@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26
+
+### 工程 — 本地 Git 初始化（GitHub 待推送）
+
+- `git init -b main`，初始提交 `b4020a4`
+- `.gitignore`：排除 `.venv/`、`logs/`、`backup/`、`.obsidian/`、pytest 缓存等
+- 已安装 `gh`；**待** `gh auth login` 后 `gh repo create … --push`
+
 ## 2026-07-21
 
 ### 修复 — 初始布局 AI 遮挡（位置上移，不改 AI 高度）
