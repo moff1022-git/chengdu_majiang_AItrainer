@@ -20,8 +20,9 @@
 
 ## 版本
 
-- **当前应用版本**：见根目录 [`version.py`](version.py)（`APP_VERSION`）  
+- **当前应用版本**：**0.2.1**（权威：根目录 [`version.py`](version.py)）  
 - **规则**：[docs/VERSIONING.md](docs/VERSIONING.md)（SemVer；与存档 schema / 座位协议分线）  
+- **进度基线**：[docs/status/LATEST.md](docs/status/LATEST.md) · 变更：[docs/changelog.md](docs/changelog.md)  
 - 查询：`.venv/bin/python main.py --version`
 
 ## macOS 打包（PyInstaller / Nuitka）

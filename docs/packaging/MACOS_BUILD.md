@@ -8,7 +8,8 @@
 | **工具** | [PyInstaller](https://pyinstaller.org/) · [Nuitka](https://nuitka.net/) |
 | **脚本** | `tools/packaging/build_pyinstaller_macos.sh` · `tools/packaging/build_nuitka_macos.sh` |
 | **规格** | [`docs/features/F0021_macos_packaging.md`](../features/F0021_macos_packaging.md) |
-| **版本** | 应用版本见 [`version.py`](../../version.py)；规则 [`docs/VERSIONING.md`](../VERSIONING.md) |
+| **版本** | 应用版本见 [`version.py`](../../version.py)（发布线 **0.2.1+**）；规则 [`docs/VERSIONING.md`](../VERSIONING.md) |
+| **本机副本** | `releases/macos/*-PyInstaller.app` · `*-Nuitka.app`（不进 git） |
 
 ---
 
@@ -204,12 +205,15 @@ releases/macos/
 
 | ID | 项 | 期望 |
 |----|----|------|
-| P1 | 双击 / 命令行启动 | 大厅出现 |
+| P1 | 双击 / 命令行启动 | 大厅出现；标题/CLI 为当前 `APP_VERSION` |
 | P2 | 开始 1H+3AI | 主窗 + 4 座位窗 |
-| P3 | 人类可出牌 | 座位窗操作正常 |
-| P4 | 牌面 / 主题 | green/blue 资源正常 |
-| P5 | 日志 | Application Support 下有 logs |
-| P6 | 再来一局 | Hub 复用 / 就绪确认仍可用 |
+| P3 | 确认后掷骰 | 主窗中心动画 → 庄家（F0023） |
+| P4 | 人类可出牌 | 座位窗操作正常 |
+| P5 | 出牌日志 | 右侧有摸/打/碰等中文明细（F0024） |
+| P6 | 弃牌 | 多行排列，无右侧滚动条 |
+| P7 | 牌面 / 主题 | green/blue 资源正常 |
+| P8 | 日志目录 | Application Support 下有 logs |
+| P9 | 再来一局 | Hub 复用 / 就绪确认仍可用 |
 
 ---
 

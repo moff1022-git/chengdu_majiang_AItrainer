@@ -114,6 +114,17 @@ else
   find "$OUT" -maxdepth 4 2>/dev/null | head -60
 fi
 
+# Project-local release copy (alongside Nuitka)
+if [[ -n "${APP:-}" && -d "$APP" ]]; then
+  REL_DIR="${ROOT}/releases/macos"
+  REL_APP="${REL_DIR}/${APP_NAME}-PyInstaller.app"
+  mkdir -p "$REL_DIR"
+  rm -rf "$REL_APP"
+  cp -R "$APP" "$REL_APP"
+  xattr -cr "$REL_APP" 2>/dev/null || true
+  echo "App (project):  $REL_APP"
+fi
+
 echo ""
 echo "Docs: docs/packaging/MACOS_BUILD.md · docs/VERSIONING.md"
 echo "Logs (when frozen): ~/Library/Application Support/ChengduMahjongAITrainer/logs/"
