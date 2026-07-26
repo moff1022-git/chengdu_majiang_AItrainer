@@ -3,6 +3,13 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（仓库公开）
+
+### 工程 — GitHub visibility
+
+- 仓库由 **private → public**：https://github.com/moff1022-git/chengdu_majiang_AItrainer  
+- 历史 changelog 中「private」表述仅描述导入当时状态，以当前 **public** 为准
+
 ## 2026-07-26（F0025 Windows 打包 · 文档）
 
 ### 文档 — Windows 打包规格（Draft）
@@ -152,7 +159,7 @@
 
 - 本地 `git init -b main`；初始提交 `b4020a4` + 进度文档 `b1fbb99`
 - `.gitignore`：排除 `.venv/`、`logs/`、`backup/` 等
-- **远程**：https://github.com/moff1022-git/chengdu_majiang_AItrainer （**private**）
+- **远程**：https://github.com/moff1022-git/chengdu_majiang_AItrainer （导入时 **private**；**2026-07-26 已改为 public**）
 - `main` 已 push 至 `origin/main`（HTTP/1.1 重试成功）
 
 ## 2026-07-21
