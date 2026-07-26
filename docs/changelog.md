@@ -25,6 +25,8 @@
 
 ### 打包
 - 用 **0.2.1** 重打 PyInstaller + Nuitka macOS `.app`（产物本地 `dist/` / `releases/macos/`，不进 git）
+- **GitHub Release** 已发布：https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1  
+  - PyInstaller / Nuitka 各一 zip（arm64）
 
 ---
 
