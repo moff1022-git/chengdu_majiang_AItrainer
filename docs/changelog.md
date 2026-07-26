@@ -17,6 +17,7 @@
 - **现象**：AI/人类「本家弃牌」像单行排，右侧裁切显示不全  
 - **修复**：按真实扩展区宽度多行换行（compact 牌面 + chrome）；多行时纵向可滚；标题显示行×列与张数  
 - 代码：`players/seat_window.py`；测：`test_discard_grid_multi_row_narrow_ext`
+- **续**：去掉弃牌区右侧滚动条（仍可用滚轮滚动）
 
 ### UI — 大厅/结算对齐人类窗风格（F0022）
 

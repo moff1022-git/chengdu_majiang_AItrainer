@@ -913,7 +913,7 @@ class TkSeatApp:
             padx=6,
         )
         self.disc_title.pack(fill="x")
-        # Scrollable discard area (multi-row; overflow vertically scrollable)
+        # Scrollable discard area (multi-row; mousewheel only — no visible scrollbar)
         self.disc_scroll_wrap = tk.Frame(self.ext_bot, bg="#143528")
         self.disc_scroll_wrap.pack(fill="both", expand=True, pady=2, padx=2)
         self.disc_canvas = tk.Canvas(
@@ -922,13 +922,6 @@ class TkSeatApp:
             highlightthickness=0,
             bd=0,
         )
-        self.disc_scroll = tk.Scrollbar(
-            self.disc_scroll_wrap,
-            orient="vertical",
-            command=self.disc_canvas.yview,
-        )
-        self.disc_canvas.configure(yscrollcommand=self.disc_scroll.set)
-        self.disc_scroll.pack(side="right", fill="y")
         self.disc_canvas.pack(side="left", fill="both", expand=True)
         self.disc_fr = tk.Frame(self.disc_canvas, bg="#143528")
         self._disc_canvas_win = self.disc_canvas.create_window(
