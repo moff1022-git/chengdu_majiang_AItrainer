@@ -95,9 +95,14 @@ class SubprocessTransport:
             except Exception:
                 pass
         # Also peek common crash log from seat_window
-        root = Path(__file__).resolve().parent.parent
+        try:
+            from app_paths import logs_dir
+
+            log_base = logs_dir()
+        except Exception:
+            log_base = Path(__file__).resolve().parent.parent / "logs"
         for mode in ("play", "watch"):
-            crash = root / "logs" / f"seat_{mode}_{self.seat}_crash.log"
+            crash = log_base / f"seat_{mode}_{self.seat}_crash.log"
             if crash.is_file():
                 try:
                     err = (err + "\n" + crash.read_text(encoding="utf-8", errors="replace"))[
@@ -110,24 +115,40 @@ class SubprocessTransport:
         return f"human process died code={code}: {err[:800]}"
 
     def start(self) -> dict:
-        """Spawn seat_window module; wait for hello."""
-        cmd = [
-            self.python_exe,
-            "-u",  # unbuffered stdio — critical on Windows pipes
-            "-m",
-            self.module,
-            "--seat",
-            str(self.seat),
-            "--theme",
-            self.theme,
-            *self.extra_args,
-        ]
+        """Spawn seat_window module (or frozen --seat-window); wait for hello."""
+        try:
+            from app_paths import logs_dir, project_root, seat_window_command
+
+            root = str(project_root())
+            log_dir = logs_dir()
+            cmd = seat_window_command(
+                seat=self.seat,
+                theme=self.theme,
+                extra_args=list(self.extra_args),
+                python_exe=self.python_exe,
+                module=self.module,
+            )
+        except Exception:
+            root = str(Path(__file__).resolve().parent.parent)
+            log_dir = Path(root) / "logs"
+            log_dir.mkdir(parents=True, exist_ok=True)
+            cmd = [
+                self.python_exe,
+                "-u",  # unbuffered stdio — critical on Windows pipes
+                "-m",
+                self.module,
+                "--seat",
+                str(self.seat),
+                "--theme",
+                self.theme,
+                *self.extra_args,
+            ]
         env = os.environ.copy()
-        root = str(Path(__file__).resolve().parent.parent)
         env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
         env["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
         env["PYTHONIOENCODING"] = "utf-8"
         env["PYTHONUNBUFFERED"] = "1"
+        env["CHENGDU_MAHJONG_ROOT"] = root
         # Critical: do NOT inherit parent's SDL_VIDEO_WINDOW_POS (main window pos).
         # Multiple children fighting the same env var / video init causes missing seats.
         env.pop("SDL_VIDEO_WINDOW_POS", None)
@@ -137,7 +158,6 @@ class SubprocessTransport:
         if sys.platform == "win32":
             env["SDL_VIDEODRIVER"] = "windows"
             env["SDL_RENDER_DRIVER"] = "software"
-        log_dir = Path(root) / "logs"
         log_dir.mkdir(parents=True, exist_ok=True)
         self._stderr_path = log_dir / f"human_seat{self.seat}_stderr.log"
         err_fp = self._stderr_path.open("w", encoding="utf-8", errors="replace")

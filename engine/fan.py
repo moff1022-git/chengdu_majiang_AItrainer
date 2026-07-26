@@ -21,9 +21,16 @@ from engine.win_check import (
     is_winning_hand,
 )
 
-_DEFAULT_TABLE_PATH = (
-    Path(__file__).resolve().parent.parent / "configs" / "fan_table.json"
-)
+def _default_table_path() -> Path:
+    try:
+        from app_paths import configs_dir
+
+        return configs_dir() / "fan_table.json"
+    except Exception:
+        return Path(__file__).resolve().parent.parent / "configs" / "fan_table.json"
+
+
+_DEFAULT_TABLE_PATH = _default_table_path()
 
 
 class FanError(ValueError):

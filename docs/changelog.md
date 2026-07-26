@@ -5,6 +5,17 @@
 
 ## 2026-07-26
 
+### 工程 — macOS 打包（F0021 · PyInstaller + Nuitka）
+
+- **文档**：`docs/packaging/MACOS_BUILD.md`、`docs/features/F0021_macos_packaging.md`
+- **路径**：`app_paths.py`（资源根 / 可写 logs / 冻结子进程命令）
+- **入口**：`packaging/macos/pyinstaller_entry.py`；`main --seat-window` 再入座位窗
+- **脚本**：`tools/packaging/build_pyinstaller_macos.sh`、`build_nuitka_macos.sh`
+- **实测产物**（arm64）：
+  - PyInstaller ≈199MB：`dist/pyinstaller/ChengduMahjongAITrainer.app`
+  - Nuitka ≈97MB：`dist/nuitka/ChengduMahjongAITrainer.app`
+- 测：`tests/test_app_paths.py`
+
 ### 修复 — 座位窗胡牌提示 / 副露尺寸 / 中文类型
 
 1. **胡牌无提示**：`hu_banner` 曾 `pack(before=meta_row)`，但横幅在 `mid`、meta 在 `op_status_fr`，跨父级 pack 静默失败 → 改挂 `op_info_fr`（状态栏下），始终可见；AI 窗同步显示  

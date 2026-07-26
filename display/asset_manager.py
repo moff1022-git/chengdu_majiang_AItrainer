@@ -9,8 +9,13 @@ import pygame
 
 Theme = Literal["green", "blue"]
 
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent
-_DEFAULT_ASSETS = _PROJECT_ROOT / "assets"
+def _default_assets() -> Path:
+    try:
+        from app_paths import assets_dir
+
+        return assets_dir()
+    except Exception:
+        return Path(__file__).resolve().parent.parent / "assets"
 
 
 class AssetManager:
@@ -21,7 +26,7 @@ class AssetManager:
         *,
         strict: bool = True,
     ) -> None:
-        self.root = Path(root) if root else _DEFAULT_ASSETS
+        self.root = Path(root) if root else _default_assets()
         if theme not in ("green", "blue"):
             raise ValueError(f"theme must be green|blue, got {theme!r}")
         self.theme: Theme = theme  # type: ignore[assignment]

@@ -18,6 +18,18 @@
 - 依赖见 `requirements.txt`（运行时需要 `pygame`；训练 env **不**依赖 gymnasium）
 - macOS 座位窗需要 **tkinter**（Homebrew：`brew install python-tk@3.12`）
 
+## macOS 打包（PyInstaller / Nuitka）
+
+无需本机 Python 即可分发 `.app`：
+
+```bash
+bash tools/packaging/build_pyinstaller_macos.sh   # → dist/pyinstaller/ChengduMahjongAITrainer.app
+bash tools/packaging/build_nuitka_macos.sh         # → dist/nuitka/ChengduMahjongAITrainer.app
+```
+
+说明与验收：[`docs/packaging/MACOS_BUILD.md`](docs/packaging/MACOS_BUILD.md) · 规格 [`F0021`](docs/features/F0021_macos_packaging.md)。  
+冻结后日志：`~/Library/Application Support/ChengduMahjongAITrainer/logs/`。
+
 ## 安装（永久环境）
 
 **权威解释器：项目根目录 `.venv`（Python 3.11+，推荐 3.12）。**  

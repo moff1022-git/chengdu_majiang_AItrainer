@@ -8,6 +8,13 @@ dist/
 build/
 *.egg
 
+# Packaging intermediates (PyInstaller / Nuitka)
+*.build/
+*.dist/
+*.onefile-build/
+packaging/**/*.build/
+# Keep packaging sources tracked; ignore local output only (dist/ build/ above)
+
 # Virtual env
 .venv/
 venv/

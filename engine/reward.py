@@ -10,9 +10,18 @@ from engine.blood_battle import GameResult
 from engine.score import ScoreTransfer
 from engine.state import GameState
 
-_DEFAULT_REWARD_PATH = (
-    Path(__file__).resolve().parent.parent / "configs" / "reward_default.json"
-)
+def _default_reward_path() -> Path:
+    try:
+        from app_paths import configs_dir
+
+        return configs_dir() / "reward_default.json"
+    except Exception:
+        return (
+            Path(__file__).resolve().parent.parent / "configs" / "reward_default.json"
+        )
+
+
+_DEFAULT_REWARD_PATH = _default_reward_path()
 
 
 @dataclass

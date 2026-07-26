@@ -325,8 +325,22 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def _run_seat_window(argv: list[str]) -> int:
+    """Frozen / packaging entry: same binary as seat Tk window."""
+    from players.seat_window import main as seat_main
+
+    # Drop leading --seat-window flag; remainder matches seat_window CLI
+    rest = list(argv)
+    if rest and rest[0] == "--seat-window":
+        rest = rest[1:]
+    return int(seat_main(rest) or 0)
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    # Packaged multi-process: re-exec of this binary with --seat-window
+    if argv and argv[0] == "--seat-window":
+        return _run_seat_window(argv)
     parser = build_parser()
     if not argv:
         argv = ["gui"]
@@ -339,8 +353,13 @@ def main(argv: list[str] | None = None) -> int:
     except SystemExit:
         raise
     except BaseException as e:  # noqa: BLE001 — log unexpected GUI/engine crashes
-        log_dir = Path(__file__).resolve().parent / "logs"
-        log_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            from app_paths import logs_dir
+
+            log_dir = logs_dir()
+        except Exception:
+            log_dir = Path(__file__).resolve().parent / "logs"
+            log_dir.mkdir(parents=True, exist_ok=True)
         crash_path = log_dir / "main_crash.log"
         tb = traceback.format_exc()
         try:

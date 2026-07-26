@@ -34,8 +34,13 @@ _queue_lock = threading.Lock()
 
 
 def _crash_log(seat: int, mode: str, text: str) -> Path:
-    log_dir = Path(_ROOT) / "logs"
-    log_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        from app_paths import logs_dir
+
+        log_dir = logs_dir()
+    except Exception:
+        log_dir = Path(_ROOT) / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
     path = log_dir / f"seat_{mode}_{seat}_crash.log"
     try:
         path.write_text(text, encoding="utf-8", errors="replace")

@@ -12,9 +12,18 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-_ROOT = Path(__file__).resolve().parents[1]
-PRESETS_PATH = _ROOT / "configs" / "strategies" / "presets.json"
-STRATEGIES_DIR = _ROOT / "configs" / "strategies"
+def _configs_root() -> Path:
+    try:
+        from app_paths import configs_dir
+
+        return configs_dir()
+    except Exception:
+        return Path(__file__).resolve().parents[1] / "configs"
+
+
+PRESETS_PATH = _configs_root() / "strategies" / "presets.json"
+STRATEGIES_DIR = _configs_root() / "strategies"
+
 
 # Built-in fallback if config missing
 _FALLBACK: list[dict[str, Any]] = [

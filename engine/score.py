@@ -13,9 +13,18 @@ from engine.shanten import shanten
 from engine.state import GameState, PlayerState
 from engine.tile import Suit
 
-_DEFAULT_SCORE_PATH = (
-    Path(__file__).resolve().parent.parent / "configs" / "score_default.json"
-)
+def _default_score_path() -> Path:
+    try:
+        from app_paths import configs_dir
+
+        return configs_dir() / "score_default.json"
+    except Exception:
+        return (
+            Path(__file__).resolve().parent.parent / "configs" / "score_default.json"
+        )
+
+
+_DEFAULT_SCORE_PATH = _default_score_path()
 
 
 @dataclass(frozen=True, slots=True)

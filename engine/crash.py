@@ -16,9 +16,18 @@ from engine.state import GameState
 from players.base_player import BasePlayer
 from protocols.messages import ActionRequest, Decision
 
-_DEFAULT_PATH = (
-    Path(__file__).resolve().parent.parent / "configs" / "crash_policy.json"
-)
+def _default_crash_path() -> Path:
+    try:
+        from app_paths import configs_dir
+
+        return configs_dir() / "crash_policy.json"
+    except Exception:
+        return (
+            Path(__file__).resolve().parent.parent / "configs" / "crash_policy.json"
+        )
+
+
+_DEFAULT_PATH = _default_crash_path()
 
 
 class CrashPolicy(str, Enum):
