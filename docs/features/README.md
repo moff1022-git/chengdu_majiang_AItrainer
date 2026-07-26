@@ -37,6 +37,7 @@
 | F0019 | [F0019_interior_element_scale.md](F0019_interior_element_scale.md) | **窗内元素等比缩放**（1080p 基准最小窗；布局比例不变） | **Done** |
 | **F0020** | [F0020_multi_human_modes.md](F0020_multi_human_modes.md) | **2 人类 / 3 人类** 模式：布局 B/D、多 proxy、ready/decide | **Done** |
 | **F0021** | [F0021_macos_packaging.md](F0021_macos_packaging.md) | **macOS 打包** PyInstaller + Nuitka；见 [MACOS_BUILD](../packaging/MACOS_BUILD.md) | **Done** |
+| **F0022** | [F0022_lobby_result_human_chrome.md](F0022_lobby_result_human_chrome.md) | 大厅/结算与人类窗 UI 风格统一，分区防遮挡 | **Done** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | Review |
 
 > **2026-07-11 交叉修订**：F0001 §13、F0002 §10、F0003 §3.3.1、F0004 全文补丁、F0005 §3.2/§10。日终复盘见 [`docs/status/2026-07-11.md`](../status/2026-07-11.md)。

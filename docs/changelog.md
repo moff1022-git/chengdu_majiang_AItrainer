@@ -3,6 +3,15 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（续）
+
+### UI — 大厅/结算对齐人类窗风格（F0022）
+
+- 共享色板与分区：`display/ui_chrome.py`（顶栏 / 底栏 / 面板 / 主次按钮）
+- `lobby_view`：设置卡片 + 固定底栏「开始」，小窗不遮挡
+- `result_view`：摘要条 + 座位卡片网格 + 固定底栏「回大厅/再来一局」
+- 测：`tests/test_lobby_view.py`、`test_result_view` 小窗
+
 ## 0.2.0 — 2026-07-26
 
 首个按 [`docs/VERSIONING.md`](VERSIONING.md) 管理的应用版本（SemVer 单一源 `version.py`）。

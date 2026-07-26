@@ -22,12 +22,8 @@ def test_format_cumulative_board() -> None:
     assert "S3:+5" in s
 
 
-def test_result_view_draw_with_details() -> None:
-    pygame.init()
-    screen = pygame.display.set_mode((1100, 720))
-    am = AssetManager(theme="green")
-    rv = ResultView(am)
-    result = GameResult(
+def _sample_result() -> GameResult:
+    return GameResult(
         game_id="rv-test",
         rankings=[0, 2, 1, 3],
         scores={0: 16, 1: -8, 2: -2, 3: -6},
@@ -65,6 +61,14 @@ def test_result_view_draw_with_details() -> None:
             }
         ],
     )
+
+
+def test_result_view_draw_with_details() -> None:
+    pygame.init()
+    screen = pygame.display.set_mode((1100, 720))
+    am = AssetManager(theme="green")
+    rv = ResultView(am)
+    result = _sample_result()
     rv.draw(
         screen,
         result,
@@ -73,9 +77,26 @@ def test_result_view_draw_with_details() -> None:
         session_scores={0: 16, 1: -8, 2: -2, 3: -6},
         hand_start_scores={0: 10, 1: -6, 2: 0, 3: -4},
     )
-    # hit tests after draw (buttons may be placed)
+    # Footer buttons must sit in lower band (not overlapping cards mid-screen)
+    assert rv.lobby_rect.centery > 720 * 0.7
+    assert rv.again_rect.centery > 720 * 0.7
+    assert rv.lobby_rect.bottom <= 720
+    assert rv.again_rect.bottom <= 720
+    assert not rv.lobby_rect.colliderect(rv.again_rect)
     assert isinstance(rv.hit_lobby((0, 0)), bool)
     assert isinstance(rv.hit_again((0, 0)), bool)
+    pygame.quit()
+
+
+def test_result_view_small_window_no_overflow() -> None:
+    pygame.init()
+    screen = pygame.display.set_mode((640, 400))
+    am = AssetManager(theme="green")
+    rv = ResultView(am)
+    rv.draw(screen, _sample_result(), round_index=1, num_rounds=1)
+    assert rv.lobby_rect.bottom <= 400
+    assert rv.again_rect.bottom <= 400
+    assert rv.lobby_rect.top >= 200  # footer zone
     pygame.quit()
 
 

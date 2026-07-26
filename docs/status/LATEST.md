@@ -1,51 +1,32 @@
 # 进度快照
 
-> 2026-07-26 — **Nuitka 产物已放回项目目录** `releases/macos/`
-
-## 本轮补充
-
-| 项 | 说明 |
-|----|------|
-| Nuitka 程序位置 | `dist/nuitka/ChengduMahjongAITrainer.app` + **`releases/macos/ChengduMahjongAITrainer-Nuitka.app`** |
-| 说明 | 大文件不进 git；Finder 可打开 `releases/macos/` |
-| 运行 | 项目路径含中文时请复制到 `/Applications` 再双击 |
-
----
-
-> 此前：版本管理规则落地 · 应用 v0.2.0
+> 2026-07-26 — **F0022 大厅/结算 UI 对齐人类窗 · 防遮挡**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 目标 | 建立版本管理规则，并更新文档与程序 |
-| 规则 | [`docs/VERSIONING.md`](../VERSIONING.md)（SemVer · 多版本线分离 · 发版清单） |
-| 单一源 | [`version.py`](../../version.py) → **`APP_VERSION = 0.2.0`** |
-| 程序 | CLI `--version`；主窗/大厅/座位窗展示 `v0.2.0`；打包读版本写 plist |
-| 流程 | `docs/DEVELOPMENT.md` 已链到 VERSIONING |
-| 测试 | `tests/test_version.py` |
+| 目标 | 开始窗、成绩汇总与人类座位窗风格统一；元素合理分布不遮挡 |
+| 规格 | `docs/features/F0022_lobby_result_human_chrome.md` · Done |
+| 代码 | `display/ui_chrome.py`、`lobby_view.py`、`result_view.py` |
+| 测试 | `test_lobby_view`、`test_result_view`（含 640×400） |
 
-## 当前版本基线
+## 布局约定
 
-| 线 | 值 |
+```text
+HEADER（深绿 + 金线）→ BODY（卡片）→ FOOTER（固定高度按钮区）
+```
+
+## 基线
+
+| 项 | 值 |
 |----|-----|
-| **应用** | **0.2.0** |
-| 存档 schema | 4 |
-| 存档 format | 1 |
-| 座位协议 | 1 |
-
-## 发版口令（摘要）
-
-1. 改 `version.py`  
-2. `docs/changelog.md` 增加 `## X.Y.Z`  
-3. 更新本文件  
-4. `git tag vX.Y.Z`  
-5. 打包脚本  
+| 应用版本 | 0.2.0 |
+| F0020–F0021 | Done |
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 可选：`git tag v0.2.0` 并 push | `打 tag v0.2.0` |
-| 2 | 用当前版本重建 mac 包 | `重新打包` |
-| 3 | 双击 .app 完整验收 | 目视打包版 |
+| 1 | 本机开大厅/打完一局看结算 | `play --players human,...` |
+| 2 | 若要升版号记 UI 变更 | `bump 0.2.1` |
