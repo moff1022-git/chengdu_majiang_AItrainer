@@ -12,6 +12,23 @@
 - **训练**：`ChengduMahjongEnv`（`reset` / `step` / `legal_actions`）+ 批跑 runner
 - **分发**：macOS arm64 **PyInstaller / Nuitka** 双包（见 [Release v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)）
 
+### 界面预览
+
+> 截图随版本刷新（[F0026](docs/features/F0026_readme_screenshots.md)）。本地重刷：  
+> `.venv/bin/python tools/capture_readme_screenshots.py`
+
+| 大厅 | 主窗口（游戏中） |
+|:----:|:----------------:|
+| ![大厅](docs/media/readme/01_lobby.png) | ![主窗口游戏中](docs/media/readme/02_main_play.png) |
+
+| 人类玩家（游戏中） | AI 玩家（游戏中） |
+|:------------------:|:-----------------:|
+| ![人类玩家](docs/media/readme/03_human_play.png) | ![AI玩家](docs/media/readme/04_ai_watch.png) |
+
+| 计分窗口 |
+|:--------:|
+| ![计分窗口](docs/media/readme/05_result.png) |
+
 ## 环境要求
 
 - Python **3.11+**

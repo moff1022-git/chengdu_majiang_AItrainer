@@ -41,6 +41,7 @@
 | **F0023** | [F0023_main_dice_roll_display.md](F0023_main_dice_roll_display.md) | 主窗每轮开局掷骰过程与结果（定庄） | **Done** |
 | **F0024** | [F0024_play_log_detail.md](F0024_play_log_detail.md) | 主窗出牌日志细化（中文牌名/摸碰杠胡分） | **Done** |
 | **F0025** | [F0025_windows_packaging.md](F0025_windows_packaging.md) | **Windows 打包** PyInstaller + Nuitka；见 [WINDOWS_BUILD](../packaging/WINDOWS_BUILD.md) | **Draft** |
+| **F0026** | [F0026_readme_screenshots.md](F0026_readme_screenshots.md) | **README 功能五图** + 发版强制刷新；`docs/media/readme/` | **Done** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | **Review**（文档清单） |
 
 > **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.2.1**

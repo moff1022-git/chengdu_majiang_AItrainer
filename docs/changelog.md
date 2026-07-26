@@ -3,6 +3,15 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（F0026 README 截图）
+
+### 文档 / 工程 — README 功能界面五图
+
+- 根 `README.md` **功能 → 界面预览**：大厅、主窗口（游戏中）、人类/AI 座位（游戏中）、计分窗口  
+- 图片：`docs/media/readme/01_lobby.png` … `05_result.png` + `MANIFEST.json`  
+- 脚本：`tools/capture_readme_screenshots.py`（主窗 pygame 真渲染；座位无屏幕权限时用资源拼合）  
+- 发版强制刷新：[`F0026`](features/F0026_readme_screenshots.md) · `VERSIONING` 步骤 4b · `DEVELOPMENT`  
+
 ## 2026-07-26（仓库公开）
 
 ### 工程 — GitHub visibility

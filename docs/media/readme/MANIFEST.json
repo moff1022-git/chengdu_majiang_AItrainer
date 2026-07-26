@@ -1,0 +1,21 @@
+{
+  "app_version": "0.2.1",
+  "generated_at": "2026-07-26T15:28:04Z",
+  "game_id": "readme-screenshot-fixed",
+  "scale": 2,
+  "files": {
+    "lobby": "01_lobby.png",
+    "main": "02_main_play.png",
+    "human": "03_human_play.png",
+    "ai": "04_ai_watch.png",
+    "result": "05_result.png"
+  },
+  "methods": {
+    "lobby": "pygame_offscreen",
+    "main": "pygame_offscreen(phase=response)",
+    "result": "pygame_offscreen(reason=wall_empty)",
+    "human": "asset_mockup:HUMAN_mockup_assets_green.jpg",
+    "ai": "asset_mockup:AI_mockup_assets_green.jpg"
+  },
+  "note": "Lobby/main/result are live pygame renders. Human/AI seats use OS grab when permitted; else asset mockups."
+}

@@ -132,6 +132,7 @@ git push origin "v$(...)"
 | 2 | 决定 SemVer 段；改 `version.py` |
 | 3 | 更新 `changelog.md` + `LATEST.md` |
 | 4 | 测试：`pytest`；可选打包脚本 |
+| 4b | **刷新 README 功能截图**（F0026）：`.venv/bin/python tools/capture_readme_screenshots.py`，提交 `docs/media/readme/*`（UI 无改动的纯内部 PATCH 可跳过，见 F0026） |
 | 5 | commit：`chore(release): vX.Y.Z` |
 | 6 | `git tag vX.Y.Z` 并 push |
 | 7 | 构建 macOS `.app` / Windows onedir（产物名可带版本，见打包脚本） |

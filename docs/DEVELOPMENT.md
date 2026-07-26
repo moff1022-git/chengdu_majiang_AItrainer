@@ -171,7 +171,8 @@ docs/
 ### 版本管理（摘要）
 
 - 应用版本：SemVer，**只**在 `version.py` 修改。  
-- 发版：bump → `changelog` 版本节 → `LATEST` → tag `vX.Y.Z` → 打包。  
+- 发版：bump → `changelog` 版本节 → `LATEST` → **刷新 README 截图（F0026）** → tag `vX.Y.Z` → 打包。  
+- README 五图：`docs/media/readme/`；脚本 `tools/capture_readme_screenshots.py`（见 [`docs/features/F0026_readme_screenshots.md`](features/F0026_readme_screenshots.md)）。
 - 存档 `SCHEMA_VERSION` / 座位 `PROTOCOL_VERSION` 与应用版本**分离**，规则见 `VERSIONING.md`。  
 
 `PLAN.md` 描述「做什么、系统怎么拆」；`docs/milestones/*` 描述「本步具体交付与验收」；冲突时以 **已确认的里程碑/ADR** 为准，并回写 `PLAN.md`。
