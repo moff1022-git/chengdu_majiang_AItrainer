@@ -23,21 +23,29 @@ _SPAWN_RETRIES = 2
 class SeatUIHub:
     """
     Starts one seat_window process per seat using a shared WindowPlan.
-    Human seat uses mode=play; AI seats use mode=watch.
+    Human seats use mode=play; AI seats use mode=watch (F0020 multi-human).
     """
 
     def __init__(
         self,
         num_players: int,
         *,
-        human_seat: int | None,
+        human_seat: int | None = None,
+        human_seats: list[int] | None = None,
         theme: str = "green",
         python_exe: str | None = None,
         plan=None,
         human_timeout_ms: int = 300_000,
     ) -> None:
         self.num_players = num_players
-        self.human_seat = human_seat
+        # F0020: prefer human_seats list; human_seat kept as first-human alias
+        if human_seats is not None:
+            self.human_seats = [int(s) for s in human_seats]
+        elif human_seat is not None:
+            self.human_seats = [int(human_seat)]
+        else:
+            self.human_seats = []
+        self.human_seat = self.human_seats[0] if self.human_seats else None
         self.theme = theme
         self.python_exe = python_exe or sys.executable
         self.plan = plan
@@ -66,9 +74,11 @@ class SeatUIHub:
         self._broadcast_min_interval_s: float = 0.06
         # Actual human Tk client size from window_ready (for MAIN height match)
         self.human_client_size: tuple[int, int] | None = None
+        # seat -> transport for every play (human) seat
+        self.human_transports: dict[int, SubprocessTransport] = {}
 
     def _mode_for(self, seat: int) -> str:
-        if self.human_seat is not None and seat == self.human_seat:
+        if int(seat) in set(self.human_seats):
             return "play"
         return "watch"
 
@@ -80,11 +90,8 @@ class SeatUIHub:
         )
 
         if self.plan is None:
-            human_seats = (
-                [self.human_seat] if self.human_seat is not None else []
-            )
             plan = plan_for_screen(
-                self.num_players, human_seats=human_seats
+                self.num_players, human_seats=list(self.human_seats)
             )
         else:
             plan = self.plan
@@ -285,20 +292,16 @@ class SeatUIHub:
             except Exception as e:
                 print(f"[seat-hub] set_geometry S{seat} failed: {e}")
 
-    def start_all(self) -> SubprocessTransport | None:
+    def start_all(self) -> dict[int, SubprocessTransport]:
         """
-        Spawn every seat window **sequentially** (human first).
-        Parallel pygame on Windows frequently fails for corner seats (S1/S3).
-        Returns human SubprocessTransport if any.
+        Spawn every seat window **sequentially** (humans first).
+        Returns map seat -> transport for all play (human) seats.
         """
         from display.window_geometry import log_plan, plan_for_screen
 
         if self.plan is None:
-            human_seats = (
-                [self.human_seat] if self.human_seat is not None else []
-            )
             plan = plan_for_screen(
-                self.num_players, human_seats=human_seats
+                self.num_players, human_seats=list(self.human_seats)
             )
         else:
             plan = self.plan
@@ -307,22 +310,23 @@ class SeatUIHub:
         self.errors = []
         self.started_seats = []
         self.transports = {}
+        self.human_transports = {}
 
-        human_transport: SubprocessTransport | None = None
-        order: list[int] = []
-        if self.human_seat is not None:
-            order.append(self.human_seat)
+        order: list[int] = list(self.human_seats)
         for s in range(self.num_players):
             if s not in order:
                 order.append(s)
 
-        print(f"[seat-hub] sequential spawn order={order}")
+        print(
+            f"[seat-hub] sequential spawn order={order} "
+            f"human_seats={self.human_seats}"
+        )
         for seat in order:
             try:
                 tr = self._spawn_with_retries(seat)
                 self._register(seat, tr)
-                if self.human_seat is not None and seat == self.human_seat:
-                    human_transport = tr
+                if seat in self.human_seats:
+                    self.human_transports[seat] = tr
             except Exception as e:
                 msg = f"{self._mode_for(seat)} S{seat} failed: {e}"
                 self.errors.append(msg)
@@ -340,8 +344,8 @@ class SeatUIHub:
                 try:
                     tr = self._spawn_with_retries(seat)
                     self._register(seat, tr)
-                    if self.human_seat is not None and seat == self.human_seat:
-                        human_transport = tr
+                    if seat in self.human_seats:
+                        self.human_transports[seat] = tr
                     # remove prior error for this seat if recovered
                     self.errors = [
                         e for e in self.errors if f"S{seat}" not in e
@@ -362,7 +366,7 @@ class SeatUIHub:
         # Parent forces all titles to plan positions (fixes off-screen / buried)
         time.sleep(0.2)
         self.reassert_placements()
-        return human_transport
+        return dict(self.human_transports)
 
     def start(self) -> None:
         """Back-compat alias."""
@@ -379,19 +383,19 @@ class SeatUIHub:
             seats = list(self.transports.keys())
         return sorted(s for s in seats if self._alive(s))
 
-    def ensure_all(self) -> SubprocessTransport | None:
+    def ensure_all(self) -> dict[int, SubprocessTransport]:
         """
         Keep live windows; respawn only missing/dead seats (sequential).
-        Returns human transport if any.
+        Returns map of human seat -> transport.
         """
         if not self.transports:
             return self.start_all()
 
-        human_transport = (
-            self.transports.get(self.human_seat)
-            if self.human_seat is not None
-            else None
-        )
+        self.human_transports = {
+            s: self.transports[s]
+            for s in self.human_seats
+            if s in self.transports and self._alive(s)
+        }
 
         for seat in range(self.num_players):
             if self._alive(seat):
@@ -400,8 +404,8 @@ class SeatUIHub:
             try:
                 tr = self._spawn_with_retries(seat)
                 self._register(seat, tr)
-                if self.human_seat is not None and seat == self.human_seat:
-                    human_transport = tr
+                if seat in self.human_seats:
+                    self.human_transports[seat] = tr
                 print(f"[seat-hub] respawned {mode} S{seat}")
             except Exception as e:
                 self.errors.append(f"respawn {mode} S{seat}: {e}")
@@ -409,7 +413,7 @@ class SeatUIHub:
 
         self.started_seats = self.alive_seats()
         self.reassert_placements()
-        return human_transport
+        return dict(self.human_transports)
 
     def _broadcast_signature(self, state: GameState) -> tuple:
         """Content signature for F0013 skip-identical broadcasts."""
@@ -565,8 +569,8 @@ class SeatUIHub:
             except Exception:
                 ok = key in ("random", "rule_ai", "current_s2")
             if ok:
-                # Never override human seat type
-                if self.human_seat is not None and seat == self.human_seat:
+                # Never override human seat type (F0020: multi-human)
+                if int(seat) in set(self.human_seats):
                     return
                 self.seat_ai_types[seat] = key
                 print(f"[seat-hub] S{seat} ai_type -> {key} (next hand)")

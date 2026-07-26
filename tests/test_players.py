@@ -92,3 +92,25 @@ def test_registry() -> None:
     assert isinstance(players[1], RuleAIPlayer)
     with pytest.raises(ValueError):
         create_player("unknown_bot")
+
+
+def test_f0020_multi_human_create_players() -> None:
+    """F0020: 2H/3H allowed; 4H rejected."""
+    from players.human_proxy import HumanPlayerProxy
+
+    p2 = create_players("human,human,rule_ai,rule_ai", base_seed=1)
+    assert len(p2) == 4
+    assert isinstance(p2[0], HumanPlayerProxy)
+    assert isinstance(p2[1], HumanPlayerProxy)
+    assert isinstance(p2[2], RuleAIPlayer)
+    assert isinstance(p2[3], RuleAIPlayer)
+    # deferred spawn: no transport until attach / on_join spawn
+    assert p2[0]._transport is None
+    assert p2[1]._transport is None
+
+    p3 = create_players("human,human,human,rule_ai", base_seed=2)
+    assert sum(1 for p in p3 if isinstance(p, HumanPlayerProxy)) == 3
+    assert isinstance(p3[3], RuleAIPlayer)
+
+    with pytest.raises(ValueError, match="at most 3 human"):
+        create_players("human,human,human,human", base_seed=0)

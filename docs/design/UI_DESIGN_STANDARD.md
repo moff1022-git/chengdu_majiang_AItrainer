@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|-----|
 | **文档类型** | **UI 设计规范**（Layout & Window Geometry Standard） |
-| **状态** | `Review`（**v1.4** 含 2H/3H；**待用户确认后 Approved 再写代码**） |
+| **状态** | **`Approved`**（v1.4 含 2H/3H；F0020 已实现） |
 | **版本** | **1.4.0** · 2026-07-26 |
 | **适用范围** | 主程序窗 MAIN + 最多 4 个座位窗（人类 play / AI watch） |
 | **关联** | F0001；[`F0020_multi_human_modes`](../features/F0020_multi_human_modes.md)；窗内：MAIN/HUMAN/AI_WINDOW_LAYOUT；落地曾见 F0018 |

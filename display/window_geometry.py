@@ -82,7 +82,7 @@ GAP = 8
 MARGIN = 8
 
 Slot = Literal["bottom", "right", "top", "left"]
-LayoutMode = Literal["A", "B", "C"]
+LayoutMode = Literal["A", "B", "C", "D"]
 
 SEAT_TO_SLOT: dict[int, Slot] = {
     0: "bottom",
@@ -1035,7 +1035,7 @@ def resolve_layout_mode(
     n_human: int,
     n_ai: int,
 ) -> LayoutMode | None:
-    """Map player counts → A/B/C; unsupported configs return None."""
+    """Map player counts → A/B/C/D (F0020); unsupported configs return None."""
     nh, na = int(n_human), int(n_ai)
     if nh == 1 and na == 3:
         return "A"
@@ -1043,6 +1043,8 @@ def resolve_layout_mode(
         return "B"
     if nh == 0 and na == 4:
         return "C"
+    if nh == 3 and na == 1:
+        return "D"
     return None
 
 
@@ -1297,6 +1299,51 @@ def plan_mode_C(
     return main, players
 
 
+def plan_mode_D(
+    canvas: WindowRect,
+    *,
+    human_seats: list[int],
+    ai_seats: list[int],
+) -> tuple[WindowRect, dict[int, WindowRect]]:
+    """
+    3 human + 1 AI (F0020 layout D).
+
+    Top band: AI (Wa×Ha). Body 2×2:
+      H[1] | H[2]
+      MAIN | H[0]
+    """
+    sz = window_sizes(canvas.w, canvas.h)
+    Wa, Ha = int(sz["Wa"]), int(sz["Ha"])
+    ox, oy = int(canvas.x), int(canvas.y)
+    Lw, Lh = int(canvas.w), int(canvas.h)
+    gap = int(GAP)
+    body_top = oy + Ha + gap
+    body_h = max(80, Lh - Ha - gap)
+    row_h = body_h // 2
+    row_h2 = body_h - row_h
+    col_w = Lw // 2
+    col_w2 = Lw - col_w
+
+    main = WindowRect(ox, body_top + row_h, col_w, row_h2)
+    players: dict[int, WindowRect] = {}
+    hs = list(human_seats)[:3]
+    # H[0] right-bottom, H[1] left-top body, H[2] right-top body
+    if len(hs) >= 1:
+        players[int(hs[0])] = WindowRect(
+            ox + col_w, body_top + row_h, col_w2, row_h2
+        )
+    if len(hs) >= 2:
+        players[int(hs[1])] = WindowRect(ox, body_top, col_w, row_h)
+    if len(hs) >= 3:
+        players[int(hs[2])] = WindowRect(
+            ox + col_w, body_top, col_w2, row_h
+        )
+    # Single AI top band, left-aligned
+    if ai_seats:
+        players[int(ai_seats[0])] = WindowRect(ox, oy, Wa, Ha)
+    return main, players
+
+
 def plan_layout_abc(
     num_players: int = 4,
     *,
@@ -1306,7 +1353,7 @@ def plan_layout_abc(
     scale: float = 1.0,
 ) -> WindowPlan | None:
     """
-    Build WindowPlan for layout A/B/C. Returns None if config unsupported.
+    Build WindowPlan for layout A/B/C/D (F0020). Returns None if unsupported.
     """
     n = max(1, min(4, int(num_players)))
     if human_seats is None:
@@ -1360,22 +1407,28 @@ def plan_layout_abc(
         main, players = plan_mode_B(
             size_basis, human_seats=human_seats, ai_seats=ai_seats
         )
+    elif mode == "D":
+        main, players = plan_mode_D(
+            size_basis, human_seats=human_seats, ai_seats=ai_seats
+        )
     else:
         main, players = plan_mode_C(size_basis, ai_seats=ai_seats)
 
     main, players = _cap_plan_windows(main, players, human_seats=human_seats)
-    # Cap can leave MAIN/human with different h if mis-tagged; force equal
-    main, players = _equalize_main_human_heights(
-        main, players, human_seats=human_seats
-    )
-    # AI: move up if needed; never grow height
-    canvas_top = int(size_basis.y)
-    players = _ensure_ai_above_bottom_row(
-        main,
-        players,
-        human_seats=human_seats,
-        canvas_top=canvas_top,
-    )
+    # A/B: equalize bottom-row human with MAIN. D: body grid already paired.
+    if mode != "D":
+        main, players = _equalize_main_human_heights(
+            main, players, human_seats=human_seats
+        )
+    # AI: move up if needed; never grow height (A/B/C). D AI is above body.
+    if mode != "D":
+        canvas_top = int(size_basis.y)
+        players = _ensure_ai_above_bottom_row(
+            main,
+            players,
+            human_seats=human_seats,
+            canvas_top=canvas_top,
+        )
 
     # work rect: full desktop slice used for containment (not 2K F0001 cap)
     work = WindowRect(ox0, oy0, dw, dh)

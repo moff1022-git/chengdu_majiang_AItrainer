@@ -5,10 +5,20 @@
 
 ## 2026-07-26
 
-### 文档 — 2/3 人类模式（F0020 · Review）
+### 实现 — F0020 多人人类模式（2H/3H · Done）
 
-- **F0020** `docs/features/F0020_multi_human_modes.md`：2H+2AI（布局 B）、3H+1AI（布局 **D**）；多 proxy / ready；实现切片；**本轮无代码**
-- **UI 规范 v1.4.0**：增加布局 D（AI 顶带 + body 四分）；B 的 AI 改为顶对齐；配置判定含 `(3,1)→D`
+- **规格** `docs/features/F0020_multi_human_modes.md` → **Done**
+- **几何**：`plan_mode_D`（AI 顶带 + body 2×2）；`resolve_layout_mode(3,1)==D`；B 沿用
+- **Hub**：`human_seats: list[int]`；play/watch 按列表；`start_all`/`ensure_all` 返回 `dict[seat, transport]`
+- **App**：`_human_seats` 全链路；为每位 human 的 `HumanPlayerProxy.attach_transport`
+- **Registry**：允许多 human（最多 3）；4H 拒绝
+- **大厅**：预设「2人类+2AI」「3人类+1AI」
+- **测试**：`tests/test_f0020_multi_human.py`；更新 `test_f0018_layout_geometry` / `test_players`
+
+### 文档 — 2/3 人类模式（F0020 · 规格先行）
+
+- **F0020** 初稿 Review → Approved → Done（同日）
+- **UI 规范 v1.4.0**：布局 D；B 的 AI 顶对齐；`(3,1)→D`
 - 索引：`docs/features/README.md`
 
 ### 工程 — 导入 GitHub

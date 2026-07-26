@@ -238,8 +238,9 @@ class MahjongApp:
 
         # GUI always uses seat windows + per-seat ready confirm (F0004),
         # including pure 4AI (all watch seats). No silent auto-start.
-        human_seat = _human_seat_index(parts)
-        self._plan_human_seats = _human_seats(parts)
+        human_seats = _human_seats(parts)
+        human_seat = human_seats[0] if human_seats else None
+        self._plan_human_seats = list(human_seats)
         if human_seat is not None:
             self.cfg.focus_seat = human_seat
         try:
@@ -247,7 +248,9 @@ class MahjongApp:
             self.play_log.append("info", f"开局 · 第{self._round_index + 1}局")
         except Exception:
             pass
-        self._start_live_game(parts, n, human_seat=human_seat)
+        self._start_live_game(
+            parts, n, human_seat=human_seat, human_seats=human_seats
+        )
 
         self.table.set_spectator(
             "full" if self.cfg.spectator == "full" else "public",
@@ -390,13 +393,16 @@ class MahjongApp:
         self._pending_main_pin = None
         self._pin_main_window(p)
 
-    def _hub_compatible(self, n: int, human_seat: int | None) -> bool:
+    def _hub_compatible(self, n: int, human_seats: list[int]) -> bool:
         hub = self._seat_hub
         if hub is None:
             return False
+        hub_hs = list(getattr(hub, "human_seats", None) or [])
+        if not hub_hs and getattr(hub, "human_seat", None) is not None:
+            hub_hs = [int(hub.human_seat)]
         return (
             hub.num_players == n
-            and hub.human_seat == human_seat
+            and hub_hs == list(human_seats)
             and hub.theme == self.cfg.theme
         )
 
@@ -406,9 +412,12 @@ class MahjongApp:
         n: int,
         *,
         human_seat: int | None = None,
+        human_seats: list[int] | None = None,
     ) -> None:
         """Backward-compatible alias for `_start_live_game`."""
-        self._start_live_game(parts, n, human_seat=human_seat)
+        self._start_live_game(
+            parts, n, human_seat=human_seat, human_seats=human_seats
+        )
 
     def _start_live_game(
         self,
@@ -416,12 +425,13 @@ class MahjongApp:
         n: int,
         *,
         human_seat: int | None = None,
+        human_seats: list[int] | None = None,
     ) -> None:
         """
         Main GUI stays responsive; seat spawn + ready confirm + engine all run
         on a background thread (never block the pygame event loop).
 
-        Works for human+AI and pure AI (all seats = watch windows).
+        Works for multi-human (F0020), 1H+AI, and pure AI (all watch windows).
         """
         from players.human_proxy import HumanPlayerProxy
         from players.seat_ui_hub import SeatUIHub
@@ -431,13 +441,18 @@ class MahjongApp:
         self._live_done = False
         self._live_error = None
         self._live_runner = None
-        # None ⇒ all seats are AI watch windows (must still confirm start)
+        # F0020: full human seat list (may be empty for 4AI)
+        if human_seats is None:
+            human_seats = _human_seats(parts)
+        else:
+            human_seats = [int(s) for s in human_seats]
         if human_seat is None:
-            human_seat = _human_seat_index(parts)
+            human_seat = human_seats[0] if human_seats else None
+        self._plan_human_seats = list(human_seats)
         round_disp = self._round_index + 1
         gid = self.cfg.game_id or (
             f"human-{int(time.time())}"
-            if human_seat is not None
+            if human_seats
             else f"ai-{int(time.time())}"
         )
         # Per-seat AI overrides from seat window settings (may update during wait)
@@ -469,15 +484,15 @@ class MahjongApp:
         )
 
         def work() -> None:
-            human_tr = None
+            human_trs: dict[int, object] = {}
             nonlocal plan
             try:
                 # 2) Spawn / reuse seats OFF main thread (same plan as main)
-                if self._hub_compatible(n, human_seat) and self._seat_hub is not None:
+                if self._hub_compatible(n, human_seats) and self._seat_hub is not None:
                     try:
                         self._seat_hub.plan = plan
                         self._status_msg = "复用座位窗 / 补启缺失…"
-                        human_tr = self._seat_hub.ensure_all()
+                        human_trs = dict(self._seat_hub.ensure_all() or {})
                         # Pull reused seats onto the preferred layout screen
                         try:
                             self._seat_hub.apply_window_plan(plan)
@@ -499,12 +514,12 @@ class MahjongApp:
                     self._status_msg = "正在启动座位窗口（串行，约数秒）…"
                     self._seat_hub = SeatUIHub(
                         n,
-                        human_seat=human_seat,
+                        human_seats=list(human_seats),
                         theme=theme,
                         plan=plan,
                     )
                     try:
-                        human_tr = self._seat_hub.start_all()
+                        human_trs = dict(self._seat_hub.start_all() or {})
                     except Exception as e:
                         print(f"[live] seat hub start_all failed: {e}")
                         self._status_msg = f"座位窗启动失败: {e}"
@@ -512,7 +527,9 @@ class MahjongApp:
 
                 # Always ensure missing seats after first pass
                 try:
-                    human_tr = self._seat_hub.ensure_all() or human_tr
+                    more = self._seat_hub.ensure_all()
+                    if more:
+                        human_trs.update(more)
                 except Exception as e:
                     print(f"[live] ensure_all after start: {e}")
 
@@ -586,14 +603,23 @@ class MahjongApp:
                     theme=theme,
                     training_mode=False,
                 )
-                if human_seat is not None and 0 <= human_seat < len(players):
-                    pl = players[human_seat]
-                    if isinstance(pl, HumanPlayerProxy) and human_tr is not None:
-                        pl.attach_transport(human_tr, human_seat)
-                        print(f"[live] human S{human_seat} attached")
+                # F0020: attach every human seat to its play transport
+                hub_trs = dict(
+                    getattr(self._seat_hub, "human_transports", {}) or {}
+                )
+                if hub_trs:
+                    human_trs.update(hub_trs)
+                for hs in human_seats:
+                    if not (0 <= hs < len(players)):
+                        continue
+                    pl = players[hs]
+                    tr = human_trs.get(hs)
+                    if isinstance(pl, HumanPlayerProxy) and tr is not None:
+                        pl.attach_transport(tr, hs)
+                        print(f"[live] human S{hs} attached")
                     elif isinstance(pl, HumanPlayerProxy):
                         print(
-                            f"[live] WARNING: human transport missing; "
+                            f"[live] WARNING: human transport missing for S{hs}; "
                             f"errors={getattr(self._seat_hub, 'errors', None)}"
                         )
 

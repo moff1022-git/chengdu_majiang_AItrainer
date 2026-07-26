@@ -4,7 +4,7 @@
 |------|-----|
 | **编号** | F0020 |
 | **标题** | Multi-human play modes (2H+2AI, 3H+1AI) |
-| **状态** | **`Review`**（文档先行；**本轮不写业务代码**） |
+| **状态** | **`Done`**（2026-07-26 用户确认并实现） |
 | **类型** | 功能增强：人数配置 + 窗口布局 + 多代理协议 |
 | **依赖** | F0001 / F0002 / F0004 / F0005 / F0018；几何权威 [`UI_DESIGN_STANDARD`](../design/UI_DESIGN_STANDARD.md) **v1.4+** |
 | **关联代码**（实现阶段） | `display/window_geometry.py`、`display/app.py`、`players/seat_ui_hub.py`、`players/human_proxy.py`、`players/registry.py`、`main.py`、大厅选人 UI（若有） |
@@ -32,7 +32,7 @@
 | G2 | 支持 **3 人类 + 1 AI**（布局 **D**，新建）：同上 |
 | G3 | 窗口初始 plan：**MAIN + 全部座位窗同屏完整显示**（几何见 UI 规范 v1.4） |
 | G4 | 每人独立 play 子进程 / 独立座位窗；ready / decide 互不串座 |
-| G5 | Docs-First：本规格 **Approved** 前不写业务代码 |
+| G5 | Docs-First：本规格 **Approved** 前不写业务代码（已满足） |
 
 ### 0.3 非目标（Out of Scope）
 
@@ -217,17 +217,17 @@ row_h2   = body_h - row_h
 
 ---
 
-## 5. 实现切片（Approved 后 · 本轮不执行）
+## 5. 实现切片（已落地）
 
-| 序 | 切片 | 内容 |
-|----|------|------|
-| 1 | **Doc 合入** | UI 规范 v1.4 已含 B/D；本 F0020 Approved |
-| 2 | **Geom-D** | `plan_mode_D` + `resolve_layout_mode(3,1)` |
-| 3 | **Hub-MH** | `human_seats: list[int]`；多 play 生成 |
-| 4 | **App-MH** | `_human_seats` 全链路；去掉单 human 限制 |
-| 5 | **Proxy** | 多 human 注册与 attach_transport |
-| 6 | **Lobby**（可选） | UI 选 2H/3H |
-| 7 | **Tests** | T1–T7 |
+| 序 | 切片 | 内容 | 状态 |
+|----|------|------|------|
+| 1 | **Doc 合入** | UI 规范 v1.4 已含 B/D；本 F0020 Approved | Done |
+| 2 | **Geom-D** | `plan_mode_D` + `resolve_layout_mode(3,1)` | Done |
+| 3 | **Hub-MH** | `human_seats: list[int]`；多 play 生成 | Done |
+| 4 | **App-MH** | `_human_seats` 全链路；多 transport attach | Done |
+| 5 | **Proxy** | 多 human 注册与 attach_transport | Done |
+| 6 | **Lobby** | 预设 2H/3H | Done（最小） |
+| 7 | **Tests** | 几何 B/D + registry + hub mode_for | Done（单元） |
 
 ---
 
@@ -246,3 +246,4 @@ row_h2   = body_h - row_h
 | 日期 | 状态 | 说明 |
 |------|------|------|
 | 2026-07-26 | **Review** | 用户要求「更新 2/3 人类模式，先文档后代码」；本规格落盘；**不写代码** |
+| 2026-07-26 | **Approved + Done** | 用户「确认并实现 F0020」：几何 D、Hub 多 human、app 多 attach、大厅 2H/3H、单元测 |

@@ -13,6 +13,7 @@ from display.window_geometry import (
     plan_mode_A,
     plan_mode_B,
     plan_mode_C,
+    plan_mode_D,
     resolve_layout_mode,
     to_compact,
     window_sizes,
@@ -50,7 +51,9 @@ def test_resolve_layout_mode():
     assert resolve_layout_mode(1, 3) == "A"
     assert resolve_layout_mode(2, 2) == "B"
     assert resolve_layout_mode(0, 4) == "C"
-    assert resolve_layout_mode(3, 1) is None
+    assert resolve_layout_mode(3, 1) == "D"
+    assert resolve_layout_mode(4, 0) is None
+    assert resolve_layout_mode(2, 1) is None
 
 
 def test_plan_mode_a_b_c_1080p_no_overlap():
@@ -73,6 +76,50 @@ def test_plan_mode_a_b_c_1080p_no_overlap():
     main_c, pl_c = plan_mode_C(canvas, ai_seats=[0, 1, 2, 3])
     assert set(pl_c) == {0, 1, 2, 3}
     assert all(r.w == 442 for r in pl_c.values())
+
+
+def test_plan_mode_d_body_grid_and_ai_top():
+    """F0020 layout D: AI top band + body 2×2 (H1|H2 / MAIN|H0)."""
+    canvas = layout_canvas(1920, 1080)
+    main, pl = plan_mode_D(
+        canvas, human_seats=[0, 1, 2], ai_seats=[3]
+    )
+    assert set(pl) == {0, 1, 2, 3}
+    # AI top band Wa×Ha
+    assert pl[3].y == canvas.y
+    assert pl[3].h == 249 and pl[3].w == 442
+    # body 2×2: H[1] top-left, H[2] top-right, MAIN bottom-left, H[0] bottom-right
+    assert pl[1].x == canvas.x
+    assert pl[1].y == canvas.y + 249 + 8  # Ha + GAP
+    assert pl[2].x == canvas.x + canvas.w // 2
+    assert pl[2].y == pl[1].y
+    assert main.x == canvas.x
+    assert main.y == pl[1].y + pl[1].h
+    assert pl[0].x == main.x + main.w
+    assert pl[0].y == main.y
+    assert pl[0].h == main.h
+    # no overlap among body cells / AI
+    assert not windows_overlap(pl[3], main)
+    for a, b in ((0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)):
+        assert not windows_overlap(pl[a], pl[b]), (a, b)
+    assert not windows_overlap(pl[1], main)
+    assert not windows_overlap(pl[2], main)
+
+
+def test_compute_window_plan_modes_b_and_d():
+    plan_b = compute_window_plan(
+        4, desktop=(1920, 1080), origin=(0, 0), human_seats=[0, 1]
+    )
+    assert plan_b.layout_mode == "B"
+    assert set(plan_b.players) == {0, 1, 2, 3}
+
+    plan_d = compute_window_plan(
+        4, desktop=(1920, 1080), origin=(0, 0), human_seats=[0, 1, 2]
+    )
+    assert plan_d.layout_mode == "D"
+    assert set(plan_d.players) == {0, 1, 2, 3}
+    # MAIN still bottom-left region of canvas
+    assert plan_d.main.x == plan_d.canvas.x or plan_d.main.x >= plan_d.canvas.x
 
 
 def test_compute_window_plan_default_is_mode_a():

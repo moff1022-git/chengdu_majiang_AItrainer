@@ -35,7 +35,7 @@
 | F0017 | [F0017_ai_window_interior_layout.md](F0017_ai_window_interior_layout.md) | AI 窗内部：67/33、只读手牌、扩展区日志+弃牌 | **Done** |
 | F0018 | [F0018_ui_design_to_code_change_plan.md](F0018_ui_design_to_code_change_plan.md) | **四 UI 设计→程序修改计划**（文件清单 + P0–P8 切片） | **Done** |
 | F0019 | [F0019_interior_element_scale.md](F0019_interior_element_scale.md) | **窗内元素等比缩放**（1080p 基准最小窗；布局比例不变） | **Done** |
-| **F0020** | [F0020_multi_human_modes.md](F0020_multi_human_modes.md) | **2 人类 / 3 人类** 模式：布局 B/D、多 proxy、ready/decide | **Review** |
+| **F0020** | [F0020_multi_human_modes.md](F0020_multi_human_modes.md) | **2 人类 / 3 人类** 模式：布局 B/D、多 proxy、ready/decide | **Done** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | Review |
 
 > **2026-07-11 交叉修订**：F0001 §13、F0002 §10、F0003 §3.3.1、F0004 全文补丁、F0005 §3.2/§10。日终复盘见 [`docs/status/2026-07-11.md`](../status/2026-07-11.md)。

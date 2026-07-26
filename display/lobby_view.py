@@ -24,9 +24,11 @@ _GAME_MODES = [
 ]
 
 _PLAYER_PRESETS = [
-    ("human,rule_ai,rule_ai,rule_ai", "人类 + 3AI"),
+    ("human,rule_ai,rule_ai,rule_ai", "1人类 + 3AI"),
+    ("human,human,rule_ai,rule_ai", "2人类 + 2AI"),
+    ("human,human,human,rule_ai", "3人类 + 1AI"),
     ("rule_ai,rule_ai,rule_ai,rule_ai", "4AI（座位窗确认）"),
-    ("human,random,random,random", "人类 + 3随机"),
+    ("human,random,random,random", "1人类 + 3随机"),
 ]
 
 _ROUND_OPTIONS = [1, 2, 4, 8]

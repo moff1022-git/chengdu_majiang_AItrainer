@@ -95,15 +95,16 @@ def create_players(
 ) -> list[BasePlayer]:
     """
     specs: "human,rule_ai,rule_ai,rule_ai" or list of specs.
-    At most one human (M09).
+
+    F0020: multiple humans allowed (1–3 with remaining AI; see layout A/B/D).
     """
     if isinstance(specs, str):
         parts = [p.strip() for p in specs.split(",") if p.strip()]
     else:
         parts = list(specs)
     human_n = sum(1 for p in parts if p.split(":")[0].strip().lower() == "human")
-    if human_n > 1:
-        raise ValueError("M09 allows at most one human player")
+    if human_n > 3:
+        raise ValueError("F0020 supports at most 3 human players (use layout A/B/D)")
     players: list[BasePlayer] = []
     for i, spec in enumerate(parts):
         # Defer human spawn: on_join when seat assigned
