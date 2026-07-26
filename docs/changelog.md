@@ -3,6 +3,11 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（README 截图重刷）
+
+- 重跑 `tools/capture_readme_screenshots.py`，刷新 `docs/media/readme/01–05` 与 `MANIFEST.json`
+- 脚本：`--prefer-seat-grab` 改为 **子进程** 抓座位窗，避免 macOS 上 pygame/Tk 同进程 abort
+
 ## 2026-07-26（F0026 README 截图）
 
 ### 文档 / 工程 — README 功能界面五图

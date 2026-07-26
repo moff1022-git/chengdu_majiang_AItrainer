@@ -1,16 +1,16 @@
 # 进度快照
 
-> 2026-07-26 — **F0026 README 功能五图 + 发版刷新流程**
+> 2026-07-26 — **README 截图已重刷**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 目标 | README 功能章增加五类界面图，并规定每次程序更新后重刷 |
-| 规格 | [`docs/features/F0026_readme_screenshots.md`](../features/F0026_readme_screenshots.md) → **Done** |
-| 图片 | `docs/media/readme/01_lobby.png` … `05_result.png` |
-| 脚本 | `tools/capture_readme_screenshots.py` |
-| 应用版本 | **0.2.1**（未升版） |
+| 目标 | 更新 README 截图 |
+| 动作 | `tools/capture_readme_screenshots.py`（座位真抓因无屏幕录制权限回退 mockup） |
+| 图片 | `docs/media/readme/01–05` + `MANIFEST.json`（`generated_at` 已更新） |
+| 脚本 | 修复：`--prefer-seat-grab` 改子进程，避免 pygame/Tk 同进程崩溃 |
+| 应用版本 | **0.2.1** |
 | 远程可见性 | **public** |
 
 ## 截图方法（当前）

@@ -305,6 +305,49 @@ def write_manifest(methods: dict[str, str], *, scale: int) -> Path:
     return path
 
 
+def _seat_grab_in_subprocess(*, theme: str) -> dict[str, str]:
+    """
+    Run seat grab in a fresh process so Tk never shares NSApp with pygame/SDL
+    (macOS: Tk after pygame.init can abort with NSInvalidArgumentException).
+    """
+    import subprocess
+
+    marker = OUT_DIR / "_seat_methods.json"
+    if marker.exists():
+        marker.unlink(missing_ok=True)
+    env = os.environ.copy()
+    env.pop("SDL_VIDEODRIVER", None)
+    env["CHENGDU_SHOT_REAL_DISPLAY"] = "1"
+    env["CHENGDU_SHOT_SKIP_SEAT_GRAB"] = "0"
+    cmd = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--seat-only",
+        "--theme",
+        theme,
+    ]
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=str(ROOT),
+            env=env,
+            timeout=120,
+            capture_output=True,
+            text=True,
+        )
+        if proc.stdout:
+            print(proc.stdout, end="")
+        if proc.stderr:
+            print(proc.stderr, end="", file=sys.stderr)
+        if marker.is_file():
+            data = json.loads(marker.read_text(encoding="utf-8"))
+            marker.unlink(missing_ok=True)
+            return {k: str(v) for k, v in (data or {}).items()}
+    except Exception as e:
+        print(f"[capture] seat subprocess failed: {e}", file=sys.stderr)
+    return {}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Refresh README screenshots")
     parser.add_argument(
@@ -320,14 +363,33 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Try live Tk window grab for human/AI (needs Screen Recording on macOS)",
     )
+    parser.add_argument(
+        "--seat-only",
+        action="store_true",
+        help=argparse.SUPPRESS,  # internal: subprocess entry for Tk grab
+    )
     args = parser.parse_args(argv)
 
     os.chdir(ROOT)
+
+    # Internal subprocess: Tk grab only (never pygame.init)
+    if args.seat_only:
+        methods = try_capture_seat_windows(theme=args.theme)
+        OUT_DIR.mkdir(parents=True, exist_ok=True)
+        (OUT_DIR / "_seat_methods.json").write_text(
+            json.dumps(methods, ensure_ascii=False), encoding="utf-8"
+        )
+        for key in ("human", "ai"):
+            p = OUT_DIR / FILES[key]
+            print(
+                f"  seat-only {key}: "
+                f"{'OK' if p.is_file() else 'FAIL'} method={methods.get(key, '-')}"
+            )
+        return 0 if methods.get("human") and methods.get("ai") else 1
+
     _ensure_env()
-    # Seat grab needs non-dummy display interaction; main scenes use dummy.
-    if args.prefer_seat_grab:
-        os.environ["CHENGDU_SHOT_REAL_DISPLAY"] = "1"
-        os.environ.pop("SDL_VIDEODRIVER", None)
+    # Keep dummy SDL for main pygame path (stable offscreen).
+    os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 
     print(f"==> README screenshots → {OUT_DIR} (v{_app_version()})")
     methods: dict[str, str] = {}
@@ -335,7 +397,8 @@ def main(argv: list[str] | None = None) -> int:
 
     seat_m: dict[str, str] = {}
     if args.prefer_seat_grab:
-        seat_m = try_capture_seat_windows(theme=args.theme)
+        print("==> Seat grab (subprocess, isolated from pygame)")
+        seat_m = _seat_grab_in_subprocess(theme=args.theme)
     if "human" not in seat_m or "ai" not in seat_m:
         seat_m = {**seat_m, **fallback_seat_mockups()}
     methods.update(seat_m)
