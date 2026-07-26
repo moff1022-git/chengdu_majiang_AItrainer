@@ -6,10 +6,11 @@
 
 - **引擎**：108 张（万筒条）、掷骰定庄、换三张、定缺、血战行牌、一炮多响、成都番型与可配置 `fan_cap`
 - **计分 / Reward / JSONL**：可配置稠密与终局奖励，局级日志
-- **玩家**：`random`、`rule_ai`、`human`（独立子进程窗口）
-- **显示**：绿/蓝主题资产、牌桌 / HUD（策略与推理）
+- **玩家**：`random`、`rule_ai`、`human`（独立子进程座位窗；**1–3 人类** + AI，布局 A/B/C/D）
+- **显示**：绿/蓝主题；主窗大厅/牌桌/结算；座位窗操作与观战；推荐出牌/进张；主窗掷骰动画与细化出牌日志
 - **存档**：JSON 存档、逐步快照、崩溃策略
 - **训练**：`ChengduMahjongEnv`（`reset` / `step` / `legal_actions`）+ 批跑 runner
+- **分发**：macOS arm64 **PyInstaller / Nuitka** 双包（见 [Release v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)）
 
 ## 环境要求
 
@@ -84,16 +85,19 @@ python main.py ...
 ### Human + 3 AI（主程序 + 玩家窗，完整 UI）
 
 ```bash
-python main.py human --theme green
+.venv/bin/python main.py human --theme green
 # 等价：
-python main.py play --players human,rule_ai,rule_ai,rule_ai --theme green
+.venv/bin/python main.py play --players human,rule_ai,rule_ai,rule_ai --theme green
+# 2 人类 / 3 人类（F0020）：
+# .venv/bin/python main.py play --players human,human,rule_ai,rule_ai
+# .venv/bin/python main.py play --players human,human,human,rule_ai
 ```
 
 会同时打开（F0002 完整 UI）：
 
-1. **主程序窗口**：全局观战 / HUD  
-2. **S0 人类窗**：操作换三张、定缺、出牌  
-3. **S1–S3 AI 观战窗**：只读  
+1. **主程序窗口**：大厅 → 确认后**掷骰动画** → 全局观战 / HUD / 出牌日志  
+2. **人类座位窗**（1–3 个 play）：换三张、定缺、出牌  
+3. **AI 观战窗**（其余 watch）：只读 + 弃牌多行  
 
 **S0 怎么操作：**
 

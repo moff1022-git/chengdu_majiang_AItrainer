@@ -1,10 +1,10 @@
 """
-Window sizes and positions for main + seat player windows (F0001 / F0018).
+Window sizes and positions for main + seat player windows (F0001 / F0018 / F0020).
 
-Design goals (UI_DESIGN_STANDARD v1.3):
+Design goals (UI_DESIGN_STANDARD v1.4+):
 - Layout canvas = 85% of capped work area, centered
-- MAIN 25% bottom-left; human 25%; AI 6.25%
-- Modes A (3AI+1H) / B (2AI+2H) / C (4AI)
+- MAIN 25% bottom-left (layout D: body grid); human full / AI 6.25%
+- Modes A (1H3AI) / B (2H2AI) / C (0H4AI) / D (3H1AI)
 - Windows remain RESIZABLE after open
 """
 

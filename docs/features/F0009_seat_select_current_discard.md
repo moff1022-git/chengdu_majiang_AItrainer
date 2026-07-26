@@ -1,14 +1,15 @@
-# F0009 — 座位窗：选中牌高亮放大 + 当前打出牌面板
+# F0009 — 座位窗：选中牌高亮 + 当前打出牌面板
 
 | 字段 | 值 |
 |------|-----|
 | **编号** | F0009 |
-| **标题** | Seat window: stronger tile selection + current discard focus |
+| **标题** | Seat window: tile selection highlight + current discard focus |
 | **状态** | `Done` |
 | **类型** | UI 增强 |
 | **依赖** | F0002 座位窗、F0006 响应式手牌、公共 `last_discard` / `last_discard_seat` |
 | **关联** | `players/seat_window.py`、`engine/state` 序列化字段 |
-| **授权** | 用户需求：① 选中牌效果不够明显，需高亮+放大；② 新增当前打出牌显示并标明谁打出 |
+| **授权** | 用户需求：① 选中牌效果更明显；② 当前打出牌面板 |
+| **实装偏差（以代码为准）** | **不放大牌面**（`selected_tile_tw` 保持 base 宽，防回流闪烁）；用 **金框 + 暖底 + 未选压暗** 表现选中（2026-07 加固） |
 
 ---
 
@@ -16,7 +17,7 @@
 
 | # | 说明 |
 |---|------|
-| R1 | 手牌（及换三张多选）**选中**态：明显 **高亮边框** + **牌面放大**（相对未选中约 +30% 宽，且至少 +10px） |
+| R1 | 手牌（及换三张多选）**选中**态：明显 **高亮边框**（原案曾含放大；见 R2 / 实装偏差） |
 | R2 | 点选切换不整页闪烁（in-place 边框/底色；**不放大**牌面以免回流闪烁） |
 | R3 | 座位窗新增 **「当前打出」** 区域：大号展示 `last_discard` 牌面 |
 | R4 | 同步显示打出者：`本座 Sx 打出` / `S{n} 打出`；无当前弃牌时显示「暂无出牌」 |
@@ -35,12 +36,12 @@
 
 ## 2. 方案
 
-### 2.1 选中特效
+### 2.1 选中特效（实装）
 
-- 基准宽 `base_tw`（布局 `compute_tile_grid` 结果）  
-- 选中宽 `sel_tw = max(base_tw + 10, round(base_tw * 1.32))` 并偶数对齐（复用 photo cache）  
-- 样式：金黄粗边框 `highlightthickness≥3`、`bg` 深金/亮绿、`relief=raised`、略增 `padx`  
-- `_apply_hand_selection_styles`：对 `_hand_tile_widgets` 换 `image` 尺寸 + 样式，避免 destroy  
+- 基准宽 `base_tw`；**`selected_tile_tw(base) == base`（偶数对齐）— 不放大**  
+- 固定 chrome：`ht=2` 牌面环 + `face_hold` 外环；选中金黄 `#ffeb3b`，未选与桌面同色  
+- 有选中时其余手牌略压暗  
+- `_apply_hand_selection_styles`：仅改边框/底色，避免 destroy / 回流  
 
 ### 2.2 当前打出面板
 
@@ -70,7 +71,7 @@ def format_discard_actor(discard_seat, self_seat) -> str: ...
 | 路径 | 变更 |
 |------|------|
 | `docs/features/F0009_seat_select_current_discard.md` | 本规格 |
-| `players/seat_window.py` | 选中放大 + 当前打出面板 |
+| `players/seat_window.py` | 选中金框/高亮 + 当前打出面板 |
 | `tests/test_seat_ui.py` | helpers 单测 |
 | `docs/changelog.md` / README 索引 | 回写 |
 
@@ -78,8 +79,8 @@ def format_discard_actor(discard_seat, self_seat) -> str: ...
 
 ## 4. 验收
 
-- [x] 点选手牌：明显变大 + 金黄高亮；再点取消恢复  
-- [x] 换三张多选：已选最多 3 张均放大高亮  
+- [x] 点选手牌：**金黄边框/高亮**（不放大）；再点取消恢复  
+- [x] 换三张多选：已选最多 3 张均高亮  
 - [x] 有人出牌后，各座位窗「当前打出」显示该牌 + 打出者座位  
 - [x] 本家出牌显示「本座 … 打出」  
 - [x] pytest 相关通过  
@@ -90,6 +91,8 @@ def format_discard_actor(discard_seat, self_seat) -> str: ...
 
 | 日期 | 内容 |
 |------|------|
-| 2026-07-10 | `selected_tile_tw` / `format_discard_actor`；`_apply_hand_selection_styles` 换大图+金边；`play_panel` 当前打出；测试 |
+| 2026-07-10 | `selected_tile_tw` / `format_discard_actor`；选中样式；`play_panel` 当前打出；测试 |
 | 2026-07-10 | 当前打出增加 `remain_of_tile_from_view` / `剩余 r 张 (可见 s/4)` |
 | 2026-07-10 | 当前打出增加 `format_wall_remaining_line`（牌墙总剩余）；此牌剩余文案区分 |
+| 2026-07-26 | **冻结不放大**；金双环 + 未选压暗；文档与代码对齐（一致性审计） |
+

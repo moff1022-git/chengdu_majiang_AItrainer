@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|-----|
 | **编号** | F0012 |
-| **状态** | **Approved + 实现**（用户直接要求功能） |
+| **状态** | **`Done`**（用户直接要求并实现） |
 | **依赖** | `rank_discards` / F0011（与 human_proxy 分析一致） |
 | **入口** | `players/seat_window.py`；逻辑 `players/analysis/discard_recommend.py` |
 

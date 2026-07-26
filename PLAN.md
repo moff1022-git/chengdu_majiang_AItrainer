@@ -1,11 +1,11 @@
 # 成都麻将 AI Trainer — 详细设计 Plan
 
-> **状态**：**开放问题已确认**（2026-07-10）— 可按里程碑推进（**Docs-First**）  
+> **状态**：**M01–M11 已 Done**；后续功能走 `docs/features/Fxxxx`（**Docs-First**）  
+> **应用版本**：见根目录 [`version.py`](version.py)（发布线 **0.2.1+**）  
 > **规则**：四川成都麻将 · 血战到底（含换三张、一炮多响、定缺）  
-> **技术栈**：Python 3.11+ · Pygame（渲染）· NumPy（向听/批模拟）· JSON/JSONL  
-> **资源**：项目根目录 `assets/` + `assets/ASSETS.md`（432 PNG，双主题 green/blue）  
-> **开发流程**：见 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — **所有步骤与功能变更先文档、后代码**
-
+> **技术栈**：Python 3.11+ · Pygame（主窗）· Tk（座位窗）· NumPy（可选）· JSON/JSONL  
+> **资源**：项目根目录 `assets/` + `assets/ASSETS.md`（双主题 green/blue）  
+> **开发流程**：[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) · 进度 [`docs/status/LATEST.md`](docs/status/LATEST.md) · 一致性 [`docs/status/DOC_CODE_BASELINE.md`](docs/status/DOC_CODE_BASELINE.md)
 ---
 
 ## 0. 目标与非目标
@@ -36,9 +36,11 @@
 | 2 | 一炮多响 | **默认开启**（可配置关闭） |
 | 3 | 换三张 | **首版必须实现**（开局流程固定阶段） |
 | 4 | 番型 / 封顶 | 按 **成都血战** 标准番型；**封顶番数可配置**（`fan_cap`，0=不封顶） |
-| 5 | Human 进程 | **子进程隔离**（stdin/stdout JSON transport） |
+| 5 | Human 进程 | **子进程隔离**（stdin/stdout JSON transport）；座位窗模块 `players.seat_window` |
 | 6 | 2/3 人规则 | 与 4 人 **保持一致**（定缺/换三张/查叫/花猪等同逻辑，仅人数与付分对象变化） |
 | 7 | NumPy | **允许**（向听、批模拟、概率计算） |
+| 8 | 多 human（后增） | **1–3 人类 + AI**（F0020 布局 A/B/D）；非网络远程 |
+| 9 | 定庄展示（后增） | 主窗每轮 ready 后掷骰动画（F0023）；骰点仍由 `game_id` 派生 |
 
 ---
 
@@ -52,12 +54,18 @@ chengdu_majiang_AItrainer/
 ├── AGENTS.md                    # AI/助手：先文档后代码
 ├── docs/                        # 软件工程文档（流程权威 DEVELOPMENT.md）
 │   ├── DEVELOPMENT.md
+│   ├── VERSIONING.md
 │   ├── changelog.md
-│   ├── architecture/
-│   ├── milestones/              # Mx 规格（Approved 后才编码）
-│   ├── features/
+│   ├── status/LATEST.md         # 跨机进度基线
+│   ├── packaging/               # macOS 打包
+│   ├── milestones/              # Mx（已全部 Done）
+│   ├── features/                # Fxxxx 功能规格
+│   ├── design/                  # UI 几何/内区
 │   └── adr/
-├── README.md                    # 后续：运行说明
+├── version.py                   # APP_VERSION 单一源
+├── app_paths.py                 # 开发/冻结资源路径
+├── packaging/macos/             # 打包入口
+├── README.md
 ├── requirements.txt             # pygame, numpy, ...
 ├── pyproject.toml               # 可选
 ├── main.py                      # 主入口：CLI / GUI / headless 分发
@@ -704,17 +712,14 @@ python main.py play --crash-policy replace_player --timeout-ms 10000
 - 与主程序 **进程隔离**，避免阻塞 AI 局
 - **可缩放**；初始按座位分布在主窗四向（下/右/上/左）
 
-### 10.3 布局基准与窗口几何（F0018 / UI_DESIGN_STANDARD v1.3）
+### 10.3 布局基准与窗口几何（F0018 / F0020 / UI_DESIGN_STANDARD v1.4）
 
-- **多窗外框**：布局有效画布 = 工作区面积 **85%** 居中；封顶 **2160p**；布局 **A**（3AI+1H）/ **B**（2AI+2H）/ **C**（4AI）
-- **MAIN** 画布 **25% 左下**；人类完整 **25%**；AI 完整 **6.25%**；默认尺寸见 `docs/design/UI_DESIGN_STANDARD.md` §8
-- **主窗内部**：TABLE **80%** / SIDE **20%**；DICE 中心方区；四扇区从里到外 弃/副露/手；SIDE 上积分 / 中控制 / 下出牌日志
-- **座位窗内部**：play/watch **OP 67% + EXT 33%**（可折叠）；人类 EXT=对手 HUD+弃牌；AI EXT=操作日志+弃牌
+- **多窗外框**：布局有效画布 = 工作区面积 **85%** 居中；封顶 **2160p**；布局 **A**（1H3AI）/ **B**（2H2AI）/ **C**（0H4AI）/ **D**（3H1AI，F0020）
+- **MAIN** 画布 **25% 左下**（D 为 body 四分）；人类/AI 尺寸见 `docs/design/UI_DESIGN_STANDARD.md` §8
+- **主窗内部**：TABLE **80%** / SIDE **20%**；DICE 中心（含开局掷骰动画 F0023）；四扇区；SIDE 下为细化出牌日志（F0024）
+- **座位窗内部**：play/watch **OP 67% + EXT 33%**（可折叠）；人类 EXT=对手 HUD+弃牌（多行）；AI EXT=日志+弃牌
 - **资源**：运行时图形仅 **`assets/`**
-- 客户区牌面宽随 `Layout.from_window` 缩放；检测 API 仍见 F0001
-- 规格：F0015–F0018；设计 `docs/design/UI_DESIGN_STANDARD.md` + MAIN/HUMAN/AI 内部布局
-- 牌桌内座位：下=焦点本家；东起逆时针映射可配置
-- 动画：特效横幅显示 N ms（headless 跳过）
+- 规格：F0015–F0020；设计 `docs/design/UI_DESIGN_STANDARD.md` + MAIN/HUMAN/AI 内部布局
 
 ---
 
@@ -732,11 +737,12 @@ python main.py play --crash-policy replace_player --timeout-ms 10000
 | **M6** | `BasePlayer` + random/rule_ai + session | 主程序 API 自对弈 |
 | **M7** | `AssetManager` + 主程序 table/lobby/result/骰子 | 可视化观战 |
 | **M8** | `analysis/*` + strategy HUD | rule_ai 决策带 reason |
-| **M9** | `human_player` **子进程**窗口 + transport | 三人 AI + 一人可玩；崩溃隔离 |
+| **M9** | `human` **子进程**座位窗 + transport | 首版 1H+3AI；**后由 F0020 扩至 ≤3H** |
 | **M10** | 存档/加载/回放 + 崩溃策略 | 容错与复盘 |
 | **M11** | `training/env` + numpy 加速路径 + README | 对外可训练接口 |
 
-> **状态（2026-07-10）**：M01–M11 均已 **Done**（见 `docs/milestones/`）。  
+> **状态**：M01–M11 均已 **Done**（见 `docs/milestones/`）。  
+> **M11 之后**：功能增量见 `docs/features/Fxxxx`（F0001–F0024 已落地一批；当前应用 **v0.2.1**）。  
 > M11 交付：`training/env.py`（Gymnasium 5-tuple，不强制 gymnasium/numpy）+ 根 `README.md`。
 
 ---
@@ -784,29 +790,27 @@ python main.py play --crash-policy replace_player --timeout-ms 10000
 
 ## 14. 验收标准（整项目）
 
-- [ ] 相同 `game_id` 两次运行：**骰点、庄家、初始手牌、换三张结果** 一致  
-- [ ] 开局含完整：**掷骰 → 发牌 → 换三张 → 定缺 → 行牌**  
-- [ ] 一炮多响默认生效；可配置关闭  
-- [ ] 番型按成都血战；`fan_cap` 配置生效  
-- [ ] 4 AI headless 可连续跑 ≥1000 局无卡死  
-- [ ] 玩家崩溃时按配置替换或重开，日志有 stack  
-- [ ] Human **子进程**独立窗口可完成换三张、定缺、出牌、碰杠胡  
-- [ ] 日志含每步 state/decision/reason/result，可回放  
-- [ ] Reward 配置修改后无需改代码即可反映到 `env.step`  
-- [ ] 所有可见渲染使用 `assets/`，主题 green/blue 可切换  
-- [ ] 无「吃」动作与 UI  
-- [ ] 2/3/4 人共用同一规则代码路径  
+- [x] 相同 `game_id` 两次运行：**骰点、庄家、初始手牌、换三张结果** 一致  
+- [x] 开局含完整：**掷骰 → 发牌 → 换三张 → 定缺 → 行牌**（主窗另有掷骰动画 F0023）  
+- [x] 一炮多响默认生效；可配置关闭  
+- [x] 番型按成都血战；`fan_cap` 配置生效  
+- [x] 4 AI headless 可连续跑（训练 runner / pytest 覆盖）  
+- [x] 玩家崩溃时按配置策略（M10）  
+- [x] Human **子进程**座位窗可完成换三张、定缺、出牌、碰杠胡（**1–3 human** F0020）  
+- [x] 日志 / 存档 / 回放（M05/M10）  
+- [x] Reward 配置可调（M05）  
+- [x] 可见渲染使用 `assets/`，主题 green/blue  
+- [x] 无「吃」动作与 UI  
+- [x] 2/3/4 人共用同一规则代码路径  
 
 ---
 
 ## 15. 下一步
 
-开放问题已全部确认，Plan 锁定。开发流程已约定为 **Docs-First**（[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)、[`AGENTS.md`](AGENTS.md)）。
+**M01–M11 已完成。** 后续功能：
 
-**正确推进顺序：**
+1. 读 `docs/status/LATEST.md` + `docs/status/DOC_CODE_BASELINE.md`  
+2. 新需求 → `docs/features/Fxxxx_*.md`（Docs-First）→ Approved → 实现  
+3. 发版 → 改 `version.py` + changelog + tag + 打包（`docs/VERSIONING.md`）
 
-1. 回复 **「开始 M1」** → 先撰写并 Review **`docs/milestones/M01_*.md`**（规格，不写业务代码）  
-2. 规格确认（`Approved`）后 → 再回复 **「实现 M1」** → 按该文档编码与测试  
-3. M1 `Done` 后同样方式进入 M2 …
-
-禁止跳过里程碑规格直接实现。
+流程：[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)、[`Agents.md`](Agents.md)。

@@ -19,17 +19,17 @@
 | F0006 | [F0006_seat_responsive_layout.md](F0006_seat_responsive_layout.md) | 玩家视窗随窗缩放 + 牌面/按钮换行 | **Done** |
 | F0007 | [F0007_main_table_ui_panel.md](F0007_main_table_ui_panel.md) | 主窗统一牌面/换行/防遮挡/控制面板 | **Done** |
 | F0008 | [F0008_result_score_detail.md](F0008_result_score_detail.md) | 结算计分牌：各玩家积分明细 | **Done** |
-| F0009 | [F0009_seat_select_current_discard.md](F0009_seat_select_current_discard.md) | 选中牌高亮放大 + 当前打出牌面板 | **Done** |
+| F0009 | [F0009_seat_select_current_discard.md](F0009_seat_select_current_discard.md) | 选中金框高亮（**不放大**）+ 当前打出面板 | **Done** |
 | F0010 | [F0010_seat_opponent_hand_predict.md](F0010_seat_opponent_hand_predict.md) | 座位窗对手牌形 **Top-5** 联合场景预测 + 连续性/策略/向听/互斥 + 准确度 + 开关 | **Done**（算法 v2） |
-| F0010-ML | [F0010_mid_late_accuracy_plan.md](F0010_mid_late_accuracy_plan.md) | **中后期**准确度规则调整计划（M1→M2→L1→L2→L3） | **Approved** |
-| F0010-L2 | [F0010_L2_shanten_structure_plan.md](F0010_L2_shanten_structure_plan.md) | L2 向听表/结构/G4 固化 | **Approved+Done** |
-| F0010-L3 | [F0010_L3_ranking_plan.md](F0010_L3_ranking_plan.md) | L3 排序 T/MMR/blend/斩色合规 | **Approved+Done** |
-| F0010-S | [F0010_S_shanten_quality_plan.md](F0010_S_shanten_quality_plan.md) | **向听/候选质量** S0–S2 | **Approved + S0–S2 Done** |
+| F0010-ML | [F0010_mid_late_accuracy_plan.md](F0010_mid_late_accuracy_plan.md) | **中后期**准确度规则调整（M1→M2→L1→L2→L3） | **Done** |
+| F0010-L2 | [F0010_L2_shanten_structure_plan.md](F0010_L2_shanten_structure_plan.md) | L2 向听表/结构/G4 固化 | **Done** |
+| F0010-L3 | [F0010_L3_ranking_plan.md](F0010_L3_ranking_plan.md) | L3 排序 T/MMR/blend/斩色合规 | **Done** |
+| F0010-S | [F0010_S_shanten_quality_plan.md](F0010_S_shanten_quality_plan.md) | **向听/候选质量** S0–S2 | **Done**（S0–S2） |
 | F0010-DH | [F0010_discard_hand_assoc_plan.md](F0010_discard_hand_assoc_plan.md) | 出牌–手牌关联：前组合低相关 / 中后听牌低相关（排除定缺） | **Done** |
 | F0011 | [F0011_integrated_discard_advisor.md](F0011_integrated_discard_advisor.md) | **综合出牌**：F0010×废张×remain×进张/番×防放炮（A1–A6） | **Done** |
 | F0012 | [F0012_seat_discard_recommend_marks.md](F0012_seat_discard_recommend_marks.md) | 座位窗推荐出牌序号 + 听牌进张缩略图 | **Done** |
 | F0013 | [F0013_seat_dirty_update.md](F0013_seat_dirty_update.md) | 座位窗脏更新/控件复用 + broadcast 节流（减闪） | **Done** |
-| F0014 | [F0014_seat_layout_redesign.md](F0014_seat_layout_redesign.md) | 座位窗内容/视觉；多窗外框见 [UI_DESIGN_STANDARD](../design/UI_DESIGN_STANDARD.md) | **Draft** |
+| F0014 | [F0014_seat_layout_redesign.md](F0014_seat_layout_redesign.md) | 座位窗内容/视觉决议；外框见 [UI_DESIGN_STANDARD](../design/UI_DESIGN_STANDARD.md) | **Done**（几何移交） |
 | F0015 | [F0015_main_window_interior_layout.md](F0015_main_window_interior_layout.md) | 主窗内部：左右 80/20、掷骰中心、四玩家扇区、侧栏三区 | **Done** |
 | F0016 | [F0016_human_window_interior_layout.md](F0016_human_window_interior_layout.md) | 人类窗内部：67/33、操作区四段、扩展区可折叠 | **Done** |
 | F0017 | [F0017_ai_window_interior_layout.md](F0017_ai_window_interior_layout.md) | AI 窗内部：67/33、只读手牌、扩展区日志+弃牌 | **Done** |
@@ -40,6 +40,8 @@
 | **F0022** | [F0022_lobby_result_human_chrome.md](F0022_lobby_result_human_chrome.md) | 大厅/结算与人类窗 UI 风格统一，分区防遮挡 | **Done** |
 | **F0023** | [F0023_main_dice_roll_display.md](F0023_main_dice_roll_display.md) | 主窗每轮开局掷骰过程与结果（定庄） | **Done** |
 | **F0024** | [F0024_play_log_detail.md](F0024_play_log_detail.md) | 主窗出牌日志细化（中文牌名/摸碰杠胡分） | **Done** |
-| F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | Review |
+| F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | **Review**（文档清单） |
+
+> **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.2.1**
 
 > **2026-07-11 交叉修订**：F0001 §13、F0002 §10、F0003 §3.3.1、F0004 全文补丁、F0005 §3.2/§10。日终复盘见 [`docs/status/2026-07-11.md`](../status/2026-07-11.md)。

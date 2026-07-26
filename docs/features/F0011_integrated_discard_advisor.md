@@ -4,24 +4,23 @@
 |------|-----|
 | **编号** | F0011 |
 | **标题** | Integrated discard advisor (F0010 + remain + offense + defense) |
-| **状态** | **`Approved` + 实现 A1–A6**（用户「直接确认 a1-a6 并全部实现」） |
+| **状态** | **`Done`（A1–A6）**（用户「直接确认 a1-a6 并全部实现」） |
 | **动机** | 用户要求：对手牌预测 + 对手「不要的牌」+ remain + 本家可能摸牌，综合指导拆牌/出牌；**抬胡率/高分胡，降放炮率** |
 | **依赖** | F0010 联合预测、`remain_map`、`rank_discards`、`danger`、`estimate_opponents`、`engine.shanten` / `fan` |
 | **非目标（本版）** | 端到端 RL；改血战计分规则；替代 engine 合法性 |
 
 ---
 
-## 1. 现状缺口（复核）
+## 1. 实现前缺口（历史；A1–A6 已落地）
 
-| 模块 | 现状 | 缺口 |
-|------|------|------|
-| **F0010** `hand_predict` | 对手完整手牌 Top-K 联合场景 | **未接入**本家出牌排序 |
-| **strategy** `rank_discards` | `score = -4·sh + 0.15·uke − danger_penalty` | 无 F0010；无番期望；危险来自粗 `likely_waits` |
-| **danger** | 现物 + 对手 `tenpai_prob`/`likely_waits` | waits 为弃牌邻张启发式，**非** F0010 听口 |
-| **opponent_model** | 听牌概率 ∝ 副露/弃牌/墙 | 与 F0010 策略/向听脱节 |
-| **fan** | engine 有番表 | 出牌建议**未**估「若胡可得期望番」 |
+| 模块 | 实现前缺口 | 现状（v0.2.1） |
+|------|------------|----------------|
+| **F0010** `hand_predict` | 未接入本家出牌排序 | `integrated_discard` / `pipeline` 已接联合场景 |
+| **strategy** `rank_discards` | 无 F0010 / 番期望 | F0011 路径已综合 |
+| **danger** | 粗 `likely_waits` | 仍可用；F0011 增强防放炮项 |
+| **fan** | 出牌建议未估期望番 | A 系列已纳入 |
 
-**结论**：攻防与摸牌效率已有雏形，但「对手不要什么 / 还可能摸什么 / 胡多大」三条链未打通。
+**结论（历史）**：曾缺「对手不要什么 / 摸什么 / 胡多大」贯通；**现已 Done**。
 
 ---
 

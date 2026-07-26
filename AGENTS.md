@@ -40,3 +40,8 @@
 
 8. **技术基线**  
    遵守 `PLAN.md`：engine 权威、players 可插拔、Human 子进程、game_id 可复现、允许 numpy/pygame。
+
+9. **版本与一致性**  
+   应用版本仅改 `version.py`（见 `docs/VERSIONING.md`）；发版写 changelog + LATEST + tag。  
+   文档与代码冲突时先对齐文档或代码，并更新 `docs/status/DOC_CODE_BASELINE.md`。  
+   新 session 读序：`LATEST.md` → `DOC_CODE_BASELINE.md`（可选）→ changelog → 相关 F/M。

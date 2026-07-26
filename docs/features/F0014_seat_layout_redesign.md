@@ -4,7 +4,7 @@
 |------|-----|
 | **编号** | F0014 |
 | **标题** | Seat/main layout redesign: asset style unity, keep settings, two pack layouts |
-| **状态** | `Draft`（内容/视觉/元素表；**布局几何已移交**） |
+| **状态** | **`Done`（几何移交完成）** — 外框权威 [`UI_DESIGN_STANDARD`](../design/UI_DESIGN_STANDARD.md) v1.4 + F0018/F0020；本文保留内容/视觉决议 |
 | **类型** | UI 信息架构 / 座位窗内容与视觉 |
 | **依赖** | F0001、F0002、F0006、F0012、F0013 |
 | **布局几何权威** | **[`docs/design/UI_DESIGN_STANDARD.md`](../design/UI_DESIGN_STANDARD.md)**（**v1.4+**：A/B/C/D；2H/3H 见 F0020） |

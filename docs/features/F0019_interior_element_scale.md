@@ -4,7 +4,7 @@
 |------|-----|
 | **编号** | F0019 |
 | **标题** | Interior element uniform scale from 1080p baseline |
-| **状态** | **`Approved` + 实现**（用户：先文档后直接实现） |
+| **状态** | **`Done`**（已实现；用户：先文档后直接实现） |
 | **类型** | UI 适配 / 布局不变、元素缩放 |
 | **依赖** | F0018（外框与内部分区已落地）；UI_DESIGN_STANDARD §8 |
 | **关联** | `display/interior_scale.py`、`layout.py`、`main_interior.py`、`table_view.py`、`control_panel.py`、`players/seat_window.py`、`players/view/responsive.py` |

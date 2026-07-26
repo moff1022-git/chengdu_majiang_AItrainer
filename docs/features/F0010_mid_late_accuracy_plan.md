@@ -4,7 +4,7 @@
 |------|-----|
 | **编号** | F0010-ML（F0010 子计划） |
 | **标题** | Mid/late phase accuracy rule adjustment plan |
-| **状态** | **`Approved`**（2026-07-12 用户确认；分批「实现 Mx」后再改代码） |
+| **状态** | **`Done`（M1–L3 已实现）** — 原批注「实现后再改代码」已过时；详见本文 §8 与 `hand_predict.py` |
 | **基线数据** | 100 局 seed=42：`docs/status/F0010_phase_accuracy_progression.md` |
 | **规则清单** | `docs/features/F0010_inference_rules_inventory.md` |
 | **实现入口** | `players/analysis/hand_predict.py`（主）；评估 `tools/eval_hand_predict.py` |

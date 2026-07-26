@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（文档审计）
+
+### 文档 — 全面一致性修正
+
+- 新增 [`docs/status/DOC_CODE_BASELINE.md`](status/DOC_CODE_BASELINE.md)
+- 对齐 F0009 实装（选中不放大）、F0014 Done、M09 多 human 演进、状态索引与 README/PLAN/LATEST
+- 远程：Release v0.2.1 已挂 zip；tag/下一步文档去陈旧项
+
 ## 0.2.1 — 2026-07-26
 
 文档完善后的功能补丁发布（相对 **0.2.0**）。单一源：`version.py`。
