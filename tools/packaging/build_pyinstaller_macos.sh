@@ -14,6 +14,11 @@ fi
 echo "==> Installing PyInstaller (if needed)"
 "$PY" -m pip install -q "pyinstaller>=6.0"
 
+APP_VERSION="$("$PY" -c 'from version import APP_VERSION; print(APP_VERSION)')"
+BUNDLE_ID="$("$PY" -c 'from version import APP_BUNDLE_ID; print(APP_BUNDLE_ID)')"
+APP_NAME="$("$PY" -c 'from version import APP_NAME; print(APP_NAME)')"
+echo "==> App version ${APP_VERSION}"
+
 OUT="${ROOT}/dist/pyinstaller"
 WORK="${ROOT}/build/pyinstaller"
 rm -rf "$OUT" "$WORK"
@@ -28,8 +33,8 @@ echo "==> PyInstaller (CLI onedir + windowed app) → $OUT"
   --noconfirm \
   --clean \
   --windowed \
-  --name ChengduMahjongAITrainer \
-  --osx-bundle-identifier com.moff.chengdu-majiang-aitrainer \
+  --name "${APP_NAME}" \
+  --osx-bundle-identifier "${BUNDLE_ID}" \
   --paths "$ROOT" \
   --distpath "$OUT" \
   --workpath "$WORK" \
@@ -37,6 +42,7 @@ echo "==> PyInstaller (CLI onedir + windowed app) → $OUT"
   --add-data "${ROOT}/assets:assets" \
   --add-data "${ROOT}/configs:configs" \
   --hidden-import app_paths \
+  --hidden-import version \
   --hidden-import main \
   --hidden-import players.seat_window \
   --hidden-import players.human_proxy \
@@ -70,28 +76,38 @@ if [[ "${BUILD_SPEC:-0}" == "1" ]]; then
 fi
 
 echo ""
-echo "Done. Artifacts:"
+echo "Done. Artifacts (app version ${APP_VERSION}):"
 ls -la "$OUT" || true
-APP="$OUT/ChengduMahjongAITrainer.app"
+APP="$OUT/${APP_NAME}.app"
 # PyInstaller 6 may nest onedir then BUNDLE, or put .app at dist root
 if [[ ! -d "$APP" ]]; then
-  APP="$(find "$OUT" -maxdepth 3 -name 'ChengduMahjongAITrainer.app' -type d | head -1 || true)"
+  APP="$(find "$OUT" -maxdepth 3 -name "${APP_NAME}.app" -type d | head -1 || true)"
 fi
 
 if [[ -n "${APP:-}" && -d "$APP" ]]; then
+  # Stamp Info.plist short version from version.py
+  PLIST="$APP/Contents/Info.plist"
+  if [[ -f "$PLIST" ]]; then
+    /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" "$PLIST" 2>/dev/null \
+      || /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string ${APP_VERSION}" "$PLIST" 2>/dev/null \
+      || true
+    /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_VERSION}" "$PLIST" 2>/dev/null \
+      || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${APP_VERSION}" "$PLIST" 2>/dev/null \
+      || true
+  fi
   echo ""
-  echo "App: $APP"
+  echo "App: $APP  (v${APP_VERSION})"
   echo "Run:"
   echo "  open \"$APP\""
-  echo "  \"$APP/Contents/MacOS/ChengduMahjongAITrainer\""
+  echo "  \"$APP/Contents/MacOS/${APP_NAME}\""
   echo ""
   echo "Clear quarantine if needed:"
   echo "  xattr -cr \"$APP\""
-  # Smoke: binary exists and --help / seat-window -h
-  BIN="$APP/Contents/MacOS/ChengduMahjongAITrainer"
+  BIN="$APP/Contents/MacOS/${APP_NAME}"
   if [[ -x "$BIN" ]]; then
-    echo "==> Smoke: --seat-window --help"
-    "$BIN" --seat-window --help 2>&1 | head -20 || true
+    echo "==> Smoke: --version / --seat-window --help"
+    "$BIN" --version 2>&1 | head -5 || true
+    "$BIN" --seat-window --help 2>&1 | head -12 || true
   fi
 else
   echo "WARN: .app not found; listing $OUT" >&2
@@ -99,5 +115,5 @@ else
 fi
 
 echo ""
-echo "Docs: docs/packaging/MACOS_BUILD.md"
+echo "Docs: docs/packaging/MACOS_BUILD.md · docs/VERSIONING.md"
 echo "Logs (when frozen): ~/Library/Application Support/ChengduMahjongAITrainer/logs/"

@@ -52,6 +52,15 @@ from players.registry import create_players
 Scene = Literal["lobby", "table", "result"]
 
 
+def _main_window_caption() -> str:
+    try:
+        from version import APP_VERSION
+
+        return f"成都麻将AI训练器 v{APP_VERSION} — 主程序"
+    except Exception:
+        return "成都麻将AI训练器 — 主程序"
+
+
 def _parse_parts(spec: str) -> list[str]:
     return [p.strip() for p in spec.split(",") if p.strip()]
 
@@ -122,7 +131,7 @@ class MahjongApp:
         self.screen = open_resizable_window(
             (mw, mh),
             pos=(main.x, main.y),
-            caption="Chengdu Mahjong AI Trainer — 主程序",
+            caption=_main_window_caption(),
             min_size=(mw, mh),
         )
         # Do not probe pygame._sdl2 for actual window screen (macOS SEGV).
@@ -364,7 +373,7 @@ class MahjongApp:
                 self.screen = pygame.display.get_surface()
             if self.screen is None:
                 raise RuntimeError("display surface missing after pin")
-            pygame.display.set_caption("Chengdu Mahjong AI Trainer — 主程序")
+            pygame.display.set_caption(_main_window_caption())
             self.layout = Layout.from_window(mw, mh)
             self.table.resize(mw, mh)
             raise_main_window()

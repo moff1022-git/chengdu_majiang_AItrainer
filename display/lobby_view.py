@@ -88,10 +88,16 @@ class LobbyView:
             )
             subtitle_y = title_y + 48
 
+        try:
+            from version import APP_VERSION
+
+            ver_s = f"v{APP_VERSION}"
+        except Exception:
+            ver_s = ""
         draw_text(
             screen,
-            "游戏封面 · 设置后点击「开始」进入对局",
-            (cx - 180, subtitle_y),
+            f"游戏封面 · 设置后点击「开始」进入对局  {ver_s}".rstrip(),
+            (cx - 200, subtitle_y),
             size=18,
             color=(255, 230, 140),
         )

@@ -18,6 +18,12 @@
 - 依赖见 `requirements.txt`（运行时需要 `pygame`；训练 env **不**依赖 gymnasium）
 - macOS 座位窗需要 **tkinter**（Homebrew：`brew install python-tk@3.12`）
 
+## 版本
+
+- **当前应用版本**：见根目录 [`version.py`](version.py)（`APP_VERSION`）  
+- **规则**：[docs/VERSIONING.md](docs/VERSIONING.md)（SemVer；与存档 schema / 座位协议分线）  
+- 查询：`.venv/bin/python main.py --version`
+
 ## macOS 打包（PyInstaller / Nuitka）
 
 无需本机 Python 即可分发 `.app`：

@@ -3,7 +3,32 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 0.2.0 — 2026-07-26
+
+首个按 [`docs/VERSIONING.md`](VERSIONING.md) 管理的应用版本（SemVer 单一源 `version.py`）。
+
+### 新增
+- **版本管理规则** `docs/VERSIONING.md`；`version.py`（`APP_VERSION=0.2.0`）
+- CLI：`main.py --version` / `-V`
+- UI：主窗标题、大厅副标题、座位窗标题栏显示 `v0.2.0`
+- 打包脚本从 `version.py` 读取版本并写入 Info.plist
+
+### 累计能力（相对项目早期）
+- F0020 2H/3H 布局 B/D；F0021 macOS PyInstaller/Nuitka 打包
+- 座位窗胡牌横幅、副露中文/手牌同尺寸、选中金框等
+
+### 内部版本线（非 APP）
+- 存档 schema：4 · format：1 · 座位协议：1
+
+---
+
 ## 2026-07-26
+
+### 工程 — 版本管理规则（v0.2.0）
+
+- 权威：`docs/VERSIONING.md`；源：`version.py`
+- 接入：`main.py`、`display/app.py`、`lobby_view`、`seat_window`、打包脚本
+- 测：`tests/test_version.py`
 
 ### 工程 — macOS 打包（F0021 · PyInstaller + Nuitka）
 

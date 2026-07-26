@@ -14,6 +14,11 @@ fi
 echo "==> Installing Nuitka (if needed)"
 "$PY" -m pip install -q "nuitka>=2.0" ordered-set zstandard
 
+APP_VERSION="$("$PY" -c 'from version import APP_VERSION; print(APP_VERSION)')"
+APP_NAME_ZH="$("$PY" -c 'from version import APP_NAME_ZH; print(APP_NAME_ZH)')"
+APP_NAME="$("$PY" -c 'from version import APP_NAME; print(APP_NAME)')"
+echo "==> App version ${APP_VERSION}"
+
 OUT="${ROOT}/dist/nuitka"
 rm -rf "$OUT"
 mkdir -p "$OUT"
@@ -28,7 +33,8 @@ set +e
 "$PY" -m nuitka \
   --standalone \
   --macos-create-app-bundle \
-  --macos-app-name="成都麻将AI训练器" \
+  --macos-app-name="${APP_NAME_ZH}" \
+  --macos-app-version="${APP_VERSION}" \
   --macos-app-icon=none \
   --enable-plugin=tk-inter \
   --include-package=engine \
@@ -38,10 +44,11 @@ set +e
   --include-package=training \
   --include-module=main \
   --include-module=app_paths \
+  --include-module=version \
   --include-data-dir="${ROOT}/assets=assets" \
   --include-data-dir="${ROOT}/configs=configs" \
   --output-dir="$OUT" \
-  --output-filename=ChengduMahjongAITrainer \
+  --output-filename="${APP_NAME}" \
   --assume-yes-for-downloads \
   "$ENTRY"
 STATUS=$?
@@ -60,43 +67,45 @@ if [[ $STATUS -ne 0 ]]; then
     --include-package=training \
     --include-module=main \
     --include-module=app_paths \
+    --include-module=version \
     --include-data-dir="${ROOT}/assets=assets" \
     --include-data-dir="${ROOT}/configs=configs" \
     --output-dir="$OUT" \
-    --output-filename=ChengduMahjongAITrainer \
+    --output-filename="${APP_NAME}" \
     --assume-yes-for-downloads \
     "$ENTRY"
 fi
 
 # Nuitka names the .app after the entry script (pyinstaller_entry.app) — normalize
 if [[ -d "$OUT/pyinstaller_entry.app" ]]; then
-  rm -rf "$OUT/ChengduMahjongAITrainer.app"
-  mv "$OUT/pyinstaller_entry.app" "$OUT/ChengduMahjongAITrainer.app"
+  rm -rf "$OUT/${APP_NAME}.app"
+  mv "$OUT/pyinstaller_entry.app" "$OUT/${APP_NAME}.app"
 fi
 
 echo ""
-echo "Done. Artifacts under $OUT:"
+echo "Done. Artifacts under $OUT (v${APP_VERSION}):"
 ls -la "$OUT" || true
-find "$OUT" -maxdepth 3 \( -name "*.app" -o -name "ChengduMahjongAITrainer*" \) 2>/dev/null | head -40
+find "$OUT" -maxdepth 3 \( -name "*.app" -o -name "${APP_NAME}*" \) 2>/dev/null | head -40
 
-APP="$OUT/ChengduMahjongAITrainer.app"
+APP="$OUT/${APP_NAME}.app"
 if [[ -d "$APP" ]]; then
   echo ""
-  echo "App: $APP"
+  echo "App: $APP  (v${APP_VERSION})"
   echo "NOTE: Nuitka aborts if the .app lives under non-ASCII paths (e.g. Chinese OneDrive)."
   echo "Smoke-test via /tmp copy:"
-  rm -rf /tmp/ChengduMahjongAITrainer.app
-  cp -R "$APP" /tmp/ChengduMahjongAITrainer.app
-  BIN="/tmp/ChengduMahjongAITrainer.app/Contents/MacOS/ChengduMahjongAITrainer"
+  rm -rf "/tmp/${APP_NAME}.app"
+  cp -R "$APP" "/tmp/${APP_NAME}.app"
+  BIN="/tmp/${APP_NAME}.app/Contents/MacOS/${APP_NAME}"
   if [[ -x "$BIN" ]]; then
-    echo "==> Smoke: --seat-window --help (from /tmp)"
-    "$BIN" --seat-window --help 2>&1 | head -16 || true
+    echo "==> Smoke: --version / --seat-window --help (from /tmp)"
+    "$BIN" --version 2>&1 | head -5 || true
+    "$BIN" --seat-window --help 2>&1 | head -12 || true
   fi
   echo "Recommended run:"
   echo "  cp -R \"$APP\" /Applications/"
-  echo "  open /Applications/ChengduMahjongAITrainer.app"
+  echo "  open /Applications/${APP_NAME}.app"
 fi
 
 echo ""
-echo "Docs: docs/packaging/MACOS_BUILD.md"
+echo "Docs: docs/packaging/MACOS_BUILD.md · docs/VERSIONING.md"
 echo "Logs (frozen): ~/Library/Application Support/ChengduMahjongAITrainer/logs/"

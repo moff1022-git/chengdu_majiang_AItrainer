@@ -3460,8 +3460,14 @@ class TkSeatApp:
     def _refresh_chrome(self) -> None:
         role = "人类操作" if self.mode == "play" else "AI 观战"
         rnd = format_round_line(self.ready_round, self.num_rounds)
+        try:
+            from version import APP_VERSION
+
+            ver = f"  v{APP_VERSION}"
+        except Exception:
+            ver = ""
         self.hdr.config(
-            text=f"座位 S{self.seat}  [{role}]  {rnd}  phase={self.phase}"
+            text=f"座位 S{self.seat}  [{role}]  {rnd}  phase={self.phase}{ver}"
         )
         self.status.config(text=self.status_note)
         try:

@@ -165,6 +165,14 @@ docs/
 | `PLAN.md` | 系统级总设计（产品与架构基线） |
 | `assets/ASSETS.md` | 图形资源契约 |
 | `docs/DEVELOPMENT.md` | **开发流程权威** |
+| `version.py` | **应用版本单一源**（见 [`docs/VERSIONING.md`](VERSIONING.md)） |
+| `docs/VERSIONING.md` | **版本管理规则权威**（SemVer、schema/协议分线、发版清单） |
+
+### 版本管理（摘要）
+
+- 应用版本：SemVer，**只**在 `version.py` 修改。  
+- 发版：bump → `changelog` 版本节 → `LATEST` → tag `vX.Y.Z` → 打包。  
+- 存档 `SCHEMA_VERSION` / 座位 `PROTOCOL_VERSION` 与应用版本**分离**，规则见 `VERSIONING.md`。  
 
 `PLAN.md` 描述「做什么、系统怎么拆」；`docs/milestones/*` 描述「本步具体交付与验收」；冲突时以 **已确认的里程碑/ADR** 为准，并回写 `PLAN.md`。
 

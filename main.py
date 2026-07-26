@@ -221,7 +221,21 @@ def cmd_save_info(args: argparse.Namespace) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Chengdu Mahjong AI Trainer")
+    try:
+        from version import APP_DISPLAY, APP_VERSION
+    except Exception:
+        APP_VERSION = "0.0.0-dev"
+        APP_DISPLAY = "Chengdu Mahjong AI Trainer"
+
+    p = argparse.ArgumentParser(
+        description=f"Chengdu Mahjong AI Trainer ({APP_DISPLAY})",
+    )
+    p.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"%(prog)s {APP_VERSION}",
+    )
     sub = p.add_subparsers(dest="command")
 
     g = sub.add_parser("gui", help="Open graphical lobby")

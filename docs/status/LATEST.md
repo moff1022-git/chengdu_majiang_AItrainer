@@ -1,40 +1,39 @@
 # 进度快照
 
-> 2026-07-26 — **F0021 macOS 打包（PyInstaller + Nuitka）Done**
+> 2026-07-26 — **版本管理规则落地 · 应用 v0.2.0**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 目标 | 生成 mac 版打包（PyInstaller 与 Nuitka）+ 文档 |
-| 规格 | `docs/features/F0021_macos_packaging.md` · **Done** |
-| 手册 | `docs/packaging/MACOS_BUILD.md` |
-| 脚本 | `tools/packaging/build_pyinstaller_macos.sh` · `build_nuitka_macos.sh` |
-| 代码 | `app_paths.py`；资源/子进程路径；`main --seat-window` |
-| 产物 | `dist/pyinstaller/…app`（~199MB）· `dist/nuitka/…app`（~97MB） |
-| 冒烟 | 两款二进制 `--seat-window --help` 正常 |
+| 目标 | 建立版本管理规则，并更新文档与程序 |
+| 规则 | [`docs/VERSIONING.md`](../VERSIONING.md)（SemVer · 多版本线分离 · 发版清单） |
+| 单一源 | [`version.py`](../../version.py) → **`APP_VERSION = 0.2.0`** |
+| 程序 | CLI `--version`；主窗/大厅/座位窗展示 `v0.2.0`；打包读版本写 plist |
+| 流程 | `docs/DEVELOPMENT.md` 已链到 VERSIONING |
+| 测试 | `tests/test_version.py` |
 
-## 怎么构建
+## 当前版本基线
 
-```bash
-bash tools/packaging/build_pyinstaller_macos.sh
-bash tools/packaging/build_nuitka_macos.sh
-open dist/pyinstaller/ChengduMahjongAITrainer.app
-# 或
-open dist/nuitka/ChengduMahjongAITrainer.app
-```
+| 线 | 值 |
+|----|-----|
+| **应用** | **0.2.0** |
+| 存档 schema | 4 |
+| 存档 format | 1 |
+| 座位协议 | 1 |
 
-## 基线
+## 发版口令（摘要）
 
-| 项 | 状态 |
-|----|------|
-| F0020 2H/3H | Done |
-| 手牌选中 / 胡牌横幅 / 副露中文 | Done |
+1. 改 `version.py`  
+2. `docs/changelog.md` 增加 `## X.Y.Z`  
+3. 更新本文件  
+4. `git tag vX.Y.Z`  
+5. 打包脚本  
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 双击 .app 完整开局验收（1H+3AI） | 目视打包版 |
-| 2 | （可选）加应用图标 / codesign | `打包签名` |
-| 3 | （可选）Windows 打包文档 | `Windows 打包` |
+| 1 | 可选：`git tag v0.2.0` 并 push | `打 tag v0.2.0` |
+| 2 | 用当前版本重建 mac 包 | `重新打包` |
+| 3 | 双击 .app 完整验收 | 目视打包版 |

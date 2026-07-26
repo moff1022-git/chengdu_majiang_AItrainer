@@ -94,15 +94,28 @@ coll = COLLECT(  # type: ignore[name-defined]
     name="ChengduMahjongAITrainer",
 )
 
+# Version from single source (version.py)
+import sys
+
+sys.path.insert(0, str(ROOT))
+try:
+    from version import APP_BUNDLE_ID, APP_NAME, APP_NAME_ZH, APP_VERSION
+except Exception:
+    APP_VERSION = "0.0.0"
+    APP_NAME = "ChengduMahjongAITrainer"
+    APP_NAME_ZH = "成都麻将AI训练器"
+    APP_BUNDLE_ID = "com.moff.chengdu-majiang-aitrainer"
+
 app = BUNDLE(  # type: ignore[name-defined]
     coll,
-    name="ChengduMahjongAITrainer.app",
+    name=f"{APP_NAME}.app",
     icon=None,
-    bundle_identifier="com.moff.chengdu-majiang-aitrainer",
+    bundle_identifier=APP_BUNDLE_ID,
     info_plist={
-        "CFBundleDisplayName": "成都麻将AI训练器",
-        "CFBundleName": "ChengduMahjongAITrainer",
-        "CFBundleShortVersionString": "0.1.0",
+        "CFBundleDisplayName": APP_NAME_ZH,
+        "CFBundleName": APP_NAME,
+        "CFBundleShortVersionString": APP_VERSION,
+        "CFBundleVersion": APP_VERSION,
         "NSHighResolutionCapable": True,
         "LSRequiresAquaSystemAppearance": False,
     },

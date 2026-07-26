@@ -8,6 +8,7 @@
 | **工具** | [PyInstaller](https://pyinstaller.org/) · [Nuitka](https://nuitka.net/) |
 | **脚本** | `tools/packaging/build_pyinstaller_macos.sh` · `tools/packaging/build_nuitka_macos.sh` |
 | **规格** | [`docs/features/F0021_macos_packaging.md`](../features/F0021_macos_packaging.md) |
+| **版本** | 应用版本见 [`version.py`](../../version.py)；规则 [`docs/VERSIONING.md`](../VERSIONING.md) |
 
 ---
 
