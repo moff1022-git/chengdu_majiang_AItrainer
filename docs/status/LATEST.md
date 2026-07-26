@@ -1,6 +1,18 @@
 # 进度快照
 
-> 2026-07-26 — **版本管理规则落地 · 应用 v0.2.0**
+> 2026-07-26 — **Nuitka 产物已放回项目目录** `releases/macos/`
+
+## 本轮补充
+
+| 项 | 说明 |
+|----|------|
+| Nuitka 程序位置 | `dist/nuitka/ChengduMahjongAITrainer.app` + **`releases/macos/ChengduMahjongAITrainer-Nuitka.app`** |
+| 说明 | 大文件不进 git；Finder 可打开 `releases/macos/` |
+| 运行 | 项目路径含中文时请复制到 `/Applications` 再双击 |
+
+---
+
+> 此前：版本管理规则落地 · 应用 v0.2.0
 
 ## 本轮
 

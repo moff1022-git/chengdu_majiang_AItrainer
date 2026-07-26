@@ -143,8 +143,12 @@ bash tools/packaging/build_nuitka_macos.sh
 
 ```text
 dist/nuitka/
-  ChengduMahjongAITrainer.app   # 脚本会把 Nuitka 默认的 pyinstaller_entry.app 重命名
+  ChengduMahjongAITrainer.app   # 构建输出（脚本会把 pyinstaller_entry.app 重命名）
   pyinstaller_entry.build/      # 中间产物（可删）
+
+releases/macos/
+  ChengduMahjongAITrainer-Nuitka.app   # 同步到项目内便于查找（.gitignore，不进 git）
+  README.md
 ```
 
 实测（arm64）：首次约 1–3 分钟（视机器与 ccache）。

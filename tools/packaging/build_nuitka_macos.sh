@@ -89,8 +89,16 @@ find "$OUT" -maxdepth 3 \( -name "*.app" -o -name "${APP_NAME}*" \) 2>/dev/null 
 
 APP="$OUT/${APP_NAME}.app"
 if [[ -d "$APP" ]]; then
+  # Project-local release copy (easier to find than dist/nuitka/)
+  REL_DIR="${ROOT}/releases/macos"
+  REL_APP="${REL_DIR}/${APP_NAME}-Nuitka.app"
+  mkdir -p "$REL_DIR"
+  rm -rf "$REL_APP"
+  cp -R "$APP" "$REL_APP"
+  xattr -cr "$REL_APP" 2>/dev/null || true
   echo ""
-  echo "App: $APP  (v${APP_VERSION})"
+  echo "App (build):    $APP  (v${APP_VERSION})"
+  echo "App (project):  $REL_APP"
   echo "NOTE: Nuitka aborts if the .app lives under non-ASCII paths (e.g. Chinese OneDrive)."
   echo "Smoke-test via /tmp copy:"
   rm -rf "/tmp/${APP_NAME}.app"
@@ -101,8 +109,8 @@ if [[ -d "$APP" ]]; then
     "$BIN" --version 2>&1 | head -5 || true
     "$BIN" --seat-window --help 2>&1 | head -12 || true
   fi
-  echo "Recommended run:"
-  echo "  cp -R \"$APP\" /Applications/"
+  echo "Recommended run (ASCII path):"
+  echo "  cp -R \"$REL_APP\" /Applications/"
   echo "  open /Applications/${APP_NAME}.app"
 fi
 
