@@ -5,6 +5,12 @@
 
 ## 2026-07-26（续）
 
+### 修复 — 座位窗弃牌多行显示
+
+- **现象**：AI/人类「本家弃牌」像单行排，右侧裁切显示不全  
+- **修复**：按真实扩展区宽度多行换行（compact 牌面 + chrome）；多行时纵向可滚；标题显示行×列与张数  
+- 代码：`players/seat_window.py`；测：`test_discard_grid_multi_row_narrow_ext`
+
 ### UI — 大厅/结算对齐人类窗风格（F0022）
 
 - 共享色板与分区：`display/ui_chrome.py`（顶栏 / 底栏 / 面板 / 主次按钮）

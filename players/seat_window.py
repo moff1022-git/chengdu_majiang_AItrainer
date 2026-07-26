@@ -913,8 +913,31 @@ class TkSeatApp:
             padx=6,
         )
         self.disc_title.pack(fill="x")
-        self.disc_fr = tk.Frame(self.ext_bot, bg="#143528")
-        self.disc_fr.pack(fill="both", expand=True, pady=2, padx=2)
+        # Scrollable discard area (multi-row; overflow vertically scrollable)
+        self.disc_scroll_wrap = tk.Frame(self.ext_bot, bg="#143528")
+        self.disc_scroll_wrap.pack(fill="both", expand=True, pady=2, padx=2)
+        self.disc_canvas = tk.Canvas(
+            self.disc_scroll_wrap,
+            bg="#143528",
+            highlightthickness=0,
+            bd=0,
+        )
+        self.disc_scroll = tk.Scrollbar(
+            self.disc_scroll_wrap,
+            orient="vertical",
+            command=self.disc_canvas.yview,
+        )
+        self.disc_canvas.configure(yscrollcommand=self.disc_scroll.set)
+        self.disc_scroll.pack(side="right", fill="y")
+        self.disc_canvas.pack(side="left", fill="both", expand=True)
+        self.disc_fr = tk.Frame(self.disc_canvas, bg="#143528")
+        self._disc_canvas_win = self.disc_canvas.create_window(
+            (0, 0), window=self.disc_fr, anchor="nw", tags="disc"
+        )
+        self.disc_fr.bind("<Configure>", self._on_disc_inner_configure)
+        self.disc_canvas.bind("<Configure>", self._on_disc_canvas_configure)
+        self.disc_canvas.bind("<Enter>", self._bind_disc_mousewheel)
+        self.disc_canvas.bind("<Leave>", self._unbind_disc_mousewheel)
 
         # Initial strict place layout (67/33, 25/55, actions above settings)
         try:
@@ -2985,6 +3008,119 @@ class TkSeatApp:
             tw -= 1
         return max(8, tw)
 
+    def _on_disc_inner_configure(self, _event=None) -> None:
+        try:
+            self.disc_canvas.configure(scrollregion=self.disc_canvas.bbox("all"))
+        except Exception:
+            pass
+
+    def _on_disc_canvas_configure(self, event=None) -> None:
+        try:
+            w = int(getattr(event, "width", 0) or self.disc_canvas.winfo_width() or 0)
+            if w > 10:
+                self.disc_canvas.itemconfigure(self._disc_canvas_win, width=w)
+        except Exception:
+            pass
+
+    def _bind_disc_mousewheel(self, _event=None) -> None:
+        # Bind on canvas only — avoid bind_all fighting mid_canvas scroll
+        try:
+            self.disc_canvas.bind("<MouseWheel>", self._on_disc_mousewheel)
+            self.disc_canvas.bind("<Button-4>", self._on_disc_mousewheel)
+            self.disc_canvas.bind("<Button-5>", self._on_disc_mousewheel)
+        except Exception:
+            pass
+
+    def _unbind_disc_mousewheel(self, _event=None) -> None:
+        try:
+            self.disc_canvas.unbind("<MouseWheel>")
+            self.disc_canvas.unbind("<Button-4>")
+            self.disc_canvas.unbind("<Button-5>")
+        except Exception:
+            pass
+
+    def _on_disc_mousewheel(self, event) -> None:
+        try:
+            if getattr(event, "num", None) == 4 or getattr(event, "delta", 0) > 0:
+                self.disc_canvas.yview_scroll(-1, "units")
+            else:
+                self.disc_canvas.yview_scroll(1, "units")
+        except Exception:
+            pass
+
+    def _disc_area_width(self) -> int:
+        """Actual discard column width (prefer live geometry)."""
+        for fr in (
+            getattr(self, "disc_canvas", None),
+            getattr(self, "disc_fr", None),
+            getattr(self, "ext_bot", None),
+        ):
+            if fr is None:
+                continue
+            try:
+                fr.update_idletasks()
+                w = int(fr.winfo_width() or 0)
+                if w >= 60:
+                    return w
+            except Exception:
+                pass
+        try:
+            root_w = max(200, int(self.root.winfo_width()))
+        except Exception:
+            from display.interior_scale import AI_REF_W, HUMAN_REF_W
+
+            root_w = HUMAN_REF_W if self.mode == "play" else AI_REF_W
+        if getattr(self, "ext_expanded", True) and getattr(
+            self, "view_mode", "full"
+        ) == "full":
+            from players.seat_layout_play import OP_WIDTH_RATIO
+
+            return max(80, int(root_w * (1.0 - OP_WIDTH_RATIO)) - 16)
+        return max(80, int(getattr(self, "_cached_content_w", 0) or root_w // 2))
+
+    def _compute_disc_grid(self, n: int, sc) -> object | None:
+        """Multi-row discard grid; cell size matches compact tile chrome."""
+        from players.view.responsive import compute_tile_grid
+
+        n = max(0, int(n))
+        if n <= 0:
+            return None
+        disc_cw = self._disc_area_width()
+        # compact face: ht=2 each side → +4 chrome; small gap
+        gap = max(1, int(getattr(sc, "gap", 2) or 2) - 1)
+        chrome = 4 + gap  # L+R highlight for compact
+        min_tw = max(10, int(getattr(sc, "disc_tw", 16) or 16))
+        max_tw = max(min_tw, int(round(min_tw * 1.15)))
+        g = compute_tile_grid(
+            n,
+            disc_cw,
+            min_tw=min_tw,
+            max_tw=max_tw,
+            gap=gap,
+            margin=max(4, int(getattr(sc, "pad", 4) or 4)),
+            label_w=0,
+            max_rows=16,
+            cell_extra=chrome,
+        )
+        # Prefer wrapping: if many tiles still one row, cap per_row (~6–10)
+        if g.rows == 1 and n > 8:
+            import math
+
+            cap = max(4, min(10, g.per_row // 2 or 6))
+            pr = min(g.per_row, cap)
+            rows = max(1, int(math.ceil(n / float(pr))))
+            from players.view.responsive import TileGrid
+
+            g = TileGrid(
+                tw=g.tw,
+                th=g.th,
+                per_row=pr,
+                rows=rows,
+                gap=g.gap,
+                n=n,
+            )
+        return g
+
     def _pack_tiles_wrapped(
         self,
         parent,
@@ -3001,12 +3137,13 @@ class TkSeatApp:
         focus_tid: str | None = None,
         use_hand_index: bool = False,
         gap: int | None = None,
+        compact: bool | None = None,
     ) -> None:
         """Pack tiles into one or more rows (F0006 wrap). F0012: rec badge + ukeire.
 
         When ``use_hand_index`` is True (hand strip), selection uses hand index so
         duplicate tile_ids can be selected independently (换三张).
-        Hand uses gap=0 (tiles flush).
+        Hand uses gap=0 (tiles flush). Discard strips use compact multi-row.
         """
         selected_set = selected_set or set()
         selected_indices = selected_indices or set()
@@ -3014,10 +3151,13 @@ class TkSeatApp:
         ukeire_by_tid = ukeire_by_tid or {}
         # Hand: gap 0; other strips may keep small gap
         if gap is None:
-            gap = 0 if use_hand_index else 2
+            gap = 0 if use_hand_index else 1
         gap = max(0, int(gap))
+        if compact is None:
+            compact = bool(use_hand_index)
         body = self.tk.Frame(parent, bg="#143528")
-        body.pack(side="left", fill="both", expand=True)
+        # top+fill so multi-row discards stack vertically (not a single left strip)
+        body.pack(side="top", fill="both", expand=True, anchor="nw")
         if start_label and not use_hand_index:
             self.tk.Label(
                 body,
@@ -3036,7 +3176,7 @@ class TkSeatApp:
             if i % per_row == 0:
                 row_fr = self.tk.Frame(body, bg="#143528")
                 # center hand row: left half-tile spacer
-                row_fr.pack(anchor="w", pady=0 if use_hand_index else 1)
+                row_fr.pack(anchor="w", fill="x", pady=0 if use_hand_index else 1)
                 if side_m > 0:
                     self.tk.Frame(
                         row_fr, bg="#143528", width=side_m, height=1
@@ -3054,7 +3194,7 @@ class TkSeatApp:
             cmd = _click if clickable else None
             # cell: face only — ukeire waits go to floating panel (F0012)
             cell = self.tk.Frame(row_fr, bg="#143528")
-            cell.pack(side="left", padx=gap, pady=0 if use_hand_index else 2)
+            cell.pack(side="left", padx=gap, pady=0 if use_hand_index else 1)
             # Fixed ring thickness on face_hold so selection never reflows width
             face_hold = self.tk.Frame(
                 cell,
@@ -3074,7 +3214,7 @@ class TkSeatApp:
                 selected=sel,
                 cmd=cmd,
                 tw=tw,
-                compact=bool(use_hand_index),
+                compact=bool(compact),
             )
             b.pack()
             try:
@@ -4168,7 +4308,6 @@ class TkSeatApp:
         except Exception:
             pass
 
-        from players.view.responsive import compute_tile_grid
         from engine.tile import parse_tile, sorted_tiles
 
         # F0019: keep scale in sync even when obs arrives without Configure
@@ -4199,7 +4338,9 @@ class TkSeatApp:
         hand = [t.id for t in sorted_tiles(tiles)] + keep
         self.hand_ids = hand
         melds = list(me.get("melds") or [])
-        discs = list(me.get("discard_pile") or [])[-24:]
+        # Full pile (multi-row + scroll); keep a soft cap for extreme long games
+        raw_discs = list(me.get("discard_pile") or [])
+        discs = raw_discs[-48:] if len(raw_discs) > 48 else raw_discs
 
         # Hand: 14 tiles + ½ tile margin each side → tw = cw/15; gap=0
         import math
@@ -4244,35 +4385,8 @@ class TkSeatApp:
                         self._cached_content_w = cw2
         except Exception:
             pass
-        # Discard strip lives in EXT (~33% when expanded). Use stable geometry
-        # (not live winfo) so F0013 dirty fingerprints do not thrash on first paints.
-        try:
-            root_w = max(200, int(self.root.winfo_width()))
-        except Exception:
-            from display.interior_scale import AI_REF_W, HUMAN_REF_W
-
-            root_w = HUMAN_REF_W if self.mode == "play" else AI_REF_W
-        if getattr(self, "ext_expanded", True):
-            from players.seat_layout_play import OP_WIDTH_RATIO
-
-            disc_cw = max(80, int(root_w * (1.0 - OP_WIDTH_RATIO)) - 8)
-        else:
-            disc_cw = max(80, cw)
-        disc_grid = (
-            compute_tile_grid(
-                len(discs),
-                disc_cw,
-                min_tw=sc.disc_tw,
-                max_tw=max(sc.disc_tw, int(round(sc.disc_tw * 1.2))),
-                gap=max(1, sc.gap - 1),
-                margin=max(2, sc.pad // 2),
-                label_w=0,
-                max_rows=8,
-                cell_extra=max(2, sc.pad // 2),
-            )
-            if discs
-            else None
-        )
+        # Discard: multi-row wrap in EXT 33% band (compact tiles + real width)
+        disc_grid = self._compute_disc_grid(len(discs), sc) if discs else None
 
         opp_rows: list[dict] = []
         for p in view.get("players") or []:
@@ -4488,7 +4602,9 @@ class TkSeatApp:
                     tw=disc_grid.tw,
                     per_row=disc_grid.per_row,
                     clickable=False,
-                    start_label="弃牌",
+                    start_label=None,  # title already on disc_title
+                    compact=True,
+                    gap=max(0, int(getattr(disc_grid, "gap", 1) or 1)),
                 )
                 # Collect face labels for next inplace update
                 self._disc_tile_widgets = self._collect_face_labels(self.disc_fr)
@@ -4497,8 +4613,33 @@ class TkSeatApp:
                     int(disc_grid.tw),
                     int(disc_grid.per_row),
                 )
+                try:
+                    n_show = len(disc_ids)
+                    n_all = len(raw_discs)
+                    extra = (
+                        f" · 近{n_show}/{n_all}张"
+                        if n_all > n_show
+                        else f" · {n_show}张"
+                    )
+                    rows = int(getattr(disc_grid, "rows", 1) or 1)
+                    self.disc_title.config(
+                        text=f"本家弃牌{extra} · {rows}行×{disc_grid.per_row}列"
+                    )
+                except Exception:
+                    pass
+                try:
+                    self.disc_fr.update_idletasks()
+                    self._on_disc_inner_configure()
+                    # Jump to bottom so latest discards are visible
+                    self.disc_canvas.yview_moveto(1.0)
+                except Exception:
+                    pass
             else:
                 self._disc_layout_key = (0, 0, 0)
+                try:
+                    self.disc_title.config(text="本家弃牌")
+                except Exception:
+                    pass
 
         # Opp HUD
         if (

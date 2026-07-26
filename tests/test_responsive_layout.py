@@ -70,6 +70,30 @@ def test_button_rows_wrap():
     assert per * rows >= 6
 
 
+def test_discard_grid_multi_row_narrow_ext():
+    """AI/human EXT discard column (~33% width) must wrap many discards."""
+    # ~442*0.33 AI watch, 24 discards, compact chrome cell_extra=4
+    g = compute_tile_grid(
+        24,
+        140,
+        min_tw=12,
+        max_tw=16,
+        gap=1,
+        margin=4,
+        max_rows=16,
+        cell_extra=4,
+    )
+    assert g.rows >= 2
+    assert g.per_row * g.rows >= 24
+    assert g.tw >= 12
+    # wide human EXT still wraps when n is large
+    g2 = compute_tile_grid(
+        30, 280, min_tw=18, max_tw=22, gap=1, margin=4, max_rows=16, cell_extra=4
+    )
+    assert g2.rows >= 2
+    assert g2.per_row * g2.rows >= 30
+
+
 def test_player_view_hand_rects_match_count_and_bounds():
     import pygame
 
