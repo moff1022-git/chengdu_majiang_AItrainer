@@ -124,6 +124,23 @@ def test_selected_tile_tw_no_enlarge() -> None:
     assert selected_tile_tw(36) % 2 == 0
 
 
+def test_hand_selection_face_style_gold_frame() -> None:
+    """Selected compact hand tiles: gold border; outer size same as unselected."""
+    from players.seat_window import TkSeatApp
+
+    class _H:
+        pass
+
+    h = _H()
+    style = TkSeatApp._tile_face_style.__get__(h, _H)
+    on = style(selected=True, compact=True)
+    off = style(selected=False, compact=True)
+    assert on["border"] == "#ffeb3b"
+    assert on["ht"] == off["ht"] == 2  # fixed chrome — no reflow
+    assert on["bg"] != off["bg"]
+    assert off["border"] == "#143528"  # blends into hand table when unselected
+
+
 def test_msg_seat_settings_wire() -> None:
     from protocols.wire import decode_line, encode_line, msg_seat_settings
 

@@ -2888,8 +2888,12 @@ class TkSeatApp:
         return cached if cached >= 100 else 360
 
     def _hand_chrome_px(self) -> int:
-        """Extra width per hand cell outside face (highlight L+R). Keep minimal."""
-        return 2  # highlightthickness=1 each side; bd=0
+        """Extra width per hand cell outside face (highlight L+R).
+
+        Fixed chrome so select/unselect never reflows the 14-tile row.
+        Budget: face ring ht=2 + face_hold ring ht=2 (each side).
+        """
+        return 8
 
     def _hand_tile_width_14(self, area_w: int | None = None) -> int:
         """
@@ -2988,7 +2992,18 @@ class TkSeatApp:
             # cell: face only — ukeire waits go to floating panel (F0012)
             cell = self.tk.Frame(row_fr, bg="#143528")
             cell.pack(side="left", padx=gap, pady=0 if use_hand_index else 2)
-            face_hold = self.tk.Frame(cell, bg="#143528")
+            # Fixed ring thickness on face_hold so selection never reflows width
+            face_hold = self.tk.Frame(
+                cell,
+                bg="#ff8f00" if (use_hand_index and sel) else "#143528",
+                highlightthickness=2 if use_hand_index else 0,
+                highlightbackground=(
+                    "#ffeb3b" if (use_hand_index and sel) else "#143528"
+                ),
+                highlightcolor=(
+                    "#ffeb3b" if (use_hand_index and sel) else "#143528"
+                ),
+            )
             face_hold.pack(side="top")
             b = self._tile_btn(
                 face_hold,
@@ -3032,8 +3047,12 @@ class TkSeatApp:
                     "ukeire": list(ukeire_by_tid.get(tid_s) or []),
                 }
         if clickable and use_hand_index:
-            self._ukeire_overlay_key = None  # force fill after rebuild
-            self._update_ukeire_overlays()
+            # Ensure double gold ring + dim others after rebuild
+            try:
+                self._apply_hand_selection_styles()
+            except Exception:
+                self._ukeire_overlay_key = None
+                self._update_ukeire_overlays()
 
     def _photo(self, tid: str, tw: int = 36):
         # Snap to even sizes so cache does not explode under continuous resize
@@ -3121,22 +3140,14 @@ class TkSeatApp:
         compact: bool = False,
     ):
         """Tile face as Label (no extra Button chrome) so size matches layout tw."""
-        # Hand uses compact chrome so 14 faces fit (ht=1, bd=0)
+        # Hand compact: fixed ht so select/unselect never reflows 14-tile row.
         face_tw = max(8, int(tw))
         if face_tw >= 12 and (face_tw % 2) == 1:
             face_tw -= 1
         photo = self._photo(tid, face_tw)
-        if compact:
-            ht, bd, relief = 1, 0, "flat"
-        else:
-            ht, bd, relief = 3, 2, "solid"
-        if selected:
-            bg, border = "#6d4c00", "#ffeb3b"
-            if not compact:
-                relief = "raised"
-                bd = 2
-        else:
-            bg, border = "#1e3c28", "#2a4a34"
+        st = self._tile_face_style(selected=selected, compact=compact)
+        bg, border = st["bg"], st["border"]
+        bd, relief, ht = st["bd"], st["relief"], st["ht"]
         if photo is not None:
             b = self.tk.Label(
                 parent,
@@ -3155,7 +3166,7 @@ class TkSeatApp:
                 parent,
                 text=_label_tile(tid),
                 bg=bg,
-                fg="#fff59d" if selected else "#f0f0d8",
+                fg=st["fg"],
                 font=self._font if compact else (self._font_lg if selected else self._font),
                 width=max(2, face_tw // 10),
                 bd=bd,
@@ -3176,29 +3187,67 @@ class TkSeatApp:
         return b
 
     def _tile_face_style(self, *, selected: bool, compact: bool = False) -> dict:
+        """
+        Face styles. Compact (hand) keeps constant outer size: always ht=2, bd=0.
+        Selected = bright gold frame + warm bg (visible even under PhotoImage edges).
+        """
         if compact:
-            ht, bd = 1, 0
-            relief = "flat"
+            # Fixed geometry — unselected border matches table so ring is invisible
+            ht, bd, relief = 2, 0, "flat"
         else:
             ht, bd = 3, 2
             relief = "raised" if selected else "solid"
         if selected:
             return {
-                "bg": "#6d4c00",
+                "bg": "#8d6e00",
                 "border": "#ffeb3b",
-                "bd": bd,
-                "relief": relief if not compact else "flat",
+                "bd": bd if compact else 2,
+                "relief": "solid" if compact else relief,
                 "ht": ht,
                 "fg": "#fff59d",
             }
         return {
             "bg": "#1e3c28",
-            "border": "#2a4a34",
+            # Match hand table so reserved chrome does not show a dark box
+            "border": "#143528" if compact else "#2a4a34",
             "bd": bd,
             "relief": relief,
             "ht": ht,
             "fg": "#f0f0d8",
         }
+
+    def _apply_cell_selection_chrome(self, hidx: int, *, selected: bool) -> None:
+        """Gold ring on face_hold/cell (second frame outside the face Label)."""
+        cell_info = self._hand_cell_by_tid.get(int(hidx))
+        if not isinstance(cell_info, dict):
+            return
+        fh = cell_info.get("face_hold")
+        cell = cell_info.get("cell")
+        # Fixed thickness always → no reflow; color shows selection
+        ring_ht = 2
+        if selected:
+            ring_bg = "#ff8f00"
+            ring_border = "#ffeb3b"
+            cell_bg = "#5d4037"
+        else:
+            ring_bg = "#143528"
+            ring_border = "#143528"
+            cell_bg = "#143528"
+        for w, ht, bg, border in (
+            (fh, ring_ht, ring_bg, ring_border),
+            (cell, 0, cell_bg, cell_bg),
+        ):
+            if w is None:
+                continue
+            try:
+                w.configure(
+                    bg=bg,
+                    highlightthickness=ht,
+                    highlightbackground=border,
+                    highlightcolor=border,
+                )
+            except Exception:
+                pass
 
     def _update_tile_face(
         self,
@@ -3718,8 +3767,14 @@ class TkSeatApp:
             ub.pack(side="top", pady=(1, 0))
 
     def _apply_hand_selection_styles(self) -> None:
-        """Update hand highlight in-place (border/color only; no size reflow)."""
+        """Update hand highlight in-place (border/color only; no size reflow).
+
+        PhotoImage fills the Label, so bg alone is nearly invisible — use a
+        fixed-thickness gold highlight ring on the face + face_hold wrapper.
+        Unselected tiles dim slightly when any tile is selected.
+        """
         sel_idx = {int(x) for x in self.selected}
+        any_sel = bool(sel_idx)
         for item in self._hand_tile_widgets:
             if len(item) >= 4:
                 tid, w, base_tw, hidx = item[0], item[1], int(item[2]), int(item[3])
@@ -3731,11 +3786,15 @@ class TkSeatApp:
                 base_tw = int(getattr(w, "_base_tw", 36) or 36)
                 hidx = int(getattr(w, "_hand_index", -1))
             selected = hidx in sel_idx
-            # Hand compact chrome: ht=1, bd=0 (must not reflow / widen cells)
+            # Hand compact chrome: fixed ht (must not reflow / widen cells)
             compact = bool(getattr(w, "_compact", True))
             st = self._tile_face_style(selected=selected, compact=compact)
             bg, border = st["bg"], st["border"]
             bd, relief, ht = st["bd"], st["relief"], st["ht"]
+            # Dim non-selected faces when something is selected (contrast)
+            if any_sel and not selected and compact:
+                bg = "#0f2418"
+                border = "#0f2418"
             try:
                 if getattr(w, "image", None) is not None:
                     w.configure(
@@ -3744,19 +3803,25 @@ class TkSeatApp:
                         relief=relief,
                         highlightthickness=ht,
                         highlightbackground=border,
-                        highlightcolor=border,
+                        highlightcolor="#ffffff" if selected else border,
                     )
                 else:
                     w.configure(
                         bg=bg,
-                        fg="#fff59d" if selected else "#f0f0d8",
+                        fg="#fff59d" if selected else (
+                            "#9e9e9e" if any_sel else "#f0f0d8"
+                        ),
                         font=self._font,
                         bd=bd,
                         relief=relief,
                         highlightthickness=ht,
                         highlightbackground=border,
-                        highlightcolor=border,
+                        highlightcolor="#ffffff" if selected else border,
                     )
+            except Exception:
+                pass
+            try:
+                self._apply_cell_selection_chrome(hidx, selected=selected)
             except Exception:
                 pass
         self._update_ukeire_overlays()

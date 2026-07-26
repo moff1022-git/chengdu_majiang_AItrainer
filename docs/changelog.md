@@ -5,6 +5,15 @@
 
 ## 2026-07-26
 
+### 修复 — 人类手牌选中无加框/高亮
+
+- **现象**：点选手牌后几乎无选中提示（PhotoImage 铺满 Label，1px 边框不可见）
+- **修复**：
+  - 手牌固定外框预算（`ht=2` 面环 + `face_hold` 外环），选中/取消不回流
+  - 选中：金黄双框 `#ffeb3b` + 暖金底；未选中边框与桌面同色
+  - 有选中时其余牌略压暗，对比更强
+- 代码：`players/seat_window.py`；测：`tests/test_seat_ui.py`
+
 ### 实现 — F0020 多人人类模式（2H/3H · Done）
 
 - **规格** `docs/features/F0020_multi_human_modes.md` → **Done**
