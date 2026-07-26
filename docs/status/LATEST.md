@@ -8,6 +8,14 @@
 2. 用 **v0.2.1** 重新构建 **PyInstaller** 与 **Nuitka** macOS 包  
 3. 代码与文档 **push origin/main**
 
+
+## 本轮打包结果（v0.2.1 · arm64）
+
+| 包 | 路径 | 冒烟 |
+|----|------|------|
+| PyInstaller | `dist/pyinstaller/` · `releases/macos/…-PyInstaller.app` | `--version` → 0.2.1 |
+| Nuitka | `dist/nuitka/` · `releases/macos/…-Nuitka.app` | `/tmp` 冒烟 0.2.1 |
+
 ## 应用版本
 
 | 项 | 值 |
