@@ -70,7 +70,8 @@ bash tools/packaging/build_nuitka_macos.sh
 ## 远程
 
 - 仓库：https://github.com/moff1022-git/chengdu_majiang_AItrainer （private）  
-- 分支：`main`  
+- 分支：`main` @ `7c31a5d`  
+- **Tag：`v0.2.1`**（annotated，已 push origin）  
 
 ## 下一步
 
