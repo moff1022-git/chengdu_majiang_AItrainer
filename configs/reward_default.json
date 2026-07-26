@@ -1,0 +1,12 @@
+{
+  "hu_fan_scale": 1.0,
+  "deal_in_penalty": 1.0,
+  "rank_bonus": [3.0, 1.0, -1.0, -3.0],
+  "gang_scale": 0.1,
+  "final_score_scale": 0.01,
+  "step_penalty": 0.0,
+  "liuju_penalty": 0.0,
+  "use_engine_score_as_reward": false,
+  "hua_zhu_scale": 1.0,
+  "cha_jiao_scale": 1.0
+}

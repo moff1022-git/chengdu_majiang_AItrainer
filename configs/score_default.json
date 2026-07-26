@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "base_score": 1,
+  "gang_ming_mult": 2,
+  "gang_jia_mult": 1,
+  "gang_an_mult": 2,
+  "hua_zhu_fan": 3,
+  "cha_jiao_mult": 1,
+  "notes": "Chengdu xuezhan score multipliers; pts = base * 2^fan for hu"
+}

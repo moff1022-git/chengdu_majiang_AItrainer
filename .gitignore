@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Virtual env
+.venv/
+venv/
+.env
+.env.*
+
+# Test / type caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Runtime data (local only)
+logs/
+saves/
+*.log
+*.jsonl
+
+# Local backups / large regenerations
+backup/
+assets/tiles/_sample_mapped.png
+assets/tiles/_tiles_regen_preview_*.png
+assets/tiles/tile_clean_preview.png
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.obsidian/
+*.swp
+*~
+
+# IDE (keep .vscode shared settings if desired — ignore only caches)
+.idea/
+*.code-workspace

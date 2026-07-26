@@ -1,0 +1,865 @@
+{
+  "version": 1,
+  "name": "f0010_predict_eval_sets",
+  "description": "Fixed game_id + play_seed for F0010 hand-predict benchmarks. Sets are nested: 20 ⊂ 50 ⊂ 100 so larger sets extend smaller ones. Deal is determined by game_id (engine derive_seeds); legal-play RNG uses play_seed.",
+  "generator_seed": 20260712,
+  "created": "2026-07-12",
+  "sets": {
+    "20": [
+      {
+        "index": 0,
+        "game_id": "f0010-bench-0000-2193527d",
+        "play_seed": 1155196967
+      },
+      {
+        "index": 1,
+        "game_id": "f0010-bench-0001-618c15d9",
+        "play_seed": 760085212
+      },
+      {
+        "index": 2,
+        "game_id": "f0010-bench-0002-435d800d",
+        "play_seed": 2037521814
+      },
+      {
+        "index": 3,
+        "game_id": "f0010-bench-0003-ed6e4029",
+        "play_seed": 2033932103
+      },
+      {
+        "index": 4,
+        "game_id": "f0010-bench-0004-7e575998",
+        "play_seed": 429081279
+      },
+      {
+        "index": 5,
+        "game_id": "f0010-bench-0005-5412f056",
+        "play_seed": 1703397424
+      },
+      {
+        "index": 6,
+        "game_id": "f0010-bench-0006-e3b36246",
+        "play_seed": 277110274
+      },
+      {
+        "index": 7,
+        "game_id": "f0010-bench-0007-2037605b",
+        "play_seed": 869914615
+      },
+      {
+        "index": 8,
+        "game_id": "f0010-bench-0008-cd02f514",
+        "play_seed": 2136529717
+      },
+      {
+        "index": 9,
+        "game_id": "f0010-bench-0009-7377606e",
+        "play_seed": 1329303061
+      },
+      {
+        "index": 10,
+        "game_id": "f0010-bench-0010-f341bf6e",
+        "play_seed": 1475350939
+      },
+      {
+        "index": 11,
+        "game_id": "f0010-bench-0011-6fd6d4b4",
+        "play_seed": 605279857
+      },
+      {
+        "index": 12,
+        "game_id": "f0010-bench-0012-d2546c9f",
+        "play_seed": 708559388
+      },
+      {
+        "index": 13,
+        "game_id": "f0010-bench-0013-fea162b6",
+        "play_seed": 1674307488
+      },
+      {
+        "index": 14,
+        "game_id": "f0010-bench-0014-69944f51",
+        "play_seed": 1412485170
+      },
+      {
+        "index": 15,
+        "game_id": "f0010-bench-0015-2f5d92fc",
+        "play_seed": 1138137003
+      },
+      {
+        "index": 16,
+        "game_id": "f0010-bench-0016-4fc35e5a",
+        "play_seed": 1783791896
+      },
+      {
+        "index": 17,
+        "game_id": "f0010-bench-0017-3a35054f",
+        "play_seed": 2097698156
+      },
+      {
+        "index": 18,
+        "game_id": "f0010-bench-0018-5a686a1a",
+        "play_seed": 1041961736
+      },
+      {
+        "index": 19,
+        "game_id": "f0010-bench-0019-e2839367",
+        "play_seed": 1123342196
+      }
+    ],
+    "50": [
+      {
+        "index": 0,
+        "game_id": "f0010-bench-0000-2193527d",
+        "play_seed": 1155196967
+      },
+      {
+        "index": 1,
+        "game_id": "f0010-bench-0001-618c15d9",
+        "play_seed": 760085212
+      },
+      {
+        "index": 2,
+        "game_id": "f0010-bench-0002-435d800d",
+        "play_seed": 2037521814
+      },
+      {
+        "index": 3,
+        "game_id": "f0010-bench-0003-ed6e4029",
+        "play_seed": 2033932103
+      },
+      {
+        "index": 4,
+        "game_id": "f0010-bench-0004-7e575998",
+        "play_seed": 429081279
+      },
+      {
+        "index": 5,
+        "game_id": "f0010-bench-0005-5412f056",
+        "play_seed": 1703397424
+      },
+      {
+        "index": 6,
+        "game_id": "f0010-bench-0006-e3b36246",
+        "play_seed": 277110274
+      },
+      {
+        "index": 7,
+        "game_id": "f0010-bench-0007-2037605b",
+        "play_seed": 869914615
+      },
+      {
+        "index": 8,
+        "game_id": "f0010-bench-0008-cd02f514",
+        "play_seed": 2136529717
+      },
+      {
+        "index": 9,
+        "game_id": "f0010-bench-0009-7377606e",
+        "play_seed": 1329303061
+      },
+      {
+        "index": 10,
+        "game_id": "f0010-bench-0010-f341bf6e",
+        "play_seed": 1475350939
+      },
+      {
+        "index": 11,
+        "game_id": "f0010-bench-0011-6fd6d4b4",
+        "play_seed": 605279857
+      },
+      {
+        "index": 12,
+        "game_id": "f0010-bench-0012-d2546c9f",
+        "play_seed": 708559388
+      },
+      {
+        "index": 13,
+        "game_id": "f0010-bench-0013-fea162b6",
+        "play_seed": 1674307488
+      },
+      {
+        "index": 14,
+        "game_id": "f0010-bench-0014-69944f51",
+        "play_seed": 1412485170
+      },
+      {
+        "index": 15,
+        "game_id": "f0010-bench-0015-2f5d92fc",
+        "play_seed": 1138137003
+      },
+      {
+        "index": 16,
+        "game_id": "f0010-bench-0016-4fc35e5a",
+        "play_seed": 1783791896
+      },
+      {
+        "index": 17,
+        "game_id": "f0010-bench-0017-3a35054f",
+        "play_seed": 2097698156
+      },
+      {
+        "index": 18,
+        "game_id": "f0010-bench-0018-5a686a1a",
+        "play_seed": 1041961736
+      },
+      {
+        "index": 19,
+        "game_id": "f0010-bench-0019-e2839367",
+        "play_seed": 1123342196
+      },
+      {
+        "index": 20,
+        "game_id": "f0010-bench-0020-212a2d08",
+        "play_seed": 434757003
+      },
+      {
+        "index": 21,
+        "game_id": "f0010-bench-0021-bfd822cc",
+        "play_seed": 1004305444
+      },
+      {
+        "index": 22,
+        "game_id": "f0010-bench-0022-e01faa17",
+        "play_seed": 1988589712
+      },
+      {
+        "index": 23,
+        "game_id": "f0010-bench-0023-b82d64ae",
+        "play_seed": 796428465
+      },
+      {
+        "index": 24,
+        "game_id": "f0010-bench-0024-539f8f72",
+        "play_seed": 2121520236
+      },
+      {
+        "index": 25,
+        "game_id": "f0010-bench-0025-4908b867",
+        "play_seed": 1728619114
+      },
+      {
+        "index": 26,
+        "game_id": "f0010-bench-0026-73f839f3",
+        "play_seed": 849843579
+      },
+      {
+        "index": 27,
+        "game_id": "f0010-bench-0027-0041d11a",
+        "play_seed": 459671242
+      },
+      {
+        "index": 28,
+        "game_id": "f0010-bench-0028-ce8a009d",
+        "play_seed": 1404401058
+      },
+      {
+        "index": 29,
+        "game_id": "f0010-bench-0029-81d36e95",
+        "play_seed": 913897228
+      },
+      {
+        "index": 30,
+        "game_id": "f0010-bench-0030-e7cd5277",
+        "play_seed": 339451396
+      },
+      {
+        "index": 31,
+        "game_id": "f0010-bench-0031-757e4761",
+        "play_seed": 991491924
+      },
+      {
+        "index": 32,
+        "game_id": "f0010-bench-0032-84e8d5b4",
+        "play_seed": 1352139636
+      },
+      {
+        "index": 33,
+        "game_id": "f0010-bench-0033-8fd07c97",
+        "play_seed": 555602103
+      },
+      {
+        "index": 34,
+        "game_id": "f0010-bench-0034-6e47ba37",
+        "play_seed": 965463936
+      },
+      {
+        "index": 35,
+        "game_id": "f0010-bench-0035-09d3c65d",
+        "play_seed": 45823864
+      },
+      {
+        "index": 36,
+        "game_id": "f0010-bench-0036-17a22815",
+        "play_seed": 1659399866
+      },
+      {
+        "index": 37,
+        "game_id": "f0010-bench-0037-ea0bbcc5",
+        "play_seed": 2097626081
+      },
+      {
+        "index": 38,
+        "game_id": "f0010-bench-0038-33a37129",
+        "play_seed": 1781373886
+      },
+      {
+        "index": 39,
+        "game_id": "f0010-bench-0039-d1faa5e6",
+        "play_seed": 939399891
+      },
+      {
+        "index": 40,
+        "game_id": "f0010-bench-0040-a86bb177",
+        "play_seed": 1862278065
+      },
+      {
+        "index": 41,
+        "game_id": "f0010-bench-0041-f764a96f",
+        "play_seed": 1894196669
+      },
+      {
+        "index": 42,
+        "game_id": "f0010-bench-0042-3e68abc9",
+        "play_seed": 1922371737
+      },
+      {
+        "index": 43,
+        "game_id": "f0010-bench-0043-fb294858",
+        "play_seed": 998453957
+      },
+      {
+        "index": 44,
+        "game_id": "f0010-bench-0044-39707996",
+        "play_seed": 26748111
+      },
+      {
+        "index": 45,
+        "game_id": "f0010-bench-0045-fd876d83",
+        "play_seed": 97304093
+      },
+      {
+        "index": 46,
+        "game_id": "f0010-bench-0046-5e84a224",
+        "play_seed": 470644051
+      },
+      {
+        "index": 47,
+        "game_id": "f0010-bench-0047-52a37c77",
+        "play_seed": 1485135869
+      },
+      {
+        "index": 48,
+        "game_id": "f0010-bench-0048-171310a9",
+        "play_seed": 443370099
+      },
+      {
+        "index": 49,
+        "game_id": "f0010-bench-0049-2c0ce5d1",
+        "play_seed": 1735152567
+      }
+    ],
+    "100": [
+      {
+        "index": 0,
+        "game_id": "f0010-bench-0000-2193527d",
+        "play_seed": 1155196967
+      },
+      {
+        "index": 1,
+        "game_id": "f0010-bench-0001-618c15d9",
+        "play_seed": 760085212
+      },
+      {
+        "index": 2,
+        "game_id": "f0010-bench-0002-435d800d",
+        "play_seed": 2037521814
+      },
+      {
+        "index": 3,
+        "game_id": "f0010-bench-0003-ed6e4029",
+        "play_seed": 2033932103
+      },
+      {
+        "index": 4,
+        "game_id": "f0010-bench-0004-7e575998",
+        "play_seed": 429081279
+      },
+      {
+        "index": 5,
+        "game_id": "f0010-bench-0005-5412f056",
+        "play_seed": 1703397424
+      },
+      {
+        "index": 6,
+        "game_id": "f0010-bench-0006-e3b36246",
+        "play_seed": 277110274
+      },
+      {
+        "index": 7,
+        "game_id": "f0010-bench-0007-2037605b",
+        "play_seed": 869914615
+      },
+      {
+        "index": 8,
+        "game_id": "f0010-bench-0008-cd02f514",
+        "play_seed": 2136529717
+      },
+      {
+        "index": 9,
+        "game_id": "f0010-bench-0009-7377606e",
+        "play_seed": 1329303061
+      },
+      {
+        "index": 10,
+        "game_id": "f0010-bench-0010-f341bf6e",
+        "play_seed": 1475350939
+      },
+      {
+        "index": 11,
+        "game_id": "f0010-bench-0011-6fd6d4b4",
+        "play_seed": 605279857
+      },
+      {
+        "index": 12,
+        "game_id": "f0010-bench-0012-d2546c9f",
+        "play_seed": 708559388
+      },
+      {
+        "index": 13,
+        "game_id": "f0010-bench-0013-fea162b6",
+        "play_seed": 1674307488
+      },
+      {
+        "index": 14,
+        "game_id": "f0010-bench-0014-69944f51",
+        "play_seed": 1412485170
+      },
+      {
+        "index": 15,
+        "game_id": "f0010-bench-0015-2f5d92fc",
+        "play_seed": 1138137003
+      },
+      {
+        "index": 16,
+        "game_id": "f0010-bench-0016-4fc35e5a",
+        "play_seed": 1783791896
+      },
+      {
+        "index": 17,
+        "game_id": "f0010-bench-0017-3a35054f",
+        "play_seed": 2097698156
+      },
+      {
+        "index": 18,
+        "game_id": "f0010-bench-0018-5a686a1a",
+        "play_seed": 1041961736
+      },
+      {
+        "index": 19,
+        "game_id": "f0010-bench-0019-e2839367",
+        "play_seed": 1123342196
+      },
+      {
+        "index": 20,
+        "game_id": "f0010-bench-0020-212a2d08",
+        "play_seed": 434757003
+      },
+      {
+        "index": 21,
+        "game_id": "f0010-bench-0021-bfd822cc",
+        "play_seed": 1004305444
+      },
+      {
+        "index": 22,
+        "game_id": "f0010-bench-0022-e01faa17",
+        "play_seed": 1988589712
+      },
+      {
+        "index": 23,
+        "game_id": "f0010-bench-0023-b82d64ae",
+        "play_seed": 796428465
+      },
+      {
+        "index": 24,
+        "game_id": "f0010-bench-0024-539f8f72",
+        "play_seed": 2121520236
+      },
+      {
+        "index": 25,
+        "game_id": "f0010-bench-0025-4908b867",
+        "play_seed": 1728619114
+      },
+      {
+        "index": 26,
+        "game_id": "f0010-bench-0026-73f839f3",
+        "play_seed": 849843579
+      },
+      {
+        "index": 27,
+        "game_id": "f0010-bench-0027-0041d11a",
+        "play_seed": 459671242
+      },
+      {
+        "index": 28,
+        "game_id": "f0010-bench-0028-ce8a009d",
+        "play_seed": 1404401058
+      },
+      {
+        "index": 29,
+        "game_id": "f0010-bench-0029-81d36e95",
+        "play_seed": 913897228
+      },
+      {
+        "index": 30,
+        "game_id": "f0010-bench-0030-e7cd5277",
+        "play_seed": 339451396
+      },
+      {
+        "index": 31,
+        "game_id": "f0010-bench-0031-757e4761",
+        "play_seed": 991491924
+      },
+      {
+        "index": 32,
+        "game_id": "f0010-bench-0032-84e8d5b4",
+        "play_seed": 1352139636
+      },
+      {
+        "index": 33,
+        "game_id": "f0010-bench-0033-8fd07c97",
+        "play_seed": 555602103
+      },
+      {
+        "index": 34,
+        "game_id": "f0010-bench-0034-6e47ba37",
+        "play_seed": 965463936
+      },
+      {
+        "index": 35,
+        "game_id": "f0010-bench-0035-09d3c65d",
+        "play_seed": 45823864
+      },
+      {
+        "index": 36,
+        "game_id": "f0010-bench-0036-17a22815",
+        "play_seed": 1659399866
+      },
+      {
+        "index": 37,
+        "game_id": "f0010-bench-0037-ea0bbcc5",
+        "play_seed": 2097626081
+      },
+      {
+        "index": 38,
+        "game_id": "f0010-bench-0038-33a37129",
+        "play_seed": 1781373886
+      },
+      {
+        "index": 39,
+        "game_id": "f0010-bench-0039-d1faa5e6",
+        "play_seed": 939399891
+      },
+      {
+        "index": 40,
+        "game_id": "f0010-bench-0040-a86bb177",
+        "play_seed": 1862278065
+      },
+      {
+        "index": 41,
+        "game_id": "f0010-bench-0041-f764a96f",
+        "play_seed": 1894196669
+      },
+      {
+        "index": 42,
+        "game_id": "f0010-bench-0042-3e68abc9",
+        "play_seed": 1922371737
+      },
+      {
+        "index": 43,
+        "game_id": "f0010-bench-0043-fb294858",
+        "play_seed": 998453957
+      },
+      {
+        "index": 44,
+        "game_id": "f0010-bench-0044-39707996",
+        "play_seed": 26748111
+      },
+      {
+        "index": 45,
+        "game_id": "f0010-bench-0045-fd876d83",
+        "play_seed": 97304093
+      },
+      {
+        "index": 46,
+        "game_id": "f0010-bench-0046-5e84a224",
+        "play_seed": 470644051
+      },
+      {
+        "index": 47,
+        "game_id": "f0010-bench-0047-52a37c77",
+        "play_seed": 1485135869
+      },
+      {
+        "index": 48,
+        "game_id": "f0010-bench-0048-171310a9",
+        "play_seed": 443370099
+      },
+      {
+        "index": 49,
+        "game_id": "f0010-bench-0049-2c0ce5d1",
+        "play_seed": 1735152567
+      },
+      {
+        "index": 50,
+        "game_id": "f0010-bench-0050-3ad7466f",
+        "play_seed": 885705179
+      },
+      {
+        "index": 51,
+        "game_id": "f0010-bench-0051-7a1dce0d",
+        "play_seed": 654216544
+      },
+      {
+        "index": 52,
+        "game_id": "f0010-bench-0052-af1c1bc4",
+        "play_seed": 1354763444
+      },
+      {
+        "index": 53,
+        "game_id": "f0010-bench-0053-67f36c72",
+        "play_seed": 311861183
+      },
+      {
+        "index": 54,
+        "game_id": "f0010-bench-0054-93da923c",
+        "play_seed": 738840482
+      },
+      {
+        "index": 55,
+        "game_id": "f0010-bench-0055-59992732",
+        "play_seed": 1120349524
+      },
+      {
+        "index": 56,
+        "game_id": "f0010-bench-0056-8eaec4b5",
+        "play_seed": 314926527
+      },
+      {
+        "index": 57,
+        "game_id": "f0010-bench-0057-4919ddd1",
+        "play_seed": 912558869
+      },
+      {
+        "index": 58,
+        "game_id": "f0010-bench-0058-6614ac49",
+        "play_seed": 165379261
+      },
+      {
+        "index": 59,
+        "game_id": "f0010-bench-0059-668dc06a",
+        "play_seed": 1230525918
+      },
+      {
+        "index": 60,
+        "game_id": "f0010-bench-0060-beabbe84",
+        "play_seed": 911000050
+      },
+      {
+        "index": 61,
+        "game_id": "f0010-bench-0061-4c003574",
+        "play_seed": 1453776909
+      },
+      {
+        "index": 62,
+        "game_id": "f0010-bench-0062-ccf232b3",
+        "play_seed": 1090162027
+      },
+      {
+        "index": 63,
+        "game_id": "f0010-bench-0063-41b02bd8",
+        "play_seed": 1577164313
+      },
+      {
+        "index": 64,
+        "game_id": "f0010-bench-0064-e65be191",
+        "play_seed": 844318232
+      },
+      {
+        "index": 65,
+        "game_id": "f0010-bench-0065-59bf4fc6",
+        "play_seed": 1967538752
+      },
+      {
+        "index": 66,
+        "game_id": "f0010-bench-0066-2ce8b4f2",
+        "play_seed": 1962162481
+      },
+      {
+        "index": 67,
+        "game_id": "f0010-bench-0067-049db769",
+        "play_seed": 1912258371
+      },
+      {
+        "index": 68,
+        "game_id": "f0010-bench-0068-6b109512",
+        "play_seed": 591123687
+      },
+      {
+        "index": 69,
+        "game_id": "f0010-bench-0069-a07caa1b",
+        "play_seed": 1687017212
+      },
+      {
+        "index": 70,
+        "game_id": "f0010-bench-0070-296c9820",
+        "play_seed": 822709708
+      },
+      {
+        "index": 71,
+        "game_id": "f0010-bench-0071-a1d45bc1",
+        "play_seed": 596895163
+      },
+      {
+        "index": 72,
+        "game_id": "f0010-bench-0072-a47c0c41",
+        "play_seed": 1119983038
+      },
+      {
+        "index": 73,
+        "game_id": "f0010-bench-0073-9985628d",
+        "play_seed": 2009248281
+      },
+      {
+        "index": 74,
+        "game_id": "f0010-bench-0074-51abbce4",
+        "play_seed": 274278414
+      },
+      {
+        "index": 75,
+        "game_id": "f0010-bench-0075-ba5fc711",
+        "play_seed": 1906060673
+      },
+      {
+        "index": 76,
+        "game_id": "f0010-bench-0076-e4bf0351",
+        "play_seed": 234455269
+      },
+      {
+        "index": 77,
+        "game_id": "f0010-bench-0077-363af6aa",
+        "play_seed": 1361645419
+      },
+      {
+        "index": 78,
+        "game_id": "f0010-bench-0078-19b6ec6b",
+        "play_seed": 1360288339
+      },
+      {
+        "index": 79,
+        "game_id": "f0010-bench-0079-04f10108",
+        "play_seed": 1773726224
+      },
+      {
+        "index": 80,
+        "game_id": "f0010-bench-0080-5f055a91",
+        "play_seed": 1665674070
+      },
+      {
+        "index": 81,
+        "game_id": "f0010-bench-0081-a2c2a948",
+        "play_seed": 379104235
+      },
+      {
+        "index": 82,
+        "game_id": "f0010-bench-0082-a663975a",
+        "play_seed": 1314161638
+      },
+      {
+        "index": 83,
+        "game_id": "f0010-bench-0083-8e1b1ae2",
+        "play_seed": 1433322303
+      },
+      {
+        "index": 84,
+        "game_id": "f0010-bench-0084-b41b4863",
+        "play_seed": 1607815165
+      },
+      {
+        "index": 85,
+        "game_id": "f0010-bench-0085-1a71f44e",
+        "play_seed": 2113073567
+      },
+      {
+        "index": 86,
+        "game_id": "f0010-bench-0086-28433275",
+        "play_seed": 289198313
+      },
+      {
+        "index": 87,
+        "game_id": "f0010-bench-0087-8bb16064",
+        "play_seed": 1825279728
+      },
+      {
+        "index": 88,
+        "game_id": "f0010-bench-0088-04751050",
+        "play_seed": 437420133
+      },
+      {
+        "index": 89,
+        "game_id": "f0010-bench-0089-68159b6d",
+        "play_seed": 360863186
+      },
+      {
+        "index": 90,
+        "game_id": "f0010-bench-0090-9f601591",
+        "play_seed": 1949857880
+      },
+      {
+        "index": 91,
+        "game_id": "f0010-bench-0091-48af9da8",
+        "play_seed": 797264713
+      },
+      {
+        "index": 92,
+        "game_id": "f0010-bench-0092-6dda03b1",
+        "play_seed": 1942300673
+      },
+      {
+        "index": 93,
+        "game_id": "f0010-bench-0093-e7484169",
+        "play_seed": 1268714241
+      },
+      {
+        "index": 94,
+        "game_id": "f0010-bench-0094-29c4cb62",
+        "play_seed": 993234601
+      },
+      {
+        "index": 95,
+        "game_id": "f0010-bench-0095-e19dd445",
+        "play_seed": 1877023847
+      },
+      {
+        "index": 96,
+        "game_id": "f0010-bench-0096-3e97e448",
+        "play_seed": 987019409
+      },
+      {
+        "index": 97,
+        "game_id": "f0010-bench-0097-9e331aff",
+        "play_seed": 1571820134
+      },
+      {
+        "index": 98,
+        "game_id": "f0010-bench-0098-739d2c29",
+        "play_seed": 1629944954
+      },
+      {
+        "index": 99,
+        "game_id": "f0010-bench-0099-e8aea0fe",
+        "play_seed": 1444517973
+      }
+    ]
+  }
+}
