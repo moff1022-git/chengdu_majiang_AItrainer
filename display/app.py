@@ -188,6 +188,9 @@ class MahjongApp:
         self._pending_main_pin: WindowPlan | None = None
         # Lock layout to the screen chosen at app/session start (avoid cursor jumps)
         self._session_layout_screen = self.screen_info
+        # F0023: main-window dice roll animation (per hand)
+        self._dice_fx = None
+        self._dice_fx_key: tuple | None = None
 
     def run(self, *, auto_start: bool = False) -> None:
         self._auto_start = auto_start
@@ -198,6 +201,7 @@ class MahjongApp:
             self._flush_pending_main_pin()
             self._handle_events()
             if self.scene == "table":
+                self._tick_dice_fx()
                 self._maybe_step()
             elif self.scene == "result":
                 self._tick_auto_next_round()
@@ -216,6 +220,38 @@ class MahjongApp:
             except Exception:
                 return None
         return None
+
+    def _tick_dice_fx(self) -> None:
+        """Complete dice animation logging; keep last result visible after done."""
+        fx = self._dice_fx
+        if fx is None:
+            return
+        try:
+            if not fx.log_emitted and not fx.is_rolling():
+                # Settle phase: ensure log once when faces lock
+                if not fx.log_emitted:
+                    try:
+                        self.play_log.append("info", fx.log_line())
+                    except Exception:
+                        pass
+                    fx.log_emitted = True
+            # Keep final caption until next hand starts (do not clear immediately)
+        except Exception:
+            pass
+
+    def _start_dice_for_state(self, state: GameState, *, round_index: int) -> None:
+        """Start dice FX from engine state if not already running this hand."""
+        if state is None or getattr(state, "dice", None) is None:
+            return
+        key = (str(state.game_id), int(round_index))
+        if self._dice_fx_key == key and self._dice_fx is not None:
+            return
+        from display.dice_fx import DiceRollFx
+
+        self._dice_fx = DiceRollFx.from_dice(
+            state.dice, game_id=str(state.game_id), round_index=round_index
+        )
+        self._dice_fx_key = key
 
     def _engine_config(self, n: int) -> EngineConfig:
         return EngineConfig(
@@ -257,6 +293,8 @@ class MahjongApp:
             self.play_log.append("info", f"开局 · 第{self._round_index + 1}局")
         except Exception:
             pass
+        self._dice_fx = None
+        self._dice_fx_key = None
         self._start_live_game(
             parts, n, human_seat=human_seat, human_seats=human_seats
         )
@@ -297,6 +335,13 @@ class MahjongApp:
             game_id=self.cfg.game_id or f"gui-{int(time.time())}",
         )
         self.runner.setup()
+        try:
+            if self.runner.state is not None:
+                self._start_dice_for_state(
+                    self.runner.state, round_index=self._round_index + 1
+                )
+        except Exception:
+            pass
         self._refresh_analysis()
 
     def _refresh_window_plan(
@@ -579,6 +624,37 @@ class MahjongApp:
                     getattr(hub, "last_ready_all_auto", False)
                 )
                 print(f"[live] ready all_auto={self._last_ready_all_auto}")
+                self._status_msg = f"第 {round_disp} 局已确认 · 掷骰定庄…"
+
+                # F0023: main-window dice animation BEFORE deal / play
+                # (same dice as engine will use for this game_id)
+                try:
+                    from display.dice_fx import (
+                        DEFAULT_TOTAL_S,
+                        DiceRollFx,
+                        preview_dice_for_game,
+                    )
+
+                    dice = preview_dice_for_game(gid, n)
+                    fx = DiceRollFx.from_dice(
+                        dice, game_id=gid, round_index=round_disp
+                    )
+                    self._dice_fx = fx
+                    self._dice_fx_key = (str(gid), int(round_disp))
+                    self._status_msg = (
+                        f"第 {round_disp} 局 · 掷骰 {dice.d1}+{dice.d2}="
+                        f"{dice.total} → 庄家 S{dice.dealer_seat}"
+                    )
+                    # Keep main loop painting; hold engine until animation ends
+                    time.sleep(float(DEFAULT_TOTAL_S) + 0.05)
+                    try:
+                        self.play_log.append("info", fx.log_line())
+                        fx.log_emitted = True
+                    except Exception:
+                        pass
+                except Exception as e:
+                    print(f"[live] dice fx skip: {e}")
+
                 self._status_msg = f"第 {round_disp} 局已确认，开局中…"
 
                 # After all ready: reassert the *same* plan (do NOT re-detect
@@ -1227,16 +1303,57 @@ class MahjongApp:
                     st,
                     self.fx,
                     analysis=self.analysis if self.cfg.show_hud else None,
+                    dice_fx=self._dice_fx,
                 )
             else:
                 self.screen.fill((20, 40, 30))
-                draw_text(
-                    self.screen,
-                    "正在启动对局 / 等待引擎发牌…",
-                    (40, 40),
-                    size=22,
-                    color=(200, 220, 200),
-                )
+                # Still show dice animation while waiting for first state
+                if self._dice_fx is not None:
+                    try:
+                        draw_text(
+                            self.screen,
+                            self._dice_fx.caption(),
+                            (40, 80),
+                            size=26,
+                            color=(255, 230, 120),
+                        )
+                        f1, f2 = self._dice_fx.faces()
+                        try:
+                            img1 = self.assets.scale_to_width(
+                                self.assets.dice(f1), 72
+                            )
+                            img2 = self.assets.scale_to_width(
+                                self.assets.dice(f2), 72
+                            )
+                            cx = self.screen.get_width() // 2
+                            self.screen.blit(
+                                img1, (cx - img1.get_width() - 12, 140)
+                            )
+                            self.screen.blit(img2, (cx + 12, 140))
+                        except Exception:
+                            draw_text(
+                                self.screen,
+                                f"{f1}   {f2}",
+                                (40, 140),
+                                size=48,
+                                color=(255, 240, 180),
+                            )
+                    except Exception:
+                        draw_text(
+                            self.screen,
+                            "正在启动对局 / 等待引擎发牌…",
+                            (40, 40),
+                            size=22,
+                            color=(200, 220, 200),
+                        )
+                else:
+                    draw_text(
+                        self.screen,
+                        "正在启动对局 / 等待引擎发牌…",
+                        (40, 40),
+                        size=22,
+                        color=(200, 220, 200),
+                    )
             if self._status_msg:
                 draw_text(
                     self.screen,

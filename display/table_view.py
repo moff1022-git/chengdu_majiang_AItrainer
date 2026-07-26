@@ -211,12 +211,108 @@ class TableView:
             return True
         return seat == self.focus_seat
 
+    def _draw_dice_center(
+        self,
+        screen: pygame.Surface,
+        state: GameState,
+        *,
+        dice_fx=None,
+    ) -> None:
+        """Center plate: animated or final dice + dealer + wall remaining."""
+        ly = self.layout
+        mi = ly.ensure_interior()
+        cx, cy = mi.dice.center()
+        dice_rect = pygame.Rect(*mi.dice.as_tuple())
+        rolling = bool(dice_fx is not None and getattr(dice_fx, "is_rolling", lambda: False)())
+        # Stronger highlight while rolling
+        plate = pygame.Surface((dice_rect.w, dice_rect.h), pygame.SRCALPHA)
+        plate.fill((30, 70, 40, 200) if rolling else (20, 50, 36, 170))
+        screen.blit(plate, dice_rect.topleft)
+        border = (255, 193, 7) if rolling else (80, 140, 100)
+        pygame.draw.rect(screen, border, dice_rect, 3 if rolling else 2, border_radius=8)
+
+        # Resolve faces: active fx > state.dice > placeholder
+        f1, f2 = 1, 1
+        dealer = getattr(state, "dealer_seat", None)
+        total = None
+        if dice_fx is not None:
+            try:
+                f1, f2 = dice_fx.faces()
+                dealer = int(dice_fx.dealer_seat)
+                total = int(dice_fx.total)
+            except Exception:
+                pass
+        elif getattr(state, "dice", None) is not None:
+            try:
+                f1, f2 = int(state.dice.d1), int(state.dice.d2)
+                total = int(state.dice.total)
+                dealer = int(state.dealer_seat)
+            except Exception:
+                pass
+
+        face_w = max(28, min(72, dice_rect.w // 3))
+        try:
+            img1 = self.assets.scale_to_width(self.assets.dice(f1), face_w)
+            img2 = self.assets.scale_to_width(self.assets.dice(f2), face_w)
+            gap = max(8, face_w // 6)
+            y0 = cy - img1.get_height() // 2 - (10 if rolling else 18)
+            screen.blit(img1, (cx - img1.get_width() - gap // 2, y0))
+            screen.blit(img2, (cx + gap // 2, y0))
+        except Exception:
+            draw_text(
+                screen,
+                f"{f1}  {f2}",
+                (cx - 24, cy - 30),
+                size=28,
+                color=(255, 240, 180),
+            )
+
+        # Caption
+        if dice_fx is not None:
+            cap = dice_fx.caption()
+            col = (255, 230, 120) if rolling else (180, 255, 180)
+        else:
+            if total is not None and dealer is not None:
+                cap = f"骰点 {f1}+{f2}={total} · 庄 S{dealer}"
+            else:
+                cap = "掷骰定庄"
+            col = (220, 230, 200)
+        draw_text(
+            screen,
+            cap,
+            (max(dice_rect.x + 4, cx - len(cap) * 4), dice_rect.y + 6),
+            size=14,
+            color=col,
+        )
+
+        # Wall remaining (below dice faces)
+        wall_n = len(state.wall) if state.wall is not None else 0
+        blit_score(
+            screen, self.assets, wall_n, (cx - 8, cy + face_w // 3), size="md"
+        )
+        draw_text(
+            screen,
+            f"牌墙 {wall_n}",
+            (cx - 36, cy + face_w // 3 + 28),
+            size=14,
+            color=(220, 230, 200),
+        )
+        if dealer is not None and not rolling:
+            draw_text(
+                screen,
+                f"★ 庄家 S{dealer}",
+                (cx - 48, dice_rect.bottom - 22),
+                size=15,
+                color=(255, 220, 120),
+            )
+
     def draw(
         self,
         screen: pygame.Surface,
         state: GameState,
         fx: FxOverlay | None = None,
         analysis: AnalysisSnapshot | None = None,
+        dice_fx=None,
     ) -> None:
         self._bg(screen)
         n = state.num_players
@@ -243,41 +339,8 @@ class TableView:
                 color=(160, 200, 255),
             )
 
-        # DICE center: wall remaining + optional dice art
-        mi = ly.ensure_interior()
-        cx, cy = mi.dice.center()
-        # soft dice plate
-        dice_rect = pygame.Rect(*mi.dice.as_tuple())
-        plate = pygame.Surface((dice_rect.w, dice_rect.h), pygame.SRCALPHA)
-        plate.fill((20, 50, 36, 160))
-        screen.blit(plate, dice_rect.topleft)
-        pygame.draw.rect(screen, (80, 140, 100), dice_rect, 2, border_radius=8)
-        try:
-            icon = self.assets.icon("remain")
-            icon = self.assets.scale_to_width(icon, 32)
-            screen.blit(icon, (cx - 50, cy - 36))
-        except FileNotFoundError:
-            pass
-        # Prefer dice faces when available (display of wall count still primary)
-        try:
-            d1 = self.assets.dice(3)
-            d1 = self.assets.scale_to_width(d1, max(20, mi.dice.w // 5))
-            d2 = self.assets.dice(5)
-            d2 = self.assets.scale_to_width(d2, max(20, mi.dice.w // 5))
-            screen.blit(d1, (cx - d1.get_width() - 6, cy - d1.get_height() // 2 - 18))
-            screen.blit(d2, (cx + 6, cy - d2.get_height() // 2 - 18))
-        except Exception:
-            pass
-        blit_score(
-            screen, self.assets, len(state.wall), (cx - 8, cy - 4), size="md"
-        )
-        draw_text(
-            screen,
-            f"牌墙 {len(state.wall)}",
-            (cx - 36, cy + 28),
-            size=14,
-            color=(220, 230, 200),
-        )
+        # DICE center: real roll process / result (F0023)
+        self._draw_dice_center(screen, state, dice_fx=dice_fx)
 
         # HUD first (center / side), then seats so hand tiles paint on top
         bot = ly.bottom_band()

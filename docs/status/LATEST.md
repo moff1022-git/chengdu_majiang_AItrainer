@@ -1,44 +1,27 @@
 # 进度快照
 
-> 2026-07-26 — **弃牌区多行显示（AI/人类座位窗）**
+> 2026-07-26 — **F0023 主窗每轮掷骰定庄展示**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 目标 | 弃牌多行排列，避免单行裁切 |
-| 代码 | `players/seat_window.py`：`_compute_disc_grid` + 滚动 `disc_canvas` |
-| 效果 | 例 AI 窗 24 张 → 约 4 行×6 列；可滚轮查看 |
+| 目标 | 每轮开始前掷骰，主窗口显示过程与结果 |
+| 规格 | `docs/features/F0023_main_dice_roll_display.md` · Done |
+| 实现 | 确认后 sleep 播动画 → 再 `PlayerGameRunner`；桌心真实 d1/d2 + 庄家 |
+| 代码 | `display/dice_fx.py`、`table_view.py`、`app.py` |
+| 规则 | 未改；仍 `roll_dice(dice_seed)` 可复现 |
 
----
+## 体验路径
 
-> 此前：**F0022 大厅/结算 UI 对齐人类窗 · 防遮挡**
-
-## 本轮
-
-| 项 | 说明 |
-|----|------|
-| 目标 | 开始窗、成绩汇总与人类座位窗风格统一；元素合理分布不遮挡 |
-| 规格 | `docs/features/F0022_lobby_result_human_chrome.md` · Done |
-| 代码 | `display/ui_chrome.py`、`lobby_view.py`、`result_view.py` |
-| 测试 | `test_lobby_view`、`test_result_view`（含 640×400） |
-
-## 布局约定
-
-```text
-HEADER（深绿 + 金线）→ BODY（卡片）→ FOOTER（固定高度按钮区）
+```bash
+.venv/bin/python main.py play --players human,rule_ai,rule_ai,rule_ai
+# 座位窗确认开始 → 主窗掷骰动画 → 换三张/行牌
 ```
-
-## 基线
-
-| 项 | 值 |
-|----|-----|
-| 应用版本 | 0.2.0 |
-| F0020–F0021 | Done |
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 本机开大厅/打完一局看结算 | `play --players human,...` |
-| 2 | 若要升版号记 UI 变更 | `bump 0.2.1` |
+| 1 | 本机开一局看掷骰 | 目视验收 |
+| 2 | 可选座位窗同步骰点 | 新需求 |
