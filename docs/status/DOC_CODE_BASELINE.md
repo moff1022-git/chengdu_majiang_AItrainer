@@ -44,6 +44,7 @@
 | F0022 | Done | `ui_chrome` + lobby/result |
 | F0023 | Done | `dice_fx` + 确认后播骰再开局 |
 | F0024 | Done | `play_log_format` 细化日志 |
+| F0025 | **Draft** | Windows 打包规格 + `WINDOWS_BUILD.md`；脚本/Win 验收未落地 |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---

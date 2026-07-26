@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（F0025 Windows 打包 · 文档）
+
+### 文档 — Windows 打包规格（Draft）
+
+- 新增 [`docs/features/F0025_windows_packaging.md`](features/F0025_windows_packaging.md)：PyInstaller + Nuitka、onedir、`--seat-window`、须在 Windows 构建  
+- 新增 [`docs/packaging/WINDOWS_BUILD.md`](packaging/WINDOWS_BUILD.md)：前置条件、手动命令、验收 W1–W11、与 macOS 差异  
+- 交叉链接：`MACOS_BUILD.md` §7、`VERSIONING.md`、功能索引、`DOC_CODE_BASELINE`  
+- `.gitignore`：忽略 `releases/windows/**` 与本地 windows zip / `*.exe`  
+- **未实现**：`packaging/windows/*` 脚本（待 `确认 F0025` 后编码；验收须在 Windows 主机）
+
 ## 2026-07-26（文档审计）
 
 ### 文档 — 全面一致性修正

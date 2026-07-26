@@ -38,6 +38,12 @@ bash tools/packaging/build_nuitka_macos.sh         # → dist/nuitka/ChengduMahj
 说明与验收：[`docs/packaging/MACOS_BUILD.md`](docs/packaging/MACOS_BUILD.md) · 规格 [`F0021`](docs/features/F0021_macos_packaging.md)。  
 冻结后日志：`~/Library/Application Support/ChengduMahjongAITrainer/logs/`。
 
+## Windows 打包（规划中）
+
+规格 **F0025 Draft** · 手册：[`docs/packaging/WINDOWS_BUILD.md`](docs/packaging/WINDOWS_BUILD.md)。  
+须在 **Windows 主机** 构建（onedir + 同一 exe `--seat-window`）；一键脚本待规格确认后实现。  
+冻结后日志：`%APPDATA%\ChengduMahjongAITrainer\logs\`。
+
 ## 安装（永久环境）
 
 **权威解释器：项目根目录 `.venv`（Python 3.11+，推荐 3.12）。**  

@@ -1,34 +1,25 @@
 # 进度快照
 
-> 2026-07-26 — **文档↔程序一致性审计完成（v0.2.1）**
+> 2026-07-26 — **F0025 Windows 打包文档 Draft**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 目标 | 全面检查文档与程序一致性并修正文档 |
-| 对照表 | [`DOC_CODE_BASELINE.md`](DOC_CODE_BASELINE.md)（权威） |
-| 应用版本 | **0.2.1**（`version.py`） |
-| 远程 | `main` + tag **`v0.2.1`** + [GitHub Release](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1) |
+| 目标 | Windows 打包（Docs-First） |
+| 规格 | [`docs/features/F0025_windows_packaging.md`](../features/F0025_windows_packaging.md) → **Draft** |
+| 手册 | [`docs/packaging/WINDOWS_BUILD.md`](../packaging/WINDOWS_BUILD.md) |
+| 应用版本 | **0.2.1**（未升版；本轮仅文档） |
+| 代码 | **未改业务**；打包脚本待 Approved 后实现 |
+| 远程 | 已 commit 并 push（F0025 Draft 文档基线） |
 
-## 已修正的主要不一致（摘要）
+## 要点
 
-| 问题 | 处理 |
-|------|------|
-| LATEST 下一步仍写「打 tag / 上传 Release」 | 已完成；改为当前基线 |
-| F0009 写「选中放大」 | 改为 **实装不放大、金框高亮**（与代码一致） |
-| F0014 长期 Draft | 改为 **Done（几何移交 UI 规范）** |
-| F0012/F0019 等状态措辞不统一 | 索引统一为 **Done** |
-| M09「最多 1 human」 | 标注 **被 F0020 扩展（≤3）** |
-| README 功能列表偏旧 | 补 2H/3H、打包、掷骰、日志、Release |
-
-## 当前产品能力（与代码一致）
-
-- 引擎 M01–M11：血战、计分、AI、训练 env、存档  
-- 座位窗：人类/AI 多窗、ready、推荐出牌、弃牌多行、胡牌横幅  
-- 主窗：大厅/结算人类风、掷骰定庄动画、细化出牌日志  
-- 布局 A/B/C/D；1–3 人类  
-- macOS 双包（PyInstaller / Nuitka）见 Release  
+- 与 F0021 同模式：**onedir + 同一 exe `--seat-window` 再入**
+- 必须在 **Windows 主机** 构建（无 macOS 交叉编译）
+- 可写数据：`%APPDATA%\ChengduMahjongAITrainer\`（`app_paths` 已支持）
+- `--add-data` 用 **`;`**；优先 PyInstaller，Nuitka 需 MSVC/MinGW
+- Out of scope：MSI 安装器、Authenticode、Linux
 
 ## 版本线
 
@@ -43,13 +34,15 @@
 
 | 位置 | 说明 |
 |------|------|
-| **GitHub Release v0.2.1** | zip 附件（不在 Code 文件树） |
-| 本机 `releases/macos/` | PyInstaller / Nuitka `.app` 副本 |
+| **GitHub Release v0.2.1** | macOS zip（PyInstaller / Nuitka） |
+| Windows 产物 | **尚未构建**；见 F0025 |
+| 本机 `releases/macos/` | macOS `.app` 副本（gitignore） |
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 目视验收 0.2.1 包（掷骰/日志/弃牌/2H） | 开局试玩 |
-| 2 | 新功能按 Docs-First 开 F0025+ | `新功能 …` |
-| 3 | 可选：Windows 打包文档 | `Windows 打包` |
+| 1 | 审阅并批准 F0025 + WINDOWS_BUILD | `确认 F0025` / `确认文档` |
+| 2 | 实现 `packaging/windows/*` + `build_*_windows.ps1` | `实现 Windows 打包` |
+| 3 | 在 Windows 机按手册构建并验收 W1–W11 | `验收 Windows 包` |
+| 4 | 可选：Release 附加 windows-x64 zip | `上传 Windows Release` |

@@ -6,7 +6,7 @@
 | **生效** | 2026-07-26 |
 | **程序单一源** | 仓库根目录 [`version.py`](../version.py) |
 | **人类可读版本线** | 本文件 + [`docs/changelog.md`](changelog.md) |
-| **关联** | [`docs/DEVELOPMENT.md`](DEVELOPMENT.md) · [`docs/packaging/MACOS_BUILD.md`](packaging/MACOS_BUILD.md) |
+| **关联** | [`docs/DEVELOPMENT.md`](DEVELOPMENT.md) · [`docs/packaging/MACOS_BUILD.md`](packaging/MACOS_BUILD.md) · [`docs/packaging/WINDOWS_BUILD.md`](packaging/WINDOWS_BUILD.md) |
 
 ---
 
@@ -134,7 +134,7 @@ git push origin "v$(...)"
 | 4 | 测试：`pytest`；可选打包脚本 |
 | 5 | commit：`chore(release): vX.Y.Z` |
 | 6 | `git tag vX.Y.Z` 并 push |
-| 7 | 构建 `.app`（产物名可带版本，见打包脚本） |
+| 7 | 构建 macOS `.app` / Windows onedir（产物名可带版本，见打包脚本） |
 
 热修：从 tag 拉 hotfix 分支 → 只升 PATCH → 合并回 main。
 

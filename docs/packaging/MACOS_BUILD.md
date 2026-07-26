@@ -241,4 +241,10 @@ xattr -cr dist/pyinstaller/ChengduMahjongAITrainer.app
 
 ## 7. 与 Windows 的关系
 
-F0005 兼容逻辑仍在代码中；**本文件仅覆盖 macOS 打包命令与产物**。Windows 可用同类 entry + PyInstaller onedir，另开文档。
+F0005 兼容逻辑仍在代码中；**本文件仅覆盖 macOS 打包命令与产物**。  
+Windows 打包规格与手册：
+
+- 规格：[`docs/features/F0025_windows_packaging.md`](../features/F0025_windows_packaging.md)  
+- 手册：[`docs/packaging/WINDOWS_BUILD.md`](WINDOWS_BUILD.md)  
+
+须在 **Windows 主机** 构建；模式同为 onedir + `--seat-window` 再入。

@@ -17,6 +17,11 @@ packaging/**/*.build/
 # Local release binaries (large); keep releases/**/README.md if present
 releases/**/*.app/
 releases/**/*.dmg
+releases/windows/**
+!releases/windows/**/README.md
+*.exe
+# Windows packaging zip artifacts (local)
+dist/**/*windows*.zip
 
 # Virtual env
 .venv/
