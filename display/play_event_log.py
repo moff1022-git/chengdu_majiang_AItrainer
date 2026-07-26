@@ -75,14 +75,20 @@ class PlayEventLog:
             if tid is not None:
                 tid = str(tid)
             seat_s = f"S{seat}" if seat is not None else "?"
+            try:
+                from display.play_log_format import tile_zh
+
+                tid_zh = tile_zh(tid) if tid else "?"
+            except Exception:
+                tid_zh = tid or "?"
             if kind in ("discard", "DISCARD"):
-                text = f"{seat_s} 出 {tid or '?'}"
+                text = f"{seat_s} 打出 {tid_zh}"
                 return self.append("discard", text, seat=seat, tile_id=tid)
             if kind in ("pong", "PONG", "peng"):
-                text = f"{seat_s} 碰 {tid or ''}".strip()
+                text = f"{seat_s} 碰 {tid_zh}".strip()
                 return self.append("pong", text, seat=seat, tile_id=tid)
             if kind in ("gang", "GANG", "an_gang", "jia_gang", "ming_gang"):
-                text = f"{seat_s} 杠 {tid or ''}".strip()
+                text = f"{seat_s} 杠 {tid_zh}".strip()
                 return self.append("gang", text, seat=seat, tile_id=tid)
             if kind in ("hu", "HU", "zimo", "ron"):
                 text = f"{seat_s} 胡"

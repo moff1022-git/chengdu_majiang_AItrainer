@@ -1,31 +1,32 @@
 # 进度快照
 
-> 2026-07-26 — **弃牌区去掉右侧滚动条**（仍可滚轮滚动）
-
----
-
-> 此前：**F0023 主窗每轮掷骰定庄展示**
+> 2026-07-26 — **F0024 主窗出牌日志细化**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 目标 | 每轮开始前掷骰，主窗口显示过程与结果 |
-| 规格 | `docs/features/F0023_main_dice_roll_display.md` · Done |
-| 实现 | 确认后 sleep 播动画 → 再 `PlayerGameRunner`；桌心真实 d1/d2 + 庄家 |
-| 代码 | `display/dice_fx.py`、`table_view.py`、`app.py` |
-| 规则 | 未改；仍 `roll_dice(dice_seed)` 可复现 |
+| 目标 | 主窗口出牌日志内容更细 |
+| 规格 | `docs/features/F0024_play_log_detail.md` |
+| 实现 | 全量 score_events + 中文牌名 + 阶段/终局摘要 + 着色 |
+| 代码 | `display/play_log_format.py`、`app.py`、`play_log_panel.py` |
 
-## 体验路径
+## 日志示例
 
-```bash
-.venv/bin/python main.py play --players human,rule_ai,rule_ai,rule_ai
-# 座位窗确认开始 → 主窗掷骰动画 → 换三张/行牌
+```text
+◆ 换三张 · 方向 顺时针
+定缺 S0缺万 · S1缺筒 · …
+▶ 行牌开始 · 庄家 S2
+T0 S2 摸 1万
+T1 S2 打出 9万
+T2 S0 碰 9万
+★ S1 自摸 2番
+分  S1+4 自摸(2番) ←S0
+■ 本局结束 · 血战末家
 ```
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 本机开一局看掷骰 | 目视验收 |
-| 2 | 可选座位窗同步骰点 | 新需求 |
+| 1 | 本机开一局看右侧日志 | 目视 |

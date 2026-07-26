@@ -138,7 +138,7 @@ class MahjongApp:
         self.clock = pygame.time.Clock()
         self.assets = AssetManager(theme=self.cfg.theme)
         self.control_panel = ControlPanel()
-        self.play_log = PlayEventLog(capacity=200)
+        self.play_log = PlayEventLog(capacity=400)
         self.layout = Layout.from_window(mw, mh)
         self.lobby = LobbyView(self.assets)
         self.table = TableView(
@@ -996,49 +996,75 @@ class MahjongApp:
                 break
 
     def _ingest_play_log(self, state: GameState) -> None:
-        """Append display lines from public state deltas (no rule changes)."""
+        """Append detailed display lines from score_events + opening phases."""
+        from display.play_log_format import (
+            format_dingque_done,
+            format_finish_summary,
+            format_phase_line,
+            format_score_events_delta,
+            tile_zh,
+        )
+
         log = self.play_log
-        # Track last discard
-        ld = getattr(state, "last_discard", None)
-        if ld is not None:
-            seat = getattr(ld, "seat", None)
-            tid = getattr(ld, "tile_id", None) or getattr(ld, "tile", None)
-            if hasattr(tid, "id"):
-                tid = tid.id
-            fp = ("discard", seat, str(tid) if tid else None, getattr(state, "action_index", None))
-            if getattr(self, "_play_log_fp", None) != fp:
-                self._play_log_fp = fp
-                seat_s = f"S{seat}" if seat is not None else "?"
-                log.append("discard", f"{seat_s} 出 {tid or '?'}", seat=seat, tile_id=str(tid) if tid else None)
-        # Score / hu events tail
+        # --- Opening phase banners (once per phase) ---
+        phase = str(getattr(state, "phase", "") or "")
+        if phase != getattr(self, "_play_log_phase", None):
+            self._play_log_phase = phase
+            line = format_phase_line(phase, state)
+            if line:
+                log.append("info", line)
+            if phase in ("ready", "discard", "draw") and not getattr(
+                self, "_play_log_dingque_done", False
+            ):
+                dq = format_dingque_done(state)
+                if dq:
+                    self._play_log_dingque_done = True
+                    log.append("info", dq)
+
+        # --- Engine event stream (draw/discard/pong/gang/hu/score/…) ---
         events = list(getattr(state, "score_events", None) or [])
         n_seen = int(getattr(self, "_play_log_score_n", 0) or 0)
         if len(events) < n_seen:
             n_seen = 0
-        for ev in events[n_seen:]:
-            if not isinstance(ev, dict):
-                continue
-            et = str(ev.get("type") or "")
-            if et == "score":
-                for t in ev.get("transfers") or []:
-                    reason = str(t.get("reason") or "")
-                    fr = t.get("from")
-                    to = t.get("to")
-                    if reason.startswith("hu"):
-                        log.append("hu", f"S{to if to is not None else '?'} 胡 ({reason})")
-                    elif "gang" in reason:
-                        log.append("gang", f"杠分 {reason} S{fr}→S{to}")
-            elif et:
-                log.append("info", et)
+            # New hand: allow dingque banner again
+            self._play_log_dingque_done = False
+        for kind, text, seat, tid in format_score_events_delta(events, n_seen):
+            log.append(kind, text, seat=seat, tile_id=tid)
         self._play_log_score_n = len(events)
+
+        # Fallback discard if event stream missed (legacy path)
+        ld = getattr(state, "last_discard", None)
+        lds = getattr(state, "last_discard_seat", None)
+        if ld is not None and lds is not None:
+            tid = getattr(ld, "id", None) or str(ld)
+            fp = ("discard_fb", int(lds), str(tid), int(getattr(state, "turn_index", 0) or 0))
+            if getattr(self, "_play_log_fp", None) != fp:
+                # Only if last event isn't already this discard
+                last_texts = log.texts(limit=3)
+                want = f"打出 {tile_zh(tid)}"
+                if not any(want in t and f"S{lds}" in t for t in last_texts):
+                    log.append(
+                        "discard",
+                        f"S{lds} 打出 {tile_zh(tid)}",
+                        seat=int(lds),
+                        tile_id=str(tid),
+                    )
+                self._play_log_fp = fp
+
         if state.phase == "finished":
-            fin_fp = ("finished", str(state.finished_reason), len(state.hu_sequence or []))
+            fin_fp = (
+                "finished",
+                str(state.finished_reason),
+                len(state.hu_sequence or []),
+                tuple(
+                    (p.seat, int(getattr(p, "score", 0)))
+                    for p in (state.players or [])
+                ),
+            )
             if getattr(self, "_play_log_fin_fp", None) != fin_fp:
                 self._play_log_fin_fp = fin_fp
-                log.append(
-                    "info",
-                    f"本局结束 · {state.finished_reason or '?'}",
-                )
+                for line in format_finish_summary(state):
+                    log.append("info", line)
 
     def _on_resize(self, w: int, h: int) -> None:
         # Full mode: lock to plan complete size (≤1080p); do not enlarge
