@@ -1,27 +1,29 @@
 # 进度快照
 
-> 2026-07-26 — **项目已推送到 GitHub（private）**
+> 2026-07-26 — **F0020 多人人类模式：文档先行（Review）**
 
 ## 本轮
 
-| 项 | 状态 |
+| 项 | 说明 |
 |----|------|
-| 远程 | https://github.com/moff1022-git/chengdu_majiang_AItrainer |
-| 可见性 | **Private** |
-| 分支 | `main` → `origin/main` |
-| 账号 | `moff1022-git` |
-| 说明 | 首次 `gh repo create --push` 遇 HTTP2 失败；改 HTTP/1.1 后 push 成功 |
+| 目标 | 2 人类 / 3 人类模式；**先文档、不写代码** |
+| 交付 | `docs/features/F0020_multi_human_modes.md`（Review） |
+| 布局规范 | `docs/design/UI_DESIGN_STANDARD.md` → **v1.4.0**（布局 **D** = 3H+1AI） |
+| 代码 | **无** |
 
-## 本地跟踪
+## 模式摘要
 
-```text
-main...origin/main（已同步）
-```
+| 模式 | 布局 | 几何要点 |
+|------|------|----------|
+| 1H+3AI | A | 既有 |
+| **2H+2AI** | **B** | 右列两人类；左上 2 AI 顶对齐 |
+| **3H+1AI** | **D（新）** | AI 顶带 + body 2×2（H1/H2/MAIN/H0） |
+| 0H+4AI | C | 既有 |
 
 ## 下一步
 
 | 序 | 动作 | 触发语 |
 |----|------|--------|
-| 1 | 日常：改完 `git add/commit` 后 `git push` | — |
-| 2 | 若要改公开 | `仓库改为 public` |
-| 3 | 继续产品开发 | 直接说任务 |
+| 1 | 确认 F0020 + UI v1.4 | `确认 F0020` / `Approved F0020` |
+| 2 | 实现几何 + Hub 多 human | `实现 F0020` |
+| 3 | 若要改 D 布局拓扑 | 直接批注 §2.3 |

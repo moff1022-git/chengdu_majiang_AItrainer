@@ -5,6 +5,12 @@
 
 ## 2026-07-26
 
+### 文档 — 2/3 人类模式（F0020 · Review）
+
+- **F0020** `docs/features/F0020_multi_human_modes.md`：2H+2AI（布局 B）、3H+1AI（布局 **D**）；多 proxy / ready；实现切片；**本轮无代码**
+- **UI 规范 v1.4.0**：增加布局 D（AI 顶带 + body 四分）；B 的 AI 改为顶对齐；配置判定含 `(3,1)→D`
+- 索引：`docs/features/README.md`
+
 ### 工程 — 导入 GitHub
 
 - 本地 `git init -b main`；初始提交 `b4020a4` + 进度文档 `b1fbb99`

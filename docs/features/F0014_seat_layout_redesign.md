@@ -7,7 +7,7 @@
 | **状态** | `Draft`（内容/视觉/元素表；**布局几何已移交**） |
 | **类型** | UI 信息架构 / 座位窗内容与视觉 |
 | **依赖** | F0001、F0002、F0006、F0012、F0013 |
-| **布局几何权威** | **[`docs/design/UI_DESIGN_STANDARD.md`](../design/UI_DESIGN_STANDARD.md)**（**v1.3.1**：85% 画布；三档示意图 9 张） |
+| **布局几何权威** | **[`docs/design/UI_DESIGN_STANDARD.md`](../design/UI_DESIGN_STANDARD.md)**（**v1.4+**：A/B/C/D；2H/3H 见 F0020） |
 | **视觉权威** | [`assets/ASSETS.md`](../../assets/ASSETS.md) + `assets/palettes/` + 主题后缀 `_green` / `_blue` |
 | **关联代码** | `players/seat_window.py`、`display/window_geometry.py`、`players/seat_ui_hub.py`、`display/app.py` |
 | **设计图** | 历史 `docs/design/f0014/*`；**新布局以 UI 设计规范为准，本阶段可不出图** |
