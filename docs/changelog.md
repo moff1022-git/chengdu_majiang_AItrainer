@@ -5,11 +5,12 @@
 
 ## 2026-07-26
 
-### 工程 — 本地 Git 初始化（GitHub 待推送）
+### 工程 — 导入 GitHub
 
-- `git init -b main`，初始提交 `b4020a4`
-- `.gitignore`：排除 `.venv/`、`logs/`、`backup/`、`.obsidian/`、pytest 缓存等
-- 已安装 `gh`；**待** `gh auth login` 后 `gh repo create … --push`
+- 本地 `git init -b main`；初始提交 `b4020a4` + 进度文档 `b1fbb99`
+- `.gitignore`：排除 `.venv/`、`logs/`、`backup/` 等
+- **远程**：https://github.com/moff1022-git/chengdu_majiang_AItrainer （**private**）
+- `main` 已 push 至 `origin/main`（HTTP/1.1 重试成功）
 
 ## 2026-07-21
 
