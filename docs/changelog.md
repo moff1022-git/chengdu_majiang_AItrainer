@@ -5,6 +5,13 @@
 
 ## 2026-07-26
 
+### 修复 — 座位窗胡牌提示 / 副露尺寸 / 中文类型
+
+1. **胡牌无提示**：`hu_banner` 曾 `pack(before=meta_row)`，但横幅在 `mid`、meta 在 `op_status_fr`，跨父级 pack 静默失败 → 改挂 `op_info_fr`（状态栏下），始终可见；AI 窗同步显示  
+2. **AI 副露过大裁切**：固定 `tw=28` 在小 AI 窗溢出 → 副露牌面改与**手牌同宽**  
+3. **副露类型英文**：`pong`/`ming_gang`… → **碰/明杠/暗杠/加杠/吃**（`meld_kind_label`）  
+- 代码：`players/seat_window.py`；测：`test_meld_kind_label_zh`
+
 ### 修复 — 人类手牌选中无加框/高亮
 
 - **现象**：点选手牌后几乎无选中提示（PhotoImage 铺满 Label，1px 边框不可见）

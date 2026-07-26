@@ -163,6 +163,44 @@ def _status_hud_label(p: dict) -> tuple[str, str]:
     return (st, "#eeeeee")
 
 
+# Engine meld kinds → Chinese UI labels (副露类型提示)
+_MELD_KIND_ZH: dict[str, str] = {
+    "pong": "碰",
+    "peng": "碰",
+    "chow": "吃",
+    "chi": "吃",
+    "ming_gang": "明杠",
+    "an_gang": "暗杠",
+    "jia_gang": "加杠",
+    "gang": "杠",
+    "gang_ming": "明杠",
+    "gang_an": "暗杠",
+    "gang_jia": "加杠",
+}
+
+
+def meld_kind_label(kind: Any) -> str:
+    """Map engine meld kind (pong/ming_gang/…) to Chinese display text."""
+    k = str(kind or "").strip().lower()
+    if not k:
+        return "副露"
+    if k in _MELD_KIND_ZH:
+        return _MELD_KIND_ZH[k]
+    if "jia" in k and "gang" in k:
+        return "加杠"
+    if "an" in k and "gang" in k:
+        return "暗杠"
+    if "ming" in k and "gang" in k:
+        return "明杠"
+    if "gang" in k:
+        return "杠"
+    if "pong" in k or "peng" in k:
+        return "碰"
+    if "chow" in k or "chi" in k:
+        return "吃"
+    return str(kind)
+
+
 def selected_tile_tw(base_tw: int) -> int:
     """Selected hand tile width — same as base (border/color only; no enlarge).
 
@@ -534,6 +572,22 @@ class TkSeatApp:
         )
         self.status.pack(fill="x")
 
+        # 本座已胡横幅：挂在 op_info_fr（始终可见），勿 pack(before=meta_row)
+        # — meta_row 在 op_status_fr，父级不同会导致 pack 静默失败。
+        self.hu_banner = tk.Label(
+            self.op_info_fr,
+            text="",
+            bg="#b71c1c",
+            fg="#fff59d",
+            font=self._font_lg,
+            anchor="center",
+            justify="center",
+            padx=8,
+            pady=8,
+            wraplength=420,
+        )
+        self._hu_banner_packed = False
+
         # OP_SETTINGS — always bottom of OP (below action bar)
         self.settings_bar = tk.Frame(
             self.op_settings_fr,
@@ -607,18 +661,6 @@ class TkSeatApp:
         self.mid_canvas.bind("<Leave>", self._unbind_mousewheel)
         self.mid.bind("<Enter>", self._bind_mousewheel)
         self.mid.bind("<Leave>", self._unbind_mousewheel)
-
-        # Prominent self-hu banner (hidden until this seat hus)
-        self.hu_banner = tk.Label(
-            self.mid,
-            text="",
-            bg="#8b1a1a",
-            fg="#fff8c0",
-            font=self._font_lg,
-            anchor="center",
-            pady=10,
-        )
-        self._hu_banner_packed = False
 
         # F0010: opponent hand prediction (packed only when enabled)
         self.predict_fr = tk.Frame(
@@ -2127,12 +2169,28 @@ class TkSeatApp:
             if n_m > prev_m and melds:
                 last = melds[-1]
                 kind = last.get("kind") if isinstance(last, dict) else "?"
-                self._append_ai_log(f"副露 {kind}")
+                self._append_ai_log(f"副露 {meld_kind_label(kind)}")
             self._ai_prev_meld_n = n_m
             st = str((my or {}).get("status") or "")
             if st == "finished" and not getattr(self, "_ai_logged_hu", False):
-                self._append_ai_log("胡牌")
+                lw = (my or {}).get("last_win") if isinstance(my, dict) else None
+                extra = ""
+                if isinstance(lw, dict):
+                    if lw.get("zimo"):
+                        extra = "·自摸"
+                    elif lw.get("loser") is not None:
+                        extra = f"·点炮S{lw.get('loser')}"
+                    if lw.get("fan") is not None:
+                        extra += f"·{lw.get('fan')}番"
+                order = (my or {}).get("hu_order")
+                order_s = f"第{order}家" if order is not None else ""
+                self._append_ai_log(f"胡牌 {order_s}{extra}".strip())
                 self._ai_logged_hu = True
+                # Same prominent banner as human play window
+                try:
+                    self._show_self_hu_banner(my if isinstance(my, dict) else {})
+                except Exception:
+                    pass
             phase = str(obs.get("phase") or "")
             if phase and phase != getattr(self, "_ai_prev_phase", None):
                 if phase in ("finished", "exchange", "deal"):
@@ -3425,26 +3483,38 @@ class TkSeatApp:
         except Exception:
             pass
 
-    def _show_self_hu_banner(self, me: dict) -> None:
+    def _show_self_hu_banner(self, me: dict | None = None) -> None:
         """Big in-window notice when this seat has already hu'd (血战)."""
+        me = me if isinstance(me, dict) else {}
         order = me.get("hu_order")
         lw = me.get("last_win") if isinstance(me.get("last_win"), dict) else {}
         fan = lw.get("fan") if lw else None
-        kind = "自摸" if lw.get("zimo") else (
-            f"点炮S{lw.get('loser')}" if lw.get("loser") is not None else "胡牌"
-        )
-        fan_s = f"  {fan}番" if fan is not None else ""
+        if lw.get("zimo"):
+            kind = "自摸"
+        elif lw.get("loser") is not None:
+            kind = f"点炮S{lw.get('loser')}"
+        else:
+            kind = "胡牌"
+        fan_s = f" · {fan}番" if fan is not None else ""
+        order_s = f"第{order}家" if order is not None else "已胡"
         text = (
-            f"★★★  本座已胡 · 第{order or '—'}家  ({kind}{fan_s})  ★★★\n"
+            f"★★★  本座已胡 · {order_s}（{kind}{fan_s}）  ★★★\n"
             f"血战继续 — 本窗只读观战，其余玩家继续行牌"
         )
         try:
+            # Keep wraplength ≈ content width so multi-line banner is readable
+            try:
+                ww = max(200, int(self.root.winfo_width() or 0) - 24)
+                self.hu_banner.config(wraplength=ww)
+            except Exception:
+                pass
             self.hu_banner.config(text=text, bg="#b71c1c", fg="#fff59d")
             if not self._hu_banner_packed:
-                self.hu_banner.pack(fill="x", before=self.meta_row, pady=4)
+                # Pack under status in op_info_fr (always visible, not scroll mid)
+                self.hu_banner.pack(fill="x", after=self.status, pady=(2, 4))
                 self._hu_banner_packed = True
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[seat_window] hu_banner show failed: {e}")
 
     def _hide_self_hu_banner(self) -> None:
         if not getattr(self, "_hu_banner_packed", False):
@@ -4071,6 +4141,11 @@ class TkSeatApp:
                         f"已胡牌离桌 · 血战继续（观看其余玩家） "
                         f"胡序=第{me.get('hu_order') or '—'}家"
                     )
+            # status_note may have changed after first _refresh_chrome
+            try:
+                self.status.config(text=self.status_note)
+            except Exception:
+                pass
         else:
             self._hide_self_hu_banner()
 
@@ -4339,6 +4414,11 @@ class TkSeatApp:
         if not meld_ok or force:
             self._clear(self.meld_fr)
             if melds:
+                # Meld faces = same size as hand (AI windows were fixed tw=28 → overflow)
+                meld_tw = int(hand_grid.tw) if hand_grid is not None else htw
+                meld_tw = max(10, min(int(meld_tw), 40))
+                if meld_tw >= 12 and (meld_tw % 2) == 1:
+                    meld_tw -= 1
                 self.tk.Label(
                     self.meld_fr,
                     text="副露",
@@ -4355,20 +4435,22 @@ class TkSeatApp:
                     if not isinstance(m, dict):
                         continue
                     tid = m.get("tile_id")
-                    kind = str(m.get("kind") or "")
-                    n = 4 if "gang" in kind else 3
+                    kind_raw = str(m.get("kind") or "")
+                    kind_zh = meld_kind_label(kind_raw)
+                    n = 4 if "gang" in kind_raw.lower() else 3
                     if not tid:
                         continue
-                    est = n * 30 + 24
+                    # width estimate: n faces + chrome + kind label
+                    est = n * (meld_tw + 4) + 20
                     if row_used > 0 and row_used + est > cw:
                         cur = self.tk.Frame(meld_row, bg="#143528")
                         cur.pack(anchor="w")
                         row_used = 0
                     box = self.tk.Frame(cur, bg="#143528")
-                    box.pack(side="left", padx=4)
+                    box.pack(side="left", padx=3)
                     self.tk.Label(
                         box,
-                        text=kind[:4],
+                        text=kind_zh,
                         bg="#143528",
                         fg="#c8dcc8",
                         font=self._font,
@@ -4376,9 +4458,12 @@ class TkSeatApp:
                     trow = self.tk.Frame(box, bg="#143528")
                     trow.pack()
                     for _ in range(n):
-                        self._tile_btn(trow, str(tid), tw=28).pack(
-                            side="left", padx=1
-                        )
+                        self._tile_btn(
+                            trow,
+                            str(tid),
+                            tw=meld_tw,
+                            compact=True,
+                        ).pack(side="left", padx=0)
                     row_used += est
             self._last_meld_key = meld_key
 
@@ -4939,6 +5024,12 @@ class TkSeatApp:
             self.status_note = "已胡牌 · 血战继续（其他玩家行牌中）…"
             # Immediate banner even before next observation arrives
             try:
+                self._show_self_hu_banner(
+                    {
+                        "hu_order": None,
+                        "last_win": {},
+                    }
+                )
                 self.hu_banner.config(
                     text=(
                         "★★★  本座已胡！血战继续  ★★★\n"
@@ -4947,11 +5038,8 @@ class TkSeatApp:
                     bg="#b71c1c",
                     fg="#fff59d",
                 )
-                if not self._hu_banner_packed:
-                    self.hu_banner.pack(fill="x", before=self.meta_row, pady=4)
-                    self._hu_banner_packed = True
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"[seat_window] immediate hu banner: {e}")
         else:
             self.status_note = "已提交，等待…"
         # Lightweight chrome update first so UI stays responsive while

@@ -141,6 +141,17 @@ def test_hand_selection_face_style_gold_frame() -> None:
     assert off["border"] == "#143528"  # blends into hand table when unselected
 
 
+def test_meld_kind_label_zh() -> None:
+    from players.seat_window import meld_kind_label
+
+    assert meld_kind_label("pong") == "碰"
+    assert meld_kind_label("ming_gang") == "明杠"
+    assert meld_kind_label("an_gang") == "暗杠"
+    assert meld_kind_label("jia_gang") == "加杠"
+    assert meld_kind_label("chow") == "吃"
+    assert meld_kind_label("") == "副露"
+
+
 def test_msg_seat_settings_wire() -> None:
     from protocols.wire import decode_line, encode_line, msg_seat_settings
 
