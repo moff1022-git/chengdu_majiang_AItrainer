@@ -349,7 +349,20 @@ msiexec /x dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi
 - 运行时日志仍在：`%APPDATA%\ChengduMahjongAITrainer\logs\`  
 - 规格：[`docs/features/F0027_windows_msi.md`](../features/F0027_windows_msi.md)
 
-### 8.3 注意
+### 8.3 中文显示（代码页）
+
+Windows Installer 字符串表按 **ANSI 代码页** 存储，**不是 UTF-8**。简体中文 MSI 必须：
+
+| 项 | 值 |
+|----|-----|
+| `Product/@Language` | **2052**（zh-CN） |
+| `Product/@Codepage` | **936**（GBK） |
+| 源 `Product.wxs` | 构建时由 `gen_msi_product_wxs.py` 写成 **GBK** |
+
+若使用 `Codepage=65001`（UTF-8）或 UTF-8 源文件直接 candle，控制面板/开始菜单中文常显示为**乱码**。  
+修复后请重新执行 `build_msi_windows.ps1` 再安装验证。
+
+### 8.4 注意
 
 - 仅包装 **PyInstaller** 树（Nuitka 另打 MSI 不在 F0027 范围）。  
 - 未签名 → SmartScreen 可能提示。  

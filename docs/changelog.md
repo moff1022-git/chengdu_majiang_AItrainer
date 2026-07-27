@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（F0027 · MSI 中文乱码修复）
+
+### 修复 — 安装程序中文乱码
+
+- 根因：MSI 字符串表为 **ANSI 代码页**；曾用 `Codepage=65001`/UTF-8 → 控制面板/开始菜单乱码  
+- 修正：`Codepage=936`（GBK）+ `Language=2052`；`gen_msi_product_wxs.py` 生成 **GBK** 编码 `Product.wxs`  
+- 请重新 `build_msi_windows.ps1` 后安装验证「成都麻将AI训练器」
+
 ## 2026-07-26（F0027 · Windows MSI）
 
 ### 实现 — WiX MSI 安装程序

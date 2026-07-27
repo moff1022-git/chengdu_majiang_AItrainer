@@ -23,12 +23,11 @@ Write-Host "Python: $PY"
 
 $APP_VERSION = & $PY -c "from version import APP_VERSION; print(APP_VERSION)"
 $APP_NAME = & $PY -c "from version import APP_NAME; print(APP_NAME)"
-$APP_NAME_ZH = & $PY -c "from version import APP_NAME_ZH; print(APP_NAME_ZH)"
 # MSI Product Version: up to 4 numeric parts
 $ProductVersion = if ($APP_VERSION -match '^\d+\.\d+\.\d+$') { "$APP_VERSION.0" } else { $APP_VERSION }
 $Manufacturer = "moff1022-git"
 
-Write-Host "==> App $APP_NAME v$APP_VERSION  MSI ProductVersion=$ProductVersion"
+Write-Host "==> App $APP_NAME v$APP_VERSION  MSI ProductVersion=$ProductVersion (Chinese strings via GBK wxs)"
 
 # --- PyInstaller onedir ---
 $AppDir = Join-Path $ROOT "dist\pyinstaller\$APP_NAME"
@@ -76,13 +75,18 @@ New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 Write-Host "==> Stage onedir → $StageApp (ASCII path for WiX)"
 Copy-Item -Recurse -Force $AppDir $StageApp
 
-$ProductWxsSrc = Join-Path $ROOT "packaging\windows\msi\Product.wxs"
 $ProductWxs = Join-Path $StageRoot "Product.wxs"
-Copy-Item -Force $ProductWxsSrc $ProductWxs
 $HarvestWxs = Join-Path $StageRoot "AppFiles.wxs"
 $MsiName = "$APP_NAME-$APP_VERSION-windows-x64.msi"
 $MsiPath = Join-Path $OutDir $MsiName
 $StageMsi = Join-Path $StageRoot $MsiName
+
+# Generate Product.wxs as **GBK (cp936)** so Chinese ARP / Start Menu are not mojibake.
+# (MSI string tables are code-page based; UTF-8/65001 often displays as garbage on zh-CN.)
+Write-Host "==> Generate Product.wxs (GBK / codepage 936)"
+$GenWxs = Join-Path $ROOT "tools\packaging\gen_msi_product_wxs.py"
+& $PY $GenWxs -o $ProductWxs --manufacturer $Manufacturer
+if ($LASTEXITCODE -ne 0) { Write-Error "gen_msi_product_wxs.py failed ($LASTEXITCODE)" }
 
 Write-Host "==> heat: harvest $StageApp"
 & $Heat dir $StageApp `
@@ -100,12 +104,9 @@ if ($LASTEXITCODE -ne 0) { Write-Error "heat failed ($LASTEXITCODE)" }
 Write-Host "==> candle"
 Push-Location $StageRoot
 try {
-    # Run from stage dir so -out . is space-free; define SourceDir without spaces
+    # No -d Chinese defines (already baked into GBK Product.wxs)
     & $Candle -nologo -arch x64 `
         "-dSourceDir=$StageApp" `
-        "-dProductVersion=$ProductVersion" `
-        "-dProductNameZh=$APP_NAME_ZH" `
-        "-dManufacturer=$Manufacturer" `
         -out "$Work\\" `
         $ProductWxs `
         $HarvestWxs

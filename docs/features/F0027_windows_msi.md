@@ -64,6 +64,7 @@ PyInstaller onedir (F0025)
 | 压缩 | `MediaTemplate EmbedCab=yes`（单文件 MSI） |
 | 快捷方式 | 开始菜单「成都麻将AI训练器」→ `ChengduMahjongAITrainer.exe` |
 | 数据 | 运行时日志仍写 `%APPDATA%\…`（`app_paths`，不写 Program Files） |
+| **中文** | `Language=2052` + **`Codepage=936`（GBK）**；构建时 `gen_msi_product_wxs.py` 写 GBK 源（**禁止** 65001/UTF-8 入库，否则 ARP 乱码） |
 
 ## 4. 交付清单
 
