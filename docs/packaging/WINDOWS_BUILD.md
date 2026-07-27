@@ -333,21 +333,36 @@ releases\windows\…（本地副本，gitignore）
 
 ### 8.2 安装 / 卸载
 
+**需要管理员权限**（安装到 Program Files + 公共开始菜单）。双击 MSI 时应弹出 UAC。
+
 ```powershell
-# 安装（需管理员）
+# 安装（管理员 / UAC）
 msiexec /i dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi
 
-# 静默
+# 静默（必须在已提升的终端）
 msiexec /i dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi /qn
 
 # 卸载
 msiexec /x dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi
 ```
 
-- 默认目录：`%ProgramFiles%\ChengduMahjongAITrainer\`  
-- 开始菜单：`成都麻将AI训练器`  
-- 运行时日志仍在：`%APPDATA%\ChengduMahjongAITrainer\logs\`  
-- 规格：[`docs/features/F0027_windows_msi.md`](../features/F0027_windows_msi.md)
+| 项 | 说明 |
+|----|------|
+| 默认目录 | `%ProgramFiles%\ChengduMahjongAITrainer\` |
+| 开始菜单 | `成都麻将AI训练器`（公共菜单） |
+| 向导 UI | **WixUI 中文**（许可协议 → 安装目录 → 安装） |
+| 产品名编码 | GBK 代码页 936（见 §8.3） |
+| 日志 | `%APPDATA%\ChengduMahjongAITrainer\logs\` |
+
+常见错误：
+
+| 代码 | 含义 | 处理 |
+|------|------|------|
+| **1925** | 无足够权限为「所有用户」安装 | 右键 MSI → **以管理员身份运行**，或同意 UAC |
+| **1603** | 致命错误（多为权限或文件占用） | 关已运行的游戏进程后管理员重装 |
+| **1639** | 命令行参数无效 | 路径含空格时对 MSI 路径加引号 |
+
+规格：[`docs/features/F0027_windows_msi.md`](../features/F0027_windows_msi.md)
 
 ### 8.3 中文显示（代码页）
 

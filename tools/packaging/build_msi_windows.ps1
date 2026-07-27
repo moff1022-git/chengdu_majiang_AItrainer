@@ -81,11 +81,15 @@ $MsiName = "$APP_NAME-$APP_VERSION-windows-x64.msi"
 $MsiPath = Join-Path $OutDir $MsiName
 $StageMsi = Join-Path $StageRoot $MsiName
 
+# License.rtf must be on ASCII path for WiX variable (copy into stage)
+$LicenseSrc = Join-Path $ROOT "packaging\windows\msi\License.rtf"
+$LicenseStage = Join-Path $StageRoot "License.rtf"
+Copy-Item -Force $LicenseSrc $LicenseStage
+
 # Generate Product.wxs as **GBK (cp936)** so Chinese ARP / Start Menu are not mojibake.
-# (MSI string tables are code-page based; UTF-8/65001 often displays as garbage on zh-CN.)
-Write-Host "==> Generate Product.wxs (GBK / codepage 936)"
+Write-Host "==> Generate Product.wxs (GBK / codepage 936 + WixUI)"
 $GenWxs = Join-Path $ROOT "tools\packaging\gen_msi_product_wxs.py"
-& $PY $GenWxs -o $ProductWxs --manufacturer $Manufacturer
+& $PY $GenWxs -o $ProductWxs --manufacturer $Manufacturer --license $LicenseStage
 if ($LASTEXITCODE -ne 0) { Write-Error "gen_msi_product_wxs.py failed ($LASTEXITCODE)" }
 
 Write-Host "==> heat: harvest $StageApp"
@@ -112,11 +116,22 @@ try {
         $HarvestWxs
     if ($LASTEXITCODE -ne 0) { Write-Error "candle failed ($LASTEXITCODE)" }
 
-    Write-Host "==> light"
+    Write-Host "==> light (WixUI + zh-CN)"
     $ProductObj = Join-Path $Work "Product.wixobj"
     $HarvestObj = Join-Path $Work "AppFiles.wixobj"
-    # Suppress noisy ICE60 (font language) if any; fail on real errors
-    & $Light -nologo -sice:ICE60 -out $StageMsi $ProductObj $HarvestObj
+    $UiExt = Join-Path $WixRoot "WixUIExtension.dll"
+    # zh-CN only — en-US culture forces codepage 1252 and breaks Chinese product strings
+    # ICE38/43/57: Start Menu shortcut + HKCU keypath under perMachine (common pattern)
+    & $Light -nologo `
+        -ext $UiExt `
+        -cultures:zh-CN `
+        -sice:ICE38 `
+        -sice:ICE43 `
+        -sice:ICE57 `
+        -sice:ICE60 `
+        -out $StageMsi `
+        $ProductObj `
+        $HarvestObj
     if ($LASTEXITCODE -ne 0) { Write-Error "light failed ($LASTEXITCODE)" }
 }
 finally {
@@ -140,10 +155,12 @@ Write-Host ""
 Write-Host "Done. MSI: $MsiPath  ($mb MB)"
 Write-Host "Copy: $RelMsi"
 Write-Host ""
-Write-Host "Install (elevated):"
+Write-Host "Install (needs admin / UAC):"
+Write-Host "  # Double-click MSI, or elevated:"
 Write-Host "  msiexec /i `"$MsiPath`""
-Write-Host "Silent:"
+Write-Host "Silent (elevated PowerShell/cmd):"
 Write-Host "  msiexec /i `"$MsiPath`" /qn"
-Write-Host "Uninstall (after install, use ARP or):"
+Write-Host "Uninstall:"
 Write-Host "  msiexec /x `"$MsiPath`""
+Write-Host "Default dir: %ProgramFiles%\ChengduMahjongAITrainer\"
 Write-Host "Docs: docs/packaging/WINDOWS_BUILD.md · F0027"

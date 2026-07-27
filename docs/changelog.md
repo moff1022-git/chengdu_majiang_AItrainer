@@ -3,6 +3,21 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（F0027 · 安装程序修复）
+
+### 修复 — MSI 安装失败 / 体验问题
+
+| 问题 | 处理 |
+|------|------|
+| 中文乱码 | `Codepage=936` + GBK 源（`gen_msi_product_wxs.py`） |
+| **错误 1925** 权限不足 | 去掉公共桌面快捷方式；`InstallPrivileges=elevated`；安装需 UAC |
+| 无安装向导 | 增加 **WixUI_InstallDir** + **zh-CN** 界面 |
+| ARP 无路径 | `ARPINSTALLLOCATION` 写入安装目录 |
+| 版本显示 0.2.1.0 | ProductVersion 改为 **0.2.1** 三段 |
+
+- 重打 MSI 后请 **以管理员身份** 安装验证  
+- 文档 WINDOWS_BUILD §8 补充错误码表  
+
 ## 2026-07-26（F0027 · MSI 中文乱码修复）
 
 ### 修复 — 安装程序中文乱码
