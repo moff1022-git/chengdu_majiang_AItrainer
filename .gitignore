@@ -13,6 +13,7 @@ build/
 *.dist/
 *.onefile-build/
 packaging/**/*.build/
+nuitka-crash-report.xml
 # Keep packaging sources tracked; ignore local output only (dist/ build/ above)
 # Local release binaries (large); keep releases/**/README.md if present
 releases/**/*.app/

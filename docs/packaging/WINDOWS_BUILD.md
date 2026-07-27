@@ -13,7 +13,7 @@
 | **本机副本** | `releases/windows/*`（不进 git） |
 | **对照** | macOS：[`MACOS_BUILD.md`](MACOS_BUILD.md) |
 
-> **状态**：手册已就绪；**一键脚本尚未合入**（F0025 = Draft）。在脚本落地前，可按 §2 / §3 的**手动命令**在 Windows 上试打。实现后以脚本为准，本节手动命令保持为等价参考。
+> **状态**：F0025 = **`Done`**；一键脚本已合入。优先用 §2.1 / §3.1 脚本；§2.2 / §3.2 手动命令为等价参考。
 
 ---
 
@@ -120,8 +120,7 @@ packaging\macos\pyinstaller_entry.py
 $ROOT = (Get-Location).Path
 $PY = Join-Path $ROOT ".venv\Scripts\python.exe"
 $APP_NAME = & $PY -c "from version import APP_NAME; print(APP_NAME)"
-$ENTRY = Join-Path $ROOT "packaging\macos\pyinstaller_entry.py"
-# 实现后改为: packaging\windows\pyinstaller_entry.py
+$ENTRY = Join-Path $ROOT "packaging\windows\pyinstaller_entry.py"
 
 & $PY -m PyInstaller `
   --noconfirm `
@@ -220,8 +219,7 @@ Compress-Archive -Path $SRC -DestinationPath $ZIP -Force
 ```powershell
 $ROOT = (Get-Location).Path
 $PY = Join-Path $ROOT ".venv\Scripts\python.exe"
-$ENTRY = Join-Path $ROOT "packaging\macos\pyinstaller_entry.py"
-# 实现后: packaging\windows\pyinstaller_entry.py
+$ENTRY = Join-Path $ROOT "packaging\windows\pyinstaller_entry.py"
 
 & $PY -m nuitka `
   --standalone `
@@ -314,11 +312,16 @@ $ENTRY = Join-Path $ROOT "packaging\macos\pyinstaller_entry.py"
 
 | 项 | 状态 |
 |----|------|
-| F0025 规格 | Draft |
-| 本手册 | 已写（手动命令可用） |
-| `packaging/windows/*` | **待实现** |
-| `build_*_windows.ps1` | **待实现** |
-| 本机 Win 验收 | **待执行** |
-| GitHub Release Win zip | **可选**（验收后） |
+| F0025 规格 | **Done** |
+| 本手册 | 已写 |
+| `packaging/windows/*` | **已合入** |
+| `build_*_windows.ps1` / `.bat` | **已合入** |
+| 本机 Win 验收 | 脚本含 `--version` / `--seat-window --help` 冒烟；完整 W1–W11 人工开局 |
+| GitHub Release Win zip | **已上传** v0.2.1（PyInstaller + Nuitka） |
 
-确认规格后触发语：`确认 F0025` → `实现 Windows 打包`。
+构建触发：
+
+```powershell
+.\tools\packaging\build_pyinstaller_windows.ps1
+.\tools\packaging\build_nuitka_windows.ps1   # 需 MSVC/MinGW
+```

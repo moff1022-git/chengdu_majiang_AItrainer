@@ -3,6 +3,44 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（F0025 · Release 发布）
+
+### 工程 — Windows 包上传 GitHub Release v0.2.1
+
+- 附件：
+  - `ChengduMahjongAITrainer-0.2.1-windows-x64-PyInstaller.zip`（约 40 MB）
+  - `ChengduMahjongAITrainer-0.2.1-windows-x64-Nuitka.zip`（约 42 MB）
+- 页面：https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1  
+- Release 说明已改为 **Windows x64 + macOS arm64** 双平台
+
+## 2026-07-26（F0025 · 本机构建）
+
+### 工程 — Windows 双包本机构建成功
+
+- **PyInstaller**：`dist/pyinstaller/…/ChengduMahjongAITrainer.exe` · `--version` 0.2.1
+- **Nuitka**：`dist/nuitka/pyinstaller_entry.dist/ChengduMahjongAITrainer.exe` · 冒烟通过  
+  （首次 MinGW 下载曾失败，重试后 gcc 15.2 缓存成功；脚本加 `--lto=no` 加速链接）
+- 副本：`releases/windows/*-PyInstaller`、`*-Nuitka`（gitignore）
+
+## 2026-07-26（F0025 Done · 实现）
+
+### 实现 — Windows 打包（PyInstaller + Nuitka）
+
+- **入口** `packaging/windows/pyinstaller_entry.py`（`freeze_support` + `main.main`）
+- **spec** `packaging/windows/ChengduMahjongAITrainer.spec`（可选）
+- **脚本** `tools/packaging/build_pyinstaller_windows.ps1` / `build_nuitka_windows.ps1` / `.bat`
+- **本机副本** `releases/windows/README.md`（产物 gitignore）
+- **单测** `tests/test_app_paths.py`：frozen 再入、`_MEIPASS`、Win 可写路径
+- 规格 **Approved → Done**；手册/索引/基线同步
+
+## 2026-07-26（F0025 Approved）
+
+### 文档 — 确认 Windows 打包规格
+
+- [`F0025_windows_packaging.md`](features/F0025_windows_packaging.md)：**Draft → Approved**
+- 锁定：双脚本（PyInstaller + Nuitka）；Release 默认只挂 PyInstaller onedir x64；须在 Windows 构建
+- 同步：`WINDOWS_BUILD.md`、features 索引、`DOC_CODE_BASELINE`、`LATEST`
+
 ## 2026-07-26（README 截图重刷）
 
 - 重跑 `tools/capture_readme_screenshots.py`，刷新 `docs/media/readme/01–05` 与 `MANIFEST.json`
