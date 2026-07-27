@@ -1,28 +1,26 @@
 # 进度快照
 
-> 2026-07-26 — **F0027 Windows MSI 安装包已生成**
+> 2026-07-26 — **MSI 中文乱码已修复（GBK 936）**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 规格 | F0027 WiX MSI · **Done** |
-| 脚本 | `tools/packaging/build_msi_windows.ps1` |
-| 模板 | `packaging/windows/msi/Product.wxs` |
-| 产物 | `dist/msi/ChengduMahjongAITrainer-0.2.1-windows-x64.msi`（**31.4 MB**） |
-| 安装 | 管理员 `msiexec /i …msi` → Program Files + 开始菜单 |
+| 问题 | 安装包 ProductName / 开始菜单中文乱码 |
+| 根因 | MSI 用 ANSI 代码页；UTF-8/65001 显示异常 |
+| 修复 | `Codepage=936` + `gen_msi_product_wxs.py` 写 **GBK** 源 |
+| 验证 | COM 读 `ProductName` == `成都麻将AI训练器` |
+| 产物 | 已重打 `dist/msi/…0.2.1-windows-x64.msi` 并 **clobber 上传** Release |
 
-## 构建
+## 请你本机验证
 
-```powershell
-.\tools\packaging\build_msi_windows.ps1            # 可自动先打 PyInstaller
-.\tools\packaging\build_msi_windows.ps1 -SkipPyInstaller
-```
+1. 卸载旧版（若已装）  
+2. 安装新 MSI（Release 或 `dist\msi\`）  
+3. 看「应用和功能」与开始菜单是否为 **成都麻将AI训练器**  
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 本机安装验收 M1–M5 | 双击 msi |
-| 2 | 上传 MSI 到 Release v0.2.1 | `发布 MSI` |
-| 3 | 提交 F0027 代码 | `提交 F0027` |
+| 1 | 本机安装目视中文 | （自行） |
+| 2 | 其它 | 见 PLAN |
