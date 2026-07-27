@@ -1,27 +1,18 @@
 # 进度快照
 
-> 2026-07-26 — **F0025 已提交并 push 到 origin/main**
+> 2026-07-26 — **README 已更新 Windows/Release 分发说明**
 
 ## 本轮
 
 | 项 | 说明 |
 |----|------|
-| 提交 | **`965358e`** `feat(F0025): Windows packaging scripts and Release docs` |
-| 远程 | `main` 已 push（ahead/behind 0/0） |
-| 范围 | packaging/windows · build_*_windows · tests · docs · releases/windows/README |
-| 未入 git | dist/ · releases 二进制 · nuitka-crash-report |
-| Release | v0.2.1 已含 Win zip（见先前发布） |
-
-## 功能线
-
-| 编号 | 状态 |
-|------|------|
-| F0025 | **Done**（代码 + Release + main） |
-| APP | 0.2.1 |
+| 问题 | GitHub README 仍写 F0025 Draft / 仅 macOS 分发 |
+| 变更 | 根 `README.md`：预构建双平台表 + Win/Mac 本机构建；changelog 同步 |
+| 提交 | 见本轮 push |
 
 ## 下一步
 
 | 序 | 动作 | 建议触发语 |
 |----|------|------------|
-| 1 | 从 Release 下载 Win 包目视验收 | （自行） |
-| 2 | 其它功能 / 版本线 | 见 PLAN / VERSIONING |
+| 1 | 刷新 GitHub 仓库首页核对 README | （浏览器） |
+| 2 | 其它功能 | 见 PLAN |

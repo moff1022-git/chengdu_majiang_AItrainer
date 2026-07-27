@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（README · 分发说明）
+
+### 文档 — 根 README 对齐 Windows 发布
+
+- 功能「分发」改为 **Win x64 + macOS arm64** 双平台预构建  
+- 删除「Windows 打包（规划中）/ F0025 Draft」；改为 **预构建下载** + **本机构建**（Win/Mac 分节）  
+- 含 Release 附件表、Windows 解压示例、构建命令与日志路径  
+
 ## 2026-07-26（F0025 · Release 发布）
 
 ### 工程 — Windows 包上传 GitHub Release v0.2.1

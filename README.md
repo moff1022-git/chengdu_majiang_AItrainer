@@ -10,7 +10,7 @@
 - **显示**：绿/蓝主题；主窗大厅/牌桌/结算；座位窗操作与观战；推荐出牌/进张；主窗掷骰动画与细化出牌日志
 - **存档**：JSON 存档、逐步快照、崩溃策略
 - **训练**：`ChengduMahjongEnv`（`reset` / `step` / `legal_actions`）+ 批跑 runner
-- **分发**：macOS arm64 **PyInstaller / Nuitka** 双包（见 [Release v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)）
+- **分发**：**Windows x64** 与 **macOS arm64** 均可下载 **PyInstaller / Nuitka** 预构建包（[Release v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)）
 
 ### 界面预览
 
@@ -43,23 +43,52 @@
 - **进度基线**：[docs/status/LATEST.md](docs/status/LATEST.md) · 变更：[docs/changelog.md](docs/changelog.md)  
 - 查询：`.venv/bin/python main.py --version`
 
-## macOS 打包（PyInstaller / Nuitka）
+## 预构建下载（Release）
 
-无需本机 Python 即可分发 `.app`：
+无需本机安装 Python，可直接使用发布包：
+
+| 平台 | 推荐附件 | 说明 |
+|------|----------|------|
+| **Windows x64** | `ChengduMahjongAITrainer-0.2.1-windows-x64-PyInstaller.zip` | 解压后运行目录内 `ChengduMahjongAITrainer.exe` |
+| **Windows x64** | `…-windows-x64-Nuitka.zip` | 备选构建，用法相同 |
+| **macOS arm64** | `…-macOS-arm64-PyInstaller.zip` | 解压后打开 `.app`（必要时 `xattr -cr`） |
+| **macOS arm64** | `…-macOS-arm64-Nuitka.zip` | 路径含中文时建议拷到 `/Applications` |
+
+- **发布页**：[v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)  
+- **Windows 日志**：`%APPDATA%\ChengduMahjongAITrainer\logs\`  
+- **macOS 日志**：`~/Library/Application Support/ChengduMahjongAITrainer/logs/`  
+- 未签名：Windows SmartScreen / macOS Gatekeeper 可能提示，从可信来源获取后「仍要运行」即可。
+
+### Windows 解压运行（示例）
+
+```powershell
+Expand-Archive ChengduMahjongAITrainer-0.2.1-windows-x64-PyInstaller.zip -DestinationPath .
+.\ChengduMahjongAITrainer\ChengduMahjongAITrainer.exe
+.\ChengduMahjongAITrainer\ChengduMahjongAITrainer.exe --version
+```
+
+## 本机构建打包
+
+### Windows（PyInstaller / Nuitka · F0025 Done）
+
+须在 **Windows** 上构建（不支持 mac 交叉编译）。onedir + 同一 `exe` 带 `--seat-window` 拉起座位窗：
+
+```powershell
+.\tools\packaging\build_pyinstaller_windows.ps1   # → dist\pyinstaller\ChengduMahjongAITrainer\
+.\tools\packaging\build_nuitka_windows.ps1         # → dist\nuitka\pyinstaller_entry.dist\（需 MSVC/MinGW）
+# 或双击 tools\packaging\build_pyinstaller_windows.bat
+```
+
+说明与验收：[`docs/packaging/WINDOWS_BUILD.md`](docs/packaging/WINDOWS_BUILD.md) · 规格 [`F0025`](docs/features/F0025_windows_packaging.md)。
+
+### macOS（PyInstaller / Nuitka · F0021 Done）
 
 ```bash
 bash tools/packaging/build_pyinstaller_macos.sh   # → dist/pyinstaller/ChengduMahjongAITrainer.app
 bash tools/packaging/build_nuitka_macos.sh         # → dist/nuitka/ChengduMahjongAITrainer.app
 ```
 
-说明与验收：[`docs/packaging/MACOS_BUILD.md`](docs/packaging/MACOS_BUILD.md) · 规格 [`F0021`](docs/features/F0021_macos_packaging.md)。  
-冻结后日志：`~/Library/Application Support/ChengduMahjongAITrainer/logs/`。
-
-## Windows 打包（规划中）
-
-规格 **F0025 Draft** · 手册：[`docs/packaging/WINDOWS_BUILD.md`](docs/packaging/WINDOWS_BUILD.md)。  
-须在 **Windows 主机** 构建（onedir + 同一 exe `--seat-window`）；一键脚本待规格确认后实现。  
-冻结后日志：`%APPDATA%\ChengduMahjongAITrainer\logs\`。
+说明与验收：[`docs/packaging/MACOS_BUILD.md`](docs/packaging/MACOS_BUILD.md) · 规格 [`F0021`](docs/features/F0021_macos_packaging.md)。
 
 ## 安装（永久环境）
 
