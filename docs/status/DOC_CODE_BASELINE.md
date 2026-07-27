@@ -46,6 +46,7 @@
 | F0024 | Done | `play_log_format` 细化日志 |
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
+| F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---

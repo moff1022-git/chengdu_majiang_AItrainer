@@ -21,8 +21,9 @@ releases/**/*.dmg
 releases/windows/**
 !releases/windows/**/README.md
 *.exe
-# Windows packaging zip artifacts (local)
+# Windows packaging zip / MSI artifacts (local; dist/ already ignored)
 dist/**/*windows*.zip
+*.msi
 
 # Virtual env
 .venv/

@@ -49,8 +49,9 @@
 
 | 平台 | 推荐附件 | 说明 |
 |------|----------|------|
-| **Windows x64** | `ChengduMahjongAITrainer-0.2.1-windows-x64-PyInstaller.zip` | 解压后运行目录内 `ChengduMahjongAITrainer.exe` |
-| **Windows x64** | `…-windows-x64-Nuitka.zip` | 备选构建，用法相同 |
+| **Windows x64** | `ChengduMahjongAITrainer-0.2.1-windows-x64.msi` | **推荐安装包**（Program Files + 开始菜单） |
+| **Windows x64** | `…-windows-x64-PyInstaller.zip` | 免安装绿色包，解压运行 `ChengduMahjongAITrainer.exe` |
+| **Windows x64** | `…-windows-x64-Nuitka.zip` | 备选绿色包 |
 | **macOS arm64** | `…-macOS-arm64-PyInstaller.zip` | 解压后打开 `.app`（必要时 `xattr -cr`） |
 | **macOS arm64** | `…-macOS-arm64-Nuitka.zip` | 路径含中文时建议拷到 `/Applications` |
 
@@ -76,10 +77,11 @@ Expand-Archive ChengduMahjongAITrainer-0.2.1-windows-x64-PyInstaller.zip -Destin
 ```powershell
 .\tools\packaging\build_pyinstaller_windows.ps1   # → dist\pyinstaller\ChengduMahjongAITrainer\
 .\tools\packaging\build_nuitka_windows.ps1         # → dist\nuitka\pyinstaller_entry.dist\（需 MSVC/MinGW）
+.\tools\packaging\build_msi_windows.ps1            # → dist\msi\*.msi（WiX；基于 PyInstaller onedir）
 # 或双击 tools\packaging\build_pyinstaller_windows.bat
 ```
 
-说明与验收：[`docs/packaging/WINDOWS_BUILD.md`](docs/packaging/WINDOWS_BUILD.md) · 规格 [`F0025`](docs/features/F0025_windows_packaging.md)。
+说明与验收：[`docs/packaging/WINDOWS_BUILD.md`](docs/packaging/WINDOWS_BUILD.md) · 规格 [`F0025`](docs/features/F0025_windows_packaging.md) · MSI [`F0027`](docs/features/F0027_windows_msi.md)。
 
 ### macOS（PyInstaller / Nuitka · F0021 Done）
 

@@ -38,7 +38,7 @@
 |---|-----|
 | O1 | Apple / macOS 打包（已有 F0021） |
 | O2 | Linux 打包 |
-| O3 | MSI / MSIX / Inno Setup / NSIS 安装器美化（可后续 F） |
+| O3 | MSI / MSIX / Inno Setup / NSIS 安装器美化（**MSI 见 F0027**） |
 | O4 | Authenticode 代码签名、Windows Store、SmartScreen 企业白名单 |
 | O5 | 在 macOS 上 **交叉编译** 出 Windows 二进制（**不支持**；必须在 Windows 上构建） |
 | O6 | 改变引擎规则、座位协议或 UI 布局 |

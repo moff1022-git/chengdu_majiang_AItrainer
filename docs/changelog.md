@@ -3,6 +3,17 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-26（F0027 · Windows MSI）
+
+### 实现 — WiX MSI 安装程序
+
+- 规格 [`F0027_windows_msi.md`](features/F0027_windows_msi.md)：**Done**
+- 脚本 `tools/packaging/build_msi_windows.ps1`：heat 采集 PyInstaller onedir → candle/light → `dist/msi/*-windows-x64.msi`
+- WiX 3.14 binaries 首次自动下载至 `%LOCALAPPDATA%\wix314`
+- 开始菜单快捷方式、per-machine Program Files、MajorUpgrade
+- 本机产物约 **31.4 MB**；已上传 GitHub **Release v0.2.1**：`ChengduMahjongAITrainer-0.2.1-windows-x64.msi`
+- 手册 WINDOWS_BUILD §8 · README 构建命令 · 索引 / DOC_CODE_BASELINE
+
 ## 2026-07-26（README · 分发说明）
 
 ### 文档 — 根 README 对齐 Windows 发布

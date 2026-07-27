@@ -308,20 +308,72 @@ $ENTRY = Join-Path $ROOT "packaging\windows\pyinstaller_entry.py"
 
 ---
 
-## 8. 实现进度（文档同步）
+## 8. MSI 安装程序（F0027 · WiX 3.14）
+
+从 **PyInstaller onedir** 生成 per-machine **x64 MSI**（安装到 Program Files、开始菜单、可卸载）。
+
+### 8.1 一键构建
+
+```powershell
+# 若尚无 onedir，会先调用 build_pyinstaller_windows.ps1
+.\tools\packaging\build_msi_windows.ps1
+
+# 已有 onedir 时：
+.\tools\packaging\build_msi_windows.ps1 -SkipPyInstaller
+```
+
+产出：
+
+```text
+dist\msi\ChengduMahjongAITrainer-{APP_VERSION}-windows-x64.msi
+releases\windows\…（本地副本，gitignore）
+```
+
+脚本会在首次运行时下载 **WiX 3.14 binaries** 到 `%LOCALAPPDATA%\wix314\`（不进 git）。
+
+### 8.2 安装 / 卸载
+
+```powershell
+# 安装（需管理员）
+msiexec /i dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi
+
+# 静默
+msiexec /i dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi /qn
+
+# 卸载
+msiexec /x dist\msi\ChengduMahjongAITrainer-0.2.1-windows-x64.msi
+```
+
+- 默认目录：`%ProgramFiles%\ChengduMahjongAITrainer\`  
+- 开始菜单：`成都麻将AI训练器`  
+- 运行时日志仍在：`%APPDATA%\ChengduMahjongAITrainer\logs\`  
+- 规格：[`docs/features/F0027_windows_msi.md`](../features/F0027_windows_msi.md)
+
+### 8.3 注意
+
+- 仅包装 **PyInstaller** 树（Nuitka 另打 MSI 不在 F0027 范围）。  
+- 未签名 → SmartScreen 可能提示。  
+- 升级：同一 `UpgradeCode`，更高 `ProductVersion` 可 MajorUpgrade。
+
+---
+
+## 9. 实现进度（文档同步）
 
 | 项 | 状态 |
 |----|------|
 | F0025 规格 | **Done** |
+| F0027 MSI | **Done**（WiX 3.14 + heat/candle/light） |
 | 本手册 | 已写 |
 | `packaging/windows/*` | **已合入** |
-| `build_*_windows.ps1` / `.bat` | **已合入** |
+| `build_*_windows.ps1` / `.bat` | **已合入**（含 `build_msi_windows.ps1`） |
 | 本机 Win 验收 | 脚本含 `--version` / `--seat-window --help` 冒烟；完整 W1–W11 人工开局 |
 | GitHub Release Win zip | **已上传** v0.2.1（PyInstaller + Nuitka） |
+| GitHub Release MSI | 可选（构建后 `gh release upload`） |
 
 构建触发：
 
 ```powershell
 .\tools\packaging\build_pyinstaller_windows.ps1
 .\tools\packaging\build_nuitka_windows.ps1   # 需 MSVC/MinGW
+.\tools\packaging\build_msi_windows.ps1      # MSI（F0027）
 ```

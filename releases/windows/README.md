@@ -2,10 +2,11 @@
 
 应用版本以仓库根目录 [`version.py`](../../version.py) 为准（当前构建应对齐 **0.2.1**）。
 
-| 目录 | 说明 |
-|------|------|
-| `ChengduMahjongAITrainer-PyInstaller/` | PyInstaller onedir（`build_pyinstaller_windows.ps1` 自动同步） |
-| `ChengduMahjongAITrainer-Nuitka/` | Nuitka standalone（`build_nuitka_windows.ps1` 自动同步） |
+| 目录 / 文件 | 说明 |
+|-------------|------|
+| `ChengduMahjongAITrainer-PyInstaller/` | PyInstaller onedir（`build_pyinstaller_windows.ps1`） |
+| `ChengduMahjongAITrainer-Nuitka/` | Nuitka standalone（`build_nuitka_windows.ps1`） |
+| `ChengduMahjongAITrainer-*-windows-x64.msi` | **MSI 安装包**（`build_msi_windows.ps1` · F0027） |
 
 ## 构建
 
@@ -16,6 +17,8 @@
 .\tools\packaging\build_pyinstaller_windows.ps1
 # 可选（需 MSVC / MinGW）:
 .\tools\packaging\build_nuitka_windows.ps1
+# MSI（需先有 PyInstaller onedir；首次下载 WiX 3.14）:
+.\tools\packaging\build_msi_windows.ps1
 ```
 
 或双击：`tools\packaging\build_pyinstaller_windows.bat`
