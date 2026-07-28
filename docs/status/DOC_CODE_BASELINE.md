@@ -50,6 +50,7 @@
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
 | F0028 | **In Progress（F0028-1 Done）** | `configs/humanlike_v2/*` + `players/humanlike/{config,runtime,traceability}.py`；GP/RP 配置追踪基座已实现，玩家策略尚未注册 |
+| F0028-2 | **Review（仅子规格）** | 提议 state schema 5 / persistence 1 / wire 1 / PlayerView 2；尚无实体牌或 v2 view 代码，不得误标实现 |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -93,3 +94,4 @@
 | 2026-07-28 | 登记 F0028 Approved/未实现；修正 Git 状态为本地 P0 损坏待远端核验 |
 | 2026-07-28 | 远端与本地历史均无法完整恢复；以当前工作树重建本地 main/index，保留损坏 `.git` 备份 |
 | 2026-07-28 | F0028-1 完成：27 GP / 33 RP / 60 条追踪映射、版本兼容矩阵和稳定配置 hash；全量 291 passed / 1 skipped |
+| 2026-07-28 | 新增 F0028-2 子规格至 Review；仅文档，等待确认版本与迁移决议 |

@@ -44,6 +44,7 @@
 | **F0026** | [F0026_readme_screenshots.md](F0026_readme_screenshots.md) | **README 功能五图** + 发版强制刷新；`docs/media/readme/` | **Done** |
 | **F0027** | [F0027_windows_msi.md](F0027_windows_msi.md) | **Windows MSI**（WiX 3.14 · 基于 PyInstaller onedir） | **Done** |
 | **F0028** | [F0028_humanlike_ai_v2_implementation_plan.md](F0028_humanlike_ai_v2_implementation_plan.md) | **人类化 AI v2**：GP/RP、实体牌/视图隔离、有限认知、决策回放、训练契约 | **In Progress**（F0028-1 Done） |
+| **F0028-2** | [F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md) | 实体牌 ID、schema 5 迁移、事件断言、PlayerView v2 白名单与 oracle 分离 | **Review** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | **Review**（文档清单） |
 
 > **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.2.1**

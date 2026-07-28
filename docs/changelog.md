@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-28（F0028-2 实体牌与 PlayerView v2 子规格）
+
+### 文档 — schema 5、所有权守恒、白名单视图与 oracle 分离
+
+- 新增 `docs/features/F0028_2_physical_tiles_player_view_v2.md`，状态 `Review`
+- 提议版本线：GameState schema 4→5；persistence format 保持 1；wire protocol 保持 1；PlayerView 新增版本 2
+- 锁定实体 ID 编码、所有权区域/历史引用区分、强类型副露与弃牌记录、schema 1–4 确定迁移
+- 定义原子事件边界断言、GP-021 八项可见性矩阵、legacy view 兼容投影和自动泄漏审计
+- 明确训练 oracle 真值移出普通 Observation；本轮仅文档，未修改业务代码或测试
+
 ## 2026-07-28（F0028-1 配置与参数追踪基座）
 
 ### 实现 — GP/RP 强类型、兼容门禁、稳定 hash 与生命周期

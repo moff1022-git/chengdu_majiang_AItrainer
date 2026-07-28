@@ -1,43 +1,52 @@
 # 进度快照
 
-> 2026-07-28 — **F0028-1 配置与参数追踪基座 Done；下一步 F0028-2 子规格**
+> 2026-07-28 — **F0028-2 子规格已编写至 Review；等待确认后才能实现**
 
 ## 当前状态
 
 | 项 | 状态 |
 |----|------|
-| 应用版本 | 0.2.1（`version.py`，本轮未变） |
-| 规格主线 | M01–M11 Done；F0001–F0027 已实现；F0028 `In Progress` |
-| F0028-1 | **Done**：27 GP、33 RP、60 条追踪映射、版本兼容矩阵；默认配置 hash `6c4f54ca…b06ee37` |
-| F0028-2 | 待先补充并批准实体牌 / 事件断言 / PlayerView v2 子规格 |
-| Git | 本地 `main` 恢复基线可用；本轮实现尚待提交；远端零 refs/非法 HEAD，未推送 |
-| 测试门禁 | F0028-1 定向 12 passed；最终提交全量 **291 passed / 1 skipped**（27.29s） |
-| 冲突副本 | 52 个 `*Moff的Mac Studio*` 文件仍保留；未删除 |
+| 应用版本 | 0.2.1（本轮未变） |
+| 规格主线 | F0028 `In Progress`；F0028-1 `Done`；F0028-2 `Review` |
+| F0028-1 | 27 GP、33 RP、60 条追踪映射、兼容矩阵和稳定配置 hash 已实现 |
+| F0028-2 | 子规格完成；本轮无业务代码、无 schema/protocol 实际变更 |
+| 测试门禁 | 沿用最终提交基线：291 passed / 1 skipped；本轮文档-only 未重跑 |
+| Git | 本地 `main` 基线可用；本轮文档待提交；远端仍为空且未推送 |
 
 ## 本轮已完成
 
-- 在 F0028 主规格追加字段级 GP/RP 映射、失败契约和规范化 hash 契约，再进入编码。
-- 新增 `configs/humanlike_v2/default.json`，完整声明 GP-001–GP-027 和四个中性普通水平 profile。
-- 新增 `compatibility.json`，未知 RULES/PARAMS/IMPL 组合明确失败。
-- 新增不可变 `GlobalParameters`、`PlayerProfile`、`HumanlikeConfig`；实现枚举、范围、固定值和权重归一校验。
-- 新增 `RoundRuntime`，注册 RP-001–RP-033 并提供建局、事件、决策、终局受控入口。
-- 新增 60 条无缺失、无重号的参数追踪记录。
-- 新增 12 个定向测试；全量回归无新增失败。
-- 未注册 `humanlike_v2` 玩家，未修改 engine/state/persistence/wire，未跨入 F0028-2。
+- 逐项核对现有 `Tile`、Deck、GameState schema 4、persistence format 1、event、view filter 和 wire protocol 1。
+- 新增 `docs/features/F0028_2_physical_tiles_player_view_v2.md`，状态 `Review`。
+- 区分实体牌所有权区域与 discard/event/last tile 等历史引用，避免碰杠后重复计数。
+- 提议 `state schema 5 / persistence format 1 / wire protocol 1 / PlayerView 2` 版本组合。
+- 设计 schema 1–4 确定性迁移、坏档失败和不覆盖旧文件的契约。
+- 定义原子事件边界断言、108 张守恒、账本/状态机/合法动作检查。
+- 定义 GP-021 八项 hidden/partial/exact 可见性矩阵和 legacy UI/wire 投影。
+- 将训练 oracle 真值从普通 PlayerView/Observation 中分离为 training-only API。
+- 未修改 engine、protocols、players、training 或 tests，符合 docs-first 门禁。
+
+## 待确认决议
+
+1. GameState 新 writer 升 schema 5，reader 保持支持 schema 1–5。
+2. persistence 外壳保持 format 1；Human NDJSON 保持 wire 1；PlayerView 独立标记 version 2。
+3. Action v1 继续表达 face，resolver 按最小 tile_id 选择合法实体副本。
+4. 旧 `filter_state_for_seat` 保留 API，但改为白名单 builder 的兼容投影。
+5. oracle 真值完全移出 Observation.view。
 
 ## 下一步完整队列
 
 | 序 | 动作 | 产出 / 依赖 | 建议触发语 |
 |----|------|-------------|------------|
-| 1 | 编写 F0028-2 子规格（立即下一步） | 实体牌兼容迁移、事件断言、PlayerView v2 白名单与验收；依赖 F0028-1 Done | `编写 F0028-2 实体牌与 PlayerView v2 子规格` |
-| 2 | 确认 F0028-2 | 子规格 `Review → Approved`；确认 schema/format 是否升级 | `确认 F0028-2 方案` |
-| 3 | 实现并验收 F0028-2 | 108 张实体 ID 守恒、视图泄漏为 0、老存档确定迁移 | `实现 F0028-2` |
-| 4 | 依次实施 F0028-3–6 | 基础策略 → 有限认知 → 回放审计 → 训练契约；每切片先子规格 | `编写 F0028-3 子规格` |
-| 5 | 推送本地恢复基线 | 外部状态变更；需确认远端零 refs 后显式授权 | `将恢复后的 main 推送到 origin` |
-| 6 | 整理 OneDrive 冲突副本 | 先出保留/删除清单；删除前需授权 | `整理 OneDrive 冲突副本，先出清单` |
+| 1 | 确认 F0028-2（立即下一步） | 子规格 `Review → Approved`，锁定五项版本/兼容决议 | `确认 F0028-2 方案` |
+| 2 | 实现 F0028-2 | PhysicalTile、schema 5 迁移、强类型所有权、事件断言、PlayerView v2、oracle 分离 | `实现 F0028-2` |
+| 3 | 验收并回写 F0028-2 | 108 张守恒、泄漏 0、旧档迁移、2/3/4 人和全量回归、性能报告 | 实现任务内自动完成 |
+| 4 | 编写 F0028-3 子规格 | 只读 PlayerView 的确定性基础策略 | `编写 F0028-3 子规格` |
+| 5 | 推送本地恢复基线 | 外部状态变更；需显式授权 | `将恢复后的 main 推送到 origin` |
+| 6 | 整理 OneDrive 冲突副本 | 先出清单；删除需授权 | `整理 OneDrive 冲突副本，先出清单` |
 
 ## 风险与边界
 
-- 当前配置基座尚未适配既有 `EngineConfig`，该适配属于后续引擎接入切片；不能形成两个相互冲突的规则权威。
-- `RoundRuntime` 当前承载 RP 生命周期和不透明 payload；各 RP 的领域计算将在 F0028-2–4 分属模块实现。
-- 本地 Git 位于 OneDrive，普通 `git status/commit` 可能因云端资产水合而变慢；远端仍未推送。
+- 实体牌会触及 state、play、存档、UI 和训练，是 F0028 风险最高的切片；必须按子规格七步实施，不可一次性重写。
+- 旧 schema 的 meld/discard 没有实体信息；迁移必须固定顺序并在无法守恒时失败，不能猜测。
+- F0028-2 尚未 Approved，当前禁止修改业务代码。
+- 远端 Git 仍未推送；OneDrive 云端资产可能拖慢普通 Git 工作树扫描。

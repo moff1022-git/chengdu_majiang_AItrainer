@@ -96,6 +96,8 @@
 
 ### F0028-2：实体牌、事件断言与 PlayerView v2
 
+> 字段级子规格：[F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md)，当前 `Review`。
+
 **目标**：建立规范所需的 108 张实体牌守恒和可验证信息隔离。
 
 **设计**：
