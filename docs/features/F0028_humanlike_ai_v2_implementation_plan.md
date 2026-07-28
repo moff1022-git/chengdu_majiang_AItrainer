@@ -3,15 +3,15 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028 |
-| **状态** | `In Progress`（F0028-1–2 Done；F0028-3 待子规格） |
+| **状态** | `In Progress`（F0028-1–2 Done；F0028-3 Review） |
 | **类型** | 跨引擎 / AI / 训练 / 回放的功能增强 |
 | **需求输入** | 根目录 `成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md` |
 | **依赖版本** | `CDMJ-AI-RULES 1.0.0`、`CDMJ-AI-PARAMS 1.0.0`、`CDMJ-AI-IMPL 2.0.0` |
 | **源规则 SHA-256** | `6cbb4d4465abfd947b6cf7f1783db99408089d4e1646849a3afe674114267992`（已校验匹配） |
 | **实现规范 SHA-256** | `9bc4d4ea5278e09ae34a1efb5edfb3cbc295752ecf6b3ebe89b348210d670135` |
-| **现有基线** | APP 0.2.1 / state schema 4 / persistence format 1 / wire protocol 1 |
-| **前置门禁** | 先恢复 Git P0 基线；本文经用户确认到 `Approved` 后才可编码 |
-| **当前切片** | `F0028-1 Done`（2026-07-28） |
+| **现有基线** | APP 0.2.1 / state schema 5 / PlayerView 2 / persistence format 1 / wire protocol 1 |
+| **前置门禁** | Git 本地基线已恢复；每个子规格须经用户确认到 `Approved` 后才可编码 |
+| **当前切片** | `F0028-3 Review`（2026-07-29） |
 
 ## 1. 结论
 
@@ -114,6 +114,8 @@
 **实现结果**：已完成。state schema 5 / persistence 1 / wire 1 / PlayerView 2；全量 308 passed / 1 skipped；60 局 2/3/4 人守恒通过；详见子规格和验收报告。
 
 ### F0028-3：只读 PlayerView 的确定性基础策略
+
+> 字段级子规格：[F0028_3_deterministic_player_view_policy.md](F0028_3_deterministic_player_view_policy.md)，当前 `Review`（2026-07-29）。
 
 **目标**：先建立不带认知噪声的 v2 策略，使规则、特征和行为可回归。
 

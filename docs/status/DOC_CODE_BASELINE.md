@@ -1,8 +1,8 @@
 # 文档 ↔ 程序一致性基线
 
-> **日期**：2026-07-28  
+> **日期**：2026-07-29  
 > **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：2026-07-28 已以当前经验证工作树重建本地 `main`（恢复根提交 `90e7174`）；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端零 refs/非法 HEAD，尚未推送  
+> **Git**：本地 `main` 已推进至 F0028-2 提交 `0c82c78`；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送  
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -16,7 +16,7 @@
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` / `90e7174` | 2026-07-28 从当前工作树重建；原历史因对象缺失无法完整恢复 |
+| Git 本地基线 | `main` / `0c82c78` | F0028-2 已提交；原历史因对象缺失无法完整恢复 |
 | Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
 | 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
 
@@ -51,6 +51,7 @@
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
 | F0028 | **In Progress（F0028-1–2 Done）** | 配置追踪 + PhysicalTile/schema 5/invariants/PlayerView v2 已实现；玩家策略尚未注册 |
 | F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
+| F0028-3 | **Review（仅规格）** | 确定性 PlayerView v2 策略尚未实现；见 `F0028_3_deterministic_player_view_policy.md` |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -97,3 +98,4 @@
 | 2026-07-28 | 新增 F0028-2 子规格至 Review；仅文档，等待确认版本与迁移决议 |
 | 2026-07-28 | 用户确认 F0028-2：Review → Approved；五项版本/兼容决议锁定，本轮未编码 |
 | 2026-07-28 | F0028-2 Done：state schema 5、PlayerView 2、108 张守恒与 oracle 分离；308 passed / 1 skipped |
+| 2026-07-29 | 新增 F0028-3 确定性 PlayerView 策略子规格至 Review；本轮未修改业务代码 |

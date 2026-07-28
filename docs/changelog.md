@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-3 子规格）
+
+### 文档 — 确定性 PlayerView v2 基础策略进入 Review
+
+- 新增 `docs/features/F0028_3_deterministic_player_view_policy.md`
+- 锁定只读输入边界、mandatory 候选规则、四分量评价、稳定同分键和内存 DecisionTrace v1
+- 明确本切片不消费 RNG，不实现记忆、注意力、满意停止、噪声或持久化审计
+- 规定 `humanlike_v2` 禁止读取 `_engine_state` / Oracle，并增加隐藏真值不变性与跨 `PYTHONHASHSEED` 门禁
+- 状态为 `Review`；本轮仅修改文档，未修改业务代码
+
 ## 2026-07-28（F0028-2 Done）
 
 ### 实现 — 实体牌、schema 5、事件断言与 PlayerView v2
