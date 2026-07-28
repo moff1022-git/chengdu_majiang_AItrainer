@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "yaku": {
+    "ping_hu": 0,
+    "dui_dui_hu": 1,
+    "qi_dui": 2,
+    "qing_yi_se": 2,
+    "dai_yao_jiu": 1,
+    "duan_yao_jiu": 1,
+    "jin_gou_diao": 1,
+    "gen": 1,
+    "gang_shang_hua": 1,
+    "gang_shang_pao": 1,
+    "qiang_gang": 1,
+    "hai_di": 1
+  },
+  "notes": "Chengdu xuezhan defaults; M05 scores with 2^fan"
+}
