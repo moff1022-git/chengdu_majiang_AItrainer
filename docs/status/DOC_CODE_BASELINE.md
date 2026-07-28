@@ -114,3 +114,4 @@
 | 2026-07-29 | F0028-5 Done：Audit v1/hash 链/策略复演；338 passed / 1 skipped，9294 决策零 mismatch |
 | 2026-07-29 | F0028-6 训练契约子规格按用户自动授权标记 Approved；实现门禁开放 |
 | 2026-07-29 | F0028-6 codec/mask、Observation v2、reward/metrics 实现验收通过；F0028-1–6 全部 Done |
+| 2026-07-29 | F0029 Humanlike v2 UI 开关与全参数设置规格进入 Draft；尚未修改业务代码 |

@@ -6,7 +6,7 @@
 > **技术栈**：Python 3.11+ · Pygame（主窗）· Tk（座位窗）· NumPy（可选）· JSON/JSONL  
 > **资源**：项目根目录 `assets/` + `assets/ASSETS.md`（双主题 green/blue）  
 > **开发流程**：[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) · 进度 [`docs/status/LATEST.md`](docs/status/LATEST.md) · 一致性 [`docs/status/DOC_CODE_BASELINE.md`](docs/status/DOC_CODE_BASELINE.md)
-> **当前功能主线**：F0028 人类化 AI v2（F0028-1–6）已全部 Done。
+> **当前功能主线**：F0028 已 Done；F0029 Humanlike v2 UI 开关与全参数设置处于 Draft。
 ---
 
 ## 0. 目标与非目标
