@@ -49,7 +49,7 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **In Progress（F0028-1–3 Done）** | 配置追踪 + 实体牌/视图隔离 + 确定性 humanlike_v2 已实现；有限认知待 F0028-4 |
+| F0028 | **In Progress（F0028-1–3 Done；F0028-4 Approved）** | 配置追踪 + 实体牌/视图隔离 + 确定性 humanlike_v2 已实现；有限认知进入实现 |
 | F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
@@ -106,3 +106,4 @@
 | 2026-07-29 | 快速人工验收 MT-04 发现 Human 换三张 face/PhysicalTile 混用阻塞缺陷；待修复复测 |
 | 2026-07-29 | 修复 opening face→PhysicalTile 确定性解析；定向 23 passed、全量 322 passed / 1 skipped；MT-04 操作结果待用户确认 |
 | 2026-07-29 | 用户确认 MT-04 可进入定缺并正常出牌；Human 换三张 Blocker 闭环，快速人工验收通过 |
+| 2026-07-29 | F0028-4 有限认知子规格落盘并按用户全程授权标记 Approved；实现门禁开放 |

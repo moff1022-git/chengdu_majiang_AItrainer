@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-4 Approved）
+
+### 文档 — 人类化有限认知子规格
+
+- 新增 `docs/features/F0028_4_human_cognition.md`，锁定认知状态、人格/水平、记忆衰减、Top-K 注意力、满意停止、有界噪声和思考时间
+- mandatory、PlayerView-only、稳定 SHA-256 RNG、无真实 sleep 与不升级协议等边界明确
+- 用户已授权“编写、确认并实现”及中途授权，因此规格落盘即为 `Approved`，实现门禁开放
+
 ## 2026-07-29（Human 换三张实体牌混用修复）
 
 ### 修复 — opening 牌面动作解析为实体牌

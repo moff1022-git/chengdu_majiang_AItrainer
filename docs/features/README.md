@@ -43,9 +43,10 @@
 | **F0025** | [F0025_windows_packaging.md](F0025_windows_packaging.md) | **Windows 打包** PyInstaller + Nuitka；见 [WINDOWS_BUILD](../packaging/WINDOWS_BUILD.md) | **Done** |
 | **F0026** | [F0026_readme_screenshots.md](F0026_readme_screenshots.md) | **README 功能五图** + 发版强制刷新；`docs/media/readme/` | **Done** |
 | **F0027** | [F0027_windows_msi.md](F0027_windows_msi.md) | **Windows MSI**（WiX 3.14 · 基于 PyInstaller onedir） | **Done** |
-| **F0028** | [F0028_humanlike_ai_v2_implementation_plan.md](F0028_humanlike_ai_v2_implementation_plan.md) | **人类化 AI v2**：GP/RP、实体牌/视图隔离、有限认知、决策回放、训练契约 | **In Progress**（F0028-1–3 Done） |
+| **F0028** | [F0028_humanlike_ai_v2_implementation_plan.md](F0028_humanlike_ai_v2_implementation_plan.md) | **人类化 AI v2**：GP/RP、实体牌/视图隔离、有限认知、决策回放、训练契约 | **In Progress**（F0028-1–3 Done；F0028-4 Approved） |
 | **F0028-2** | [F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md) | 实体牌 ID、schema 5 迁移、事件断言、PlayerView v2 白名单与 oracle 分离 | **Done** |
 | **F0028-3** | [F0028_3_deterministic_player_view_policy.md](F0028_3_deterministic_player_view_policy.md) | 只读 PlayerView v2 的确定性候选、评价、决策 trace 与选配玩家 | **Done** |
+| **F0028-4** | [F0028_4_human_cognition.md](F0028_4_human_cognition.md) | 认知状态、人格、注意力、记忆、满意停止、有界噪声与思考时间 | **Approved** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | **Review**（文档清单） |
 
 > **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.2.1**
