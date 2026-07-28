@@ -2,7 +2,7 @@
 
 > **日期**：2026-07-29  
 > **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：Human 换三张修复已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
+> **Git**：F0028-4 Docs-First 规格、实现与验收已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -16,7 +16,7 @@
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` | F0028-3、首次人工阻塞记录及 Human 换三张修复已提交 |
+| Git 本地基线 | `main` | F0028-1–4、Human 换三张修复及验收记录已提交 |
 | Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
 | 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
 
@@ -49,9 +49,10 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **In Progress（F0028-1–3 Done；F0028-4 Approved）** | 配置追踪 + 实体牌/视图隔离 + 确定性 humanlike_v2 已实现；有限认知进入实现 |
+| F0028 | **In Progress（F0028-1–4 Done）** | 配置追踪 + 实体牌/视图隔离 + 确定性策略 + 有限认知已实现；审计/训练待后续切片 |
 | F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
+| F0028-4 | **Done** | `players/humanlike/{memory,attention,cognition,policy}.py` + player RP-024–029 / trace v2 |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -107,3 +108,4 @@
 | 2026-07-29 | 修复 opening face→PhysicalTile 确定性解析；定向 23 passed、全量 322 passed / 1 skipped；MT-04 操作结果待用户确认 |
 | 2026-07-29 | 用户确认 MT-04 可进入定缺并正常出牌；Human 换三张 Blocker 闭环，快速人工验收通过 |
 | 2026-07-29 | F0028-4 有限认知子规格落盘并按用户全程授权标记 Approved；实现门禁开放 |
+| 2026-07-29 | F0028-4 Done：有限记忆/注意力/人格/满意停止/有界噪声；332 passed / 1 skipped，150 局零崩溃 |

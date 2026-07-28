@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-4 Done）
+
+### 实现 — 人类化有限认知
+
+- 新增公开信息有限记忆、稳定 Top-K 注意力、持续 CognitiveState、人格/水平修正、计划惯性/重启、满意停止、有界噪声和模型思考时间
+- `HumanlikeV2Player` 输出 DecisionTrace v2 并写入 RP-024–029；不读取 GameState/Oracle，不真实 sleep，不升级协议
+- humanlike 定向 52 passed；全量 332 passed / 1 skipped；2/3/4 人各 50 局零策略崩溃/非法动作
+- 50 局双跑及跨 PYTHONHASHSEED 摘要一致；p95 1.1968 ms；20 局相对 RuleAI 2.50×
+- 验收：`docs/status/F0028_4_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0028-4 Approved）
 
 ### 文档 — 人类化有限认知子规格

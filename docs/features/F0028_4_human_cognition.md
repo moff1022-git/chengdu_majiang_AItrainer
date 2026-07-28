@@ -3,12 +3,12 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028-4 |
-| **状态** | `Approved`（2026-07-29，用户授权“编写、确认并实现”） |
+| **状态** | `Done`（2026-07-29） |
 | **父功能** | [F0028 人类化 AI v2 实现方案](F0028_humanlike_ai_v2_implementation_plan.md) |
 | **依赖** | F0028-1–3 `Done`；Human 换三张人工阻塞已清零 |
 | **输入版本** | CDMJ-AI-RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 |
 | **协议基线** | State schema 5 / PlayerView 2 / persistence 1 / wire 1 |
-| **实现授权** | 已开放；本文件落盘后可编码 |
+| **实现授权** | 已执行并通过验收 |
 
 ## 1. 目标
 
@@ -215,3 +215,12 @@ Decision.analysis 升为内存 `trace_version=2`，保留 v1 字段并新增：
 ## 10. 确认记录
 
 用户于 2026-07-29 指令“编写、确认并实现 F0028-4……全程自动实现，无需我的干预”，并补充“中途的所有授权，全部同意”。据此本规格在落盘时直接标记 `Approved`，实现门禁开放；授权不包含远端推送、破坏性删除或范围外协议升级。
+
+## 11. 实现结果
+
+- 已新增 `memory.py`、`attention.py`、`cognition.py`、`policy.py`，并接入 `HumanlikeV2Player` 与 RP-024–029。
+- DecisionTrace 升为内存 v2；F0028-3 evaluator 的完整稳定评分保留为认知层输入。
+- 记忆、注意力、满意停止、计划惯性、人格/情绪、有界 RNG 与思考时间均按本规格实现。
+- 定向 52 passed；全量 332 passed / 1 skipped；2/3/4 人各 50 局零崩溃/非法动作。
+- 双跑与跨 PYTHONHASHSEED 动作摘要一致；单决策 p95 1.1968 ms；相对 RuleAI 2.50×。
+- 详细证据见 `docs/status/F0028_4_ACCEPTANCE_2026-07-29.md`。
