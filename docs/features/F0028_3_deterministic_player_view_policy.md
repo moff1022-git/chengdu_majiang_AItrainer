@@ -3,12 +3,12 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028-3 |
-| **状态** | `Review` |
+| **状态** | `Approved`（2026-07-29 用户确认） |
 | **父功能** | [F0028 人类化 AI v2 实现方案](F0028_humanlike_ai_v2_implementation_plan.md) |
 | **依赖** | F0028-1、F0028-2 `Done` |
 | **输入版本** | CDMJ-AI-RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 |
 | **协议基线** | State schema 5 / PlayerView 2 / persistence 1 / wire 1 |
-| **目标状态** | 用户确认后 `Approved`；确认本身不写业务代码 |
+| **实现门禁** | 已批准；可在用户明确要求 `实现 F0028-3` 后编码 |
 
 ## 1. 背景与目标
 
@@ -226,9 +226,9 @@ Q(a) = w_speed*speed + w_hand_value*hand_value
 
 `humanlike_v2` 是选配注册项；撤销注册和新模块即可回滚，旧 AI 不受影响。本切片无数据/协议迁移。纯 PlayerView 分析新入口若回归，可独立回滚并保留旧入口。
 
-## 11. 待确认决议
+## 11. 已确认决议
 
-| 项 | 建议决议 |
+| 项 | 已批准决议 |
 |----|----------|
 | 可过胡 | 仅不可过胡为 mandatory；可过胡参加效用比较 |
 | 候选上限 | 不裁剪 mandatory，只裁剪 ordinary |
@@ -237,4 +237,4 @@ Q(a) = w_speed*speed + w_hand_value*hand_value
 | trace 落盘 | 本切片仅内存契约；持久化归 F0028-5 |
 | 版本 | 保持 PlayerView 2 / wire 1 / state 5 / persistence 1 |
 
-以上六项随本文确认；确认后转 `Approved`，方可实现。
+以上六项已由用户于 2026-07-29 一并确认。本次确认仅开放实现门禁，没有修改业务代码。

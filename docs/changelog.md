@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-3 Approved）
+
+### 文档 — 确定性 PlayerView v2 基础策略方案确认
+
+- 用户确认 `docs/features/F0028_3_deterministic_player_view_policy.md`：`Review → Approved`
+- 锁定可过胡、mandatory 候选、零 RNG、非精确 belief、内存 trace 和版本保持六项决议
+- 实现门禁已开放；本轮仅更新文档，未修改业务代码或运行测试
+
 ## 2026-07-29（F0028-3 子规格）
 
 ### 文档 — 确定性 PlayerView v2 基础策略进入 Review
