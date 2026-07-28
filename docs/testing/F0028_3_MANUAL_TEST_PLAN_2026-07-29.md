@@ -167,10 +167,12 @@ Windows 将解释器替换为 `.\.venv\Scripts\python.exe`，其余参数不变�
 
 ### MT-17 — 崩溃/泄漏关键字扫描
 
+> 注意：`--save-every-decision` 的 `*.steps.jsonl` 是 M10 明确定义的 **private 全状态快照**，按设计包含墙顺序与暗牌。它只用于回放证据，应限制访问；不得将其当作 PlayerView 泄漏判据。下列扫描目标应限于非 private 运行日志、Observation/decision 导出与人工可见 UI。
+
 对人工证据目录执行：
 
 ```bash
-rg -n "Traceback|PolicyInputError|illegal action|replace_player|_engine_state|TrainingTruth|oracle" manual_evidence/F0028-3
+rg -n -g '!*.steps.jsonl' "Traceback|PolicyInputError|illegal action|replace_player|_engine_state|TrainingTruth|oracle" manual_evidence/F0028-3
 ```
 
 预期：无异常或私有信息命中。若 `oracle` 只出现在测试说明文件中，应人工排除；运行日志出现则失败。
@@ -231,4 +233,3 @@ GUI 四 AI设置 `--step-ms 0` 或较小值观察：
 - MT-06～15 中本轮自然对局未出现的场景可标“未覆盖”，但任何已出现场景不得失败。
 - 任一非法动作、策略崩溃替换、暗牌/Oracle 泄漏或固定 game_id 动作不一致均阻塞放行。
 - UI 文案或非阻塞视觉问题可记录为后续缺陷，但必须附截图并评估是否影响操作。
-

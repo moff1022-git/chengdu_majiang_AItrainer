@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-3 快速人工验收）
+
+### 测试 — MT-04 阻塞失败
+
+- MT-01/02/05 通过；MT-03 用户确认 GUI 牌局正常，策略列表显示项尚未单独回报
+- MT-04 Human 换三张失败：face `Tile` 与 AI `PhysicalTile` 混入目标手牌，排序报类型比较异常
+- 根因定位至 `engine/opening.py` 的 face action → PhysicalTile 解析遗漏；本轮只诊断和记录，未修改业务代码
+- 修订人工测试方案：M10 steps 是 private 全状态快照，不作为 PlayerView 泄漏判据
+- 记录：`docs/status/F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0028-3 人工测试方案）
 
 ### 文档 — 可执行人工验收清单

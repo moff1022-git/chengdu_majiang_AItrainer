@@ -58,6 +58,8 @@
 
 ## 4. 关键行为（文档易错点）
 
+> **已知阻塞缺陷（2026-07-29）**：Human 换三张返回 face `Tile`，opening 未解析为具体 `PhysicalTile`；与 AI offer 混合后排序报类型比较异常。纯 AI 不受影响，Human+AI 启用换三张暂不可放行。详见 `F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md`。
+
 | 主题 | 程序事实 |
 |------|----------|
 | 选中手牌 | 金黄双环 + 压暗未选；**`selected_tile_tw` 不放大** |
@@ -101,3 +103,4 @@
 | 2026-07-29 | 新增 F0028-3 确定性 PlayerView 策略子规格至 Review；本轮未修改业务代码 |
 | 2026-07-29 | 用户确认 F0028-3：Review → Approved；六项确定性策略决议锁定，本轮未编码 |
 | 2026-07-29 | F0028-3 Done：纯 PlayerView 确定性策略与选配玩家；321 passed / 1 skipped，150 局零策略崩溃 |
+| 2026-07-29 | 快速人工验收 MT-04 发现 Human 换三张 face/PhysicalTile 混用阻塞缺陷；待修复复测 |
