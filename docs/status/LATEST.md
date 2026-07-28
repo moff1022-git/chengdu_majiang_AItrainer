@@ -1,13 +1,13 @@
 # 进度快照
 
-> 2026-07-29 — **F0029 Humanlike v2 UI 开关与全参数设置规格 Draft**
+> 2026-07-29 — **F0029 Humanlike v2 UI 开关与全参数设置 Approved，进入实现**
 
 ## 当前状态
 
 | 项 | 状态 |
 |----|------|
 | 应用版本 | 0.2.1（本轮未变） |
-| 规格主线 | F0028 `Done`；F0029 `Draft`，待确认后实现 |
+| 规格主线 | F0028 `Done`；F0029 `Approved`，实现中 |
 | 版本线 | state schema 5（reader 1–5）/ persistence 1 / wire 1 / PlayerView 2 |
 | 测试门禁 | 347 passed / 1 skipped in 29.04s；F0028-6 定向 18 passed；compileall 通过 |
 | 批跑门禁 | F0028-6：2/3/4 人各 50 局，共 150 局、10,950 决策样本，零非法动作 |

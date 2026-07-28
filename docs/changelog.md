@@ -3,6 +3,10 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0029 Approved）
+
+- 用户确认 F0029 规格并要求实现；Docs-First 门禁开放
+
 ## 2026-07-29（F0029 Draft）
 
 ### 文档 — Humanlike v2 UI 与参数设置
