@@ -35,6 +35,10 @@ from training.spaces import (
     enumerate_exchange_actions,
     opening_dingque_actions,
 )
+from training.action_codec_v2 import ActionCodecError, decode_action, encode_action, legal_action_mask
+from training.metrics_v2 import EpisodeMetricsV2, build_episode_metrics
+from training.observations_v2 import encode_observation_v2
+from training.reward_v2 import TrainingContractConfig, shaping_delta, visible_potential
 
 __all__ = [
     "ChengduMahjongEnv",
@@ -67,6 +71,8 @@ class ChengduMahjongEnv:
         log_dir: Path | str | None = None,
         seed: int | None = None,
         max_episode_steps: int = 10_000,
+        contract_version: int = 1,
+        training_contract: TrainingContractConfig | None = None,
     ) -> None:
         if num_players not in (2, 3, 4):
             raise ValueError(f"num_players must be 2-4, got {num_players}")
@@ -83,6 +89,10 @@ class ChengduMahjongEnv:
         self.log_dir = Path(log_dir) if log_dir else None
         self.seed = seed
         self.max_episode_steps = max_episode_steps
+        self.training_contract = training_contract or TrainingContractConfig(contract_version=contract_version)
+        if training_contract is not None and contract_version != 1 and contract_version != training_contract.contract_version:
+            raise ValueError("contract_version conflicts with training_contract")
+        self.contract_version = self.training_contract.contract_version
 
         self._state: GameState | None = None
         self.config: EngineConfig | None = None
@@ -97,6 +107,12 @@ class ChengduMahjongEnv:
         self._request_id: str = ""
         self._reward_baseline = 0.0
         self._closed = False
+        self._potential_baseline = 0.0
+        self._unshaped_episode_reward = 0.0
+        self._shaped_episode_reward = 0.0
+        self._illegal_action_count = 0
+        self._action_counts: dict[str, int] = {}
+        self._episode_metrics: EpisodeMetricsV2 | None = None
         self._rng = random.Random(seed if seed is not None else 0)
 
     # --- public API -------------------------------------------------------
@@ -148,6 +164,12 @@ class ChengduMahjongEnv:
         self._pending_legals = []
         self._request_id = ""
         self._reward_baseline = 0.0
+        self._potential_baseline = 0.0
+        self._unshaped_episode_reward = 0.0
+        self._shaped_episode_reward = 0.0
+        self._illegal_action_count = 0
+        self._action_counts = {}
+        self._episode_metrics = None
 
         if self.log_dir is not None:
             self.logger = EpisodeLogger(self.log_dir, state.game_id, log_private=True)
@@ -170,7 +192,10 @@ class ChengduMahjongEnv:
         if self._is_done():
             self._finalize_episode()
             return self._terminal_obs()
-        return self._build_obs()
+        obs = self._build_obs()
+        if self.contract_version == 2 and self.training_contract.shaping_enabled:
+            self._potential_baseline = visible_potential(filter_state_for_seat(self._state, self.learner_seat), self.training_contract.shaping_weights)[0]
+        return obs
 
     def step(
         self, action: Action | dict | int
@@ -184,18 +209,28 @@ class ChengduMahjongEnv:
         if not self._pending_legals:
             raise EnvError("no pending learner decision")
 
-        resolved = self._resolve_action(action)
-        if not action_in_legal(resolved, self._pending_legals):
-            raise EnvError(
-                f"illegal action {resolved}; not in legal_actions "
-                f"({len(self._pending_legals)} options)"
-            )
+        try:
+            resolved = self._resolve_action(action)
+            legal = action_in_legal(resolved, self._pending_legals)
+        except (ActionCodecError, KeyError, TypeError, ValueError) as exc:
+            if self.contract_version == 2 and self.training_contract.illegal_action_mode == "terminate":
+                return self._terminate_illegal(str(exc))
+            raise EnvError(str(exc)) from exc
+        if not legal:
+            if self.contract_version == 2 and self.training_contract.illegal_action_mode == "terminate":
+                return self._terminate_illegal(f"not in legal actions: {resolved}")
+            raise EnvError(f"illegal action {resolved}; not in legal_actions ({len(self._pending_legals)} options)")
 
         score_before = self._learner_score()
         reward_before = self._reward_baseline
 
+        passed_hu = resolved.type == ActionType.PASS and any(a.type == ActionType.HU for a in self._pending_legals)
         self._apply_learner_action(resolved)
         self._learner_steps += 1
+        key = resolved.type.value
+        self._action_counts[key] = self._action_counts.get(key, 0) + 1
+        if passed_hu:
+            self._action_counts["pass_hu"] = self._action_counts.get("pass_hu", 0) + 1
         self._advance_until_learner_or_done()
 
         terminated = False
@@ -214,15 +249,29 @@ class ChengduMahjongEnv:
             if self.reward_calc
             else 0.0
         )
-        reward = float(reward_after - reward_before)
+        base_reward = float(reward_after - reward_before)
         self._reward_baseline = reward_after
+
+        shaping_reward = 0.0
+        if self.contract_version == 2 and self.training_contract.shaping_enabled:
+            next_potential = 0.0 if terminated or truncated else visible_potential(filter_state_for_seat(self._state, self.learner_seat), self.training_contract.shaping_weights)[0]
+            shaping_reward = shaping_delta(self._potential_baseline, next_potential, gamma=self.training_contract.shaping_gamma, terminal=terminated or truncated)
+            self._potential_baseline = next_potential
+        reward = base_reward + shaping_reward
+        self._unshaped_episode_reward += base_reward
+        self._shaped_episode_reward += reward
 
         score_after = self._learner_score()
         info = self._build_info(score_before, score_after)
+        if self.contract_version == 2:
+            info.update({"base_reward": base_reward, "shaping_reward": shaping_reward, "illegal_penalty": 0.0, "true_score_delta": score_after - score_before, "true_score": score_after, "unshaped_episode_reward": self._unshaped_episode_reward, "shaped_episode_reward": self._shaped_episode_reward, "illegal_action": False})
         if terminated or truncated:
             obs = self._terminal_obs()
             if self._episode_result is not None:
+                self._episode_metrics = build_episode_metrics(self._episode_result, self.learner_seat, action_counts=self._action_counts, illegal_count=self._illegal_action_count, learner_steps=self._learner_steps, base_reward=self._unshaped_episode_reward, shaping_reward=self._shaped_episode_reward - self._unshaped_episode_reward)
                 info["result"] = self._episode_result.to_dict()
+                if self.contract_version == 2:
+                    info["episode_metrics"] = self._episode_metrics.to_dict()
         else:
             obs = self._build_obs()
         return obs, reward, terminated, truncated, info
@@ -606,6 +655,12 @@ class ChengduMahjongEnv:
 
     def _resolve_action(self, action: Action | dict | int) -> Action:
         if isinstance(action, int):
+            if self.contract_version == 2:
+                decoded = decode_action(action)
+                for legal in self._pending_legals:
+                    if encode_action(legal) == action:
+                        return legal
+                return decoded
             if action < 0 or action >= len(self._pending_legals):
                 raise EnvError(
                     f"action index {action} out of range "
@@ -621,7 +676,7 @@ class ChengduMahjongEnv:
     def _build_obs(self) -> dict[str, Any]:
         assert self._state is not None
         seat = self.learner_seat
-        return {
+        legacy = {
             "game_id": self._state.game_id,
             "seat": seat,
             "phase": self._state.phase,
@@ -629,11 +684,14 @@ class ChengduMahjongEnv:
             "legal_actions": [a.to_dict() for a in self._pending_legals],
             "request_id": self._request_id,
         }
+        if self.contract_version == 2:
+            return encode_observation_v2(legacy, legal_action_mask(self._pending_legals))
+        return legacy
 
     def _terminal_obs(self) -> dict[str, Any]:
         assert self._state is not None
         seat = self.learner_seat
-        return {
+        legacy = {
             "game_id": self._state.game_id,
             "seat": seat,
             "phase": self._state.phase,
@@ -641,6 +699,25 @@ class ChengduMahjongEnv:
             "legal_actions": [],
             "request_id": self._request_id or "",
         }
+        if self.contract_version == 2:
+            return encode_observation_v2(legacy, (0,) * 635)
+        return legacy
+
+    def _terminate_illegal(self, reason: str):
+        assert self._state is not None
+        self._illegal_action_count += 1
+        self._state.phase = "finished"
+        self._state.finished_reason = "illegal_action"
+        self._pending_legals = []
+        penalty = float(self.training_contract.illegal_action_penalty)
+        self._shaped_episode_reward += penalty
+        info = self._build_info(self._learner_score(), self._learner_score())
+        info.update({"base_reward": 0.0, "shaping_reward": 0.0, "illegal_penalty": penalty, "true_score_delta": 0, "true_score": self._learner_score(), "unshaped_episode_reward": self._unshaped_episode_reward, "shaped_episode_reward": self._shaped_episode_reward, "illegal_action": True, "illegal_reason": reason})
+        if self.logger:
+            self.logger.emit("illegal_action", seat=self.learner_seat, reason=reason, penalty=penalty)
+            self.logger.close()
+            self.logger = None
+        return self._terminal_obs(), penalty, True, False, info
 
     def _learner_score(self) -> int:
         if self._state is None:

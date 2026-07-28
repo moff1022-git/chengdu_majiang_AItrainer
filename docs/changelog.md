@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-6 Done）
+
+### 实现 — 训练契约 v2
+
+- 新增 635 项固定 codec/legal mask、PlayerView-only Observation v2 与 921 维 flat encoder
+- env v2 支持固定整数动作、非法 raise/terminate、base/shaping/true-score 分离和 episode metrics；v1 默认兼容
+- 新增 PlayerView 势能塑形与稳定批次指标聚合器
+- 全量 347 passed / 1 skipped；2/3/4 人各 50 局零非法动作；obs p95 0.4917ms；v2/v1 1.0847×
+- 验收：`docs/status/F0028_6_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0028-6 Approved）
 
 ### 文档 — 训练契约 v2
