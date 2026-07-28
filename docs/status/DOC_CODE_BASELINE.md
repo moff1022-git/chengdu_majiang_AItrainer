@@ -49,7 +49,7 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **In Progress（F0028-1–5 Done）** | 配置追踪 + 实体牌/视图隔离 + 确定性策略 + 有限认知 + 决策审计已实现；训练契约待 F0028-6 |
+| F0028 | **In Progress（F0028-1–5 Done；F0028-6 Approved）** | 配置追踪、实体牌、策略、认知、审计已实现；训练契约进入实现 |
 | F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0028-4 | **Done** | `players/humanlike/{memory,attention,cognition,policy}.py` + player RP-024–029 / trace v2 |
@@ -112,3 +112,4 @@
 | 2026-07-29 | F0028-4 Done：有限记忆/注意力/人格/满意停止/有界噪声；332 passed / 1 skipped，150 局零崩溃 |
 | 2026-07-29 | F0028-5 决策审计与确定性回放子规格按用户自动授权标记 Approved；实现门禁开放 |
 | 2026-07-29 | F0028-5 Done：Audit v1/hash 链/策略复演；338 passed / 1 skipped，9294 决策零 mismatch |
+| 2026-07-29 | F0028-6 训练契约子规格按用户自动授权标记 Approved；实现门禁开放 |

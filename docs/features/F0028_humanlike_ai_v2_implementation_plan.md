@@ -174,6 +174,8 @@
 
 ### F0028-6：训练空间与回归评估
 
+> 字段级子规格：[F0028_6_training_contract.md](F0028_6_training_contract.md)，当前 `Approved`（2026-07-29，用户已授权自动实现）。
+
 **目标**：在现有 `ChengduMahjongEnv` 上建立稳定、可版本化的训练契约。
 
 **改造**：

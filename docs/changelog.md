@@ -3,6 +3,15 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-6 Approved）
+
+### 文档 — 训练契约 v2
+
+- 新增 `docs/features/F0028_6_training_contract.md`
+- 锁定 635 项固定动作空间、等长 legal mask、结构化 Observation v2、非法动作模式、奖励分解和回归指标
+- v2 显式 opt-in，M11 v1 默认兼容；不引入训练框架或修改规则/协议
+- 用户授权文档确认、实现和本地 Git 全自动执行，规格落盘即 Approved
+
 ## 2026-07-29（F0028-5 Done）
 
 ### 实现 — private Audit v1 与策略复演
