@@ -2,7 +2,7 @@
 
 > **日期**：2026-07-29  
 > **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：F0028-4 Docs-First 规格、实现与验收已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
+> **Git**：F0028-5 Docs-First 规格、实现与验收已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -16,7 +16,7 @@
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` | F0028-1–4、Human 换三张修复及验收记录已提交 |
+| Git 本地基线 | `main` | F0028-1–5、Human 换三张修复及验收记录已提交 |
 | Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
 | 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
 
@@ -49,10 +49,11 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **In Progress（F0028-1–4 Done；F0028-5 Approved）** | 配置追踪 + 实体牌/视图隔离 + 确定性策略 + 有限认知已实现；审计进入实现 |
+| F0028 | **In Progress（F0028-1–5 Done）** | 配置追踪 + 实体牌/视图隔离 + 确定性策略 + 有限认知 + 决策审计已实现；训练契约待 F0028-6 |
 | F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0028-4 | **Done** | `players/humanlike/{memory,attention,cognition,policy}.py` + player RP-024–029 / trace v2 |
+| F0028-5 | **Done** | `engine/audit.py`、`players/humanlike/audit_replay.py`、orchestrator Audit v1 接线 |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -110,3 +111,4 @@
 | 2026-07-29 | F0028-4 有限认知子规格落盘并按用户全程授权标记 Approved；实现门禁开放 |
 | 2026-07-29 | F0028-4 Done：有限记忆/注意力/人格/满意停止/有界噪声；332 passed / 1 skipped，150 局零崩溃 |
 | 2026-07-29 | F0028-5 决策审计与确定性回放子规格按用户自动授权标记 Approved；实现门禁开放 |
+| 2026-07-29 | F0028-5 Done：Audit v1/hash 链/策略复演；338 passed / 1 skipped，9294 决策零 mismatch |

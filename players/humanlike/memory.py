@@ -10,7 +10,14 @@ from typing import Any, Iterable, Mapping
 
 
 def _canonical(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
+    def thaw(item: Any) -> Any:
+        if isinstance(item, Mapping):
+            return {str(key): thaw(child) for key, child in item.items()}
+        if isinstance(item, (list, tuple)):
+            return [thaw(child) for child in item]
+        return item
+
+    return json.dumps(thaw(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
 
 
 @dataclass(frozen=True, slots=True)

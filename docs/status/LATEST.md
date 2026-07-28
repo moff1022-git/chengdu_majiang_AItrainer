@@ -1,24 +1,28 @@
 # 进度快照
 
-> 2026-07-29 — **F0028-5 决策审计与确定性回放子规格 Approved，进入自动实现**
+> 2026-07-29 — **F0028-5 决策审计与确定性策略回放 Done**
 
 ## 当前状态
 
 | 项 | 状态 |
 |----|------|
 | 应用版本 | 0.2.1（本轮未变） |
-| 规格主线 | F0028 `In Progress`；F0028-1–4 `Done`；F0028-5 `Approved` |
+| 规格主线 | F0028 `In Progress`；F0028-1–5 `Done`；F0028-6 待子规格 |
 | 版本线 | state schema 5（reader 1–5）/ persistence 1 / wire 1 / PlayerView 2 |
-| 测试门禁 | 332 passed / 1 skipped in 29.29s；humanlike 定向 52 passed；compileall 通过 |
+| 测试门禁 | 338 passed / 1 skipped in 29.55s；F0028-5 定向 19 passed；compileall 通过 |
 | 批跑门禁 | F0028-4：2/3/4 人各 50 局，共 150 局，零策略崩溃/非法动作 |
 | 性能门禁 | F0028-4：单决策 p95 1.1968 ms；相对 RuleAI 2.50×，均通过 |
 | 人工测试 | 快速集通过；MT-04 确认进入定缺并正常出牌；MT-03 策略列表显示待非阻塞补验 |
-| Git | F0028-4 Docs-First 规格、实现与验收已纳入本地 `main` 基线；远端未推送 |
+| Git | F0028-5 Docs-First 规格、实现与验收已纳入本地 `main` 基线；远端未推送 |
 
 ## 本轮已完成
 
-- 新增并批准 F0028-5 子规格：独立 private Audit v1、canonical hash 链、state/view/config hash、认知/RNG 快照与 humanlike 策略复演。
-- 用户已授权本切片文档、实现、测试及本地 Git 全自动执行；Docs-First 门禁开放。
+- F0028-5 子规格按用户自动授权完成 `Approved → Done`。
+- 新增 private Audit v1 writer/reader/verifier、canonical SHA-256 链、state/view/config hash、认知/RNG 快照。
+- orchestrator 覆盖换三张、定缺、出牌和响应决策；旧 steps/ReplaySession 保持兼容。
+- 新增 humanlike 多 seat 策略输入序列复演；2/3/4 人共 60 局、9294 决策全部匹配。
+- 篡改、截断、泄漏、非法动作、RNG 回退和同局双跑门禁通过。
+- audit+steps 写入开销 1.375×；verifier 6288.3 records/s。
 
 - F0028-4 子规格按用户预授权完成 `Approved → Done`。
 - 新增公开信息 MemoryStore、Top-K AttentionSelector、持续 CognitiveState 和 CognitivePolicy。
@@ -41,7 +45,7 @@
 - Observation 仍是 wire 1 legacy mapping；策略按 PlayerView v2 白名单重建冻结对象，没有升级协议。
 - 被认领弃牌须在公开计数中与副露去重；现已覆盖自动测试和批跑。
 - 当前 belief 是确定性公开启发式，不输出精确他手；F0010/F0011 全知入口未复用。
-- 认知状态当前仅驻留玩家进程；中断恢复、持久化 RNG/记忆快照归 F0028-5。
+- 认知/RNG 已进入 private audit 并可策略复演；尚未进入普通 GameState/persistence save。
 - 默认四座仍均为 normal/balanced；多 profile 产品配置尚未启用。
 - 远端未推送；OneDrive 可能拖慢 Git 扫描。
 
@@ -61,9 +65,9 @@
 
 | 序 | 动作 | 产出 / 依赖 | 建议触发语 |
 |----|------|-------------|------------|
-| 1 | 实现并验收 F0028-5（立即执行） | Audit writer/verifier、策略复演、orchestrator 接线、测试报告 | 已自动执行 |
-| 2 | 补验 F0028-3/4 完整人工场景 | 策略显示、MT-06～17、2/3 人与认知体感 | `继续执行 F0028 完整人工测试` |
-| 3 | 编写、确认并实现 F0028-6 | 训练契约；依赖 F0028-5 Done | 按 F0028-6 触发 |
+| 1 | 编写并确认 F0028-6 子规格（立即下一步） | 固定动作空间、legal mask、观测块、奖励与评估；依赖 F0028-5 Done | `编写并确认 F0028-6 子规格` |
+| 2 | 补验 F0028-3–5 完整人工场景 | 策略显示、MT-06～17、2/3 人、认知与审计体感 | `继续执行 F0028 完整人工测试` |
+| 3 | 实现并验收 F0028-6 | 训练契约闭环 | `实现 F0028-6` |
 | 4 | 验证真实历史存档 | schema 1–4 真实夹具和迁移报告；发布前建议完成 | `导入并验证真实历史存档夹具` |
 | 5 | 推送本地 main | 外部状态变更，需显式授权 | `将恢复后的 main 推送到 origin` |
 | 6 | 整理 OneDrive 冲突副本 | 先只读列清单；删除另行授权 | `整理 OneDrive 冲突副本，先出清单` |

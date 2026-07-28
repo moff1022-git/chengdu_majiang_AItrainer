@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028 |
-| **状态** | `In Progress`（F0028-1–4 Done；F0028-5 待子规格） |
+| **状态** | `In Progress`（F0028-1–5 Done；F0028-6 待子规格） |
 | **类型** | 跨引擎 / AI / 训练 / 回放的功能增强 |
 | **需求输入** | 根目录 `成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md` |
 | **依赖版本** | `CDMJ-AI-RULES 1.0.0`、`CDMJ-AI-PARAMS 1.0.0`、`CDMJ-AI-IMPL 2.0.0` |
@@ -11,7 +11,7 @@
 | **实现规范 SHA-256** | `9bc4d4ea5278e09ae34a1efb5edfb3cbc295752ecf6b3ebe89b348210d670135` |
 | **现有基线** | APP 0.2.1 / state schema 5 / PlayerView 2 / persistence format 1 / wire protocol 1 |
 | **前置门禁** | Git 本地基线已恢复；每个子规格须经用户确认到 `Approved` 后才可编码 |
-| **当前切片** | `F0028-4 Done`（2026-07-29） |
+| **当前切片** | `F0028-5 Done`（2026-07-29） |
 
 ## 1. 结论
 
@@ -157,7 +157,7 @@
 
 ### F0028-5：审计日志与确定性回放
 
-> 字段级子规格：[F0028_5_decision_audit_replay.md](F0028_5_decision_audit_replay.md)，当前 `Approved`（2026-07-29，用户已授权自动实现）。
+> 字段级子规格：[F0028_5_decision_audit_replay.md](F0028_5_decision_audit_replay.md)，当前 `Done`（2026-07-29）。
 
 **目标**：能回答“AI 当时看到什么、想了什么、为何停止、用了哪个随机位置”。
 
@@ -169,6 +169,8 @@
 - 定义 replay/audit 格式版本与兼容读取策略。
 
 **验收**：从初始种子+配置+事件重放得到相同状态 hash、动作和结算；历史 PlayerView 不因终局信息被覆写。
+
+**实现结果**：已完成 private Audit v1、state/view/config hash、链式验证、认知/RNG 快照和 humanlike 策略输入序列复演；全量 338 passed / 1 skipped；60 局、9294 决策全部验证/复演一致。完整规则事件重演继续由 M10 steps 承担。
 
 ### F0028-6：训练空间与回归评估
 

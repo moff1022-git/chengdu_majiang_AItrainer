@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Sequence
 
 from engine.action import Action, ActionType
+from engine.audit import DecisionAuditWriter
 from engine.blood_battle import (
     GameResult,
     PlayError,
@@ -102,6 +103,7 @@ class PlayerGameRunner:
             int(k): int(v) for k, v in (starting_scores or {}).items()
         }
         self._step_recorder: StepRecorder | None = None
+        self._audit_writer: DecisionAuditWriter | None = None
         self.players_meta: list[dict] = [
             {"seat": i, "type": type(p).__name__, "name": p.name}
             for i, p in enumerate(self.players)
@@ -135,6 +137,12 @@ class PlayerGameRunner:
                 snapshot_every=1,
             )
             self._step_recorder.record_snapshot(state)
+            self._audit_writer = DecisionAuditWriter(
+                Path(self.save_dir) / f"{state.game_id}.audit.jsonl",
+                game_id=state.game_id,
+                engine_config=cfg.to_dict(),
+                initial_state=state.to_dict(),
+            )
 
         join_cfg = cfg.to_dict()
         join_cfg.setdefault("theme", "green")
@@ -303,6 +311,12 @@ class PlayerGameRunner:
         if self.logger:
             self.logger.emit("game_end", result=result.to_dict())
 
+        if self._audit_writer:
+            self._audit_writer.finish(
+                final_state=state.to_dict(),
+                finished_reason=state.finished_reason,
+            )
+
         if self.save_dir and self.save_on_end:
             path = default_save_path(self.save_dir, state.game_id)
             save_game(
@@ -346,6 +360,7 @@ class PlayerGameRunner:
         if isinstance(player, RuleAIPlayer):
             setattr(player, "_engine_state", state)
         obs = build_observation(state, seat)
+        state_before = state.to_dict()
         self.transport.send_observation(player, obs)
         legal = legal_actions(state, seat)
         if not legal:
@@ -387,16 +402,11 @@ class PlayerGameRunner:
                 reason=dec.reason,
                 analysis=dec.analysis,
             )
-        if self._step_recorder:
-            self._step_recorder.record_decision(
-                seat,
-                dec.action.to_dict(),
-                dec.reason,
-                state=state if self.save_every_decision else None,
-            )
+        applied = True
         try:
             session.apply(seat, dec.action)
         except Exception as e:
+            applied = False
             # Never let a single apply kill the whole blood-battle hand
             print(f"[orchestrator] apply failed seat={seat} phase={state.phase}: {e}")
             if state.phase == "response":
@@ -413,11 +423,32 @@ class PlayerGameRunner:
                     raise PlayError(str(e)) from e
             else:
                 raise
+        if self._audit_writer:
+            self._audit_writer.record_decision(
+                seat=seat,
+                phase=req.phase,
+                state_before=state_before,
+                state_after=state.to_dict(),
+                player_view=obs.to_dict(),
+                legal_actions=[action.to_dict() for action in legal],
+                selected_action=dec.action.to_dict(),
+                reason=dec.reason,
+                decision_trace=dec.analysis,
+                applied=applied,
+            )
+        if self._step_recorder:
+            self._step_recorder.record_decision(
+                seat,
+                dec.action.to_dict(),
+                dec.reason,
+                state=state if self.save_every_decision else None,
+            )
 
     def _decide_and_opening_exchange(self, state: GameState, seat: int) -> None:
         player = self.players[seat]
         p = next(x for x in state.players if x.seat == seat)
         obs = build_observation(state, seat)
+        state_before = state.to_dict()
         self.transport.send_observation(player, obs)
         legals = _opening_exchange_legals(p.hand)
         # Also allow player-chosen triple via validate if they invent — only offer one
@@ -440,11 +471,35 @@ class PlayerGameRunner:
                 reason=dec.reason,
                 action={"type": "exchange", "tiles": [t.id for t in tiles]},
             )
+        applied_action = Action(ActionType.EXCHANGE, tiles=tuple(tiles))
         submit_exchange(state, seat, tiles)
+        audit_legals = [action.to_dict() for action in legals]
+        if applied_action.to_dict() not in audit_legals:
+            audit_legals.append(applied_action.to_dict())
+        if self._audit_writer:
+            self._audit_writer.record_decision(
+                seat=seat,
+                phase="exchange",
+                state_before=state_before,
+                state_after=state.to_dict(),
+                player_view=obs.to_dict(),
+                legal_actions=audit_legals,
+                selected_action=applied_action.to_dict(),
+                reason=dec.reason,
+                decision_trace=dec.analysis,
+            )
+        if self._step_recorder:
+            self._step_recorder.record_decision(
+                seat,
+                applied_action.to_dict(),
+                dec.reason,
+                state=state if self.save_every_decision else None,
+            )
 
     def _decide_and_opening_dingque(self, state: GameState, seat: int) -> None:
         player = self.players[seat]
         obs = build_observation(state, seat)
+        state_before = state.to_dict()
         self.transport.send_observation(player, obs)
         legals = _opening_dingque_legals()
         req = ActionRequest.create(seat, "dingque", legals)
@@ -461,7 +516,27 @@ class PlayerGameRunner:
                 reason=dec.reason,
                 action={"type": "dingque", "suit": suit.value},
             )
+        applied_action = Action(ActionType.DINGQUE, suit=suit)
         submit_dingque(state, seat, suit)
+        if self._audit_writer:
+            self._audit_writer.record_decision(
+                seat=seat,
+                phase="dingque",
+                state_before=state_before,
+                state_after=state.to_dict(),
+                player_view=obs.to_dict(),
+                legal_actions=[action.to_dict() for action in legals],
+                selected_action=applied_action.to_dict(),
+                reason=dec.reason,
+                decision_trace=dec.analysis,
+            )
+        if self._step_recorder:
+            self._step_recorder.record_decision(
+                seat,
+                applied_action.to_dict(),
+                dec.reason,
+                state=state if self.save_every_decision else None,
+            )
 
 
 def run_players_game(

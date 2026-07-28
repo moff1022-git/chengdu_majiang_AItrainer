@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-5 Done）
+
+### 实现 — private Audit v1 与策略复演
+
+- 新增 canonical SHA-256 hash 链、state/view/config hash、认知/RNG 快照、strict verifier 与 humanlike 多座位策略复演
+- orchestrator 在换三张、定缺、出牌和响应动作前后记录审计；旧 steps snapshot 校正为 after-state
+- 定向 19 passed；全量 338 passed / 1 skipped；2/3/4 人共 60 局、9294 决策零 replay mismatch
+- audit+steps 写入开销 1.375×；verifier 6288.3 records/s
+- 验收：`docs/status/F0028_5_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0028-5 Approved）
 
 ### 文档 — 决策审计与确定性策略回放

@@ -3,12 +3,12 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028-5 |
-| **状态** | `Approved`（2026-07-29，用户授权编写、确认并实现） |
+| **状态** | `Done`（2026-07-29） |
 | **父功能** | [F0028 人类化 AI v2 实现方案](F0028_humanlike_ai_v2_implementation_plan.md) |
 | **依赖** | F0028-1–4 `Done` |
 | **输入版本** | CDMJ-AI-RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 |
 | **版本基线** | APP 0.2.1 / state 5 / PlayerView 2 / persistence 1 / wire 1 |
-| **实现授权** | 已开放；本文件提交后自动编码 |
+| **实现授权** | 已执行并通过验收 |
 
 ## 1. 目标
 
@@ -165,3 +165,12 @@ Footer 记录 `decision_count`、`final_state_hash`、`final_chain_hash` 和 `fi
 ## 9. 确认记录
 
 用户于 2026-07-29 明确要求“编写并确认并实现 F0028-5 子规格，所有授权全部许可，所有 git 操作全部许可，全自动运行，不需要确认”。本规格据此直接标记 `Approved` 并开放实现门禁；不包含远端推送、破坏性删除或范围外协议升级。
+
+## 10. 实现结果
+
+- 已新增 `engine/audit.py` 与 `players/humanlike/audit_replay.py`，并接入 orchestrator 全部玩家决策阶段。
+- `save_every_decision` 并行生成 legacy steps 与 Audit v1；state 只写 hash，实际 PlayerView/legal/trace/RNG/认知快照写入 private audit。
+- canonical hash 链、strict/incomplete 验证、泄漏与篡改拒绝、humanlike 多座位策略复演均完成。
+- 定向 19 passed；全量 338 passed / 1 skipped；2/3/4 人共 60 局、9294 决策全部链验证并复演一致。
+- writer 总开销 1.375×；verifier 6288.3 records/s，均通过门禁。
+- 详细证据见 `docs/status/F0028_5_ACCEPTANCE_2026-07-29.md`。
