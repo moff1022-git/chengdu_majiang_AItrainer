@@ -807,11 +807,11 @@ python main.py play --crash-policy replace_player --timeout-ms 10000
 
 ## 15. 下一步
 
-**M01–M11 已完成。F0028 已 Approved。** 当前有序队列：
+**M01–M11 已完成。F0028 已进入 In Progress，F0028-1 已 Done。** 当前有序队列：
 
 1. 读 `docs/status/LATEST.md` + `docs/status/DOC_CODE_BASELINE.md`  
-2. 先恢复已损坏的 Git 基线，再修复接管审计中的测试门禁  
-3. 按 [`F0028_humanlike_ai_v2_implementation_plan.md`](docs/features/F0028_humanlike_ai_v2_implementation_plan.md) 依次实施 F0028-1–F0028-6，每个切片单独验收与回写  
+2. 本地 Git 与测试门禁已恢复；远端基线推送仍需单独授权
+3. 按 [`F0028_humanlike_ai_v2_implementation_plan.md`](docs/features/F0028_humanlike_ai_v2_implementation_plan.md) 继续实施 F0028-2–F0028-6，每个切片单独验收与回写
 4. 新需求 → `docs/features/Fxxxx_*.md`（Docs-First）→ Approved → 实现  
 5. 发版 → 改 `version.py` + changelog + tag + 打包（`docs/VERSIONING.md`）
 

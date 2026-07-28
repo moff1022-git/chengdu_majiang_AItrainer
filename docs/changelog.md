@@ -3,6 +3,18 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-28（F0028-1 配置与参数追踪基座）
+
+### 实现 — GP/RP 强类型、兼容门禁、稳定 hash 与生命周期
+
+- `configs/humanlike_v2/default.json`：完整 GP-001–GP-027 与四个中性 `normal/balanced` profile
+- `configs/humanlike_v2/compatibility.json`：锁定 RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 组合
+- `players/humanlike/config.py`：不可变配置、枚举/范围/权重验证、规范化 SHA-256
+- `players/humanlike/runtime.py`：RP-001–RP-033 唯一注册及建局、事件、决策、终局生命周期
+- `players/humanlike/traceability.py`：60 条参数到 schema、consumer、测试锚点的机械映射
+- 文档状态：F0028 `Approved` → `In Progress`，F0028-1 `Done`
+- 验收：F0028-1 定向 **12 passed**；最终提交全量 **291 passed / 1 skipped**（27.29s）；`compileall` 通过
+
 ## 2026-07-28（接管测试门禁修复）
 
 ### 测试 — F0020 旧断言与 macOS Tk 硬崩溃隔离

@@ -1,59 +1,43 @@
 # 进度快照
 
-> 2026-07-28 — **Git 与测试门禁已恢复；下一步可进入 F0028-1**
+> 2026-07-28 — **F0028-1 配置与参数追踪基座 Done；下一步 F0028-2 子规格**
 
 ## 当前状态
 
 | 项 | 状态 |
 |----|------|
-| 应用版本 | 0.2.1（`version.py`） |
-| 规格主线 | M01–M11 已 Done；F0001–F0027 已实现；F0028 人类化 AI v2 已 Approved |
-| F0028 输入 | 两份根目录新规范已校验 hash 并完成代码差距分析 |
-| 接管审计 | 已完成并二次复核，见 `docs/status/PROJECT_TAKEOVER_AUDIT_2026-07-28.md` |
-| Git | **本地基线已重建**：`main` 根提交 `90e7174`；损坏 `.git` 已备份；远端零 refs/非法 HEAD，未推送 |
-| 编译 / CLI | `compileall` 通过；`main.py --version` = 0.2.1 |
-| 测试门禁 | **全量 279 passed / 1 skipped（27.83s）**；无失败、无解释器 Abort |
-| 冲突副本 | 排除 `.venv` / `backup` 后仍扫到 52 个 `*Moff的Mac Studio*` 文件 |
-| 大目录 | `.venv` 415 MB、backup 350 MB、logs 316 MB、releases 309 MB、dist 274 MB、build 18 MB |
-
-## 已确认问题
-
-1. 远端 GitHub 当前无可恢复 refs，尚未将新本地基线推送至远端，历史 `v0.2.1` tag 也无法验证。
-2. OneDrive 冲突副本仍保留在本地，但新 `.gitignore` 已将其与 venv/logs/build/dist/backup 排除出 Git 基线。
+| 应用版本 | 0.2.1（`version.py`，本轮未变） |
+| 规格主线 | M01–M11 Done；F0001–F0027 已实现；F0028 `In Progress` |
+| F0028-1 | **Done**：27 GP、33 RP、60 条追踪映射、版本兼容矩阵；默认配置 hash `6c4f54ca…b06ee37` |
+| F0028-2 | 待先补充并批准实体牌 / 事件断言 / PlayerView v2 子规格 |
+| Git | 本地 `main` 恢复基线可用；本轮实现尚待提交；远端零 refs/非法 HEAD，未推送 |
+| 测试门禁 | F0028-1 定向 12 passed；最终提交全量 **291 passed / 1 skipped**（27.29s） |
+| 冲突副本 | 52 个 `*Moff的Mac Studio*` 文件仍保留；未删除 |
 
 ## 本轮已完成
 
-- 用户确认 F0028；状态 `Review` → `Approved`，本轮未写业务代码。
-- 锁定六切片渐进实施、`humanlike_v2` 选配 profile、实体牌 ID 必做和中性中等水平首个 profile。
-- 新增并已批准 `docs/features/F0028_humanlike_ai_v2_implementation_plan.md`，将新规范映射为 6 个渐进切片。
-- 完成 Docs-First 一致性补齐：`PLAN.md`、`DOC_CODE_BASELINE.md`、F0026/F0027 正文状态、status 文档链接已同步。
-- 读取 GitHub 远端并临时 clone；确认远端零 refs/非法 HEAD，不可作为恢复源。
-- 盘点本地冲突 index：728 个条目中 675 个 blob 缺失；原历史无法完整恢复。
-- 将损坏 `.git` 移至 `backup/git-metadata-corrupt-2026-07-28/`，以当前工作树重建本地 `main`/index。
-- 恢复正常 `.gitignore`，新基线收录 744 个源文件/文档/资源，排除本地产物与冲突副本。
-- 创建本地 `main` 恢复根提交 `90e7174`；`git fsck --full` 无损坏 ref/对象错误（仅有未引用 blob）。
-- 恢复后 `compileall` 通过；安全测试主体 278 passed / 1 failed / 1 deselected，唯一失败仍是 F0020 旧断言。
-- 更新 M09 历史测试为 F0020 当前行为：允许 2H/3H，拒绝 4H。
-- 为 F0013 Tk GUI 用例增加 macOS 收集期 skip 门禁，避免 `tk.Tk()` 在当前环境直接 Abort 整个 pytest 进程。
-- 验收：`compileall` 通过；不带排除条件的全量 `pytest -q` = 279 passed / 1 skipped（27.83s）。
-- 确认规则文件 SHA-256 与实现规范绑定值一致；记录实现规范 hash。
-- 对照现有 `engine/`、`protocols/`、`players/analysis/`、`training/` 和 replay，明确复用边界与缺口。
-- 锁定“不重建 `src/`、不复制引擎、新 profile 先选配、保留 2/3/4 人”的兼容方向。
-- 按强制读序恢复了跨机基线，复阅接管审计、流程规范和系统设计。
-- 以只读命令复核 Git refs / fsck / remote，确认 P0 损坏仍在。
-- 复跑安全测试主体，结果与上轮一致：278 passed / 1 failed / 1 deselected。
-- 复核冲突副本和大目录数量；未删除文件，未修改业务代码、测试或 Git 元数据。
+- 在 F0028 主规格追加字段级 GP/RP 映射、失败契约和规范化 hash 契约，再进入编码。
+- 新增 `configs/humanlike_v2/default.json`，完整声明 GP-001–GP-027 和四个中性普通水平 profile。
+- 新增 `compatibility.json`，未知 RULES/PARAMS/IMPL 组合明确失败。
+- 新增不可变 `GlobalParameters`、`PlayerProfile`、`HumanlikeConfig`；实现枚举、范围、固定值和权重归一校验。
+- 新增 `RoundRuntime`，注册 RP-001–RP-033 并提供建局、事件、决策、终局受控入口。
+- 新增 60 条无缺失、无重号的参数追踪记录。
+- 新增 12 个定向测试；全量回归无新增失败。
+- 未注册 `humanlike_v2` 玩家，未修改 engine/state/persistence/wire，未跨入 F0028-2。
 
 ## 下一步完整队列
 
 | 序 | 动作 | 产出 / 依赖 | 建议触发语 |
 |----|------|-------------|------------|
-| 1 | 实施 F0028-1（立即下一步） | GP/RP 强类型、验证、hash 和追踪矩阵 | `实现 F0028-1 配置与参数追踪基座` |
-| 2 | 确认并推送新远端基线 | 将本地 `main` 推送到当前零 refs 远端；是外部状态变更，需单独确认 | `将恢复后的 main 推送到 origin` |
-| 4 | 依次实施 F0028-2–6 | 实体牌/视图 → 基础策略 → 有限认知 → 回放 → 训练 | 见 F0028 每切片触发语 |
-| 5 | 处理冲突副本与瘦身 | 恢复 `.gitignore`，diff/删除清单；删除前需授权 | `整理 OneDrive 冲突副本，先出保留删除清单再执行` |
+| 1 | 编写 F0028-2 子规格（立即下一步） | 实体牌兼容迁移、事件断言、PlayerView v2 白名单与验收；依赖 F0028-1 Done | `编写 F0028-2 实体牌与 PlayerView v2 子规格` |
+| 2 | 确认 F0028-2 | 子规格 `Review → Approved`；确认 schema/format 是否升级 | `确认 F0028-2 方案` |
+| 3 | 实现并验收 F0028-2 | 108 张实体 ID 守恒、视图泄漏为 0、老存档确定迁移 | `实现 F0028-2` |
+| 4 | 依次实施 F0028-3–6 | 基础策略 → 有限认知 → 回放审计 → 训练契约；每切片先子规格 | `编写 F0028-3 子规格` |
+| 5 | 推送本地恢复基线 | 外部状态变更；需确认远端零 refs 后显式授权 | `将恢复后的 main 推送到 origin` |
+| 6 | 整理 OneDrive 冲突副本 | 先出保留/删除清单；删除前需授权 | `整理 OneDrive 冲突副本，先出清单` |
 
 ## 风险与边界
 
-- 本地 Git 基线已可提交；远端推送和 `v0.2.1` tag 重建尚未授权。
-- F0028 已 Approved，Git 与测试前置门禁均已满足，可开始 F0028-1。
+- 当前配置基座尚未适配既有 `EngineConfig`，该适配属于后续引擎接入切片；不能形成两个相互冲突的规则权威。
+- `RoundRuntime` 当前承载 RP 生命周期和不透明 payload；各 RP 的领域计算将在 F0028-2–4 分属模块实现。
+- 本地 Git 位于 OneDrive，普通 `git status/commit` 可能因云端资产水合而变慢；远端仍未推送。

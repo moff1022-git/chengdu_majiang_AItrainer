@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028 |
-| **状态** | `Approved` |
+| **状态** | `In Progress`（F0028-1 Done；F0028-2 待实施） |
 | **类型** | 跨引擎 / AI / 训练 / 回放的功能增强 |
 | **需求输入** | 根目录 `成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md` |
 | **依赖版本** | `CDMJ-AI-RULES 1.0.0`、`CDMJ-AI-PARAMS 1.0.0`、`CDMJ-AI-IMPL 2.0.0` |
@@ -11,6 +11,7 @@
 | **实现规范 SHA-256** | `9bc4d4ea5278e09ae34a1efb5edfb3cbc295752ecf6b3ebe89b348210d670135` |
 | **现有基线** | APP 0.2.1 / state schema 4 / persistence format 1 / wire protocol 1 |
 | **前置门禁** | 先恢复 Git P0 基线；本文经用户确认到 `Approved` 后才可编码 |
+| **当前切片** | `F0028-1 Done`（2026-07-28） |
 
 ## 1. 结论
 
@@ -81,6 +82,17 @@
 - `configs/humanlike_v2/compatibility.json`：支持的 RULES/PARAMS/IMPL 组合。
 
 **验收**：27 个 GP 与 33 个 RP 无缺失、无重号；非法范围/未知版本/权重不归一明确失败；配置规范化后 hash 稳定。
+
+**实现结果（2026-07-28）**：
+
+- [x] 默认配置包含且仅包含 GP-001–GP-027，并展开四个中性 `normal/balanced` 座位 profile。
+- [x] `GlobalParameters` / `PlayerProfile` / `HumanlikeConfig` 完成强类型加载、深冻结和显式失败。
+- [x] RULES/PARAMS/IMPL 兼容矩阵拒绝未知组合；默认配置规范化 SHA-256 = `6c4f54cafa4bd4124632194ee4180e5803e1f60011d72e044c7eb0298b06ee37`，对排版和键顺序稳定。
+- [x] `RoundRuntime` 注册且仅注册 RP-001–RP-033，提供建局、事件、决策和终局生命周期入口。
+- [x] `PARAMETER_TRACES` 提供 60 条唯一 `parameter_id → schema_path → consumer → test` 映射。
+- [x] 定向测试 12 passed；最终提交全量测试 291 passed / 1 skipped（27.29s）；`compileall` 通过。
+
+实现路径：`configs/humanlike_v2/`、`players/humanlike/{config,runtime,traceability}.py`、`tests/humanlike_v2/`。本切片未注册 `humanlike_v2` 玩家、未修改引擎或存档协议，符合 F0028-1 边界。
 
 ### F0028-2：实体牌、事件断言与 PlayerView v2
 
@@ -267,4 +279,43 @@
 - [x] 已说明复用、改造、新增与不重写的边界。
 - [x] 已给出切片顺序、代码路径、测试、回滚和风险。
 - [x] 用户确认本方案（2026-07-28，`Review` → `Approved`）。
-- [ ] Git P0 基线已恢复。
+- [x] Git P0 基线已恢复。
+
+## 12. F0028-1 字段级 GP/RP 映射附录（Approved 实施基线）
+
+本附录锁定 F0028-1 的机械追踪契约。配置中的 GP 使用
+`global_parameters.<parameter_id>`；每局运行时 RP 使用
+`round_parameters.<parameter_id>`。`players[*].profile` 是 GP-023 的四座位展开，
+不得形成第 28 个 GP。派生字段必须保存在所属 RP 值对象内部，不新增顶层编号。
+
+### 12.1 GP 映射
+
+| 参数 | schema path | F0028-1 consumer | 后续权威 consumer |
+|------|-------------|------------------|-------------------|
+| GP-001 | `global_parameters.GP-001` | `config.GlobalParameters` | 版本门禁 / audit |
+| GP-002–GP-010 | `global_parameters.GP-002..010` | `config.GlobalParameters` | match / engine adapter |
+| GP-011–GP-020 | `global_parameters.GP-011..020` | `config.GlobalParameters` | scoring adapter |
+| GP-021–GP-022 | `global_parameters.GP-021..022` | `config.GlobalParameters` | PlayerView / timeout |
+| GP-023 | `global_parameters.GP-023` + `players[*].profile` | `config.PlayerProfile` | humanlike policy |
+| GP-024–GP-027 | `global_parameters.GP-024..027` | `config.GlobalParameters` | memory / policy / objective |
+
+### 12.2 RP 映射与生命周期
+
+| 参数 | schema path | 初始化/更新入口 | 后续权威 consumer |
+|------|-------------|-----------------|-------------------|
+| RP-001–RP-003 | `round_parameters.RP-001..003` | `RoundRuntime.create_round` | match / score context |
+| RP-004–RP-012 | `round_parameters.RP-004..012` | `RoundRuntime.set_parameter` / `apply_event` | PlayerView / hand state |
+| RP-013–RP-015 | `round_parameters.RP-013..015` | `RoundRuntime.begin_decision` | event / legal actions |
+| RP-016–RP-022 | `round_parameters.RP-016..022` | `RoundRuntime.set_parameter` | analysis / plan / threat |
+| RP-023–RP-028 | `round_parameters.RP-023..028` | `RoundRuntime.begin_decision` / `set_parameter` | cognitive policy |
+| RP-029–RP-031 | `round_parameters.RP-029..031` | `RoundRuntime.append_decision` / `set_parameter` | trace / reveal / ledger |
+| RP-032–RP-033 | `round_parameters.RP-032..033` | `RoundRuntime.finalize_round` | settlement / learning |
+
+### 12.3 F0028-1 文件与失败契约
+
+- `configs/humanlike_v2/default.json` 是默认配置的唯一数据源，包含且仅包含 GP-001–GP-027、四个座位 profile。
+- `configs/humanlike_v2/compatibility.json` 是 RULES/PARAMS/IMPL 支持组合的唯一数据源；未知组合必须抛出 `ConfigValidationError`。
+- `players/humanlike/config.py` 负责完整性、编号唯一性、枚举、范围、权重和规范化 SHA-256；加载后对象不可变。
+- `players/humanlike/runtime.py` 负责 RP-001–RP-033 注册、生命周期和受控更新；缺失、重号或未知 RP 必须明确失败。
+- `players/humanlike/traceability.py` 的 60 条记录必须分别绑定 schema path、consumer 与测试锚点，测试机械检查无缺失、无重号。
+- JSON 规范化采用 UTF-8、键排序、紧凑分隔符 `(',', ':')`、`allow_nan=false`；hash 为该字节串的 SHA-256 小写十六进制。

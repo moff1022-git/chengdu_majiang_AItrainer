@@ -49,7 +49,7 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **Approved（未实现）** | 人类化 AI v2 六切片方案；当前无 `humanlike_v2` 代码锚点，不得误标 Done |
+| F0028 | **In Progress（F0028-1 Done）** | `configs/humanlike_v2/*` + `players/humanlike/{config,runtime,traceability}.py`；GP/RP 配置追踪基座已实现，玩家策略尚未注册 |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -92,3 +92,4 @@
 | 2026-07-26 | 全面对照 v0.2.1 代码；修正 F0009/F0014/M09/LATEST/README/状态索引 |
 | 2026-07-28 | 登记 F0028 Approved/未实现；修正 Git 状态为本地 P0 损坏待远端核验 |
 | 2026-07-28 | 远端与本地历史均无法完整恢复；以当前工作树重建本地 main/index，保留损坏 `.git` 备份 |
+| 2026-07-28 | F0028-1 完成：27 GP / 33 RP / 60 条追踪映射、版本兼容矩阵和稳定配置 hash；全量 291 passed / 1 skipped |
