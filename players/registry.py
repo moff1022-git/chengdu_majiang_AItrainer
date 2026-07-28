@@ -6,6 +6,7 @@ from typing import Type
 
 from players.base_player import BasePlayer
 from players.human_proxy import HumanPlayerProxy
+from players.humanlike.player import HumanlikeV2Player
 from players.random_player import RandomPlayer
 from players.rule_ai_player import RuleAIPlayer
 from players.strategy_presets import (
@@ -20,6 +21,7 @@ PLAYER_REGISTRY: dict[str, Type[BasePlayer]] = {
     "random": RandomPlayer,
     "rule_ai": RuleAIPlayer,
     "human": HumanPlayerProxy,
+    "humanlike_v2": HumanlikeV2Player,
 }
 
 
@@ -33,7 +35,7 @@ def create_player(
     human_timeout_ms: int = 120_000,
 ) -> BasePlayer:
     """
-    spec: "random" | "rule_ai" | "human" | "current_s2" | "rule_ai:Bot1"
+    spec: "random" | "rule_ai" | "humanlike_v2" | "human" | "current_s2" | "rule_ai:Bot1"
 
     Strategy preset ids from ``configs/strategies/presets.json`` resolve to a
     base player type plus options (e.g. use_f0011).

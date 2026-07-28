@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028 |
-| **状态** | `In Progress`（F0028-1–2 Done；F0028-3 Approved） |
+| **状态** | `In Progress`（F0028-1–3 Done；F0028-4 待子规格） |
 | **类型** | 跨引擎 / AI / 训练 / 回放的功能增强 |
 | **需求输入** | 根目录 `成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md` |
 | **依赖版本** | `CDMJ-AI-RULES 1.0.0`、`CDMJ-AI-PARAMS 1.0.0`、`CDMJ-AI-IMPL 2.0.0` |
@@ -11,7 +11,7 @@
 | **实现规范 SHA-256** | `9bc4d4ea5278e09ae34a1efb5edfb3cbc295752ecf6b3ebe89b348210d670135` |
 | **现有基线** | APP 0.2.1 / state schema 5 / PlayerView 2 / persistence format 1 / wire protocol 1 |
 | **前置门禁** | Git 本地基线已恢复；每个子规格须经用户确认到 `Approved` 后才可编码 |
-| **当前切片** | `F0028-3 Approved`（2026-07-29） |
+| **当前切片** | `F0028-3 Done`（2026-07-29） |
 
 ## 1. 结论
 
@@ -115,7 +115,7 @@
 
 ### F0028-3：只读 PlayerView 的确定性基础策略
 
-> 字段级子规格：[F0028_3_deterministic_player_view_policy.md](F0028_3_deterministic_player_view_policy.md)，当前 `Approved`（2026-07-29）。
+> 字段级子规格：[F0028_3_deterministic_player_view_policy.md](F0028_3_deterministic_player_view_policy.md)，当前 `Done`（2026-07-29）。
 
 **目标**：先建立不带认知噪声的 v2 策略，使规则、特征和行为可回归。
 
@@ -132,6 +132,8 @@
 **强制改造**：当前 `RuleAIPlayer` 可从 `_engine_state` 调用 `analyze_for_seat(GameState, ...)`；`humanlike_v2` 不得使用此通道。F0010/F0011 要复用时，必须增加仅接受 `PlayerView` 的入口。
 
 **验收**：全部选择均在 legal mask 中；同一视图+配置+种子输出相同 action/trace；批量自博弈非法动作率 0。
+
+**实现结果**：已完成。新增选配 `humanlike_v2` 及七个纯视图策略模块；全量 321 passed / 1 skipped；2/3/4 人共 150 局、23392 次决策零崩溃/零非法动作；跨 hash seed 摘要一致；p95 2.87 ms、相对 RuleAI 2.222×。
 
 ### F0028-4：人类化有限认知
 

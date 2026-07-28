@@ -3,12 +3,12 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028-3 |
-| **状态** | `Approved`（2026-07-29 用户确认） |
+| **状态** | `Done`（2026-07-29） |
 | **父功能** | [F0028 人类化 AI v2 实现方案](F0028_humanlike_ai_v2_implementation_plan.md) |
 | **依赖** | F0028-1、F0028-2 `Done` |
 | **输入版本** | CDMJ-AI-RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 |
 | **协议基线** | State schema 5 / PlayerView 2 / persistence 1 / wire 1 |
-| **实现门禁** | 已批准；可在用户明确要求 `实现 F0028-3` 后编码 |
+| **实现门禁** | 已执行并通过验收 |
 
 ## 1. 背景与目标
 
@@ -211,16 +211,16 @@ Q(a) = w_speed*speed + w_hand_value*hand_value
 
 ## 9. 验收标准
 
-- [ ] 仅使用 PlayerView v2、ActionRequest、配置和自身 runtime。
-- [ ] `humanlike_v2` 可显式注册，旧 AI 默认不变。
-- [ ] 输出动作均严格属于 legal actions，非法动作率 0。
-- [ ] 重复、跨 hash seed、双批自对弈 action/trace 复现率 100%。
-- [ ] 相同 PlayerView 下隐藏真值变化不改变决策。
-- [ ] mandatory 不受 GP-026 上限影响。
-- [ ] 四阶段、同分规则和 trace 泄漏测试通过，`rng_used=false`。
-- [ ] 2/3/4 人各 50 局通过规则、守恒、异常和性能门禁。
-- [ ] 全量测试与 compileall 无回归。
-- [ ] 验收报告及所有状态文档回写完成。
+- [x] 仅使用 PlayerView v2、ActionRequest、配置和自身 runtime。
+- [x] `humanlike_v2` 可显式注册，旧 AI 默认不变。
+- [x] 输出动作均严格属于 legal actions，非法动作率 0。
+- [x] 重复、跨 hash seed、双批自对弈 action/trace 复现率 100%。
+- [x] 相同 PlayerView 下隐藏真值变化不改变决策。
+- [x] mandatory 不受 GP-026 上限影响。
+- [x] 四阶段、同分规则和 trace 泄漏测试通过，`rng_used=false`。
+- [x] 2/3/4 人各 50 局通过规则、守恒、异常和性能门禁。
+- [x] 全量测试与 compileall 无回归。
+- [x] 验收报告及所有状态文档回写完成。
 
 ## 10. 回滚思路
 
@@ -238,3 +238,15 @@ Q(a) = w_speed*speed + w_hand_value*hand_value
 | 版本 | 保持 PlayerView 2 / wire 1 / state 5 / persistence 1 |
 
 以上六项已由用户于 2026-07-29 一并确认。本次确认仅开放实现门禁，没有修改业务代码。
+
+## 12. 实现结果与差异
+
+- 已实现 `view / belief / hand_analyzer / plan / candidates / evaluator / player` 七个策略模块，并通过现有 registry 与策略 presets 注册 `humanlike_v2`。
+- orchestrator 的全知 `_engine_state` 兼容注入缩窄为仅 `RuleAIPlayer`；humanlike_v2 实例从未接收该属性。
+- Observation 外壳仍是 wire 1 的 legacy mapping，因此 `view.py` 按 PlayerView v2 白名单重建冻结对象；没有升级 wire 或 PlayerView 版本。
+- 原计划的多个测试文件合并为 `test_deterministic_policy.py` 与 `test_humanlike_player_integration.py`，覆盖范围不减。
+- F0010/F0011 现有全知入口没有被调用；本切片使用独立、纯可见输入启发式，保留后续替换点。
+- 最终全量测试 321 passed / 1 skipped；compileall 通过。
+- 最终 2/3/4 人各 50 局共 150 局、23392 次决策，策略崩溃和非法动作均为 0。
+- 跨 `PYTHONHASHSEED=1/777` 的三局动作摘要 SHA-256 均为 `e541199f51e9c1c3c2702555c3d7b606204176acaab6fe79d51ab1c0b9b53d2b`。
+- macOS arm64 / Python 3.12.13：单决策 p95 2.87 ms；10 局四人批跑相对 RuleAI 2.222×，均通过门禁。

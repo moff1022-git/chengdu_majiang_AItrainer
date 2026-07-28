@@ -6,7 +6,7 @@
 > **技术栈**：Python 3.11+ · Pygame（主窗）· Tk（座位窗）· NumPy（可选）· JSON/JSONL  
 > **资源**：项目根目录 `assets/` + `assets/ASSETS.md`（双主题 green/blue）  
 > **开发流程**：[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) · 进度 [`docs/status/LATEST.md`](docs/status/LATEST.md) · 一致性 [`docs/status/DOC_CODE_BASELINE.md`](docs/status/DOC_CODE_BASELINE.md)
-> **当前功能主线**：F0028-1–2 Done；[F0028-3 确定性 PlayerView 策略](docs/features/F0028_3_deterministic_player_view_policy.md) `Approved`，待实现。
+> **当前功能主线**：F0028-1–3 Done；下一步编写 F0028-4 有限认知子规格。
 ---
 
 ## 0. 目标与非目标
@@ -812,7 +812,7 @@ python main.py play --crash-policy replace_player --timeout-ms 10000
 
 1. 读 `docs/status/LATEST.md` + `docs/status/DOC_CODE_BASELINE.md`  
 2. 本地 Git 与测试门禁已恢复；远端基线推送仍需单独授权
-3. 实施并验收已批准的 [`F0028-3`](docs/features/F0028_3_deterministic_player_view_policy.md)，随后每个切片继续先写子规格并单独验收回写
+3. 编写并确认 F0028-4 有限认知子规格，随后继续逐切片实现和验收回写
 4. 新需求 → `docs/features/Fxxxx_*.md`（Docs-First）→ Approved → 实现  
 5. 发版 → 改 `version.py` + changelog + tag + 打包（`docs/VERSIONING.md`）
 

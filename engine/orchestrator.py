@@ -339,7 +339,12 @@ class PlayerGameRunner:
             return
 
         player = self.players[seat]
-        setattr(player, "_engine_state", state)
+        # Legacy RuleAI analysis still consumes GameState.  F0028-3 players are
+        # deliberately excluded from this full-information compatibility path.
+        from players.rule_ai_player import RuleAIPlayer
+
+        if isinstance(player, RuleAIPlayer):
+            setattr(player, "_engine_state", state)
         obs = build_observation(state, seat)
         self.transport.send_observation(player, obs)
         legal = legal_actions(state, seat)

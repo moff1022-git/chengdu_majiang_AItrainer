@@ -3,6 +3,17 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-3 Done）
+
+### 实现 — 只读 PlayerView v2 的确定性 humanlike_v2
+
+- 新增七个 `players/humanlike/` 策略模块：上下文、belief、牌效、计划、候选、评价和玩家生命周期
+- 注册选配 `humanlike_v2` 与大厅策略 preset；rule_ai/current_s2 默认行为不变
+- orchestrator 全知 `_engine_state` 注入缩窄为 legacy RuleAI，humanlike_v2 无该通道
+- DecisionTrace v1、RP 写入、mandatory 候选和稳定 8 位评分落地，策略不消费 RNG
+- 全量 321 passed / 1 skipped；2/3/4 人各 50 局共 150 局、23392 次决策零策略崩溃/非法动作
+- p95 2.87 ms，相对 RuleAI 2.222×；验收报告：`docs/status/F0028_3_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0028-3 Approved）
 
 ### 文档 — 确定性 PlayerView v2 基础策略方案确认

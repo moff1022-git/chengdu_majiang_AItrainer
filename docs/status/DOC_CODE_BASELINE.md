@@ -49,9 +49,9 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **In Progress（F0028-1–2 Done）** | 配置追踪 + PhysicalTile/schema 5/invariants/PlayerView v2 已实现；玩家策略尚未注册 |
+| F0028 | **In Progress（F0028-1–3 Done）** | 配置追踪 + 实体牌/视图隔离 + 确定性 humanlike_v2 已实现；有限认知待 F0028-4 |
 | F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
-| F0028-3 | **Approved（尚未实现）** | 六项策略决议已锁定；实现须严格遵循 `F0028_3_deterministic_player_view_policy.md` |
+| F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -100,3 +100,4 @@
 | 2026-07-28 | F0028-2 Done：state schema 5、PlayerView 2、108 张守恒与 oracle 分离；308 passed / 1 skipped |
 | 2026-07-29 | 新增 F0028-3 确定性 PlayerView 策略子规格至 Review；本轮未修改业务代码 |
 | 2026-07-29 | 用户确认 F0028-3：Review → Approved；六项确定性策略决议锁定，本轮未编码 |
+| 2026-07-29 | F0028-3 Done：纯 PlayerView 确定性策略与选配玩家；321 passed / 1 skipped，150 局零策略崩溃 |

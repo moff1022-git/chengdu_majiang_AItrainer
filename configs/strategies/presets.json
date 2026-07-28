@@ -26,6 +26,14 @@
       "use_f0011": true,
       "profile": "configs/strategies/current_s2.json",
       "description": "当前仓库默认强度：F0010 M1–L3+DH+S0–S2 预测 + F0011 综合出牌"
+    },
+    {
+      "id": "humanlike_v2",
+      "label": "人类化AI·v2",
+      "short_label": "人类v2",
+      "player": "humanlike_v2",
+      "use_f0011": false,
+      "description": "F0028-3：仅使用 PlayerView v2 的确定性基础策略"
     }
   ]
 }

@@ -9,6 +9,8 @@ from players.humanlike.config import (
 )
 from players.humanlike.runtime import RoundRuntime
 from players.humanlike.engine_adapter import EngineConfigConflict, HumanlikeEngineAdapter
+from players.humanlike.player import HumanlikeV2Player
+from players.humanlike.view import DecisionContext, PolicyInputError
 
 __all__ = [
     "ConfigValidationError",
@@ -16,6 +18,9 @@ __all__ = [
     "EngineConfigConflict",
     "HumanlikeEngineAdapter",
     "HumanlikeConfig",
+    "HumanlikeV2Player",
+    "DecisionContext",
+    "PolicyInputError",
     "PlayerProfile",
     "RoundRuntime",
     "load_config",
