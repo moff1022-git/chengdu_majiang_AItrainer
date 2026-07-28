@@ -8,10 +8,13 @@ from players.humanlike.config import (
     load_config,
 )
 from players.humanlike.runtime import RoundRuntime
+from players.humanlike.engine_adapter import EngineConfigConflict, HumanlikeEngineAdapter
 
 __all__ = [
     "ConfigValidationError",
     "GlobalParameters",
+    "EngineConfigConflict",
+    "HumanlikeEngineAdapter",
     "HumanlikeConfig",
     "PlayerProfile",
     "RoundRuntime",

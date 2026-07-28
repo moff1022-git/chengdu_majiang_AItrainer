@@ -58,8 +58,8 @@ def test_an04_no_state_mutation() -> None:
     before = state.to_dict()
     analyze_for_seat(state, 0)
     after = state.to_dict()
-    assert before["players"][0]["hand"] == after["players"][0]["hand"]
-    assert before["wall"] == after["wall"]
+    assert before["players"][0]["concealed_tile_ids"] == after["players"][0]["concealed_tile_ids"]
+    assert before["wall_tile_ids"] == after["wall_tile_ids"]
 
 
 def test_an05_rule_ai_pipeline_analysis() -> None:

@@ -6,7 +6,9 @@ from pathlib import Path
 import pytest
 
 from players.humanlike.config import ConfigValidationError, GP_IDS, load_config
+from players.humanlike.engine_adapter import EngineConfigConflict, HumanlikeEngineAdapter
 from players.humanlike.traceability import PARAMETER_TRACES, TRACE_BY_ID
+from engine.config import EngineConfig
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT = ROOT / "configs" / "humanlike_v2" / "default.json"
@@ -74,3 +76,13 @@ def test_traceability_has_all_60_unique_parameters() -> None:
     assert len(TRACE_BY_ID) == 60
     assert set(TRACE_BY_ID) == {f"GP-{i:03d}" for i in range(1, 28)} | {f"RP-{i:03d}" for i in range(1, 34)}
     assert all(trace.schema_path and trace.consumer and trace.test_anchor for trace in PARAMETER_TRACES)
+
+
+def test_engine_adapter_is_read_only_and_conflicts_fail() -> None:
+    adapter = HumanlikeEngineAdapter(load_config(DEFAULT))
+    projected = adapter.engine_config()
+    assert projected.num_players == 4
+    assert projected.exchange_dir == "auto_dice"
+    assert adapter.require_compatible(projected) == projected
+    with pytest.raises(EngineConfigConflict, match="conflicts"):
+        adapter.require_compatible(EngineConfig(num_players=3))

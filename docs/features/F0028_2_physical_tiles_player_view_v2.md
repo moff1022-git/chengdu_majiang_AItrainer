@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|----|
 | 编号 | F0028-2 |
-| 状态 | `Approved`（2026-07-28 用户确认；尚未实现） |
+| 状态 | `Done`（2026-07-28） |
 | 父规格 | [F0028_humanlike_ai_v2_implementation_plan.md](F0028_humanlike_ai_v2_implementation_plan.md) |
 | 依赖 | F0028-1 `Done`；CDMJ-AI-RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 |
 | 当前应用基线 | APP 0.2.1 / state schema 4 / persistence format 1 / wire protocol 1 |
@@ -378,16 +378,25 @@ F0028-2 只接入与实体牌/视图有关的 GP：GP-004、GP-005、GP-007、GP
 ## 12. 验收标准
 
 - [x] schema 5 / persistence 1 / wire 1 / PlayerView 2 版本决议经用户确认（2026-07-28）。
-- [ ] 108 个实体 ID 唯一，每个 face 四张；全部原子事件后所有权守恒。
-- [ ] schema 1–4 迁移确定、可重复、坏档失败且不覆盖原文件。
-- [ ] schema 5 保存/读取保持实体 ID 和事件引用。
-- [ ] 碰杠后的弃牌历史可见，但同一 ID 只在一个所有权区域。
-- [ ] PlayerView 从显式白名单构建，不调用 `GameState.to_dict()`。
-- [ ] GP-021 八项在 hidden/partial/exact 下均有测试。
-- [ ] 生产 PlayerView 泄漏率 0，oracle 与 Observation 完全分离。
-- [ ] Human wire v1、旧 UI、RuleAI、训练旧入口兼容。
-- [ ] 2/3/4 人及现有全量回归通过；性能门禁有报告。
-- [ ] 实现后回写父规格、DOC_CODE_BASELINE、LATEST 和 changelog。
+- [x] 108 个实体 ID 唯一，每个 face 四张；全部原子事件后所有权守恒。
+- [x] schema 1–4 迁移确定、可重复、坏档失败且不覆盖原文件。
+- [x] schema 5 保存/读取保持实体 ID 和事件引用。
+- [x] 碰杠后的弃牌历史可见，但同一 ID 只在一个所有权区域。
+- [x] PlayerView 从显式白名单构建，不调用 `GameState.to_dict()`。
+- [x] GP-021 八项在 hidden/partial/exact 下均有测试。
+- [x] 生产 PlayerView 泄漏率 0，oracle 与 Observation 完全分离。
+- [x] Human wire v1、旧 UI、RuleAI、训练旧入口兼容。
+- [x] 2/3/4 人及现有全量回归通过；性能门禁有报告。
+- [x] 实现后回写父规格、DOC_CODE_BASELINE、LATEST 和 changelog。
+
+## 12.1 实现结果与差异（2026-07-28）
+
+- 实体牌使用 `engine/physical_tile.py::PhysicalTile`；保留 `id=face_id` 兼容属性，权威身份为 `tile_id`。
+- schema 5 已启用，reader 支持 1–5；persistence format 保持 1，wire protocol 保持 1，PlayerView version 为 2。
+- 为多人点炮与抢杠胡的唯一获胜牌所有权增加 `winning_tile_ids` 终态区域；这是 §4.2 “胡牌事件定义的终态位置”的具体落地，不新增业务规则。
+- PlayerView v2 顶层严格使用白名单；legacy UI/wire 字典由独立显式兼容投影生成。
+- 实时座位窗口不再接收 `oracle_hands`，对手预测仍运行，但局中真值准确率不再显示/写入；离线评估能力保留。
+- 验收报告：[F0028_2_ACCEPTANCE_2026-07-28.md](../status/F0028_2_ACCEPTANCE_2026-07-28.md)。
 
 ## 13. 风险与回滚
 

@@ -13,7 +13,7 @@
 | 线 | 权威位置 | 当前值 |
 |----|----------|--------|
 | 应用 SemVer | `version.py` → `APP_VERSION` | **0.2.1** |
-| 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **4** |
+| 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
 | Git 本地基线 | `main` / `90e7174` | 2026-07-28 从当前工作树重建；原历史因对象缺失无法完整恢复 |
@@ -49,8 +49,8 @@
 | F0025 | **Done** | `packaging/windows/*` + `tools/packaging/build_*_windows.ps1`；见 WINDOWS_BUILD |
 | F0026 | **Done** | README 五图 `docs/media/readme/` + `tools/capture_readme_screenshots.py` |
 | F0027 | **Done** | MSI：`build_msi_windows.ps1` + `packaging/windows/msi/Product.wxs`（WiX 3.14） |
-| F0028 | **In Progress（F0028-1 Done）** | `configs/humanlike_v2/*` + `players/humanlike/{config,runtime,traceability}.py`；GP/RP 配置追踪基座已实现，玩家策略尚未注册 |
-| F0028-2 | **Approved（待实现）** | 已锁定 state schema 5 / persistence 1 / wire 1 / PlayerView 2；尚无实体牌或 v2 view 代码，不得误标 Done |
+| F0028 | **In Progress（F0028-1–2 Done）** | 配置追踪 + PhysicalTile/schema 5/invariants/PlayerView v2 已实现；玩家策略尚未注册 |
+| F0028-2 | **Done** | `engine/physical_tile.py`、schema migration/invariants、`protocols/player_view_*`、`training/oracle.py` |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -96,3 +96,4 @@
 | 2026-07-28 | F0028-1 完成：27 GP / 33 RP / 60 条追踪映射、版本兼容矩阵和稳定配置 hash；全量 291 passed / 1 skipped |
 | 2026-07-28 | 新增 F0028-2 子规格至 Review；仅文档，等待确认版本与迁移决议 |
 | 2026-07-28 | 用户确认 F0028-2：Review → Approved；五项版本/兼容决议锁定，本轮未编码 |
+| 2026-07-28 | F0028-2 Done：state schema 5、PlayerView 2、108 张守恒与 oracle 分离；308 passed / 1 skipped |

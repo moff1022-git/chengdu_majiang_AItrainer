@@ -3,6 +3,19 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-28（F0028-2 Done）
+
+### 实现 — 实体牌、schema 5、事件断言与 PlayerView v2
+
+- 新增 `PhysicalTile(tile_id=0..107, face)`；固定 seed 的牌面级洗牌/发牌序列保持兼容
+- GameState schema 4→5，reader 支持 1–5；persistence format 保持 1，wire protocol 保持 1
+- 新增 schema 1–4 确定迁移、强类型 Meld/DiscardRecord、transit/winning 所有权区域和事件断言
+- 新增 PlayerView version 2 白名单 builder；旧 UI/wire API 改由显式兼容投影生成，不再全状态删字段
+- 新增 training-only `TrainingTruth`；普通 Observation 和座位窗口移除 oracle 手牌
+- F0028-2 定向/全量与批量验收通过：**308 passed / 1 skipped**，2/3/4 人共 60 局守恒通过
+- 性能：PlayerView v2 -23.8%；四 RuleAI 断言抽样 -2.2%（均通过门禁）
+- 规格状态：F0028-2 `Approved → Done`；验收报告见 `docs/status/F0028_2_ACCEPTANCE_2026-07-28.md`
+
 ## 2026-07-28（F0028-2 Approved）
 
 ### 文档 — 实体牌与 PlayerView v2 方案确认

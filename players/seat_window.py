@@ -2362,7 +2362,6 @@ class TkSeatApp:
         if not isinstance(view, dict):
             return
         from players.analysis.hand_predict import (
-            apply_oracle_accuracy,
             discard_fingerprint,
             predict_opponent_hands,
         )
@@ -2409,9 +2408,6 @@ class TkSeatApp:
             scenes = []
             if forecasts:
                 scenes = list(getattr(forecasts[0], "_joint_scenes", None) or [])
-            oracle = view.get("oracle_hands")
-            if isinstance(oracle, dict):
-                forecasts = apply_oracle_accuracy(forecasts, oracle)
             self._predict_forecasts = forecasts
             self._predict_joints = scenes
             # F0010-L: per-game prediction log for accuracy analysis
@@ -2453,7 +2449,6 @@ class TkSeatApp:
             game_id = str(getattr(self.last_obs, "game_id", "") or "")
         if not game_id:
             game_id = f"seat{self.seat}-unknown"
-        oracle = view.get("oracle_hands") if isinstance(view, dict) else None
         remain = view.get("remain") if isinstance(view.get("remain"), dict) else None
         if remain is None:
             # Derive remain from public view (discards/melds/own hand) for baseline
@@ -2491,7 +2486,7 @@ class TkSeatApp:
             game_id=game_id,
             self_seat=self.seat,
             forecasts=forecasts,
-            oracle_hands=oracle if isinstance(oracle, dict) else None,
+            oracle_hands=None,
             discard_fp=fp,
             discard_seq=seq_i,
             last_discarder=last_discarder,

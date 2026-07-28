@@ -64,7 +64,7 @@ class SeatUIHub:
         # e.g. "random" | "rule_ai" | "current_s2"
         self.seat_ai_types: dict[int, str] = {}
         self.seat_auto_start: dict[int, bool] = {}
-        # F0010: seats that enabled opponent-hand prediction (oracle_hands)
+        # F0010: seats that enabled opponent-hand prediction (public view only).
         self.seat_predict_opponents: dict[int, bool] = {}
         self._discard_seq: int = 0
         self._last_discard_fp: str | None = None
@@ -515,11 +515,9 @@ class SeatUIHub:
                 if tr._proc is None or tr._proc.poll() is not None:
                     dead.append(seat)
                     continue
-                want_oracle = bool(self.seat_predict_opponents.get(seat, False))
                 obs = build_observation(
                     state,
                     seat,
-                    include_oracle_hands=want_oracle,
                     discard_seq=self._discard_seq,
                 )
                 tr.send_observation(obs)

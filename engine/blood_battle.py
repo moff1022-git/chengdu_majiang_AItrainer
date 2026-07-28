@@ -13,7 +13,8 @@ from engine.hand_utils import melds_from_raw
 from engine.legal import action_in_legal, legal_actions
 from engine.rules import config_from_state
 from engine.score import ScoreService
-from engine.state import GameState, PlayerState
+from engine.physical_tile import PhysicalTile
+from engine.state import DiscardRecord, GameState, Meld, PlayerState
 from engine.tile import Tile, parse_tile
 from engine.win_check import is_winning_hand
 
@@ -71,21 +72,43 @@ def next_active(state: GameState, after_seat: int) -> int | None:
     return None
 
 
-def _remove_one(hand: list[Tile], tile: Tile) -> None:
+def _remove_one(hand: list[PhysicalTile], tile: Tile) -> PhysicalTile:
     for i, t in enumerate(hand):
         if t.id == tile.id:
-            del hand[i]
-            return
+            return hand.pop(i)
     raise PlayError(f"tile {tile.id} not in hand")
 
 
-def _remove_n(hand: list[Tile], tile: Tile, n: int) -> None:
-    for _ in range(n):
-        _remove_one(hand, tile)
+def _remove_n(hand: list[PhysicalTile], tile: Tile, n: int) -> list[PhysicalTile]:
+    return [_remove_one(hand, tile) for _ in range(n)]
 
 
-def _meld_dict(kind: str, tile: Tile) -> dict:
-    return {"kind": kind, "tile_id": tile.id}
+def _make_meld(
+    kind: str,
+    tiles: list[PhysicalTile],
+    *,
+    source_seat: int | None = None,
+    claimed_discard_event: int | None = None,
+) -> Meld:
+    return Meld(
+        kind=kind,
+        tile_ids=tuple(sorted(tile.tile_id for tile in tiles)),
+        source_seat=source_seat,
+        claimed_discard_event=claimed_discard_event,
+    )
+
+
+def _claim_last_discard(state: GameState, seat: int, kind: str) -> DiscardRecord:
+    discard_seat = state.last_discard_seat
+    if discard_seat is None:
+        raise PlayError("claim missing discard seat")
+    source = player_at(state, discard_seat)
+    for record in reversed(source.discard_records):
+        if record.claimed_by is None and state.last_discard is not None and record.tile_id == state.last_discard.tile_id:
+            record.claimed_by = seat
+            record.claim_kind = kind
+            return record
+    raise PlayError("claim missing unclaimed discard record")
 
 
 def _append_event(state: GameState, etype: str, **payload: Any) -> None:
@@ -189,7 +212,7 @@ def start_play(state: GameState, config: EngineConfig | None = None) -> GameStat
     state.config = cfg.to_dict()
     state.phase = "discard"
     state.current_seat = state.dealer_seat
-    state.schema_version = 4
+    state.schema_version = 5
     state.last_discard = None
     state.last_discard_seat = None
     state.response_seats = []
@@ -205,6 +228,7 @@ def start_play(state: GameState, config: EngineConfig | None = None) -> GameStat
     if state.hu_sequence is None:
         state.hu_sequence = []
     _append_event(state, "start_play", dealer=state.dealer_seat)
+    state.validate()
     return state
 
 
@@ -226,6 +250,7 @@ def do_draw(state: GameState) -> GameState:
     if not state.wall:
         _append_event(state, "wall_empty")
         _mark_finished(state, "wall_empty")
+        state.validate()
         return state
 
     tile = state.wall.pop(0)
@@ -235,6 +260,7 @@ def do_draw(state: GameState) -> GameState:
     state.last_draw_tile = tile
     state.phase = "discard"
     _append_event(state, "draw", seat=seat, tile=tile.id)
+    state.validate()
     return state
 
 
@@ -255,6 +281,37 @@ def _enter_response(
 def _after_all_pass(
     state: GameState, discard_seat: int, cfg: EngineConfig | None = None
 ) -> None:
+    if state.qiang_gang_context and state.transit_tile_ids:
+        gang_seat = int(state.qiang_gang_context["seat"])
+        tile_id = int(state.qiang_gang_context["tile_id"])
+        player = player_at(state, gang_seat)
+        for index, meld in enumerate(player.melds):
+            if meld.kind == "pong" and meld.face.id == state.qiang_gang_context["tile"]:
+                player.melds[index] = Meld(
+                    "jia_gang",
+                    tuple(sorted((*meld.tile_ids, tile_id))),
+                    meld.source_seat,
+                    meld.claimed_discard_event,
+                )
+                break
+        else:
+            raise PlayError("pending jia gang lost its pong meld")
+        state.transit_tile_ids = []
+        state.qiang_gang_context = None
+        state.after_gang_draw = True
+        _score_svc(config_from_state(state, cfg)).apply_gang(state, "gang_jia", gang_seat)
+        state.response_seats = []
+        state.pending_claims = {}
+        state.current_seat = gang_seat
+        if state.wall:
+            drawn = state.wall.pop(0)
+            player.hand.append(drawn)
+            player.sort_hand_inplace()
+            state.last_draw_tile = drawn
+            state.phase = "discard"
+        else:
+            _mark_finished(state, "wall_empty", cfg)
+        return
     state.qiang_gang_context = None
     state.after_gang_draw = False
     nxt = next_active(state, discard_seat)
@@ -294,8 +351,6 @@ def _resolve_response(state: GameState, cfg: EngineConfig) -> None:
 
         is_qiang = state.qiang_gang_context is not None
         disc = state.last_discard
-        if is_qiang:
-            disc = parse_tile(state.qiang_gang_context["tile"])
         if disc is None:
             raise PlayError("hu resolve missing discard tile")
 
@@ -321,9 +376,15 @@ def _resolve_response(state: GameState, cfg: EngineConfig) -> None:
         # score before marking finished
         loser = discard_seat
         svc = _score_svc(cfg)
-        for w in hu_seats:
-            p = player_at(state, w)
-            p.hand.append(disc)
+        if isinstance(disc, PhysicalTile):
+            if is_qiang:
+                if disc.tile_id not in state.winning_tile_ids:
+                    state.winning_tile_ids.append(disc.tile_id)
+                state.transit_tile_ids = [value for value in state.transit_tile_ids if value != disc.tile_id]
+            else:
+                record = _claim_last_discard(state, hu_seats[0], "hu")
+                if record.tile_id not in state.winning_tile_ids:
+                    state.winning_tile_ids.append(record.tile_id)
         svc.apply_hu_dianpao(state, hu_seats, loser, fans)
         for w in hu_seats:
             p = player_at(state, w)
@@ -377,16 +438,18 @@ def _resolve_response(state: GameState, cfg: EngineConfig) -> None:
         p = player_at(state, seat)
         svc = _score_svc(cfg)
         if action.type == ActionType.PONG:
-            _remove_n(p.hand, disc, 2)
+            removed = _remove_n(p.hand, disc, 2)
+            record = _claim_last_discard(state, seat, "pong")
             p.sort_hand_inplace()
-            p.melds.append(_meld_dict("pong", disc))
+            p.melds.append(_make_meld("pong", [PhysicalTile(record.tile_id, disc.face), *removed], source_seat=discard_seat, claimed_discard_event=record.event_index))
             state.current_seat = seat
             state.phase = "discard"
             state.after_gang_draw = False
             _append_event(state, "pong", seat=seat, tile=disc.id)
         else:
-            _remove_n(p.hand, disc, 3)
-            p.melds.append(_meld_dict("ming_gang", disc))
+            removed = _remove_n(p.hand, disc, 3)
+            record = _claim_last_discard(state, seat, "ming_gang")
+            p.melds.append(_make_meld("ming_gang", [PhysicalTile(record.tile_id, disc.face), *removed], source_seat=discard_seat, claimed_discard_event=record.event_index))
             state.current_seat = seat
             state.after_gang_draw = True
             _append_event(state, "gang_ming", seat=seat, tile=disc.id)
@@ -420,10 +483,13 @@ def apply_action(
         )
 
     if state.phase == "discard":
-        return _apply_discard_phase(state, seat, action, cfg)
-    if state.phase == "response":
-        return _apply_response_phase(state, seat, action, cfg)
-    raise PlayError(f"no player actions in phase {state.phase}")
+        result = _apply_discard_phase(state, seat, action, cfg)
+    elif state.phase == "response":
+        result = _apply_response_phase(state, seat, action, cfg)
+    else:
+        raise PlayError(f"no player actions in phase {state.phase}")
+    result.validate()
+    return result
 
 
 def _apply_discard_phase(
@@ -460,10 +526,11 @@ def _apply_discard_phase(
         if not action.tiles:
             raise PlayError("discard needs tile")
         tile = action.tiles[0]
-        _remove_one(p.hand, tile)
+        actual = _remove_one(p.hand, tile)
         p.sort_hand_inplace()
-        p.discard_pile.append(tile)
-        state.last_discard = tile
+        p.discard_pile.append(actual)
+        p.discard_records.append(DiscardRecord(state.turn_index + 1, seat, actual.tile_id))
+        state.last_discard = actual
         state.last_discard_seat = seat
         state.last_draw_tile = None
         state.after_gang_draw = False
@@ -474,8 +541,8 @@ def _apply_discard_phase(
 
     if action.type == ActionType.GANG_AN:
         tile = action.tiles[0]
-        _remove_n(p.hand, tile, 4)
-        p.melds.append(_meld_dict("an_gang", tile))
+        removed = _remove_n(p.hand, tile, 4)
+        p.melds.append(_make_meld("an_gang", removed))
         state.after_gang_draw = True
         _append_event(state, "gang_an", seat=seat, tile=tile.id)
         _score_svc(cfg).apply_gang(state, "gang_an", seat)
@@ -491,22 +558,22 @@ def _apply_discard_phase(
 
     if action.type == ActionType.GANG_JIA:
         tile = action.tiles[0]
+        actual = _remove_one(p.hand, tile)
         # upgrade pong to jia_gang
         found = False
         for i, m in enumerate(p.melds):
-            md = m if isinstance(m, dict) else {"kind": getattr(m, "kind"), "tile_id": m.tile.id}
-            kind = md.get("kind")
-            tid = md.get("tile_id") or md.get("tile")
+            kind = m.kind
+            tid = m.face.id
             if kind == "pong" and tid == tile.id:
-                p.melds[i] = _meld_dict("jia_gang", tile)
+                p.melds[i] = Meld("jia_gang", tuple(sorted((*m.tile_ids, actual.tile_id))), m.source_seat, m.claimed_discard_event)
                 found = True
                 break
         if not found:
+            p.hand.append(actual)
             raise PlayError("no pong for jia gang")
-        _remove_one(p.hand, tile)
         # qiang gang opportunity
-        state.qiang_gang_context = {"seat": seat, "tile": tile.id}
-        state.last_discard = tile  # virtual
+        state.qiang_gang_context = {"seat": seat, "tile": tile.id, "tile_id": actual.tile_id}
+        state.last_discard = actual  # virtual
         state.last_discard_seat = seat
         others = [s for s in active_seats(state) if s != seat]
         can_any = False
@@ -518,12 +585,19 @@ def _apply_discard_phase(
                 can_any = True
                 break
         if can_any:
+            state.transit_tile_ids = [actual.tile_id]
+            # The fourth tile is in transit, not yet part of the upgraded meld.
+            for i, m in enumerate(p.melds):
+                if m.kind == "jia_gang" and actual.tile_id in m.tile_ids:
+                    p.melds[i] = Meld("pong", tuple(value for value in m.tile_ids if value != actual.tile_id), m.source_seat, m.claimed_discard_event)
+                    break
             state.phase = "response"
             state.response_seats = others
             state.pending_claims = {}
             return state
         # no qiang — score jia gang and draw
         state.qiang_gang_context = None
+        state.transit_tile_ids = []
         state.after_gang_draw = True
         _score_svc(cfg).apply_gang(state, "gang_jia", seat)
         if state.wall:

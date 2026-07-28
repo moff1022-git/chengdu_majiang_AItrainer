@@ -216,19 +216,24 @@ def test_t11_player_counts(n: int) -> None:
 
 def test_t12_v1_dealt_readable() -> None:
     state = create_dealt_game("m02-v1", num_players=4)
-    data = state.to_dict()
-    # Simulate legacy v1 snapshot (no opening fields)
-    data["schema_version"] = 1
-    for k in (
-        "current_seat",
-        "exchange_dir_resolved",
-        "pending_exchange",
-        "exchange_log",
-    ):
-        data.pop(k, None)
+    current = state.to_dict()
+    data = {
+        **{key: value for key, value in current.items() if key not in {"wall_tile_ids", "players", "pending_exchange_tile_ids", "last_discard_tile_id", "last_draw_tile_id", "transit_tile_ids", "winning_tile_ids"}},
+        "schema_version": 1,
+        "wall": [tile.id for tile in state.wall],
+        "players": [
+            {
+                **{key: value for key, value in player.to_dict().items() if key not in {"concealed_tile_ids", "melds", "discards"}},
+                "hand": [tile.id for tile in player.hand],
+                "melds": [],
+                "discard_pile": [],
+            }
+            for player in state.players
+        ],
+    }
     restored = GameState.from_dict(data, strict=True)
     assert restored.phase == "dealt"
-    assert restored.schema_version >= 2  # upgraded on load to current
+    assert restored.schema_version == 5
 
 
 def test_wrong_phase_ops() -> None:

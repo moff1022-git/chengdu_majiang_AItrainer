@@ -31,7 +31,7 @@ def test_strict_rejects_bad_hand_sizes() -> None:
     # Corrupt a non-dealer hand
     for p in data["players"]:
         if not p["is_dealer"]:
-            p["hand"] = p["hand"][:5]
+            p["concealed_tile_ids"] = p["concealed_tile_ids"][:5]
             break
     with pytest.raises(ValueError):
         GameState.from_dict(data, strict=True)
@@ -48,6 +48,6 @@ def test_unsupported_schema_version() -> None:
 def test_missing_field() -> None:
     state = create_dealt_game("missing-field", num_players=2)
     data = state.to_dict()
-    del data["wall"]
+    del data["wall_tile_ids"]
     with pytest.raises(ValueError, match="missing field"):
         GameState.from_dict(data)

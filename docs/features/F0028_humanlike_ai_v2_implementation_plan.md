@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028 |
-| **状态** | `In Progress`（F0028-1 Done；F0028-2 Approved、待实施） |
+| **状态** | `In Progress`（F0028-1–2 Done；F0028-3 待子规格） |
 | **类型** | 跨引擎 / AI / 训练 / 回放的功能增强 |
 | **需求输入** | 根目录 `成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md` |
 | **依赖版本** | `CDMJ-AI-RULES 1.0.0`、`CDMJ-AI-PARAMS 1.0.0`、`CDMJ-AI-IMPL 2.0.0` |
@@ -96,7 +96,7 @@
 
 ### F0028-2：实体牌、事件断言与 PlayerView v2
 
-> 字段级子规格：[F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md)，当前 `Approved`（2026-07-28）、待实施。
+> 字段级子规格：[F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md)，当前 `Done`（2026-07-28）。
 
 **目标**：建立规范所需的 108 张实体牌守恒和可验证信息隔离。
 
@@ -110,6 +110,8 @@
 - 每个引擎原子事件后执行牌张守恒、状态机、账本与合法动作断言。
 
 **验收**：108 个实体 ID 唯一且每张只在一个位置；各牌面总数始终 4；泄漏检查为 0；老存档迁移可重复。
+
+**实现结果**：已完成。state schema 5 / persistence 1 / wire 1 / PlayerView 2；全量 308 passed / 1 skipped；60 局 2/3/4 人守恒通过；详见子规格和验收报告。
 
 ### F0028-3：只读 PlayerView 的确定性基础策略
 

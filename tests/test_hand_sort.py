@@ -42,4 +42,4 @@ def test_to_dict_hand_sorted() -> None:
     p = st.players[0]
     p.hand = list(reversed(p.hand))
     d = p.to_dict()
-    assert d["hand"] == [t.id for t in p.sorted_hand()]
+    assert d["concealed_tile_ids"] == [t.tile_id for t in p.sorted_hand()]

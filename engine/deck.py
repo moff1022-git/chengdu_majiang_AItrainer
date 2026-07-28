@@ -5,20 +5,15 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from engine.tile import Suit, Tile
+from engine.physical_tile import PhysicalTile, build_physical_wall
 
 
-def build_full_wall() -> list[Tile]:
-    """Fixed order: suit (wan, tong, tiao) × rank 1..9 × 4 copies."""
-    wall: list[Tile] = []
-    for suit in Suit:
-        for rank in range(1, 10):
-            face = Tile(suit=suit, rank=rank)
-            wall.extend([face, face, face, face])
-    return wall
+def build_full_wall() -> list[PhysicalTile]:
+    """Fixed physical-id order, preserving the historical face sequence."""
+    return build_physical_wall()
 
 
-def shuffle_wall(wall: list[Tile], shuffle_seed: int) -> list[Tile]:
+def shuffle_wall(wall: list[PhysicalTile], shuffle_seed: int) -> list[PhysicalTile]:
     """Return a new shuffled list (does not mutate input)."""
     out = list(wall)
     random.Random(shuffle_seed).shuffle(out)
@@ -29,7 +24,7 @@ def shuffle_wall(wall: list[Tile], shuffle_seed: int) -> list[Tile]:
 class Deck:
     """Wall with draw pointer; remaining tiles are ``tiles[index:]``."""
 
-    tiles: list[Tile] = field(default_factory=build_full_wall)
+    tiles: list[PhysicalTile] = field(default_factory=build_full_wall)
     index: int = 0
 
     @classmethod
@@ -40,14 +35,14 @@ class Deck:
     def remaining(self) -> int:
         return len(self.tiles) - self.index
 
-    def draw(self) -> Tile:
+    def draw(self) -> PhysicalTile:
         if self.index >= len(self.tiles):
             raise ValueError("wall is empty")
         tile = self.tiles[self.index]
         self.index += 1
         return tile
 
-    def remaining_tiles(self) -> list[Tile]:
+    def remaining_tiles(self) -> list[PhysicalTile]:
         return list(self.tiles[self.index :])
 
 
@@ -56,7 +51,7 @@ def deal_hands(
     *,
     num_players: int,
     dealer_seat: int,
-) -> list[list[Tile]]:
+) -> list[list[PhysicalTile]]:
     """
     Deal 13 tiles each starting from dealer, then one extra to dealer.
 
@@ -67,7 +62,7 @@ def deal_hands(
     if not 0 <= dealer_seat < num_players:
         raise ValueError(f"dealer_seat out of range: {dealer_seat}")
 
-    hands: list[list[Tile]] = [[] for _ in range(num_players)]
+    hands: list[list[PhysicalTile]] = [[] for _ in range(num_players)]
     for _ in range(13):
         for k in range(num_players):
             seat = (dealer_seat + k) % num_players

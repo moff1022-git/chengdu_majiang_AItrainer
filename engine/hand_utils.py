@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, Literal, Sequence
 
+from engine.physical_tile import PhysicalTile
 from engine.tile import Suit, Tile, parse_tile
 
 NUM_FACES = 27  # 3 suits × 9 ranks
@@ -77,6 +78,14 @@ def melds_from_raw(raw: Sequence) -> list[MeldView]:
         if isinstance(item, MeldView):
             out.append(item)
             continue
+        if hasattr(item, "kind") and hasattr(item, "tile_ids"):
+            tile_ids = tuple(getattr(item, "tile_ids"))
+            if not tile_ids:
+                raise ValueError(f"invalid empty meld: {item!r}")
+            from engine.physical_tile import physical_tile
+
+            out.append(MeldView(kind=getattr(item, "kind"), tile=physical_tile(tile_ids[0]).face))
+            continue
         if not isinstance(item, dict):
             raise ValueError(f"invalid meld: {item!r}")
         kind = item["kind"]
@@ -84,6 +93,8 @@ def melds_from_raw(raw: Sequence) -> list[MeldView]:
             tile = item["tile"]
             if isinstance(tile, str):
                 tile = parse_tile(tile)
+            elif isinstance(tile, PhysicalTile):
+                tile = tile.face
             elif not isinstance(tile, Tile):
                 raise ValueError(f"invalid meld tile: {tile!r}")
         elif "tile_id" in item:

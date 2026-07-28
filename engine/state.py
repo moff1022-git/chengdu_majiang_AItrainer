@@ -9,29 +9,97 @@ from typing import Any, Optional
 from engine.action import Action
 from engine.config import EngineConfig
 from engine.dice import DiceResult
-from engine.tile import Suit, Tile, ids_to_tiles, parse_tile, sorted_tiles, tiles_to_ids
+from engine.physical_tile import PhysicalTile, physical_tile
+from engine.state_migrations import StateMigrationError, migrate_state_to_v5
+from engine.tile import Suit, Tile, sorted_tiles, tiles_to_ids
 
-SCHEMA_VERSION = 4
-SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4})
+SCHEMA_VERSION = 5
+SUPPORTED_SCHEMA_VERSIONS = frozenset({1, 2, 3, 4, 5})
 
 _OPENING_HAND_PHASES = frozenset({"dealt", "exchange", "dingque", "ready"})
 _PLAY_PHASES = frozenset({"draw", "discard", "response", "finished"})
 
 
+@dataclass(frozen=True, slots=True)
+class Meld:
+    kind: str
+    tile_ids: tuple[int, ...]
+    source_seat: int | None = None
+    claimed_discard_event: int | None = None
+
+    def __post_init__(self) -> None:
+        expected = 3 if self.kind == "pong" else 4 if self.kind in {"ming_gang", "an_gang", "jia_gang"} else 0
+        if not expected or len(self.tile_ids) != expected:
+            raise ValueError(f"invalid {self.kind} meld size: {len(self.tile_ids)}")
+        faces = {physical_tile(tile_id).face_id for tile_id in self.tile_ids}
+        if len(faces) != 1 or len(set(self.tile_ids)) != len(self.tile_ids):
+            raise ValueError("meld tile_ids must be unique and share one face")
+
+    @property
+    def face(self) -> Tile:
+        return physical_tile(self.tile_ids[0]).face
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "kind": self.kind,
+            "tile_ids": list(self.tile_ids),
+            "source_seat": self.source_seat,
+            "claimed_discard_event": self.claimed_discard_event,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Meld":
+        return cls(
+            kind=str(data["kind"]),
+            tile_ids=tuple(int(value) for value in data["tile_ids"]),
+            source_seat=int(data["source_seat"]) if data.get("source_seat") is not None else None,
+            claimed_discard_event=int(data["claimed_discard_event"]) if data.get("claimed_discard_event") is not None else None,
+        )
+
+
+@dataclass(slots=True)
+class DiscardRecord:
+    event_index: int
+    seat: int
+    tile_id: int
+    claimed_by: int | None = None
+    claim_kind: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "event_index": self.event_index,
+            "seat": self.seat,
+            "tile_id": self.tile_id,
+            "claimed_by": self.claimed_by,
+            "claim_kind": self.claim_kind,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "DiscardRecord":
+        return cls(
+            event_index=int(data["event_index"]),
+            seat=int(data["seat"]),
+            tile_id=int(data["tile_id"]),
+            claimed_by=int(data["claimed_by"]) if data.get("claimed_by") is not None else None,
+            claim_kind=str(data["claim_kind"]) if data.get("claim_kind") is not None else None,
+        )
+
+
 @dataclass
 class PlayerState:
     seat: int
-    hand: list[Tile]
+    hand: list[PhysicalTile]
     score: int = 0
     is_dealer: bool = False
     dingque: Optional[Suit] = None
-    melds: list[Any] = field(default_factory=list)
-    discard_pile: list[Tile] = field(default_factory=list)
+    melds: list[Meld] = field(default_factory=list)
+    discard_pile: list[PhysicalTile] = field(default_factory=list)
+    discard_records: list[DiscardRecord] = field(default_factory=list)
     status: str = "active"
     hu_order: int | None = None
     last_win: dict | None = None
 
-    def sorted_hand(self) -> list[Tile]:
+    def sorted_hand(self) -> list[PhysicalTile]:
         """万 → 筒 → 条，同花色点数 1→9。"""
         return sorted_tiles(self.hand)
 
@@ -42,13 +110,12 @@ class PlayerState:
     def to_dict(self) -> dict:
         return {
             "seat": self.seat,
-            # Always export sorted — UI / wire / logs consistent
-            "hand": tiles_to_ids(sorted_tiles(self.hand)),
+            "concealed_tile_ids": [tile.tile_id for tile in sorted_tiles(self.hand)],
             "score": self.score,
             "is_dealer": self.is_dealer,
             "dingque": self.dingque.value if self.dingque else None,
-            "melds": list(self.melds),
-            "discard_pile": tiles_to_ids(self.discard_pile),
+            "melds": [meld.to_dict() for meld in self.melds],
+            "discards": [record.to_dict() for record in self.discard_records],
             "status": self.status,
             "hu_order": self.hu_order,
             "last_win": self.last_win,
@@ -58,13 +125,14 @@ class PlayerState:
     def from_dict(cls, data: dict) -> PlayerState:
         try:
             seat = int(data["seat"])
-            hand = ids_to_tiles(data["hand"])
+            hand = [physical_tile(int(value)) for value in data["concealed_tile_ids"]]
             score = int(data.get("score", 0))
             is_dealer = bool(data.get("is_dealer", False))
             dingque_raw = data.get("dingque")
             dingque = Suit(dingque_raw) if dingque_raw else None
-            melds = list(data.get("melds") or [])
-            discard_pile = ids_to_tiles(data.get("discard_pile") or [])
+            melds = [Meld.from_dict(item) for item in data.get("melds") or []]
+            discard_records = [DiscardRecord.from_dict(item) for item in data.get("discards") or []]
+            discard_pile = [physical_tile(item.tile_id) for item in discard_records]
             status = str(data.get("status", "active"))
             hu_order = data.get("hu_order")
             hu_order = int(hu_order) if hu_order is not None else None
@@ -79,6 +147,7 @@ class PlayerState:
             dingque=dingque,
             melds=melds,
             discard_pile=discard_pile,
+            discard_records=discard_records,
             status=status,
             hu_order=hu_order,
             last_win=last_win,
@@ -86,7 +155,7 @@ class PlayerState:
 
 
 def _pending_to_json(
-    pending: dict[int, list[Tile]] | None,
+    pending: dict[int, list[PhysicalTile]] | None,
 ) -> dict[str, list[str]] | None:
     if pending is None:
         return None
@@ -94,17 +163,17 @@ def _pending_to_json(
     for seat, tiles in pending.items():
         if tiles is None:
             continue
-        out[str(seat)] = tiles_to_ids(tiles)
+        out[str(seat)] = [tile.tile_id for tile in tiles]
     return out
 
 
-def _pending_from_json(raw: dict | None) -> dict[int, list[Tile]]:
+def _pending_from_json(raw: dict | None) -> dict[int, list[PhysicalTile]]:
     if not raw:
         return {}
-    out: dict[int, list[Tile]] = {}
+    out: dict[int, list[PhysicalTile]] = {}
     for k, v in raw.items():
         seat = int(k)
-        out[seat] = ids_to_tiles(v)
+        out[seat] = [physical_tile(int(value)) for value in v]
     return out
 
 
@@ -130,7 +199,7 @@ class GameState:
     num_players: int
     dice: DiceResult
     dealer_seat: int
-    wall: list[Tile]
+    wall: list[PhysicalTile]
     players: list[PlayerState]
     turn_index: int = 0
     config: dict = field(default_factory=dict)
@@ -153,6 +222,8 @@ class GameState:
     hu_count: int = 0
     end_settled: bool = False
     settle_tags: dict = field(default_factory=dict)
+    transit_tile_ids: list[int] = field(default_factory=list)
+    winning_tile_ids: list[int] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -167,19 +238,19 @@ class GameState:
                 "total": self.dice.total,
             },
             "dealer_seat": self.dealer_seat,
-            "wall": tiles_to_ids(self.wall),
+            "wall_tile_ids": [tile.tile_id for tile in self.wall],
             "players": [p.to_dict() for p in self.players],
             "turn_index": self.turn_index,
             "config": dict(self.config),
             "current_seat": self.current_seat,
             "exchange_dir_resolved": self.exchange_dir_resolved,
-            "pending_exchange": _pending_to_json(self.pending_exchange),
+            "pending_exchange_tile_ids": _pending_to_json(self.pending_exchange),
             "exchange_log": list(self.exchange_log),
-            "last_discard": self.last_discard.id if self.last_discard else None,
+            "last_discard_tile_id": self.last_discard.tile_id if isinstance(self.last_discard, PhysicalTile) else None,
             "last_discard_seat": self.last_discard_seat,
             "response_seats": list(self.response_seats or []),
             "pending_claims": _claims_to_json(self.pending_claims),
-            "last_draw_tile": self.last_draw_tile.id if self.last_draw_tile else None,
+            "last_draw_tile_id": self.last_draw_tile.tile_id if isinstance(self.last_draw_tile, PhysicalTile) else None,
             "after_gang_draw": self.after_gang_draw,
             "qiang_gang_context": self.qiang_gang_context,
             "finished_reason": self.finished_reason,
@@ -188,6 +259,8 @@ class GameState:
             "hu_count": self.hu_count,
             "end_settled": self.end_settled,
             "settle_tags": dict(self.settle_tags or {}),
+            "transit_tile_ids": list(self.transit_tile_ids),
+            "winning_tile_ids": list(self.winning_tile_ids),
         }
 
     @classmethod
@@ -204,6 +277,13 @@ class GameState:
                 f"(supported {sorted(SUPPORTED_SCHEMA_VERSIONS)})"
             )
 
+        if schema_version < SCHEMA_VERSION:
+            try:
+                data = migrate_state_to_v5(data)
+            except StateMigrationError as exc:
+                raise ValueError(f"state migration failed: {exc}") from exc
+            schema_version = SCHEMA_VERSION
+
         required = (
             "game_id",
             "master_seed",
@@ -211,7 +291,7 @@ class GameState:
             "num_players",
             "dice",
             "dealer_seat",
-            "wall",
+            "wall_tile_ids",
             "players",
         )
         for key in required:
@@ -224,7 +304,7 @@ class GameState:
             phase = str(data["phase"])
             num_players = int(data["num_players"])
             dealer_seat = int(data["dealer_seat"])
-            wall = ids_to_tiles(data["wall"])
+            wall = [physical_tile(int(value)) for value in data["wall_tile_ids"]]
             players_raw = data["players"]
             turn_index = int(data.get("turn_index", 0))
             config = dict(data.get("config") or {})
@@ -236,18 +316,18 @@ class GameState:
             exchange_dir_resolved = data.get("exchange_dir_resolved")
             if exchange_dir_resolved is not None:
                 exchange_dir_resolved = str(exchange_dir_resolved)
-            pending_exchange = _pending_from_json(data.get("pending_exchange"))
+            pending_exchange = _pending_from_json(data.get("pending_exchange_tile_ids"))
             exchange_log = list(data.get("exchange_log") or [])
-            ld = data.get("last_discard")
-            last_discard = parse_tile(ld) if ld else None
+            ld = data.get("last_discard_tile_id")
+            last_discard = physical_tile(int(ld)) if ld is not None else None
             last_discard_seat = data.get("last_discard_seat")
             last_discard_seat = (
                 int(last_discard_seat) if last_discard_seat is not None else None
             )
             response_seats = [int(x) for x in (data.get("response_seats") or [])]
             pending_claims = _claims_from_json(data.get("pending_claims"))
-            ldt = data.get("last_draw_tile")
-            last_draw_tile = parse_tile(ldt) if ldt else None
+            ldt = data.get("last_draw_tile_id")
+            last_draw_tile = physical_tile(int(ldt)) if ldt is not None else None
             after_gang_draw = bool(data.get("after_gang_draw", False))
             qiang_gang_context = data.get("qiang_gang_context")
             finished_reason = data.get("finished_reason")
@@ -256,6 +336,8 @@ class GameState:
             hu_count = int(data.get("hu_count", 0))
             end_settled = bool(data.get("end_settled", False))
             settle_tags = dict(data.get("settle_tags") or {})
+            transit_tile_ids = [int(value) for value in data.get("transit_tile_ids") or []]
+            winning_tile_ids = [int(value) for value in data.get("winning_tile_ids") or []]
         except (TypeError, ValueError) as e:
             raise ValueError(f"invalid state fields: {e}") from e
 
@@ -301,6 +383,8 @@ class GameState:
             hu_count=hu_count,
             end_settled=end_settled,
             settle_tags=settle_tags,
+            transit_tile_ids=transit_tile_ids,
+            winning_tile_ids=winning_tile_ids,
         )
         if strict:
             state.validate()
@@ -360,6 +444,10 @@ class GameState:
             ):
                 raise ValueError("current_seat out of range")
 
+        from engine.invariants import assert_event_boundary
+
+        assert_event_boundary(self, event_type=self.phase)
+
     def semantic_equal(self, other: GameState) -> bool:
         if self.game_id != other.game_id:
             return False
@@ -381,7 +469,7 @@ class GameState:
             return False
         if self.exchange_dir_resolved != other.exchange_dir_resolved:
             return False
-        if tiles_to_ids(self.wall) != tiles_to_ids(other.wall):
+        if [tile.tile_id for tile in self.wall] != [tile.tile_id for tile in other.wall]:
             return False
         if (self.exchange_log or []) != (other.exchange_log or []):
             return False
@@ -399,9 +487,9 @@ class GameState:
                 return False
             if a.status != b.status:
                 return False
-            if tiles_to_ids(a.hand) != tiles_to_ids(b.hand):
+            if [tile.tile_id for tile in a.hand] != [tile.tile_id for tile in b.hand]:
                 return False
-            if tiles_to_ids(a.discard_pile) != tiles_to_ids(b.discard_pile):
+            if [record.to_dict() for record in a.discard_records] != [record.to_dict() for record in b.discard_records]:
                 return False
             if a.dingque != b.dingque or a.melds != b.melds:
                 return False

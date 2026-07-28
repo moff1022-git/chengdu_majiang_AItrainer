@@ -56,7 +56,7 @@ def begin_exchange(
     state.pending_exchange = {}
     state.exchange_log = []
     state.current_seat = None
-    state.schema_version = 2
+    state.schema_version = 5
     # keep config snapshot in sync with exchange_dir used
     snap = cfg.to_dict()
     state.config = snap
@@ -80,7 +80,7 @@ def begin_dingque_skip_exchange(
     state.pending_exchange = {}
     state.exchange_log = []
     state.current_seat = None
-    state.schema_version = 2
+    state.schema_version = 5
     state.config = cfg.to_dict()
     state.validate()
     return state
