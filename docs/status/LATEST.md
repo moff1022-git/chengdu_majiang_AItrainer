@@ -1,6 +1,6 @@
 # 进度快照
 
-> 2026-07-28 — **本地 Git 基线已重建；下一步修复测试门禁后进入 F0028-1**
+> 2026-07-28 — **Git 与测试门禁已恢复；下一步可进入 F0028-1**
 
 ## 当前状态
 
@@ -12,16 +12,14 @@
 | 接管审计 | 已完成并二次复核，见 `docs/status/PROJECT_TAKEOVER_AUDIT_2026-07-28.md` |
 | Git | **本地基线已重建**：`main` 根提交 `90e7174`；损坏 `.git` 已备份；远端零 refs/非法 HEAD，未推送 |
 | 编译 / CLI | `compileall` 通过；`main.py --version` = 0.2.1 |
-| 安全测试主体 | Git 恢复后复跑：278 passed / 1 failed / 1 deselected（27.64s） |
+| 测试门禁 | **全量 279 passed / 1 skipped（27.83s）**；无失败、无解释器 Abort |
 | 冲突副本 | 排除 `.venv` / `backup` 后仍扫到 52 个 `*Moff的Mac Studio*` 文件 |
 | 大目录 | `.venv` 415 MB、backup 350 MB、logs 316 MB、releases 309 MB、dist 274 MB、build 18 MB |
 
 ## 已确认问题
 
 1. 远端 GitHub 当前无可恢复 refs，尚未将新本地基线推送至远端，历史 `v0.2.1` tag 也无法验证。
-2. `tests/test_human_wire.py::test_h05_registry_human` 仍断言最多 1 human，与已批准 F0020（最多 3）冲突。
-3. F0013 Tk 测试在当前 macOS/Python 3.12/Tk 环境可触发解释器 Abort，需安全隔离。
-4. OneDrive 冲突副本仍保留在本地，但新 `.gitignore` 已将其与 venv/logs/build/dist/backup 排除出 Git 基线。
+2. OneDrive 冲突副本仍保留在本地，但新 `.gitignore` 已将其与 venv/logs/build/dist/backup 排除出 Git 基线。
 
 ## 本轮已完成
 
@@ -35,6 +33,9 @@
 - 恢复正常 `.gitignore`，新基线收录 744 个源文件/文档/资源，排除本地产物与冲突副本。
 - 创建本地 `main` 恢复根提交 `90e7174`；`git fsck --full` 无损坏 ref/对象错误（仅有未引用 blob）。
 - 恢复后 `compileall` 通过；安全测试主体 278 passed / 1 failed / 1 deselected，唯一失败仍是 F0020 旧断言。
+- 更新 M09 历史测试为 F0020 当前行为：允许 2H/3H，拒绝 4H。
+- 为 F0013 Tk GUI 用例增加 macOS 收集期 skip 门禁，避免 `tk.Tk()` 在当前环境直接 Abort 整个 pytest 进程。
+- 验收：`compileall` 通过；不带排除条件的全量 `pytest -q` = 279 passed / 1 skipped（27.83s）。
 - 确认规则文件 SHA-256 与实现规范绑定值一致；记录实现规范 hash。
 - 对照现有 `engine/`、`protocols/`、`players/analysis/`、`training/` 和 replay，明确复用边界与缺口。
 - 锁定“不重建 `src/`、不复制引擎、新 profile 先选配、保留 2/3/4 人”的兼容方向。
@@ -47,13 +48,12 @@
 
 | 序 | 动作 | 产出 / 依赖 | 建议触发语 |
 |----|------|-------------|------------|
-| 1 | 修复两项测试问题（立即下一步） | F0020 旧断言更新；Tk 测试安全 skip/隔离 | `修复接管审计中的两项测试问题` |
+| 1 | 实施 F0028-1（立即下一步） | GP/RP 强类型、验证、hash 和追踪矩阵 | `实现 F0028-1 配置与参数追踪基座` |
 | 2 | 确认并推送新远端基线 | 将本地 `main` 推送到当前零 refs 远端；是外部状态变更，需单独确认 | `将恢复后的 main 推送到 origin` |
-| 3 | 实施 F0028-1 | GP/RP 强类型、验证、hash 和追踪矩阵；依赖测试门禁 | `实现 F0028-1 配置与参数追踪基座` |
 | 4 | 依次实施 F0028-2–6 | 实体牌/视图 → 基础策略 → 有限认知 → 回放 → 训练 | 见 F0028 每切片触发语 |
 | 5 | 处理冲突副本与瘦身 | 恢复 `.gitignore`，diff/删除清单；删除前需授权 | `整理 OneDrive 冲突副本，先出保留删除清单再执行` |
 
 ## 风险与边界
 
 - 本地 Git 基线已可提交；远端推送和 `v0.2.1` tag 重建尚未授权。
-- F0028 已 Approved；应先修复两项测试门禁，再开始 F0028-1。
+- F0028 已 Approved，Git 与测试前置门禁均已满足，可开始 F0028-1。

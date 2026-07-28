@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import sys
 import time
 from types import SimpleNamespace
+
+import pytest
 
 from engine.deal import create_dealt_game
 
@@ -116,11 +119,16 @@ def _make_play_obs_view(
     return {"players": players, "wall_remaining": 70, "phase": "discard"}
 
 
+@pytest.mark.skipif(
+    sys.platform == "darwin",
+    reason=(
+        "macOS Tk may abort the Python process during Tk() construction; "
+        "covered by pure helper tests and manual/subprocess GUI acceptance"
+    ),
+)
 def test_f0013_tk_inplace_paths_single_root() -> None:
     """Single Tk root covers face/hand/disc/opp dirty paths (Win Tcl flaky multi-root)."""
     import tkinter as tk
-
-    import pytest
 
     from players.seat_window import TkSeatApp
 

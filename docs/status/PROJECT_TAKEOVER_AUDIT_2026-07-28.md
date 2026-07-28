@@ -12,9 +12,9 @@
 |------|------|-------------|
 | P0 | Git 工作树失去有效分支基线 | `main` 为 unborn；`origin/main [gone]`；全部文件显示未跟踪；正常 `index`、`refs/heads/main` 缺失 |
 | P0 | `.git` 被 OneDrive 冲突副本污染且对象不完整 | 存在 `index-Moff的Mac Studio`、非法 ref；tag `v0.2.1` 指向缺失对象；`git fsck` 报 badRefName / invalid sha1 / dangling commit |
-| P1 | 测试套件并非全绿 | 共收集 280 项；排除会 Abort 的 Tk 用例后：278 passed、1 failed、1 deselected |
-| P1 | 测试与已批准规格冲突 | `tests/test_human_wire.py::test_h05_registry_human` 仍断言最多 1 human；F0020 与 `players/registry.py` 已允许最多 3 human |
-| P1 | Tk GUI 测试可令解释器硬崩溃 | `test_f0013_tk_inplace_paths_single_root` 在当前 macOS/Python 3.12/Tk 环境创建 `tk.Tk()` 时触发 Fatal Python error: Aborted，无法由 pytest 正常报告/清理 |
+| P1 | 测试套件曾非全绿（**2026-07-28 已修复**） | 全量 `pytest -q` 现为 279 passed / 1 skipped；无失败 |
+| P1 | 旧测试曾与 F0020 冲突（**已修复**） | `test_h05_registry_human_limit_follows_f0020` 现验证 2H/3H 允许、4H 拒绝 |
+| P1 | Tk GUI 测试曾可令解释器硬崩溃（**已隔离**） | macOS 收集后显式 skip 该 `tk.Tk()` 用例；Windows/Linux 仍执行，纯函数与手工/子进程 GUI 验收补位 |
 | P1 | 大量同步冲突副本可能造成双版本事实源 | 根目录、`docs/`、`display/`、`tools/` 与 `.git/` 均有 `*-Moff的Mac Studio*`；部分内容不同，例如两个 `LATEST` 表示不同下一步 |
 | P2 | 仓库目录膨胀严重 | `.venv` 415 MB、backup 350 MB、logs 316 MB、releases 309 MB、dist 274 MB；`logs/predict` 含约 1,700 个 JSONL |
 | P2 | 正常 `.gitignore` 文件缺失 | 仅存在冲突命名 `-Moff的Mac Studio.gitignore`，因此虚拟环境、日志、构建产物、缓存全部显示未跟踪 |
@@ -63,10 +63,8 @@
 
 1. **P0：恢复 Git 基线（本地已完成）**  
    已以当前工作树重建健康 `main`/index；损坏元数据保留在 `backup/git-metadata-corrupt-2026-07-28/`。远端推送与 tag 重建需单独确认。
-2. **P1：修复测试基线**  
-   产出：更新 M09 旧测试以符合 F0020；为 Tk 用例增加安全 skip/环境门禁；全量测试不再硬崩溃。  
-   依赖：Git 基线恢复；属于纯缺陷/测试修复，补 changelog。  
-   建议触发语：`修复接管审计中的两项测试问题`。
+2. **P1：修复测试基线（已完成）**  
+   M09 旧测试已对齐 F0020；Tk 用例已增加 macOS 安全门禁；全量 279 passed / 1 skipped，不再硬崩溃。
 3. **P1：处理 OneDrive 冲突副本**  
    产出：逐文件 diff 决议表；合并有效差异；移除确认冗余副本。  
    依赖：Git 基线和备份；删除前需明确授权。  

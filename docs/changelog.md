@@ -3,6 +3,15 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-28（接管测试门禁修复）
+
+### 测试 — F0020 旧断言与 macOS Tk 硬崩溃隔离
+
+- `tests/test_human_wire.py`：将 M09 “最多 1 human”旧断言更新为 F0020 当前规格（2H/3H 允许，4H 拒绝）
+- `tests/test_f0013_dirty_update.py`：对 macOS 显式 skip 会在 `tk.Tk()` 构造期 Abort 解释器的 GUI 用例；Windows/Linux 继续执行
+- F0013/F0020 规格回写测试环境门禁和历史断言更新
+- 验收：`compileall` 通过；全量 `pytest -q` = **279 passed / 1 skipped**（27.83s），无失败、无 Abort
+
 ## 2026-07-28（Git 本地基线恢复）
 
 ### 工程 — 以当前工作树重建 main/index

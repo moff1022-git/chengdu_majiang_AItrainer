@@ -53,10 +53,12 @@ def test_h01b_observation_roundtrip() -> None:
     assert back.view["wall_remaining"] == 55
 
 
-def test_h05_registry_human() -> None:
+def test_h05_registry_human_limit_follows_f0020() -> None:
     assert "human" in PLAYER_REGISTRY
-    with pytest.raises(ValueError, match="at most one human"):
-        create_players("human,human,rule_ai,rule_ai")
+    assert len(create_players("human,human,rule_ai,rule_ai")) == 4
+    assert len(create_players("human,human,human,rule_ai")) == 4
+    with pytest.raises(ValueError, match="at most 3 human"):
+        create_players("human,human,human,human")
 
 
 def test_h04_fake_human_script(tmp_path: Path) -> None:

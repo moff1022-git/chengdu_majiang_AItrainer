@@ -131,6 +131,7 @@ last_sig, last_t = sig, now
 - `test_hand_inplace_updates_tid_without_new_widget`（dummy Tk：同一 Label 实例）  
 - `test_broadcast_skips_identical_sig` / `test_broadcast_sends_on_sig_change`  
 - 现有 `test_seat_ui` / `test_f0004` 不回归  
+- macOS 上 `tk.Tk()` 可在某些 Python 3.12/Tk 组合中直接 Abort 解释器；GUI 单根用例在 macOS 收集后显式 skip，由纯函数测试与手工/子进程 GUI 验收补位，Windows/Linux 仍执行该 Tk 用例。
 
 ---
 
