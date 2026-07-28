@@ -3,17 +3,17 @@
 | 字段 | 值 |
 |------|----|
 | 编号 | F0028-2 |
-| 状态 | `Review` |
+| 状态 | `Approved`（2026-07-28 用户确认；尚未实现） |
 | 父规格 | [F0028_humanlike_ai_v2_implementation_plan.md](F0028_humanlike_ai_v2_implementation_plan.md) |
 | 依赖 | F0028-1 `Done`；CDMJ-AI-RULES 1.0.0 / PARAMS 1.0.0 / IMPL 2.0.0 |
 | 当前应用基线 | APP 0.2.1 / state schema 4 / persistence format 1 / wire protocol 1 |
 | 规格日期 | 2026-07-28 |
 
-## 1. 结论与待确认决议
+## 1. 结论与已批准决议
 
 F0028-2 在不重写规则引擎的前提下，引入 0–107 的实体牌身份、原子事件边界断言和显式白名单 PlayerView v2。`Tile(suit, rank)` 继续作为牌面值对象和算法输入；引擎状态中的实际牌张改由 `PhysicalTile(tile_id, face)` 表示，旧 UI、Action 和分析模块仍可通过牌面投影工作。
 
-本文提议并等待用户确认以下版本决议：
+用户已于 2026-07-28 确认并锁定以下版本决议：
 
 1. `GameState` 写出格式升级为 **schema 5**，读取继续支持 schema 1–5；schema 1–4 在内存中确定性迁移为实体牌。
 2. 存档外壳字段未改变，`FORMAT_VERSION` 保持 **1**；外壳中的 `schema_version` 和 `state.schema_version` 写 5。
@@ -377,7 +377,7 @@ F0028-2 只接入与实体牌/视图有关的 GP：GP-004、GP-005、GP-007、GP
 
 ## 12. 验收标准
 
-- [ ] schema 5 / persistence 1 / wire 1 / PlayerView 2 版本决议经用户确认。
+- [x] schema 5 / persistence 1 / wire 1 / PlayerView 2 版本决议经用户确认（2026-07-28）。
 - [ ] 108 个实体 ID 唯一，每个 face 四张；全部原子事件后所有权守恒。
 - [ ] schema 1–4 迁移确定、可重复、坏档失败且不覆盖原文件。
 - [ ] schema 5 保存/读取保持实体 ID 和事件引用。
@@ -412,4 +412,4 @@ F0028-2 只接入与实体牌/视图有关的 GP：GP-004、GP-005、GP-007、GP
 6. oracle 分离、泄漏审计、Human/RuleAI/training 兼容。
 7. 性能测试、全量验收、文档回写。
 
-本文达到 `Approved` 前只允许继续修改文档和测试设计，不允许修改上述业务代码。
+本文已达到 `Approved`，允许用户后续明确要求“实现 F0028-2”时按上述七步修改业务代码；本次确认动作本身不授权编码。

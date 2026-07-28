@@ -3,6 +3,15 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-28（F0028-2 Approved）
+
+### 文档 — 实体牌与 PlayerView v2 方案确认
+
+- 用户确认 `docs/features/F0028_2_physical_tiles_player_view_v2.md`：`Review → Approved`
+- 锁定 GameState schema 5、persistence format 1、wire protocol 1、PlayerView version 2
+- 锁定 Action 保持 face 表达并由 resolver 确定实体副本、legacy builder 兼容投影、oracle 移出 Observation
+- 本轮只更新规格状态和跨机基线，未修改业务代码或测试
+
 ## 2026-07-28（F0028-2 实体牌与 PlayerView v2 子规格）
 
 ### 文档 — schema 5、所有权守恒、白名单视图与 oracle 分离

@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |------|----|
 | **编号** | F0028 |
-| **状态** | `In Progress`（F0028-1 Done；F0028-2 待实施） |
+| **状态** | `In Progress`（F0028-1 Done；F0028-2 Approved、待实施） |
 | **类型** | 跨引擎 / AI / 训练 / 回放的功能增强 |
 | **需求输入** | 根目录 `成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md` |
 | **依赖版本** | `CDMJ-AI-RULES 1.0.0`、`CDMJ-AI-PARAMS 1.0.0`、`CDMJ-AI-IMPL 2.0.0` |
@@ -96,7 +96,7 @@
 
 ### F0028-2：实体牌、事件断言与 PlayerView v2
 
-> 字段级子规格：[F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md)，当前 `Review`。
+> 字段级子规格：[F0028_2_physical_tiles_player_view_v2.md](F0028_2_physical_tiles_player_view_v2.md)，当前 `Approved`（2026-07-28）、待实施。
 
 **目标**：建立规范所需的 108 张实体牌守恒和可验证信息隔离。
 
