@@ -3,6 +3,15 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0028-5 Approved）
+
+### 文档 — 决策审计与确定性策略回放
+
+- 新增 `docs/features/F0028_5_decision_audit_replay.md`
+- 锁定 private Audit v1、canonical SHA-256 链、state/view/config hash、认知/RNG 快照和 humanlike 策略复演
+- 保留 M10 steps/ReplaySession；不升级 APP/state/PlayerView/persistence/wire
+- 用户授权文档确认、实现与本地 Git 全自动执行，规格落盘即 Approved
+
 ## 2026-07-29（F0028-4 Done）
 
 ### 实现 — 人类化有限认知

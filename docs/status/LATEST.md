@@ -1,13 +1,13 @@
 # 进度快照
 
-> 2026-07-29 — **F0028-4 人类化有限认知 Done**
+> 2026-07-29 — **F0028-5 决策审计与确定性回放子规格 Approved，进入自动实现**
 
 ## 当前状态
 
 | 项 | 状态 |
 |----|------|
 | 应用版本 | 0.2.1（本轮未变） |
-| 规格主线 | F0028 `In Progress`；F0028-1–4 `Done`；F0028-5 待子规格 |
+| 规格主线 | F0028 `In Progress`；F0028-1–4 `Done`；F0028-5 `Approved` |
 | 版本线 | state schema 5（reader 1–5）/ persistence 1 / wire 1 / PlayerView 2 |
 | 测试门禁 | 332 passed / 1 skipped in 29.29s；humanlike 定向 52 passed；compileall 通过 |
 | 批跑门禁 | F0028-4：2/3/4 人各 50 局，共 150 局，零策略崩溃/非法动作 |
@@ -16,6 +16,9 @@
 | Git | F0028-4 Docs-First 规格、实现与验收已纳入本地 `main` 基线；远端未推送 |
 
 ## 本轮已完成
+
+- 新增并批准 F0028-5 子规格：独立 private Audit v1、canonical hash 链、state/view/config hash、认知/RNG 快照与 humanlike 策略复演。
+- 用户已授权本切片文档、实现、测试及本地 Git 全自动执行；Docs-First 门禁开放。
 
 - F0028-4 子规格按用户预授权完成 `Approved → Done`。
 - 新增公开信息 MemoryStore、Top-K AttentionSelector、持续 CognitiveState 和 CognitivePolicy。
@@ -58,9 +61,9 @@
 
 | 序 | 动作 | 产出 / 依赖 | 建议触发语 |
 |----|------|-------------|------------|
-| 1 | 编写并确认 F0028-5 子规格（立即下一步） | 审计日志、hash 链、RNG/认知快照与确定性回放；依赖 F0028-4 Done | `编写并确认 F0028-5 子规格` |
+| 1 | 实现并验收 F0028-5（立即执行） | Audit writer/verifier、策略复演、orchestrator 接线、测试报告 | 已自动执行 |
 | 2 | 补验 F0028-3/4 完整人工场景 | 策略显示、MT-06～17、2/3 人与认知体感 | `继续执行 F0028 完整人工测试` |
-| 3 | 实现 F0028-5，再编写/确认/实现 F0028-6 | 决策回放 → 训练契约 | 按对应 F 编号触发 |
+| 3 | 编写、确认并实现 F0028-6 | 训练契约；依赖 F0028-5 Done | 按 F0028-6 触发 |
 | 4 | 验证真实历史存档 | schema 1–4 真实夹具和迁移报告；发布前建议完成 | `导入并验证真实历史存档夹具` |
 | 5 | 推送本地 main | 外部状态变更，需显式授权 | `将恢复后的 main 推送到 origin` |
 | 6 | 整理 OneDrive 冲突副本 | 先只读列清单；删除另行授权 | `整理 OneDrive 冲突副本，先出清单` |

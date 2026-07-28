@@ -6,7 +6,7 @@
 > **技术栈**：Python 3.11+ · Pygame（主窗）· Tk（座位窗）· NumPy（可选）· JSON/JSONL  
 > **资源**：项目根目录 `assets/` + `assets/ASSETS.md`（双主题 green/blue）  
 > **开发流程**：[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) · 进度 [`docs/status/LATEST.md`](docs/status/LATEST.md) · 一致性 [`docs/status/DOC_CODE_BASELINE.md`](docs/status/DOC_CODE_BASELINE.md)
-> **当前功能主线**：F0028-1–4 Done；下一步 F0028-5 决策审计与确定性回放子规格。
+> **当前功能主线**：F0028-1–4 Done；F0028-5 决策审计与确定性回放子规格 Approved，进入实现。
 ---
 
 ## 0. 目标与非目标
