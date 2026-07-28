@@ -2,7 +2,7 @@
 
 > **日期**：2026-07-28  
 > **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：2026-07-28 已以当前经验证工作树重建本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端零 refs/非法 HEAD，尚未推送  
+> **Git**：2026-07-28 已以当前经验证工作树重建本地 `main`（恢复根提交 `90e7174`）；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端零 refs/非法 HEAD，尚未推送  
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -16,7 +16,7 @@
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **4** |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` | 2026-07-28 从当前工作树重建；原历史因对象缺失无法完整恢复 |
+| Git 本地基线 | `main` / `90e7174` | 2026-07-28 从当前工作树重建；原历史因对象缺失无法完整恢复 |
 | Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
 | 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
 

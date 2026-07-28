@@ -10,9 +10,9 @@
 | 规格主线 | M01–M11 已 Done；F0001–F0027 已实现；F0028 人类化 AI v2 已 Approved |
 | F0028 输入 | 两份根目录新规范已校验 hash 并完成代码差距分析 |
 | 接管审计 | 已完成并二次复核，见 `docs/status/PROJECT_TAKEOVER_AUDIT_2026-07-28.md` |
-| Git | **本地基线已重建**：`main` + 新 index；损坏 `.git` 已备份；远端零 refs/非法 HEAD，未推送 |
+| Git | **本地基线已重建**：`main` 根提交 `90e7174`；损坏 `.git` 已备份；远端零 refs/非法 HEAD，未推送 |
 | 编译 / CLI | `compileall` 通过；`main.py --version` = 0.2.1 |
-| 安全测试主体 | 2026-07-28 复跑：278 passed / 1 failed / 1 deselected（26.63s） |
+| 安全测试主体 | Git 恢复后复跑：278 passed / 1 failed / 1 deselected（27.64s） |
 | 冲突副本 | 排除 `.venv` / `backup` 后仍扫到 52 个 `*Moff的Mac Studio*` 文件 |
 | 大目录 | `.venv` 415 MB、backup 350 MB、logs 316 MB、releases 309 MB、dist 274 MB、build 18 MB |
 
@@ -33,6 +33,8 @@
 - 盘点本地冲突 index：728 个条目中 675 个 blob 缺失；原历史无法完整恢复。
 - 将损坏 `.git` 移至 `backup/git-metadata-corrupt-2026-07-28/`，以当前工作树重建本地 `main`/index。
 - 恢复正常 `.gitignore`，新基线收录 744 个源文件/文档/资源，排除本地产物与冲突副本。
+- 创建本地 `main` 恢复根提交 `90e7174`；`git fsck --full` 无损坏 ref/对象错误（仅有未引用 blob）。
+- 恢复后 `compileall` 通过；安全测试主体 278 passed / 1 failed / 1 deselected，唯一失败仍是 F0020 旧断言。
 - 确认规则文件 SHA-256 与实现规范绑定值一致；记录实现规范 hash。
 - 对照现有 `engine/`、`protocols/`、`players/analysis/`、`training/` 和 replay，明确复用边界与缺口。
 - 锁定“不重建 `src/`、不复制引擎、新 profile 先选配、保留 2/3/4 人”的兼容方向。

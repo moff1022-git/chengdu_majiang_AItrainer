@@ -12,6 +12,8 @@
 - 损坏 `.git` 已可恢复地移至 `backup/git-metadata-corrupt-2026-07-28/`
 - 恢复 `.gitignore`，排除 `.venv` / logs / backup / build / dist / releases 产物与 OneDrive 冲突副本
 - 以当前经编译/测试审计的工作树重建本地 `main` 和 index；744 个文件进入恢复基线
+- 创建恢复根提交 `90e7174`；`git fsck --full` 无损坏 ref/对象错误
+- 恢复后验收：`compileall` 通过；278 passed / 1 failed / 1 deselected，失败仍为 F0020 旧 human 断言
 - 未推送远端，未重建历史 `v0.2.1` tag
 
 ## 2026-07-28（Docs-First 一致性补齐）
