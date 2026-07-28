@@ -2,9 +2,9 @@
 
 ## 结论
 
-**不通过（存在阻塞缺陷）**。
+**自动修复已通过，MT-04 人工复测结果待用户确认**。
 
-MT-01、MT-02、MT-03 牌局运行、MT-05 通过；MT-04 Human 混合局在换三张结算阶段稳定触发实体牌类型混用异常，导致 Human 无法继续牌局。该问题必须修复并复测 MT-04 后，快速人工验收才可放行。
+MT-01、MT-02、MT-03 牌局运行、MT-05 通过；MT-04 首次执行发现的实体牌类型混用已完成代码修复与自动回归。修复后 GUI 已启动并正常关闭，日志未复现类型比较异常；是否实际完成换三张、定缺和至少 10 次出牌仍待用户反馈，快速人工验收尚未最终放行。
 
 ## 环境
 
@@ -23,7 +23,7 @@ MT-01、MT-02、MT-03 牌局运行、MT-05 通过；MT-04 Human 混合局在换�
 | MT-01 CLI 四 humanlike_v2 | Pass | `manual-f28-001` 自然 `wall_empty`；分数 `[-6,6,-2,2]`；存档与 1.94MB steps 生成；无异常关键字 |
 | MT-02 固定 game_id 重复性 | Pass | 双跑各 209 个决策且完全一致；动作摘要 `529c9502f97082ca61bc359db624e498371b71d5799b5a2410fd2351fbd1b614`；终局及胡牌序列一致 |
 | MT-03 GUI 观战 | Partial Pass | 四观察窗创建/定位 `errors=0`；用户反馈“牌局正常”；策略列表中“人类化AI·v2”是否可见未单独回报 |
-| MT-04 Human 混合局 | **Fail / Blocker** | Human 选中三张后，“确认换牌”和“自动换牌”均无法继续；主进程报 `'<' not supported between instances of 'Tile' and 'PhysicalTile'` |
+| MT-04 Human 混合局 | **Retest Pending** | 原 Blocker 已修复；定向 23 passed、全量 322 passed / 1 skipped；修复后 GUI 日志未复现异常，窗口操作结果待用户确认 |
 | MT-05 旧 AI 回归 | Pass | rule_ai 分数 `[-3,1,2,0]`；current_s2 分数 `[2,0,-2,0]`；均自然 `wall_empty` |
 
 ## 阻塞缺陷分析
@@ -76,3 +76,12 @@ steps private 快照只能用于确定性/状态回放证据，必须限制访�
 2. 全量自动测试和牌守恒门禁通过。
 3. 重新执行 MT-04：Human 可完成换三张、定缺及至少 10 次出牌。
 4. 补充人工确认 MT-03 策略列表显示项。
+
+## 修复记录
+
+- `engine.exchange.resolve_exchange_tiles()` 在 opening 权威边界把 Human 牌面动作确定性解析为本手具体实体牌；牌面重复时选择剩余副本中最小 `tile_id`。
+- 已携带实体牌的 AI 动作按精确 `tile_id` 校验归属，不重新映射副本。
+- `pending_exchange`、结算 offers 与目标手牌均只保存 `PhysicalTile`。
+- 新增 Human face + AI physical 混合路径回归，换牌后验证所有手牌实体类型及 108 张状态守恒。
+- 自动验收：定向 **23 passed**；全量 **322 passed / 1 skipped**。
+- GUI 复测进程 `manual-f28-human-retest-001` 已正常启动和关闭，未输出原类型比较异常；人工操作结论待用户确认。

@@ -206,7 +206,7 @@ class GameState:
     schema_version: int = SCHEMA_VERSION
     current_seat: int | None = None
     exchange_dir_resolved: str | None = None
-    pending_exchange: dict[int, list[Tile]] | None = field(default_factory=dict)
+    pending_exchange: dict[int, list[PhysicalTile]] | None = field(default_factory=dict)
     exchange_log: list[dict[str, Any]] = field(default_factory=list)
     # M04 play fields
     last_discard: Tile | None = None

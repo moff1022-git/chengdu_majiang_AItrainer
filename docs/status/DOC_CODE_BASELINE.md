@@ -2,7 +2,7 @@
 
 > **日期**：2026-07-29  
 > **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：本地 `main` 已推进至 F0028-2 提交 `0c82c78`；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送  
+> **Git**：Human 换三张修复已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -16,7 +16,7 @@
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` / `0c82c78` | F0028-2 已提交；原历史因对象缺失无法完整恢复 |
+| Git 本地基线 | `main` | F0028-3、首次人工阻塞记录及 Human 换三张修复已提交 |
 | Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
 | 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
 
@@ -58,7 +58,7 @@
 
 ## 4. 关键行为（文档易错点）
 
-> **已知阻塞缺陷（2026-07-29）**：Human 换三张返回 face `Tile`，opening 未解析为具体 `PhysicalTile`；与 AI offer 混合后排序报类型比较异常。纯 AI 不受影响，Human+AI 启用换三张暂不可放行。详见 `F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md`。
+> **人工复测待确认（2026-07-29）**：Human 换三张 face `Tile` 已在 opening 权威边界确定性解析为具体 `PhysicalTile`；混合路径与全量自动测试通过。修复后 GUI 日志未复现异常，仍待用户确认完成换三张、定缺及 10 次出牌。详见 `F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md`。
 
 | 主题 | 程序事实 |
 |------|----------|
@@ -104,3 +104,4 @@
 | 2026-07-29 | 用户确认 F0028-3：Review → Approved；六项确定性策略决议锁定，本轮未编码 |
 | 2026-07-29 | F0028-3 Done：纯 PlayerView 确定性策略与选配玩家；321 passed / 1 skipped，150 局零策略崩溃 |
 | 2026-07-29 | 快速人工验收 MT-04 发现 Human 换三张 face/PhysicalTile 混用阻塞缺陷；待修复复测 |
+| 2026-07-29 | 修复 opening face→PhysicalTile 确定性解析；定向 23 passed、全量 322 passed / 1 skipped；MT-04 操作结果待用户确认 |

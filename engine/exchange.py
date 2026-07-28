@@ -6,6 +6,7 @@ from collections import Counter
 from typing import Iterable, Literal
 
 from engine.config import EngineConfig
+from engine.physical_tile import PhysicalTile
 from engine.state import GameState
 from engine.tile import Suit, Tile
 
@@ -70,6 +71,40 @@ def validate_exchange_tiles(hand: list[Tile], tiles: list[Tile]) -> list[Tile]:
         if hand_counts[tid] < need:
             raise ExchangeError(f"hand missing tiles for exchange: {tid}")
     return list(tiles)
+
+
+def resolve_exchange_tiles(
+    hand: list[PhysicalTile], tiles: Iterable[Tile | PhysicalTile]
+) -> list[PhysicalTile]:
+    """Resolve a face-level exchange choice to unique tiles owned by the player.
+
+    Human/UI actions carry legacy face-level ``Tile`` values.  Engine and AI
+    actions may already carry ``PhysicalTile`` values.  This boundary always
+    returns concrete owned entities and deterministically chooses the lowest
+    physical id when only a face was supplied.
+    """
+    offered = list(tiles)
+    validate_exchange_tiles(hand, offered)  # type: ignore[arg-type]
+    remaining = list(hand)
+    resolved: list[PhysicalTile] = []
+    for tile in offered:
+        if isinstance(tile, PhysicalTile):
+            match = next(
+                (candidate for candidate in remaining if candidate.tile_id == tile.tile_id),
+                None,
+            )
+            if match is None or match.face_id != tile.face_id:
+                raise ExchangeError(
+                    f"hand missing physical tile for exchange: {tile.tile_id}"
+                )
+        else:
+            matches = [candidate for candidate in remaining if candidate.id == tile.id]
+            if not matches:
+                raise ExchangeError(f"hand missing tiles for exchange: {tile.id}")
+            match = min(matches, key=lambda candidate: candidate.tile_id)
+        remaining.remove(match)
+        resolved.append(match)
+    return resolved
 
 
 def remove_tiles_from_hand(hand: list[Tile], tiles: Iterable[Tile]) -> list[Tile]:

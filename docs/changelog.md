@@ -3,6 +3,16 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（Human 换三张实体牌混用修复）
+
+### 修复 — opening 牌面动作解析为实体牌
+
+- 新增 `resolve_exchange_tiles()`：Human face action 按剩余副本最小 `tile_id` 确定性解析，AI PhysicalTile action 按精确实体 ID 校验
+- `pending_exchange`、exchange offers 和目标手牌统一只保存 `PhysicalTile`，消除混合排序异常
+- 新增 Human face + AI physical 混合换牌回归，验证进入定缺、全手牌实体类型和 108 张守恒
+- 定向测试 **23 passed**；全量 **322 passed / 1 skipped**
+- 修复后 GUI 复测进程正常启动/关闭且未复现类型异常；MT-04 窗口操作结果待用户确认
+
 ## 2026-07-29（F0028-3 快速人工验收）
 
 ### 测试 — MT-04 阻塞失败

@@ -10,10 +10,12 @@ from engine.exchange import (
     ExchangeError,
     destination_seat,
     remove_tiles_from_hand,
+    resolve_exchange_tiles,
     resolve_exchange_direction,
     validate_exchange_tiles,
 )
 from engine.state import GameState
+from engine.physical_tile import PhysicalTile
 from engine.tile import Suit, Tile, tiles_to_ids
 
 
@@ -113,17 +115,17 @@ def _resolve_exchange(state: GameState) -> None:
 
     n = state.num_players
     pending = state.pending_exchange or {}
-    offers: dict[int, list[Tile]] = {}
+    offers: dict[int, list[PhysicalTile]] = {}
     for seat in range(n):
         tiles = pending[seat]
         assert tiles is not None
         player = _player(state, seat)
-        validated = validate_exchange_tiles(player.hand, tiles)
+        validated = resolve_exchange_tiles(player.hand, tiles)
         # re-check against current hand (pending was validated at submit)
         offers[seat] = validated
 
     # Remove all offers first
-    new_hands: dict[int, list[Tile]] = {}
+    new_hands: dict[int, list[PhysicalTile]] = {}
     for seat in range(n):
         player = _player(state, seat)
         new_hands[seat] = remove_tiles_from_hand(player.hand, offers[seat])
@@ -153,7 +155,7 @@ def _resolve_exchange(state: GameState) -> None:
 
 
 def submit_exchange(
-    state: GameState, seat: int, tiles: list[Tile]
+    state: GameState, seat: int, tiles: list[Tile | PhysicalTile]
 ) -> GameState:
     """Record/overwrite pending exchange; auto-resolve when all submitted."""
     if state.phase != "exchange":
@@ -161,7 +163,7 @@ def submit_exchange(
             f"submit_exchange requires phase=exchange, got {state.phase!r}"
         )
     player = _player(state, seat)
-    validated = validate_exchange_tiles(player.hand, tiles)
+    validated = resolve_exchange_tiles(player.hand, tiles)
     if state.pending_exchange is None:
         state.pending_exchange = {}
     state.pending_exchange[seat] = list(validated)

@@ -22,6 +22,7 @@ from engine.opening import (
     submit_dingque,
     submit_exchange,
 )
+from engine.physical_tile import PhysicalTile
 from engine.state import GameState, state_from_json, state_to_json
 from engine.tile import Suit, Tile, tiles_to_ids
 
@@ -75,6 +76,41 @@ def test_t03_full_exchange_to_dingque() -> None:
         else:
             assert len(p.hand) == 13
     assert len(state.wall) == 55
+
+
+def test_human_face_exchange_resolves_to_physical_tiles() -> None:
+    """Human face actions must never mix legacy Tiles into physical hands."""
+    state = create_dealt_game("m02-human-physical", num_players=4)
+    begin_exchange(state, EngineConfig(num_players=4, exchange_dir="clockwise"))
+    offers = _exchanges_for_all(state)
+    human_physical = offers[0]
+    human_faces = [tile.face for tile in human_physical]
+    remaining = list(state.players[0].hand)
+    expected_ids = []
+    for face in human_faces:
+        chosen = min(
+            (tile for tile in remaining if tile.face_id == face.id),
+            key=lambda tile: tile.tile_id,
+        )
+        expected_ids.append(chosen.tile_id)
+        remaining.remove(chosen)
+
+    submit_exchange(state, 0, human_faces)
+    pending = (state.pending_exchange or {})[0]
+    assert all(isinstance(tile, PhysicalTile) for tile in pending)
+    assert [tile.tile_id for tile in pending] == expected_ids
+
+    for seat in range(1, state.num_players):
+        submit_exchange(state, seat, offers[seat])
+
+    assert state.phase == "dingque"
+    assert state.pending_exchange == {}
+    assert all(
+        isinstance(tile, PhysicalTile)
+        for player in state.players
+        for tile in player.hand
+    )
+    state.validate()
 
 
 def test_t04_multiset_transfer() -> None:
