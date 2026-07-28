@@ -58,7 +58,7 @@
 
 ## 4. 关键行为（文档易错点）
 
-> **人工复测待确认（2026-07-29）**：Human 换三张 face `Tile` 已在 opening 权威边界确定性解析为具体 `PhysicalTile`；混合路径与全量自动测试通过。修复后 GUI 日志未复现异常，仍待用户确认完成换三张、定缺及 10 次出牌。详见 `F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md`。
+> **缺陷已闭环（2026-07-29）**：Human 换三张 face `Tile` 已在 opening 权威边界确定性解析为具体 `PhysicalTile`；混合路径与全量自动测试通过。用户确认修复后可进入定缺并正常出牌，原 Blocker 清零。详见 `F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md`。
 
 | 主题 | 程序事实 |
 |------|----------|
@@ -105,3 +105,4 @@
 | 2026-07-29 | F0028-3 Done：纯 PlayerView 确定性策略与选配玩家；321 passed / 1 skipped，150 局零策略崩溃 |
 | 2026-07-29 | 快速人工验收 MT-04 发现 Human 换三张 face/PhysicalTile 混用阻塞缺陷；待修复复测 |
 | 2026-07-29 | 修复 opening face→PhysicalTile 确定性解析；定向 23 passed、全量 322 passed / 1 skipped；MT-04 操作结果待用户确认 |
+| 2026-07-29 | 用户确认 MT-04 可进入定缺并正常出牌；Human 换三张 Blocker 闭环，快速人工验收通过 |

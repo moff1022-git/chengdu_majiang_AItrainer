@@ -11,7 +11,7 @@
 - `pending_exchange`、exchange offers 和目标手牌统一只保存 `PhysicalTile`，消除混合排序异常
 - 新增 Human face + AI physical 混合换牌回归，验证进入定缺、全手牌实体类型和 108 张守恒
 - 定向测试 **23 passed**；全量 **322 passed / 1 skipped**
-- 修复后 GUI 复测进程正常启动/关闭且未复现类型异常；MT-04 窗口操作结果待用户确认
+- 修复后 GUI 复测进程正常启动/关闭且未复现类型异常；用户确认 MT-04 已进入定缺并正常出牌，原 Blocker 闭环
 
 ## 2026-07-29（F0028-3 快速人工验收）
 
