@@ -9,7 +9,7 @@ GP_TITLES = {
   1:"版本锁定",2:"成都麻将规则集",3:"局制与初始分",4:"牌组定义",5:"换三张",6:"定缺",7:"允许动作",8:"响应优先级",9:"过胡规则",10:"牌墙与终局",
   11:"番型开关",12:"番型关系",13:"基础计分",14:"自摸计分",15:"杠分",16:"呼叫转移",17:"花猪",18:"查叫",19:"退税",20:"庄家",
   21:"信息可见性",22:"思考与超时",23:"玩家画像数量",24:"记忆",25:"情绪与随机误差",26:"搜索与决策",27:"全局目标"}
-ZH = {"seed":"随机种子","name":"名称","level":"水平","style":"风格","enabled":"启用","weights":"权重","decision_weights":"决策权重",
+ZH = {"seed":"随机种子","player_id":"座位编号","profile":"人格参数","cognitive_parameters":"认知与目标参数","name":"名称","level":"水平","style":"风格","enabled":"启用","weights":"权重","decision_weights":"决策权重",
 "peng_preference":"碰牌偏好","gang_preference":"杠牌偏好","big_hand_preference":"大牌偏好","defense_awareness":"防守意识","plan_persistence":"计划坚持度","thinking_speed":"思考速度",
 "initial_strength":"初始记忆强度","forget_rate":"遗忘率","salience_boost":"显著事件增强","cross_round_history":"跨局记忆局数","learn_hidden_information":"学习隐藏信息",
 "emotional_stability":"情绪稳定度","habit_strength":"习惯强度","max_error_probability":"最大失误概率","near_equal_randomness":"近似选择随机度","random_seed":"策略随机种子",
@@ -47,9 +47,10 @@ class SettingsWindow:
         self.book=ttk.Notebook(self.root); self.book.pack(fill="both",expand=True,padx=10,pady=4)
         self._build_tab("基础设置",[(k,self.data[k]) for k in ("rule_version","parameter_version","implementation_version","ruleset","seed")],())
         gp=self.data["global_parameters"]
-        for start,end,title in ((1,10,"规则与牌局"),(11,20,"番型与结算"),(21,27,"认知与目标")):
+        for start,end,title in ((1,10,"规则与牌局"),(11,20,"番型与结算"),(21,23,"全局行为")):
             self._build_tab(title,[(f"GP-{i:03d}",gp[f"GP-{i:03d}"]) for i in range(start,end+1)],("global_parameters",))
-        self._build_tab("玩家画像",[(f"座位 S{i}",p["profile"]) for i,p in enumerate(self.data["players"])],("players",))
+        player_groups=[(f"座位 S{i}",p) for i,p in enumerate(self.data["players"])]
+        self._build_tab("逐玩家设置",player_groups,("players",))
         bar=tk.Frame(self.root,bg="#0d2818"); bar.pack(fill="x",padx=12,pady=8)
         for label,fn in (("重新载入",self.reload),("校验全部",self.validate),("保存（下局生效）",self.save),("导入…",self.import_file),("导出…",self.export_file)): tk.Button(bar,text=label,command=fn,bg="#e8f5e9",fg="#102019",activeforeground="#102019",padx=10).pack(side="left",padx=3)
         tk.Button(bar,text="关闭",command=self.root.destroy,bg="#ffe0b2",fg="#3e2723",activeforeground="#3e2723").pack(side="right")
@@ -61,7 +62,7 @@ class SettingsWindow:
         for name,value in groups:
             section=tk.LabelFrame(body,text=GP_TITLES.get(int(name[-3:]),name) if name.startswith("GP-") else name,bg="#12261c",fg="#ffe082",padx=8,pady=6); section.pack(fill="x",padx=8,pady=6)
             if isinstance(value,dict):
-                base=prefix+(name,) if name.startswith("GP-") else (prefix+(int(name[-1]),"profile") if name.startswith("座位") else (name,))
+                base=prefix+(name,) if name.startswith("GP-") else (prefix+(int(name[-1]),) if name.startswith("座位") else (name,))
                 self._fields(section,value,base)
             else:
                 self._fields(section,{name:value},())
@@ -69,7 +70,7 @@ class SettingsWindow:
     def _fields(self,parent,obj,path):
         for key,value in obj.items():
             p=path+(key,); row=tk.Frame(parent,bg="#12261c"); row.pack(fill="x",pady=3); tk.Label(row,text=_label(key),width=24,anchor="w",bg="#12261c",fg="#e8f5e9").pack(side="left")
-            locked=("GP-001" in p or "GP-004" in p or key in {"rule_version","parameter_version","implementation_version","ruleset"})
+            locked=("GP-001" in p or "GP-004" in p or key in {"rule_version","parameter_version","implementation_version","ruleset","player_id"})
             if isinstance(value,dict):
                 tk.Label(row,text="分组",bg="#12261c",fg="#80cbc4").pack(side="left"); self._fields(parent,value,p); continue
             if isinstance(value,bool): var=tk.BooleanVar(value=value); widget=tk.Checkbutton(row,variable=var,text="开启",bg="#12261c",fg="#e8f5e9",selectcolor="#256d45")

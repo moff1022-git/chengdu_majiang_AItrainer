@@ -45,7 +45,8 @@ def test_invalid_or_locked_value_is_rejected_without_write(tmp_path):
 
 def test_all_gp_and_profiles_are_present():
     data = read_raw(DEFAULT)
-    assert set(data["global_parameters"]) == {f"GP-{i:03d}" for i in range(1, 28)}
+    assert set(data["global_parameters"]) == {f"GP-{i:03d}" for i in range(1, 24)}
+    assert all(set(player["cognitive_parameters"]) == {f"GP-{i:03d}" for i in range(24, 28)} for player in data["players"])
     assert len(data["players"]) == 4
     assert validate_raw(copy.deepcopy(data), target=DEFAULT).config_hash
 
@@ -56,3 +57,13 @@ def test_form_metadata_has_explicit_ranges_and_all_validator_enums():
     for key in ("ranking", "direction", "priority_mode", "seat_priority", "pass_hu_mode", "gang_draw_source", "mode", "payers", "payment", "settlement", "multi_hu_mode", "payees", "dead_wait", "valuation", "dealer_mode", "timeout_action", "level", "style"):
         assert len(ENUMS[key]) >= 2
     assert set(SCOPE_ENUMS) == {"GP-016", "GP-019"}
+
+
+def test_save_one_seat_cognition_does_not_change_other_seats(tmp_path):
+    target = _target(tmp_path)
+    data = read_raw(target)
+    before_s1 = copy.deepcopy(data["players"][1]["cognitive_parameters"])
+    data["players"][0]["cognitive_parameters"]["GP-026"]["attention_capacity"] = 20
+    saved = save_raw(data, target)
+    assert saved.players[0].cognitive_parameters["GP-026"]["attention_capacity"] == 20
+    assert dict(saved.players[1].cognitive_parameters["GP-026"]) == before_s1["GP-026"]

@@ -49,9 +49,9 @@ def _fixture(actions: list[Action] | None = None):
         context,
         candidates,
         belief,
-        cfg.global_parameters["GP-026"]["decision_weights"],
+        cfg.players[0].cognitive_parameters["GP-026"]["decision_weights"],
     )
-    state = CognitiveState.create(context.view.game_id, cfg.global_parameters["GP-024"])
+    state = CognitiveState.create(context.view.game_id, cfg.players[0].cognitive_parameters["GP-024"])
     state.update_plan(context, evaluation.plan)
     return context, cfg, candidates, evaluation, state
 
@@ -117,8 +117,8 @@ def test_mandatory_action_never_consumes_rng() -> None:
         evaluation,
         state,
         gp022=cfg.global_parameters["GP-022"],
-        gp025={**cfg.global_parameters["GP-025"], "max_error_probability": 1.0, "near_equal_randomness": 1.0},
-        gp026=cfg.global_parameters["GP-026"],
+        gp025={**cfg.players[0].cognitive_parameters["GP-025"], "max_error_probability": 1.0, "near_equal_randomness": 1.0},
+        gp026=cfg.players[0].cognitive_parameters["GP-026"],
         config_seed=cfg.seed,
         plan_restarted=False,
         restart_reasons=(),
@@ -135,15 +135,15 @@ def test_bounded_noise_is_reproducible_and_stays_in_near_pool() -> None:
     synthetic = EvaluationResult(close[0].action, evaluation.plan, close, evaluation.trace)
     outputs = []
     for _ in range(2):
-        state = CognitiveState.create(context.view.game_id, cfg.global_parameters["GP-024"])
+        state = CognitiveState.create(context.view.game_id, cfg.players[0].cognitive_parameters["GP-024"])
         state.update_plan(context, evaluation.plan)
         result = select_cognitively(
             context,
             synthetic,
             state,
             gp022=cfg.global_parameters["GP-022"],
-            gp025={**cfg.global_parameters["GP-025"], "max_error_probability": 1.0, "near_equal_randomness": 1.0},
-            gp026={**cfg.global_parameters["GP-026"], "satisfaction_threshold": 0.95},
+            gp025={**cfg.players[0].cognitive_parameters["GP-025"], "max_error_probability": 1.0, "near_equal_randomness": 1.0},
+            gp026={**cfg.players[0].cognitive_parameters["GP-026"], "satisfaction_threshold": 0.95},
             config_seed=99,
             plan_restarted=True,
             restart_reasons=("fixture",),
@@ -165,8 +165,8 @@ def test_clear_score_gap_disables_noise_and_think_time_is_bounded() -> None:
         synthetic,
         state,
         gp022=cfg.global_parameters["GP-022"],
-        gp025={**cfg.global_parameters["GP-025"], "max_error_probability": 1.0, "near_equal_randomness": 0.1},
-        gp026=cfg.global_parameters["GP-026"],
+        gp025={**cfg.players[0].cognitive_parameters["GP-025"], "max_error_probability": 1.0, "near_equal_randomness": 0.1},
+        gp026=cfg.players[0].cognitive_parameters["GP-026"],
         config_seed=7,
         plan_restarted=False,
         restart_reasons=(),
@@ -180,7 +180,7 @@ def test_round_reset_keeps_only_bounded_public_impressions() -> None:
     _, cfg, _, _, state = _fixture()
     state.memory.update(1, [VisibleToken("discard:S1:wan_1:0", "discard", "S1:wan_1", 1.0)])
     state.primary_plan = "fast_win"
-    state.begin_new_round("next-round", cfg.global_parameters["GP-024"], attention_capacity=4)
+    state.begin_new_round("next-round", cfg.players[0].cognitive_parameters["GP-024"], attention_capacity=4)
     assert state.game_id == "next-round"
     assert state.memory.items == {}
     assert state.primary_plan is None

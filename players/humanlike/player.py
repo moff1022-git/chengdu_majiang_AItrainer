@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +45,8 @@ class HumanlikeV2Player(BasePlayer):
         self.config = dict(config or {})
         self.humanlike_config = load_config(self._config_path)
         self.profile = self.humanlike_config.players[seat]
+        player_payload = self.humanlike_config.normalized_dict()["players"][seat]
+        self.player_config_hash = hashlib.sha256(json.dumps(player_payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         if not self.name or self.name in {"HumanlikeV2Player", "humanlike_v2"}:
             self.name = f"HumanlikeV2-{seat}"
         self.runtime = None
@@ -69,8 +73,8 @@ class HumanlikeV2Player(BasePlayer):
                 scores=tuple(scores),
             )
             self._round_game_id = observation.game_id
-            gp024 = self.humanlike_config.global_parameters["GP-024"]
-            gp026 = self.humanlike_config.global_parameters["GP-026"]
+            gp024 = self.profile.cognitive_parameters["GP-024"]
+            gp026 = self.profile.cognitive_parameters["GP-026"]
             if self.cognitive_state is None:
                 self.cognitive_state = CognitiveState.create(observation.game_id, gp024)
                 self.cognitive_state.memory.capacity = max(8, int(gp026["attention_capacity"]) * 4)
@@ -93,9 +97,9 @@ class HumanlikeV2Player(BasePlayer):
             profile=self.profile,
             config_hash=self.humanlike_config.config_hash,
         )
-        gp026 = self.humanlike_config.global_parameters["GP-026"]
+        gp026 = self.profile.cognitive_parameters["GP-026"]
         gp022 = self.humanlike_config.global_parameters["GP-022"]
-        gp025 = self.humanlike_config.global_parameters["GP-025"]
+        gp025 = self.profile.cognitive_parameters["GP-025"]
         self.runtime.begin_decision(
             legal_actions=[action.to_dict() for action in request.legal_actions],
             deadline_ms=int(request.deadline_ms or 0),
@@ -149,6 +153,7 @@ class HumanlikeV2Player(BasePlayer):
             "emotion": round(self.cognitive_state.emotion, 8),
         }
         trace["cross_round_impressions"] = len(self.cognitive_state.opponent_impressions)
+        trace["player_config_hash"] = self.player_config_hash
 
         self.runtime.set_parameter("RP-015", {"view_version": 2, "event_index": context.event_index})
         self.runtime.set_parameter("RP-016", belief.summary())

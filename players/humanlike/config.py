@@ -11,12 +11,14 @@ from types import MappingProxyType
 from typing import Any
 
 RULE_VERSION = "CDMJ-AI-RULES 1.0.0"
-PARAMETER_VERSION = "CDMJ-AI-PARAMS 1.0.0"
-IMPLEMENTATION_VERSION = "CDMJ-AI-IMPL 2.0.0"
+PARAMETER_VERSION = "CDMJ-AI-PARAMS 1.1.0"
+IMPLEMENTATION_VERSION = "CDMJ-AI-IMPL 2.1.0"
 RULESET = "chengdu_xuezhan_daodi"
 WEIGHT_TOLERANCE = 1e-6
 
 GP_IDS = tuple(f"GP-{index:03d}" for index in range(1, 28))
+GLOBAL_GP_IDS = GP_IDS[:23]
+COGNITIVE_GP_IDS = GP_IDS[23:]
 GP_FIELDS = {
     "GP-001": {"rule_version", "parameter_version", "locked"},
     "GP-002": {"ruleset", "platform_ruleset_id", "extensions"},
@@ -109,9 +111,10 @@ class PlayerProfile:
     defense_awareness: float
     plan_persistence: float
     thinking_speed: float
+    cognitive_parameters: Mapping[str, Mapping[str, Any]]
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any], path: str) -> "PlayerProfile":
+    def from_dict(cls, data: Mapping[str, Any], path: str, cognitive_parameters: Mapping[str, Any]) -> "PlayerProfile":
         expected = {
             "player_id", "name", "level", "style", "peng_preference", "gang_preference",
             "big_hand_preference", "defense_awareness", "plan_persistence", "thinking_speed",
@@ -129,6 +132,7 @@ class PlayerProfile:
             defense_awareness=_number(data["defense_awareness"], f"{path}.defense_awareness", 0, 1),
             plan_persistence=_number(data["plan_persistence"], f"{path}.plan_persistence", 0, 1),
             thinking_speed=_number(data["thinking_speed"], f"{path}.thinking_speed", 0, 1),
+            cognitive_parameters=_freeze(cognitive_parameters),
         )
 
 
@@ -141,8 +145,8 @@ class GlobalParameters:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> "GlobalParameters":
-        _require(set(data) == set(GP_IDS), "global_parameters must contain exactly GP-001 through GP-027")
-        for parameter_id in GP_IDS:
+        _require(set(data) == set(GLOBAL_GP_IDS), "global_parameters must contain exactly GP-001 through GP-023")
+        for parameter_id in GLOBAL_GP_IDS:
             _require(isinstance(data[parameter_id], Mapping), f"global_parameters.{parameter_id} must be an object")
         _validate_global_parameters(data)
         return cls(_freeze(data))
@@ -164,7 +168,11 @@ class HumanlikeConfig:
             "implementation_version": self.implementation_version,
             "parameter_version": self.parameter_version,
             "players": [
-                {field: getattr(profile, field) for field in profile.__dataclass_fields__}
+                {
+                    "player_id": profile.player_id,
+                    "profile": {field: getattr(profile, field) for field in profile.__dataclass_fields__ if field not in {"player_id", "cognitive_parameters"}},
+                    "cognitive_parameters": _thaw(profile.cognitive_parameters),
+                }
                 for profile in self.players
             ],
             "rule_version": self.rule_version,
@@ -182,7 +190,8 @@ def canonical_json_bytes(data: Mapping[str, Any]) -> bytes:
 
 
 def _validate_global_parameters(gp: Mapping[str, Mapping[str, Any]]) -> None:
-    for parameter_id, expected_fields in GP_FIELDS.items():
+    for parameter_id in GLOBAL_GP_IDS:
+        expected_fields = GP_FIELDS[parameter_id]
         _require(set(gp[parameter_id]) == expected_fields, f"{parameter_id} fields must be {sorted(expected_fields)}")
     _require(gp["GP-001"] == {"rule_version": RULE_VERSION, "parameter_version": PARAMETER_VERSION, "locked": True}, "GP-001 version lock mismatch")
     _require(gp["GP-002"].get("ruleset") == RULESET, "GP-002.ruleset mismatch")
@@ -252,6 +261,10 @@ def _validate_global_parameters(gp: Mapping[str, Mapping[str, Any]]) -> None:
     _integer(gp["GP-022"].get("max_performance_delay_ms"), "GP-022.max_performance_delay_ms", 0, int(discard_timeout * 0.8))
     _enum(gp["GP-022"].get("timeout_action"), "GP-022.timeout_action", {"auto_pass", "auto_hu", "safe_discard", "platform_default"})
     _require(gp["GP-023"].get("profile_count") == 4, "GP-023.profile_count must be 4")
+def _validate_cognitive_parameters(gp: Mapping[str, Mapping[str, Any]], path: str) -> None:
+    _require(set(gp) == set(COGNITIVE_GP_IDS), f"{path} must contain exactly GP-024 through GP-027")
+    for parameter_id in COGNITIVE_GP_IDS:
+        _require(set(gp[parameter_id]) == GP_FIELDS[parameter_id], f"{path}.{parameter_id} fields mismatch")
     for key in ("initial_strength", "forget_rate", "salience_boost"):
         _number(gp["GP-024"].get(key), f"GP-024.{key}", 0, 1)
     _require(gp["GP-024"].get("learn_hidden_information") is False, "GP-024.learn_hidden_information must be false")
@@ -297,10 +310,24 @@ def load_config(path: str | Path, compatibility_path: str | Path | None = None) 
     versions = (raw["rule_version"], raw["parameter_version"], raw["implementation_version"])
     compatibility = Path(compatibility_path) if compatibility_path else source.with_name("compatibility.json")
     _require(versions in _load_compatibility(compatibility), f"unsupported RULES/PARAMS/IMPL combination: {versions}")
+    raw = json.loads(json.dumps(raw))
+    if versions[1:] == ("CDMJ-AI-PARAMS 1.0.0", "CDMJ-AI-IMPL 2.0.0"):
+        legacy = {key: raw["global_parameters"].pop(key) for key in COGNITIVE_GP_IDS}
+        for item in raw["players"]:
+            item["cognitive_parameters"] = json.loads(json.dumps(legacy))
+        raw["parameter_version"] = PARAMETER_VERSION
+        raw["implementation_version"] = IMPLEMENTATION_VERSION
+        raw["global_parameters"]["GP-001"]["parameter_version"] = PARAMETER_VERSION
+        versions = (raw["rule_version"], raw["parameter_version"], raw["implementation_version"])
     _require(raw["ruleset"] == RULESET, f"ruleset must be {RULESET}")
     global_parameters = GlobalParameters.from_dict(raw["global_parameters"])
     _require(isinstance(raw["players"], list) and len(raw["players"]) == 4, "players must contain exactly four profiles")
-    players = tuple(PlayerProfile.from_dict(item["profile"] | {"player_id": item["player_id"]}, f"players[{index}]") for index, item in enumerate(raw["players"]))
+    players_list = []
+    for index, item in enumerate(raw["players"]):
+        _require(set(item) == {"player_id", "profile", "cognitive_parameters"}, f"players[{index}] fields invalid")
+        _validate_cognitive_parameters(item["cognitive_parameters"], f"players[{index}].cognitive_parameters")
+        players_list.append(PlayerProfile.from_dict(item["profile"] | {"player_id": item["player_id"]}, f"players[{index}]", item["cognitive_parameters"]))
+    players = tuple(players_list)
     _require(tuple(profile.player_id for profile in players) == (0, 1, 2, 3), "player ids must be exactly 0,1,2,3 in seat order")
     seed = _integer(raw["seed"], "seed", 0, 2**64 - 1)
     provisional = HumanlikeConfig(versions[0], versions[1], versions[2], raw["ruleset"], global_parameters, players, seed, "")

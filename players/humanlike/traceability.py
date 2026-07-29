@@ -43,7 +43,7 @@ def _rp_consumer(index: int) -> str:
 
 
 PARAMETER_TRACES: tuple[ParameterTrace, ...] = tuple(
-    ParameterTrace(parameter_id, f"global_parameters.{parameter_id}", _gp_consumer(index), "tests/humanlike_v2/test_config.py")
+    ParameterTrace(parameter_id, (f"global_parameters.{parameter_id}" if index <= 23 else f"players[i].cognitive_parameters.{parameter_id}"), _gp_consumer(index), "tests/humanlike_v2/test_config.py")
     for index, parameter_id in enumerate(GP_IDS, 1)
 ) + tuple(
     ParameterTrace(parameter_id, f"round_parameters.{parameter_id}", _rp_consumer(index), "tests/humanlike_v2/test_runtime.py")

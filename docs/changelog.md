@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0030 Done）
+
+- PARAMS 1.1 / IMPL 2.1：GP-024–027 从全局迁移到 S0–S3 各自 cognitive_parameters
+- 玩家运行时按 seat 读取并记录 player_config_hash；旧 1.0/2.0 配置自动深拷贝迁移
+- 设置窗口生成 112 个逐座认知字段，无全局认知页
+- 全量 356 passed / 1 skipped；2/3/4 人各 10 局批跑通过
+- 验收：`docs/status/F0030_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0030 Approved）
 
 - 用户确认逐玩家认知与目标参数迁移规格并要求实现；Docs-First 门禁开放

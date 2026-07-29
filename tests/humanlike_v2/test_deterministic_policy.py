@@ -74,8 +74,8 @@ def test_evaluation_is_repeatable_and_rng_free() -> None:
     context, cfg = _context(actions=[Action(ActionType.DISCARD, (parse_tile("wan_1"),)), Action(ActionType.DISCARD, (parse_tile("wan_2"),))])
     belief = build_public_belief(context)
     candidates = build_candidates(context, max_candidates=8)
-    first = evaluate_candidates(context, candidates, belief, cfg.global_parameters["GP-026"]["decision_weights"])
-    second = evaluate_candidates(context, candidates, belief, cfg.global_parameters["GP-026"]["decision_weights"])
+    first = evaluate_candidates(context, candidates, belief, cfg.players[0].cognitive_parameters["GP-026"]["decision_weights"])
+    second = evaluate_candidates(context, candidates, belief, cfg.players[0].cognitive_parameters["GP-026"]["decision_weights"])
     assert first.selected == second.selected
     assert first.trace == second.trace
     assert first.trace["rng_used"] is False
