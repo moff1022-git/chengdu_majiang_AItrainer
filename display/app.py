@@ -1160,6 +1160,7 @@ class MahjongApp:
                 elif self.scene == "table":
                     st = self._current_state()
                     n = st.num_players if st is not None else self.cfg.num_players
+                    panel_key = self.control_panel.hit(pos)
                     if self.control_panel.handle_click(
                         pos,
                         num_players=n,
@@ -1175,6 +1176,18 @@ class MahjongApp:
                         sw, sh = self.screen.get_size()
                         self.table.resize(sw, sh)
                         self._refresh_analysis()
+                        if panel_key == "humanlike":
+                            from display.lobby_view import humanlike_status, toggle_humanlike_players
+                            self.cfg.players_spec = toggle_humanlike_players(self.cfg.players_spec)
+                            self.control_panel.options.humanlike_status = humanlike_status(self.cfg.players_spec)
+                            hub = getattr(self, "_seat_hub", None)
+                            if hub is not None:
+                                for seat, spec in enumerate(_parse_parts(self.cfg.players_spec)):
+                                    if spec.split(":")[0].lower() != "human":
+                                        hub.seat_ai_types[seat] = spec.split(":")[0].lower()
+                        elif panel_key == "humanlike_settings":
+                            from players.humanlike.settings_service import launch_settings_window
+                            launch_settings_window()
 
     def _handle_lobby_click(self, pos: tuple[int, int]) -> None:
         from display.lobby_view import (
@@ -1184,6 +1197,8 @@ class MahjongApp:
             CTL_ROUNDS,
             CTL_START,
             CTL_THEME,
+            CTL_HUMANLIKE,
+            CTL_HUMANLIKE_SETTINGS,
         )
 
         ctl = self.lobby.hit_control(pos)
@@ -1212,6 +1227,17 @@ class MahjongApp:
             return
         if ctl == CTL_ROUNDS:
             self.cfg.num_rounds = self.lobby.cycle_rounds(self.cfg.num_rounds)
+            return
+        if ctl == CTL_HUMANLIKE:
+            from display.lobby_view import toggle_humanlike_players
+            old = self.cfg.players_spec
+            self.cfg.players_spec = toggle_humanlike_players(old)
+            if old != self.cfg.players_spec:
+                self._stop_live_game(close_seats=True)
+            return
+        if ctl == CTL_HUMANLIKE_SETTINGS:
+            from players.humanlike.settings_service import launch_settings_window
+            launch_settings_window()
             return
 
     def _auto_next_eligible(self) -> bool:
@@ -1321,6 +1347,8 @@ class MahjongApp:
                 num_rounds=self.cfg.num_rounds,
             )
         elif self.scene == "table":
+            from display.lobby_view import humanlike_status
+            self.control_panel.options.humanlike_status = humanlike_status(self.cfg.players_spec)
             st = self._current_state()
             if st is not None:
                 self.table.auto_next_eligible = self._auto_next_eligible()

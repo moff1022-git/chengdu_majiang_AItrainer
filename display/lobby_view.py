@@ -31,6 +31,8 @@ CTL_EXCHANGE = "exchange"
 CTL_ROUNDS = "rounds"
 CTL_THEME = "theme"
 CTL_START = "start"
+CTL_HUMANLIKE = "humanlike_v2"
+CTL_HUMANLIKE_SETTINGS = "humanlike_v2_settings"
 
 _GAME_MODES = [
     ("blood_battle", "血战到底"),
@@ -154,7 +156,7 @@ class LobbyView:
         panel_w = min(560, max(240, w - 2 * m.margin))
         panel_x = (w - panel_w) // 2
 
-        n_rows = 5
+        n_rows = 7
         # Fit all rows + padding inside body without clipping
         pad = m.gap
         inner_h = body_h - 2 * pad
@@ -204,6 +206,8 @@ class LobbyView:
             ),
             (CTL_ROUNDS, "轮数", f"{num_rounds} 局", "1/2/4/8"),
             (CTL_THEME, "主题", theme, "green/blue"),
+            (CTL_HUMANLIKE, "人类化 AI v2", humanlike_status(players_spec), "点击切换·下局生效"),
+            (CTL_HUMANLIKE_SETTINGS, "人类化参数", "打开设置窗口", "GP-001–027 / S0–S3"),
         ]
 
         # rows start below section title
@@ -269,3 +273,15 @@ class LobbyView:
             return _ROUND_OPTIONS[0]
         i = _ROUND_OPTIONS.index(current)
         return _ROUND_OPTIONS[(i + 1) % len(_ROUND_OPTIONS)]
+
+
+def humanlike_status(players_spec: str) -> str:
+    ai = [part.split(":")[0].strip().lower() for part in players_spec.split(",") if part.strip() and part.split(":")[0].strip().lower() != "human"]
+    count = sum(key == "humanlike_v2" for key in ai)
+    return "开启" if ai and count == len(ai) else ("混合" if count else "关闭")
+
+
+def toggle_humanlike_players(players_spec: str) -> str:
+    parts = [part.strip() for part in players_spec.split(",") if part.strip()]
+    enable = humanlike_status(players_spec) != "开启"
+    return ",".join(part if part.split(":")[0].lower() == "human" else ("humanlike_v2" if enable else ("rule_ai" if part.split(":")[0].lower() == "humanlike_v2" else part)) for part in parts)

@@ -9,7 +9,7 @@ os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 import pygame
 
 from display.asset_manager import AssetManager
-from display.lobby_view import CTL_START, LobbyView
+from display.lobby_view import CTL_HUMANLIKE, CTL_HUMANLIKE_SETTINGS, CTL_START, LobbyView
 
 
 def test_lobby_draw_buttons_in_footer() -> None:
@@ -33,6 +33,9 @@ def test_lobby_draw_buttons_in_footer() -> None:
         assert lv.hit_control(lv.start_rect.center) == CTL_START
         # settings rows exist
         assert "players" in lv._hit
+        if w >= 800 and h >= 498:
+            assert CTL_HUMANLIKE in lv._hit
+            assert CTL_HUMANLIKE_SETTINGS in lv._hit
         for r in lv._hit.values():
             assert r.bottom <= h
             assert r.top >= 0

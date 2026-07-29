@@ -49,7 +49,7 @@
 | **F0028-4** | [F0028_4_human_cognition.md](F0028_4_human_cognition.md) | 认知状态、人格、注意力、记忆、满意停止、有界噪声与思考时间 | **Done** |
 | **F0028-5** | [F0028_5_decision_audit_replay.md](F0028_5_decision_audit_replay.md) | 私有决策审计、规范哈希链、认知/RNG 快照与策略复演 | **Done** |
 | **F0028-6** | [F0028_6_training_contract.md](F0028_6_training_contract.md) | 固定动作 codec/mask、Observation v2、奖励分解与训练回归指标 | **Done** |
-| **F0029** | [F0029_humanlike_v2_ui_settings.md](F0029_humanlike_v2_ui_settings.md) | 大厅/主桌/AI 座位 Humanlike v2 开关与全参数设置窗口 | **Approved** |
+| **F0029** | [F0029_humanlike_v2_ui_settings.md](F0029_humanlike_v2_ui_settings.md) | 大厅/主桌/AI 座位 Humanlike v2 开关与全参数设置窗口 | **Done** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | **Review**（文档清单） |
 
 > **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.2.1**

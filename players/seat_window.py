@@ -1524,6 +1524,18 @@ class TkSeatApp:
                 fg="#80cbc4",
                 font=self._font,
             ).pack(side="left", padx=4)
+            humanlike_on = cur == "humanlike_v2"
+            self._make_colored_button(
+                bar,
+                "人类v2 " + ("开 ✓" if humanlike_on else "关"),
+                command=lambda: self._set_ai_from_bar("rule_ai" if humanlike_on else "humanlike_v2"),
+                bg="#7b1fa2" if humanlike_on else "#37474f",
+                fg="white", active_bg="#8e24aa", font=self._font, padx=8, pady=4,
+            ).pack(side="left", padx=3, pady=4)
+            self._make_colored_button(
+                bar, "参数…", command=self._open_humanlike_settings,
+                bg="#00695c", fg="white", active_bg="#00897b", font=self._font, padx=8, pady=4,
+            ).pack(side="left", padx=3, pady=4)
 
         # Expand details
         more = self._make_colored_button(
@@ -1571,6 +1583,15 @@ class TkSeatApp:
         if self._settings_open:
             self._build_settings_panel()
         self.status_note = f"AI 策略已设为 {key}（下局生效）"
+        self._refresh_chrome()
+
+    def _open_humanlike_settings(self) -> None:
+        try:
+            from players.humanlike.settings_service import launch_settings_window
+            launch_settings_window()
+            self.status_note = "已打开 Humanlike AI v2 参数窗口"
+        except Exception as exc:
+            self.status_note = f"参数窗口启动失败：{exc}"
         self._refresh_chrome()
 
     def _build_settings_panel(self) -> None:

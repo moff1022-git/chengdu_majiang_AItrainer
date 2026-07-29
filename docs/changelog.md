@@ -3,6 +3,14 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0029 Done）
+
+- 大厅、主桌控制面板和 AI 座位窗新增 Humanlike v2 开关与参数入口
+- 新增独立 Tk 全参数 JSON 编辑器，覆盖 GP-001–027、S0–S3、版本与 seed
+- 保存复用严格 validator，支持备份、临时文件、fsync 与原子替换；所有变更下局生效
+- 全量 352 passed / 1 skipped；compileall、GUI 启动与多尺寸大厅布局通过
+- 验收：`docs/status/F0029_ACCEPTANCE_2026-07-29.md`
+
 ## 2026-07-29（F0029 Approved）
 
 - 用户确认 F0029 规格并要求实现；Docs-First 门禁开放

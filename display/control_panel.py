@@ -30,6 +30,7 @@ class TableUIOptions:
     auto_next_round: bool = False
     panel_expanded: bool = True
     focus_seat: int = 0
+    humanlike_status: str = "关闭"
 
     def face_visible(self, seat: int) -> bool:
         return bool(self.show_faces.get(int(seat), True))
@@ -196,6 +197,8 @@ class ControlPanel:
             )
             y += max(12, row_h - 8)
         y += max(2, pad // 2)
+        y = self._toggle_row(screen, x0, y, "humanlike", "人类化 AI 下局", self.options.humanlike_status == "开启")
+        y = self._button_row(screen, x0, y, "humanlike_settings", "Humanlike 参数…")
         draw_text(
             screen,
             "各座明牌",
