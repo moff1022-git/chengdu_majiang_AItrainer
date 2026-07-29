@@ -6,7 +6,7 @@
 > **技术栈**：Python 3.11+ · Pygame（主窗）· Tk（座位窗）· NumPy（可选）· JSON/JSONL  
 > **资源**：项目根目录 `assets/` + `assets/ASSETS.md`（双主题 green/blue）  
 > **开发流程**：[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) · 进度 [`docs/status/LATEST.md`](docs/status/LATEST.md) · 一致性 [`docs/status/DOC_CODE_BASELINE.md`](docs/status/DOC_CODE_BASELINE.md)
-> **当前功能主线**：F0028、F0029 均已 Done；下一步为 F0029 GUI 人工点击验收。
+> **当前功能主线**：F0028、F0029 已 Done；F0030 逐玩家认知与目标参数处于 Draft。
 ---
 
 ## 0. 目标与非目标
