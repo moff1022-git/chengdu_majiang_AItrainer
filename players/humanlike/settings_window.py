@@ -16,18 +16,29 @@ ZH = {"seed":"随机种子","name":"名称","level":"水平","style":"风格","e
 "min_candidates":"最少候选数","max_candidates":"最多候选数","search_depth":"搜索深度","attention_capacity":"注意容量","satisfaction_threshold":"满意停止阈值","research_threshold":"重新搜索阈值",
 "rule_version":"规则版本","parameter_version":"参数版本","implementation_version":"实现版本","ruleset":"规则集","total_rounds":"总局数","starting_score":"起始分","base_score":"基础分","fan_cap":"封顶番数",
 "discard_timeout_ms":"出牌超时（毫秒）","response_timeout_ms":"响应超时（毫秒）","max_performance_delay_ms":"最大模拟思考延迟（毫秒）"}
-ENUMS={"level":["novice","normal","skilled","expert"],"style":["conservative","balanced","aggressive"],"direction":["left","right","opposite","dice","random"],"ranking":["total_score","rank_points","custom"]}
+ENUMS={
+"level":["novice","normal","skilled","expert"],"style":["conservative","balanced","aggressive"],"direction":["left","right","opposite","dice","random"],"ranking":["total_score","rank_points","custom"],
+"priority_mode":["hu_gang_peng_pass","hu_seat_peng_gang_pass"],"seat_priority":["nearest_from_discarder","platform_deterministic"],"pass_hu_mode":["none","until_self_draw","until_value_increase","platform_custom"],
+"gang_draw_source":["wall_tail","platform_position"],"mode":["add_base","add_fan","fixed_bonus","none"],"payers":["all_active_opponents","platform_set"],"payment":["discarder_only","all_active_opponents","custom"],
+"settlement":["immediate","round_end"],"multi_hu_mode":["copy_to_each_winner","split","custom"],"payees":["all_non_hu_non_huazhu","all_eligible","custom"],"dead_wait":["valid","invalid"],
+"valuation":["actual_live_wait","maximum_possible_fan","custom"],"dealer_mode":["dice","rotate","winner","custom"],"timeout_action":["auto_pass","auto_hu","safe_discard","platform_default"]}
+SCOPE_ENUMS={"GP-016":["latest_gang_only","all_related_gang_score","custom"],"GP-019":["all_gang_income","untransferred_gang_income","selected_events","custom"]}
+RANGES={"total_rounds":"1–10000","starting_score":"-1,000,000,000–1,000,000,000","early_end_score":"留空或 -1,000,000,000–1,000,000,000","forced_hu_wall_threshold":"0–4","tail_reserved":"0–16","base_score":"1–1,000,000","fan_cap":"0–64","bonus_fan":"0–16","fixed_bonus":"0–1,000,000","ming_gang_score":"0–1,000,000","an_gang_score":"0–1,000,000","bu_gang_score":"0–1,000,000","penalty_fan":"0–64","fixed_score":"0–1,000,000","dealer_bonus_fan":"0–16","dealer_fixed_bonus":"0–1,000,000","continuations":"0–10000","discard_timeout_ms":"250–600000 毫秒","response_timeout_ms":"250–600000 毫秒","max_performance_delay_ms":"0–出牌超时的 80%","cross_round_history":"0–10000","random_seed":"0–18,446,744,073,709,551,615","min_candidates":"1–14，且不大于最多候选数","max_candidates":"1–14，且不小于最少候选数","search_depth":"0–8","attention_capacity":"1–64","target_rank":"1–4","lead_gap":"0–1,000,000,000","trail_gap":"0–1,000,000,000","seed":"0–18,446,744,073,709,551,615"}
 
 def _label(key): return ZH.get(key, key.replace("_"," "))
-def _help(key,value):
+def _help(key,value,path=()):
     if isinstance(value,bool): return "控制该功能是否启用；范围：开启 / 关闭。"
-    if key in ENUMS: return "选择该参数的工作模式；范围："+" / ".join(ENUMS[key])
-    if isinstance(value,float): return "调节该行为的相对强度；范围：0.0–1.0（权重组总和须为 1）。"
+    choices=SCOPE_ENUMS.get(next((p for p in path if isinstance(p,str) and p.startswith("GP-")),"")) if key=="scope" else ENUMS.get(key)
+    if choices: return "选择该参数的工作模式；可选："+" / ".join(choices)
+    if "GP-021" in path: return "控制该公开信息的可见程度；可选：hidden / public_partial / public_exact。"
+    if isinstance(value,float): return "调节该行为的相对强度；范围：0.0–1.0"+("，同组权重总和须为 1。" if "weights" in path or "decision_weights" in path else "。")
     if isinstance(value,int):
-        if key.endswith("_ms"): return "控制等待时间；范围：0–600000 毫秒，具体上限由规范校验。"
-        return "整数参数；合法范围由成都麻将参数规范校验，越界不能保存。"
+        return "整数参数；范围："+RANGES.get(key,"固定值（只读）。")
     if isinstance(value,(list,dict)): return "结构化列表；逐行填写 JSON 数组，保存时执行完整规范校验。"
-    return "文本标识或模式名称；可选值和长度由参数规范校验。"
+    if value is None and key in RANGES: return "可选整数参数；范围："+RANGES[key]
+    if key=="platform_ruleset_id": return "平台规则集标识；长度范围：1–128 个字符。"
+    if key=="name": return "玩家画像名称；必须为非空文本。"
+    return "规范标识文本；当前字段为锁定值，不可修改。"
 
 class SettingsWindow:
     def __init__(self,path:Path):
@@ -40,8 +51,8 @@ class SettingsWindow:
             self._build_tab(title,[(f"GP-{i:03d}",gp[f"GP-{i:03d}"]) for i in range(start,end+1)],("global_parameters",))
         self._build_tab("玩家画像",[(f"座位 S{i}",p["profile"]) for i,p in enumerate(self.data["players"])],("players",))
         bar=tk.Frame(self.root,bg="#0d2818"); bar.pack(fill="x",padx=12,pady=8)
-        for label,fn in (("重新载入",self.reload),("校验全部",self.validate),("保存（下局生效）",self.save),("导入…",self.import_file),("导出…",self.export_file)): tk.Button(bar,text=label,command=fn,bg="#256d45",fg="white",padx=10).pack(side="left",padx=3)
-        tk.Button(bar,text="关闭",command=self.root.destroy,bg="#5b4030",fg="white").pack(side="right")
+        for label,fn in (("重新载入",self.reload),("校验全部",self.validate),("保存（下局生效）",self.save),("导入…",self.import_file),("导出…",self.export_file)): tk.Button(bar,text=label,command=fn,bg="#e8f5e9",fg="#102019",activeforeground="#102019",padx=10).pack(side="left",padx=3)
+        tk.Button(bar,text="关闭",command=self.root.destroy,bg="#ffe0b2",fg="#3e2723",activeforeground="#3e2723").pack(side="right")
         self.status=tk.StringVar(value=str(path)); tk.Label(self.root,textvariable=self.status,bg="#0d2818",fg="#b0bec5",anchor="w").pack(fill="x",padx=12,pady=(0,8))
 
     def _build_tab(self,title,groups,prefix):
@@ -62,12 +73,14 @@ class SettingsWindow:
             if isinstance(value,dict):
                 tk.Label(row,text="分组",bg="#12261c",fg="#80cbc4").pack(side="left"); self._fields(parent,value,p); continue
             if isinstance(value,bool): var=tk.BooleanVar(value=value); widget=tk.Checkbutton(row,variable=var,text="开启",bg="#12261c",fg="#e8f5e9",selectcolor="#256d45")
-            elif key in ENUMS: var=tk.StringVar(value=str(value)); widget=ttk.Combobox(row,textvariable=var,values=ENUMS[key],state="readonly",width=24)
+            elif key in ENUMS or key=="scope" or "GP-021" in p:
+                choices=(SCOPE_ENUMS.get(next((x for x in p if isinstance(x,str) and x.startswith("GP-")),""),[]) if key=="scope" else (["hidden","public_partial","public_exact"] if "GP-021" in p else ENUMS[key]))
+                var=tk.StringVar(value=str(value)); widget=ttk.Combobox(row,textvariable=var,values=choices,state="readonly",width=28)
             else: var=tk.StringVar(value=json.dumps(value,ensure_ascii=False) if isinstance(value,list) else ("" if value is None else str(value))); widget=tk.Entry(row,textvariable=var,width=30)
             if locked:
                 try: widget.configure(state="disabled")
                 except tk.TclError: pass
-            widget.pack(side="left",padx=5); tk.Label(row,text=("🔒 " if locked else "")+_help(key,value),anchor="w",justify="left",wraplength=560,bg="#12261c",fg="#9fb8aa").pack(side="left",fill="x",expand=True); self.vars[p]=(var,value)
+            widget.pack(side="left",padx=5); tk.Label(row,text=("🔒 " if locked else "")+_help(key,value,p),anchor="w",justify="left",wraplength=560,bg="#12261c",fg="#9fb8aa").pack(side="left",fill="x",expand=True); self.vars[p]=(var,value)
 
     def _collect(self):
         out=copy.deepcopy(self.data)

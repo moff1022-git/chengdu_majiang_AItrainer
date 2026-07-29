@@ -8,6 +8,7 @@ import pytest
 
 from players.humanlike.config import ConfigValidationError
 from players.humanlike.settings_service import read_raw, save_raw, validate_raw
+from players.humanlike.settings_window import ENUMS, RANGES, SCOPE_ENUMS, _help
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -48,3 +49,10 @@ def test_all_gp_and_profiles_are_present():
     assert len(data["players"]) == 4
     assert validate_raw(copy.deepcopy(data), target=DEFAULT).config_hash
 
+
+def test_form_metadata_has_explicit_ranges_and_all_validator_enums():
+    for key in ("total_rounds", "starting_score", "forced_hu_wall_threshold", "tail_reserved", "base_score", "fan_cap", "discard_timeout_ms", "response_timeout_ms", "max_performance_delay_ms", "cross_round_history", "random_seed", "min_candidates", "max_candidates", "search_depth", "attention_capacity", "target_rank", "lead_gap", "trail_gap", "seed"):
+        assert key in RANGES and "范围：" in _help(key, 1)
+    for key in ("ranking", "direction", "priority_mode", "seat_priority", "pass_hu_mode", "gang_draw_source", "mode", "payers", "payment", "settlement", "multi_hu_mode", "payees", "dead_wait", "valuation", "dealer_mode", "timeout_action", "level", "style"):
+        assert len(ENUMS[key]) >= 2
+    assert set(SCOPE_ENUMS) == {"GP-016", "GP-019"}
