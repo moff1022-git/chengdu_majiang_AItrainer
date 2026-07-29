@@ -3,6 +3,10 @@
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
+## 2026-07-29（F0030 Approved）
+
+- 用户确认逐玩家认知与目标参数迁移规格并要求实现；Docs-First 门禁开放
+
 ## 2026-07-29（F0030 Draft）
 
 - 确认 GP-024–027 当前由四个 Humanlike 玩家共享，不能仅通过 UI 调整实现逐座独立
