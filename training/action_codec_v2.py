@@ -14,7 +14,10 @@ FACE_OFFSETS = dict(zip(FACE_ACTIONS, (2, 29, 56, 83, 110)))
 
 
 class ActionCodecError(ValueError):
-    pass
+    code = "ACTION_CODEC_INVALID"
+
+    def __init__(self, detail: str) -> None:
+        super().__init__(f"{self.code}: {detail}")
 
 
 def _face_index(tile: Tile) -> int:

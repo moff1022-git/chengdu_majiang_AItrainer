@@ -1,0 +1,55 @@
+{
+  "authority": "Task 18 current status view; Task 17 historical baseline is immutable",
+  "effective_date": "2026-07-30",
+  "source_commit": "423326ecf6e602f9c1c3392dd2a844b1e61ce9b3",
+  "worktree_clean": false,
+  "unit_count": 96,
+  "status_distribution": {
+    "AUDITED": 15,
+    "INTEGRATED": 1,
+    "PARTIAL": 79,
+    "SCAFFOLDED": 1
+  },
+  "b1b": {
+    "decision": "READY_TO_PROMOTE",
+    "batch_status": "COMPLETED",
+    "units": {
+      "STATE-001": "AUDITED",
+      "STATE-011": "AUDITED",
+      "STATE-004": "AUDITED"
+    },
+    "audit_report": "docs/spec-v3/audit/B1-B_final_independent_audit_report.md",
+    "status_delta": "docs/spec-v3/audit/task18_b1b_audit_status_delta_final.csv"
+  },
+  "post_b1b_queue": {
+    "original_non_audited_count": 87,
+    "removed_completed_units": [
+      "STATE-010",
+      "ALGO-009",
+      "ALGO-011",
+      "STATE-001",
+      "STATE-011",
+      "STATE-004"
+    ],
+    "remaining_count": 81,
+    "integrity": {
+      "duplicate_count": 0,
+      "audited_unit_in_queue_count": 0,
+      "missing_count": 0,
+      "unexpected_count": 0,
+      "dependency_graph_acyclic": true
+    },
+    "next_batch": "B2-A1",
+    "next_batch_units": ["STATE-002", "STATE-003", "ALGO-002"],
+    "authorization": "READY_FOR_IMPLEMENTATION",
+    "business_code_authorized": true,
+    "model001_external_gate_blocks_independent_units": false
+  },
+  "task17_history_modified": false,
+  "task17_historical_distribution": {
+    "AUDITED": 9,
+    "INTEGRATED": 1,
+    "PARTIAL": 85,
+    "SCAFFOLDED": 1
+  }
+}

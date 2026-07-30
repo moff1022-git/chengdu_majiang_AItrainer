@@ -81,8 +81,10 @@ class PlayerViewBuilder:
         legal_actions: list[dict[str, Any]] | None = None,
         deadline_ms: int | None = None,
     ) -> PlayerViewV2:
+        if state.phase not in {"dealt","exchange","dingque","ready","draw","discard","response","finished"}:
+            raise ValueError("INVALID_PHASE")
         if seat not in {player.seat for player in state.players}:
-            raise ValueError(f"invalid self seat: {seat}")
+            raise ValueError(f"INVALID_VIEWER: {seat}")
         wall_level = self.visibility["wall_remaining"]
         if wall_level == "hidden":
             wall_remaining: int | None = None
@@ -132,13 +134,16 @@ class PlayerViewBuilder:
                 "cancel_action": None,
             },
         }
-        return PlayerViewV2(
+        view = PlayerViewV2(
             game_id=state.game_id,
             self_seat=seat,
             phase=state.phase,
             event_index=state.turn_index,
             payload=payload,
         )
+        # STATE-005 production boundary: force full canonical traversal now.
+        _ = view.stable_hash
+        return view
 
     def build_legacy_dict(self, state: GameState, seat: int) -> dict[str, Any]:
         result = self.build(state, seat).to_legacy_dict()

@@ -18,6 +18,7 @@ from players.humanlike.evaluator import evaluate_candidates
 from players.humanlike.hand_analyzer import analyze_action
 from players.humanlike.policy import select_cognitively
 from players.humanlike.runtime import RoundRuntime
+from players.humanlike.state010 import SeatRuntimeStore
 from players.humanlike.view import PolicyInputError, build_decision_context
 from protocols.messages import ActionRequest, Decision, Observation
 
@@ -37,6 +38,7 @@ class HumanlikeV2Player(BasePlayer):
         self.runtime: RoundRuntime | None = None
         self.cognitive_state: CognitiveState | None = None
         self._round_game_id: str | None = None
+        self.state010_store: SeatRuntimeStore | None = None
 
     def on_join(self, seat: int, config: dict) -> None:
         if seat not in range(4):
@@ -52,6 +54,7 @@ class HumanlikeV2Player(BasePlayer):
         self.runtime = None
         self.cognitive_state = None
         self._round_game_id = None
+        self.state010_store = None
 
     def observe(self, observation: Observation) -> None:
         super().observe(observation)
@@ -72,6 +75,7 @@ class HumanlikeV2Player(BasePlayer):
                 self_seat=self.seat,
                 scores=tuple(scores),
             )
+            self.state010_store = SeatRuntimeStore(observation.game_id)
             self._round_game_id = observation.game_id
             gp024 = self.profile.cognitive_parameters["GP-024"]
             gp026 = self.profile.cognitive_parameters["GP-026"]
@@ -155,17 +159,17 @@ class HumanlikeV2Player(BasePlayer):
         trace["cross_round_impressions"] = len(self.cognitive_state.opponent_impressions)
         trace["player_config_hash"] = self.player_config_hash
 
-        self.runtime.set_parameter("RP-015", {"view_version": 2, "event_index": context.event_index})
-        self.runtime.set_parameter("RP-016", belief.summary())
+        self._set_rp("RP-015", {"view_version": 2, "event_index": context.event_index})
+        self._set_rp("RP-016", belief.summary())
         selected_scored = next(item for item in evaluation.scored if item.action.to_dict() == decision.selected.to_dict())
-        self.runtime.set_parameter("RP-017", selected_scored.features.to_dict())
-        self.runtime.set_parameter("RP-018", evaluation.plan.to_dict())
-        self.runtime.set_parameter("RP-023", {"count": len(candidates.candidates), "actions": [item.action.to_dict() for item in candidates.candidates]})
-        self.runtime.set_parameter("RP-024", memory_summary.to_dict() | {"cross_round_impressions": len(self.cognitive_state.opponent_impressions)})
-        self.runtime.set_parameter("RP-025", [item.to_dict() for item in attention])
-        self.runtime.set_parameter("RP-026", {"selected_action": decision.selected.to_dict(), "score": selected_scored.score, "checked_count": trace["checked_count"], "stop_reason": trace["stop_reason"]})
-        self.runtime.set_parameter("RP-027", {"deadline_ms": int(request.deadline_ms or 0), "think_time_ms": trace["think_time_ms"], "time_pressure": bool(request.deadline_ms and trace["think_time_ms"] >= request.deadline_ms)})
-        self.runtime.set_parameter("RP-028", {"personality": trace["personality"], "plan_restarted": plan_restarted, "restart_reasons": list(restart_reasons)})
+        self._set_rp("RP-017", selected_scored.features.to_dict())
+        self._set_rp("RP-018", evaluation.plan.to_dict())
+        self._set_rp("RP-023", {"count": len(candidates.candidates), "actions": [item.action.to_dict() for item in candidates.candidates]})
+        self._set_rp("RP-024", memory_summary.to_dict() | {"cross_round_impressions": len(self.cognitive_state.opponent_impressions)})
+        self._set_rp("RP-025", [item.to_dict() for item in attention])
+        self._set_rp("RP-026", {"selected_action": decision.selected.to_dict(), "score": selected_scored.score, "checked_count": trace["checked_count"], "stop_reason": trace["stop_reason"]})
+        self._set_rp("RP-027", {"deadline_ms": int(request.deadline_ms or 0), "think_time_ms": trace["think_time_ms"], "time_pressure": bool(request.deadline_ms and trace["think_time_ms"] >= request.deadline_ms)})
+        self._set_rp("RP-028", {"personality": trace["personality"], "plan_restarted": plan_restarted, "restart_reasons": list(restart_reasons)})
         self.runtime.append_decision(trace)
         return Decision(
             request_id=request.request_id,
@@ -173,3 +177,11 @@ class HumanlikeV2Player(BasePlayer):
             reason=f"humanlike_v2:cognitive:{decision.selected.type.value}:{trace['stop_reason']}",
             analysis=trace,
         )
+
+    def _set_rp(self, parameter_id: str, value: Any) -> None:
+        assert self.runtime is not None and self.state010_store is not None and self.seat is not None
+        self.runtime.set_parameter(parameter_id, value)
+        version = self.state010_store.version(self.seat)
+        result = self.state010_store.update(actor_seat=self.seat, owner_seat=self.seat, changes={parameter_id: value}, expected_version=version)
+        if not result.accepted:
+            raise PolicyInputError(f"STATE-010 update failed: {result.error_code}")

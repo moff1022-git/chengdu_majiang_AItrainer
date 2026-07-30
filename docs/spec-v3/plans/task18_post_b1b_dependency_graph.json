@@ -1,0 +1,1045 @@
+{
+  "authority": "Task 18A dependency graph refreshed after B1-A and B1-B audit closure",
+  "effective_date": "2026-07-30",
+  "node_count": 96,
+  "remaining_queue_count": 81,
+  "edge_count": 207,
+  "acyclic": true,
+  "topological_order": [
+    "ALGO-001",
+    "ALGO-010",
+    "AUDIT-003",
+    "AUDIT-010",
+    "HEUR-019",
+    "RULE-003",
+    "RULE-016",
+    "SCORE-001",
+    "STATE-005",
+    "STATE-010",
+    "TRAIN-003",
+    "ALGO-003",
+    "HEUR-006",
+    "TRAIN-002",
+    "ALGO-009",
+    "ALGO-011",
+    "RULE-015",
+    "TRAIN-004",
+    "MODEL-004",
+    "TRAIN-005",
+    "STATE-001",
+    "STATE-011",
+    "TRAIN-009",
+    "STATE-004",
+    "STATE-006",
+    "ALGO-004",
+    "RULE-006",
+    "STATE-002",
+    "HEUR-020",
+    "HEUR-022",
+    "AUDIT-001",
+    "RULE-001",
+    "RULE-005",
+    "STATE-003",
+    "STATE-007",
+    "HEUR-016",
+    "MODEL-001",
+    "HEUR-003",
+    "AUDIT-005",
+    "STATE-009",
+    "TRAIN-001",
+    "ALGO-005",
+    "ALGO-002",
+    "RULE-002",
+    "RULE-007",
+    "RULE-008",
+    "HEUR-007",
+    "MODEL-002",
+    "AUDIT-006",
+    "AUDIT-007",
+    "ALGO-006",
+    "ALGO-008",
+    "AUDIT-013",
+    "TRAIN-006",
+    "ALGO-007",
+    "HEUR-002",
+    "HEUR-004",
+    "HEUR-011",
+    "RULE-004",
+    "RULE-010",
+    "HEUR-001",
+    "HEUR-012",
+    "HEUR-015",
+    "AUDIT-008",
+    "AUDIT-011",
+    "STATE-012",
+    "AUDIT-004",
+    "HEUR-017",
+    "AUDIT-002",
+    "HEUR-021",
+    "HEUR-023",
+    "HEUR-005",
+    "SCORE-004",
+    "RULE-009",
+    "RULE-011",
+    "RULE-012",
+    "RULE-014",
+    "SCORE-002",
+    "HEUR-018",
+    "AUDIT-009",
+    "AUDIT-014",
+    "HEUR-014",
+    "RULE-013",
+    "SCORE-003",
+    "TRAIN-008",
+    "TRAIN-007",
+    "HEUR-013",
+    "SCORE-005",
+    "MODEL-005",
+    "SCORE-006",
+    "AUDIT-012",
+    "HEUR-008",
+    "STATE-008",
+    "HEUR-009",
+    "HEUR-010",
+    "MODEL-003"
+  ],
+  "current_audited_units": [
+    "ALGO-001",
+    "ALGO-009",
+    "ALGO-010",
+    "ALGO-011",
+    "AUDIT-003",
+    "HEUR-019",
+    "RULE-003",
+    "RULE-016",
+    "SCORE-001",
+    "STATE-001",
+    "STATE-004",
+    "STATE-005",
+    "STATE-010",
+    "STATE-011",
+    "TRAIN-003"
+  ],
+  "removed_completed_units": [
+    "ALGO-009",
+    "ALGO-011",
+    "STATE-001",
+    "STATE-004",
+    "STATE-010",
+    "STATE-011"
+  ],
+  "remaining_units": [
+    "ALGO-002",
+    "ALGO-003",
+    "ALGO-004",
+    "ALGO-005",
+    "ALGO-006",
+    "ALGO-007",
+    "ALGO-008",
+    "AUDIT-001",
+    "AUDIT-002",
+    "AUDIT-004",
+    "AUDIT-005",
+    "AUDIT-006",
+    "AUDIT-007",
+    "AUDIT-008",
+    "AUDIT-009",
+    "AUDIT-010",
+    "AUDIT-011",
+    "AUDIT-012",
+    "AUDIT-013",
+    "AUDIT-014",
+    "HEUR-001",
+    "HEUR-002",
+    "HEUR-003",
+    "HEUR-004",
+    "HEUR-005",
+    "HEUR-006",
+    "HEUR-007",
+    "HEUR-008",
+    "HEUR-009",
+    "HEUR-010",
+    "HEUR-011",
+    "HEUR-012",
+    "HEUR-013",
+    "HEUR-014",
+    "HEUR-015",
+    "HEUR-016",
+    "HEUR-017",
+    "HEUR-018",
+    "HEUR-020",
+    "HEUR-021",
+    "HEUR-022",
+    "HEUR-023",
+    "MODEL-001",
+    "MODEL-002",
+    "MODEL-003",
+    "MODEL-004",
+    "MODEL-005",
+    "RULE-001",
+    "RULE-002",
+    "RULE-004",
+    "RULE-005",
+    "RULE-006",
+    "RULE-007",
+    "RULE-008",
+    "RULE-009",
+    "RULE-010",
+    "RULE-011",
+    "RULE-012",
+    "RULE-013",
+    "RULE-014",
+    "RULE-015",
+    "SCORE-002",
+    "SCORE-003",
+    "SCORE-004",
+    "SCORE-005",
+    "SCORE-006",
+    "STATE-002",
+    "STATE-003",
+    "STATE-006",
+    "STATE-007",
+    "STATE-008",
+    "STATE-009",
+    "STATE-012",
+    "TRAIN-001",
+    "TRAIN-002",
+    "TRAIN-004",
+    "TRAIN-005",
+    "TRAIN-006",
+    "TRAIN-007",
+    "TRAIN-008",
+    "TRAIN-009"
+  ],
+  "edges": [
+    {
+      "from": "ALGO-001",
+      "to": "ALGO-003"
+    },
+    {
+      "from": "ALGO-001",
+      "to": "AUDIT-005"
+    },
+    {
+      "from": "ALGO-001",
+      "to": "RULE-002"
+    },
+    {
+      "from": "ALGO-001",
+      "to": "STATE-003"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "ALGO-007"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-001"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-002"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-004"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-009"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-011"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-012"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "HEUR-014"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "RULE-004"
+    },
+    {
+      "from": "ALGO-002",
+      "to": "RULE-010"
+    },
+    {
+      "from": "ALGO-003",
+      "to": "ALGO-004"
+    },
+    {
+      "from": "ALGO-003",
+      "to": "ALGO-007"
+    },
+    {
+      "from": "ALGO-003",
+      "to": "HEUR-001"
+    },
+    {
+      "from": "ALGO-003",
+      "to": "MODEL-001"
+    },
+    {
+      "from": "ALGO-003",
+      "to": "MODEL-002"
+    },
+    {
+      "from": "ALGO-004",
+      "to": "MODEL-002"
+    },
+    {
+      "from": "ALGO-005",
+      "to": "ALGO-007"
+    },
+    {
+      "from": "ALGO-005",
+      "to": "HEUR-009"
+    },
+    {
+      "from": "ALGO-006",
+      "to": "HEUR-021"
+    },
+    {
+      "from": "ALGO-006",
+      "to": "HEUR-023"
+    },
+    {
+      "from": "ALGO-006",
+      "to": "STATE-012"
+    },
+    {
+      "from": "ALGO-007",
+      "to": "AUDIT-002"
+    },
+    {
+      "from": "ALGO-007",
+      "to": "HEUR-010"
+    },
+    {
+      "from": "ALGO-007",
+      "to": "HEUR-021"
+    },
+    {
+      "from": "ALGO-007",
+      "to": "HEUR-023"
+    },
+    {
+      "from": "ALGO-008",
+      "to": "AUDIT-004"
+    },
+    {
+      "from": "ALGO-008",
+      "to": "HEUR-017"
+    },
+    {
+      "from": "ALGO-008",
+      "to": "HEUR-023"
+    },
+    {
+      "from": "ALGO-009",
+      "to": "AUDIT-011"
+    },
+    {
+      "from": "ALGO-009",
+      "to": "RULE-001"
+    },
+    {
+      "from": "ALGO-009",
+      "to": "STATE-001"
+    },
+    {
+      "from": "ALGO-009",
+      "to": "STATE-007"
+    },
+    {
+      "from": "ALGO-010",
+      "to": "AUDIT-013"
+    },
+    {
+      "from": "ALGO-010",
+      "to": "TRAIN-002"
+    },
+    {
+      "from": "ALGO-011",
+      "to": "ALGO-008"
+    },
+    {
+      "from": "ALGO-011",
+      "to": "AUDIT-007"
+    },
+    {
+      "from": "ALGO-011",
+      "to": "STATE-001"
+    },
+    {
+      "from": "ALGO-011",
+      "to": "STATE-011"
+    },
+    {
+      "from": "ALGO-011",
+      "to": "TRAIN-009"
+    },
+    {
+      "from": "AUDIT-001",
+      "to": "AUDIT-014"
+    },
+    {
+      "from": "AUDIT-002",
+      "to": "AUDIT-014"
+    },
+    {
+      "from": "AUDIT-003",
+      "to": "AUDIT-004"
+    },
+    {
+      "from": "AUDIT-004",
+      "to": "AUDIT-009"
+    },
+    {
+      "from": "AUDIT-005",
+      "to": "AUDIT-006"
+    },
+    {
+      "from": "AUDIT-005",
+      "to": "AUDIT-007"
+    },
+    {
+      "from": "AUDIT-006",
+      "to": "AUDIT-008"
+    },
+    {
+      "from": "AUDIT-006",
+      "to": "AUDIT-011"
+    },
+    {
+      "from": "AUDIT-009",
+      "to": "AUDIT-012"
+    },
+    {
+      "from": "AUDIT-010",
+      "to": "AUDIT-008"
+    },
+    {
+      "from": "AUDIT-010",
+      "to": "AUDIT-011"
+    },
+    {
+      "from": "AUDIT-011",
+      "to": "MODEL-005"
+    },
+    {
+      "from": "AUDIT-014",
+      "to": "AUDIT-012"
+    },
+    {
+      "from": "AUDIT-014",
+      "to": "TRAIN-008"
+    },
+    {
+      "from": "HEUR-004",
+      "to": "HEUR-005"
+    },
+    {
+      "from": "HEUR-005",
+      "to": "HEUR-010"
+    },
+    {
+      "from": "HEUR-005",
+      "to": "HEUR-014"
+    },
+    {
+      "from": "HEUR-006",
+      "to": "HEUR-007"
+    },
+    {
+      "from": "HEUR-008",
+      "to": "HEUR-009"
+    },
+    {
+      "from": "HEUR-008",
+      "to": "HEUR-010"
+    },
+    {
+      "from": "HEUR-015",
+      "to": "HEUR-018"
+    },
+    {
+      "from": "HEUR-016",
+      "to": "HEUR-018"
+    },
+    {
+      "from": "HEUR-019",
+      "to": "HEUR-021"
+    },
+    {
+      "from": "HEUR-020",
+      "to": "HEUR-016"
+    },
+    {
+      "from": "HEUR-020",
+      "to": "MODEL-001"
+    },
+    {
+      "from": "HEUR-020",
+      "to": "MODEL-003"
+    },
+    {
+      "from": "HEUR-022",
+      "to": "HEUR-003"
+    },
+    {
+      "from": "HEUR-022",
+      "to": "HEUR-004"
+    },
+    {
+      "from": "HEUR-022",
+      "to": "HEUR-015"
+    },
+    {
+      "from": "HEUR-022",
+      "to": "HEUR-017"
+    },
+    {
+      "from": "HEUR-022",
+      "to": "HEUR-023"
+    },
+    {
+      "from": "MODEL-001",
+      "to": "HEUR-007"
+    },
+    {
+      "from": "MODEL-001",
+      "to": "MODEL-002"
+    },
+    {
+      "from": "MODEL-002",
+      "to": "HEUR-013"
+    },
+    {
+      "from": "MODEL-002",
+      "to": "HEUR-015"
+    },
+    {
+      "from": "MODEL-004",
+      "to": "MODEL-005"
+    },
+    {
+      "from": "MODEL-005",
+      "to": "AUDIT-012"
+    },
+    {
+      "from": "RULE-001",
+      "to": "ALGO-006"
+    },
+    {
+      "from": "RULE-001",
+      "to": "AUDIT-005"
+    },
+    {
+      "from": "RULE-001",
+      "to": "RULE-007"
+    },
+    {
+      "from": "RULE-001",
+      "to": "RULE-008"
+    },
+    {
+      "from": "RULE-001",
+      "to": "RULE-010"
+    },
+    {
+      "from": "RULE-001",
+      "to": "RULE-013"
+    },
+    {
+      "from": "RULE-001",
+      "to": "STATE-009"
+    },
+    {
+      "from": "RULE-001",
+      "to": "TRAIN-001"
+    },
+    {
+      "from": "RULE-002",
+      "to": "HEUR-001"
+    },
+    {
+      "from": "RULE-003",
+      "to": "HEUR-002"
+    },
+    {
+      "from": "RULE-003",
+      "to": "HEUR-014"
+    },
+    {
+      "from": "RULE-004",
+      "to": "SCORE-004"
+    },
+    {
+      "from": "RULE-005",
+      "to": "ALGO-005"
+    },
+    {
+      "from": "RULE-005",
+      "to": "RULE-014"
+    },
+    {
+      "from": "RULE-007",
+      "to": "HEUR-012"
+    },
+    {
+      "from": "RULE-007",
+      "to": "RULE-013"
+    },
+    {
+      "from": "RULE-008",
+      "to": "HEUR-013"
+    },
+    {
+      "from": "RULE-008",
+      "to": "RULE-009"
+    },
+    {
+      "from": "RULE-008",
+      "to": "SCORE-003"
+    },
+    {
+      "from": "RULE-009",
+      "to": "HEUR-013"
+    },
+    {
+      "from": "RULE-009",
+      "to": "RULE-013"
+    },
+    {
+      "from": "RULE-009",
+      "to": "SCORE-003"
+    },
+    {
+      "from": "RULE-010",
+      "to": "RULE-009"
+    },
+    {
+      "from": "RULE-010",
+      "to": "RULE-011"
+    },
+    {
+      "from": "RULE-010",
+      "to": "RULE-012"
+    },
+    {
+      "from": "RULE-010",
+      "to": "RULE-013"
+    },
+    {
+      "from": "RULE-010",
+      "to": "RULE-014"
+    },
+    {
+      "from": "RULE-010",
+      "to": "SCORE-002"
+    },
+    {
+      "from": "RULE-013",
+      "to": "TRAIN-007"
+    },
+    {
+      "from": "RULE-015",
+      "to": "HEUR-011"
+    },
+    {
+      "from": "RULE-015",
+      "to": "SCORE-002"
+    },
+    {
+      "from": "RULE-015",
+      "to": "SCORE-004"
+    },
+    {
+      "from": "RULE-015",
+      "to": "SCORE-005"
+    },
+    {
+      "from": "RULE-016",
+      "to": "AUDIT-013"
+    },
+    {
+      "from": "RULE-016",
+      "to": "MODEL-003"
+    },
+    {
+      "from": "SCORE-001",
+      "to": "AUDIT-005"
+    },
+    {
+      "from": "SCORE-001",
+      "to": "SCORE-002"
+    },
+    {
+      "from": "SCORE-001",
+      "to": "SCORE-003"
+    },
+    {
+      "from": "SCORE-001",
+      "to": "SCORE-004"
+    },
+    {
+      "from": "SCORE-001",
+      "to": "SCORE-006"
+    },
+    {
+      "from": "SCORE-001",
+      "to": "TRAIN-005"
+    },
+    {
+      "from": "SCORE-002",
+      "to": "SCORE-005"
+    },
+    {
+      "from": "SCORE-003",
+      "to": "HEUR-013"
+    },
+    {
+      "from": "SCORE-003",
+      "to": "SCORE-005"
+    },
+    {
+      "from": "SCORE-004",
+      "to": "SCORE-005"
+    },
+    {
+      "from": "SCORE-005",
+      "to": "SCORE-006"
+    },
+    {
+      "from": "SCORE-006",
+      "to": "HEUR-008"
+    },
+    {
+      "from": "SCORE-006",
+      "to": "STATE-008"
+    },
+    {
+      "from": "STATE-001",
+      "to": "HEUR-003"
+    },
+    {
+      "from": "STATE-001",
+      "to": "HEUR-008"
+    },
+    {
+      "from": "STATE-001",
+      "to": "SCORE-006"
+    },
+    {
+      "from": "STATE-001",
+      "to": "STATE-004"
+    },
+    {
+      "from": "STATE-001",
+      "to": "STATE-006"
+    },
+    {
+      "from": "STATE-001",
+      "to": "STATE-008"
+    },
+    {
+      "from": "STATE-001",
+      "to": "TRAIN-001"
+    },
+    {
+      "from": "STATE-002",
+      "to": "AUDIT-001"
+    },
+    {
+      "from": "STATE-002",
+      "to": "RULE-001"
+    },
+    {
+      "from": "STATE-002",
+      "to": "RULE-005"
+    },
+    {
+      "from": "STATE-002",
+      "to": "STATE-003"
+    },
+    {
+      "from": "STATE-002",
+      "to": "STATE-007"
+    },
+    {
+      "from": "STATE-003",
+      "to": "ALGO-002"
+    },
+    {
+      "from": "STATE-003",
+      "to": "RULE-002"
+    },
+    {
+      "from": "STATE-003",
+      "to": "RULE-004"
+    },
+    {
+      "from": "STATE-003",
+      "to": "RULE-007"
+    },
+    {
+      "from": "STATE-003",
+      "to": "RULE-008"
+    },
+    {
+      "from": "STATE-003",
+      "to": "RULE-010"
+    },
+    {
+      "from": "STATE-003",
+      "to": "RULE-011"
+    },
+    {
+      "from": "STATE-004",
+      "to": "AUDIT-001"
+    },
+    {
+      "from": "STATE-004",
+      "to": "AUDIT-005"
+    },
+    {
+      "from": "STATE-004",
+      "to": "RULE-006"
+    },
+    {
+      "from": "STATE-004",
+      "to": "RULE-014"
+    },
+    {
+      "from": "STATE-004",
+      "to": "STATE-002"
+    },
+    {
+      "from": "STATE-004",
+      "to": "STATE-009"
+    },
+    {
+      "from": "STATE-004",
+      "to": "TRAIN-001"
+    },
+    {
+      "from": "STATE-005",
+      "to": "ALGO-003"
+    },
+    {
+      "from": "STATE-005",
+      "to": "HEUR-006"
+    },
+    {
+      "from": "STATE-005",
+      "to": "HEUR-007"
+    },
+    {
+      "from": "STATE-005",
+      "to": "HEUR-016"
+    },
+    {
+      "from": "STATE-005",
+      "to": "HEUR-020"
+    },
+    {
+      "from": "STATE-005",
+      "to": "MODEL-001"
+    },
+    {
+      "from": "STATE-005",
+      "to": "STATE-006"
+    },
+    {
+      "from": "STATE-005",
+      "to": "STATE-009"
+    },
+    {
+      "from": "STATE-005",
+      "to": "TRAIN-002"
+    },
+    {
+      "from": "STATE-006",
+      "to": "AUDIT-002"
+    },
+    {
+      "from": "STATE-006",
+      "to": "HEUR-005"
+    },
+    {
+      "from": "STATE-006",
+      "to": "HEUR-020"
+    },
+    {
+      "from": "STATE-006",
+      "to": "HEUR-022"
+    },
+    {
+      "from": "STATE-006",
+      "to": "STATE-008"
+    },
+    {
+      "from": "STATE-007",
+      "to": "AUDIT-004"
+    },
+    {
+      "from": "STATE-007",
+      "to": "AUDIT-011"
+    },
+    {
+      "from": "STATE-008",
+      "to": "MODEL-003"
+    },
+    {
+      "from": "STATE-009",
+      "to": "ALGO-006"
+    },
+    {
+      "from": "STATE-009",
+      "to": "ALGO-008"
+    },
+    {
+      "from": "STATE-009",
+      "to": "AUDIT-002"
+    },
+    {
+      "from": "STATE-009",
+      "to": "HEUR-017"
+    },
+    {
+      "from": "STATE-009",
+      "to": "STATE-012"
+    },
+    {
+      "from": "STATE-010",
+      "to": "ALGO-007"
+    },
+    {
+      "from": "STATE-010",
+      "to": "ALGO-009"
+    },
+    {
+      "from": "STATE-010",
+      "to": "ALGO-011"
+    },
+    {
+      "from": "STATE-010",
+      "to": "HEUR-003"
+    },
+    {
+      "from": "STATE-010",
+      "to": "HEUR-022"
+    },
+    {
+      "from": "STATE-010",
+      "to": "RULE-001"
+    },
+    {
+      "from": "STATE-010",
+      "to": "RULE-015"
+    },
+    {
+      "from": "STATE-010",
+      "to": "STATE-001"
+    },
+    {
+      "from": "STATE-010",
+      "to": "STATE-006"
+    },
+    {
+      "from": "STATE-010",
+      "to": "TRAIN-009"
+    },
+    {
+      "from": "STATE-011",
+      "to": "ALGO-004"
+    },
+    {
+      "from": "STATE-011",
+      "to": "ALGO-005"
+    },
+    {
+      "from": "STATE-011",
+      "to": "RULE-002"
+    },
+    {
+      "from": "STATE-011",
+      "to": "RULE-006"
+    },
+    {
+      "from": "STATE-011",
+      "to": "RULE-008"
+    },
+    {
+      "from": "STATE-011",
+      "to": "RULE-012"
+    },
+    {
+      "from": "STATE-011",
+      "to": "STATE-002"
+    },
+    {
+      "from": "TRAIN-001",
+      "to": "AUDIT-013"
+    },
+    {
+      "from": "TRAIN-001",
+      "to": "TRAIN-006"
+    },
+    {
+      "from": "TRAIN-002",
+      "to": "MODEL-004"
+    },
+    {
+      "from": "TRAIN-002",
+      "to": "TRAIN-005"
+    },
+    {
+      "from": "TRAIN-002",
+      "to": "TRAIN-006"
+    },
+    {
+      "from": "TRAIN-002",
+      "to": "TRAIN-008"
+    },
+    {
+      "from": "TRAIN-003",
+      "to": "MODEL-004"
+    },
+    {
+      "from": "TRAIN-003",
+      "to": "TRAIN-004"
+    },
+    {
+      "from": "TRAIN-003",
+      "to": "TRAIN-006"
+    },
+    {
+      "from": "TRAIN-003",
+      "to": "TRAIN-008"
+    },
+    {
+      "from": "TRAIN-005",
+      "to": "TRAIN-006"
+    },
+    {
+      "from": "TRAIN-006",
+      "to": "AUDIT-009"
+    },
+    {
+      "from": "TRAIN-006",
+      "to": "TRAIN-007"
+    },
+    {
+      "from": "TRAIN-008",
+      "to": "MODEL-005"
+    }
+  ],
+  "model001_external_calibration_isolated": true
+}

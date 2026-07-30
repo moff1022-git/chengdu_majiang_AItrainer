@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Callable, Sequence
 
 from engine.action import Action, ActionType
 from engine.audit import DecisionAuditWriter
+from engine.audit import canonical_hash
 from engine.blood_battle import (
     GameResult,
     PlayError,
@@ -21,7 +22,7 @@ from engine.blood_battle import (
 )
 from engine.config import EngineConfig
 from engine.crash import AbortGame, CrashConfig, CrashHandler
-from engine.deal import create_dealt_game
+from engine.deal import DealRequest, DealTransaction, create_dealt_game
 from engine.exchange import pick_same_suit_triple, validate_exchange_tiles
 from engine.legal import action_in_legal, legal_actions
 from engine.opening import begin_opening, submit_dingque, submit_exchange
@@ -36,6 +37,9 @@ from players.base_player import BasePlayer
 from protocols.messages import ActionRequest, Decision
 from protocols.transport import InProcessTransport
 from protocols.view_filter import build_observation
+from players.humanlike.state010 import SeatRuntimeStore
+from engine.round_state_machine import RoundPhase, RoundSnapshot, RoundStateMachine
+from engine.match import MatchController, MatchCreateRequest, SeatBinding
 
 if TYPE_CHECKING:
     from training.episode_log import EpisodeLogger
@@ -75,6 +79,8 @@ class PlayerGameRunner:
         shutdown_players_on_end: bool = True,
         step_delay_ms: int = 0,
         starting_scores: dict[int, int] | None = None,
+        rng_version: int = 1,
+        frozen_config=None,
     ) -> None:
         self.players = list(players)
         n = len(self.players)
@@ -102,14 +108,26 @@ class PlayerGameRunner:
         self.starting_scores = {
             int(k): int(v) for k, v in (starting_scores or {}).items()
         }
+        self.rng_version = rng_version
+        self.frozen_config = frozen_config
         self._step_recorder: StepRecorder | None = None
         self._audit_writer: DecisionAuditWriter | None = None
+        self.state010_stores: list[SeatRuntimeStore] = []
+        self.state010_trace: dict = {}
+        self.state004_machine: RoundStateMachine | None = None
+        self.state011_result = None
+        self._state004_event_index = 0
+        self.match_controller: MatchController | None = None
+        self.match_context = None
         self.players_meta: list[dict] = [
             {"seat": i, "type": type(p).__name__, "name": p.name}
             for i, p in enumerate(self.players)
         ]
 
     def _notify_state(self) -> None:
+        if self.state is not None and self.state004_machine is not None:
+            self._state004_event_index += 1
+            self.state004_machine.observe_legacy_commit(self.state, event_id=f"{self.state.game_id}:legacy:{self._state004_event_index}")
         if self.on_state_change is None or self.state is None:
             return
         try:
@@ -120,15 +138,53 @@ class PlayerGameRunner:
         if self.step_delay_ms > 0 and self.state.phase != "finished":
             time.sleep(self.step_delay_ms / 1000.0)
 
+    def _state004_apply(self, state: GameState, label: str, mutation) -> None:
+        if self.state004_machine is None:
+            mutation()
+            return
+        self._state004_event_index += 1
+        result = self.state004_machine.apply_legacy_transaction(
+            state, event_id=f"{state.game_id}:{label}:{self._state004_event_index}", mutation=mutation,
+        )
+        if not result.accepted:
+            raise PlayError(f"STATE-004 transaction failed: {result.error_code}")
+
     def run(self) -> GameResult:
         gid = self.game_id
-        state = create_dealt_game(gid, config=self.config)
+        effective_gid = gid or __import__("engine.game_id", fromlist=["generate_game_id"]).generate_game_id()
+        match = MatchController()
+        match_create = match.create(MatchCreateRequest(
+            event_id=f"{effective_gid}:match-create", match_id=effective_gid,
+            expected_state_version=0, ruleset_hash=canonical_hash(self.config.to_dict()),
+            config_hash=getattr(self.frozen_config, "config_hash", canonical_hash(self.config.to_dict())), seed_trace_ref=canonical_hash({"game_id": effective_gid, "scope": "safe-match-ref"}),
+            bindings=tuple(SeatBinding(i, player.player_id, f"{type(player).__name__}:{i}") for i, player in enumerate(self.players)),
+            total_rounds=1, starting_scores={i: self.starting_scores.get(i, self.config.initial_score) for i in range(len(self.players))},
+            rng_version=self.rng_version, frozen_config=self.frozen_config,
+        ), player_factories={i: (lambda player=player: player) for i, player in enumerate(self.players)})
+        if not match_create.accepted or match_create.context is None:
+            raise PlayError(f"match transaction failed: {match_create.error_code}")
+        self.match_controller = match
+        self.match_context = match_create.context
+        deal = DealTransaction().execute(DealRequest(
+            event_id=f"{gid or 'generated'}:deal", expected_state_version=0,
+            game_id=effective_gid,
+            num_players=self.config.num_players, initial_score=self.config.initial_score,
+            rng_version=self.rng_version, algorithm_version=self.rng_version,
+            record_format="legacy-pre-rng-version" if self.rng_version == 1 else "rng-v2-new-record",
+        ), config=self.config)
+        if not deal.accepted or deal.game_state is None:
+            raise PlayError(f"deal transaction failed: {deal.error_code}")
+        self.state011_result = deal
+        state = deal.game_state
+        self.state004_machine = RoundStateMachine(RoundSnapshot(RoundPhase.CONFIGURED, 0, tuple(range(state.num_players)), len(state.wall)))
+        self.state004_machine.observe_legacy_commit(state, event_id=f"{state.game_id}:deal-committed")
         # Apply session carry-over scores (multi-round GUI / training sessions)
         if self.starting_scores:
             for p in state.players:
                 if p.seat in self.starting_scores:
                     p.score = int(self.starting_scores[p.seat])
         self.state = state
+        self._initialize_state010(state)
         cfg = self.config
 
         if self.save_dir and self.save_every_decision:
@@ -182,7 +238,7 @@ class PlayerGameRunner:
 
         try:
             # --- Opening: optional exchange → dingque ---
-            begin_opening(state, cfg)
+            self._state004_apply(state, "begin-opening", lambda: begin_opening(state, cfg))
             self._notify_state()
             if state.phase == "exchange":
                 for seat in range(state.num_players):
@@ -211,7 +267,7 @@ class PlayerGameRunner:
                 logger=self.logger,
                 reward_calc=self.reward_calc,
             )
-            start_play(state, cfg)
+            self._state004_apply(state, "start-play", lambda: start_play(state, cfg))
             self._notify_state()
             if self.logger:
                 self.logger.emit("phase", phase="discard", dealer=state.dealer_seat)
@@ -220,7 +276,7 @@ class PlayerGameRunner:
             while state.phase != "finished" and steps < self.max_steps:
                 steps += 1
                 if state.phase == "draw":
-                    do_draw(state)
+                    self._state004_apply(state, "draw", lambda: do_draw(state))
                     self._notify_state()
                     continue
                 if state.phase == "discard":
@@ -299,6 +355,13 @@ class PlayerGameRunner:
             finalize_game(state, cfg)
 
         result = build_game_result(state)
+        if self.match_controller is not None and self.match_context is not None:
+            self.match_controller.complete_round(
+                event_id=f"{state.game_id}:round-complete",
+                expected_state_version=self.match_context.state_version,
+                scores={player.seat: player.score for player in state.players},
+            )
+        self._archive_state010(state)
         if self.reward_calc:
             end_r = self.reward_calc.on_game_end(result, state)
             if self.logger:
@@ -338,6 +401,16 @@ class PlayerGameRunner:
                 except Exception:
                     pass
         return result
+
+    def _initialize_state010(self, state: GameState) -> None:
+        self.state010_stores = [SeatRuntimeStore(state.game_id) for _ in range(4)]
+        self.state010_trace = {"call_site": "PlayerGameRunner._initialize_state010", "phase_before": "uninitialized", "phase_after": "round_start", "committed_version": 0, "owner_hashes": [canonical_hash(dict(store.snapshot(seat))) for seat, store in enumerate(self.state010_stores)]}
+
+    def _archive_state010(self, state: GameState) -> None:
+        if not self.state010_stores:
+            return
+        archives = [store.finalize(seat) for seat, store in enumerate(self.state010_stores)]
+        self.state010_trace.update({"phase_before": "active", "phase_after": "archived", "archive_hashes": [canonical_hash(dict(item.values)) for item in archives], "finished_reason": state.finished_reason})
 
     def _play_seat_action(
         self, state: GameState, seat: int, session: GameSession
@@ -404,7 +477,7 @@ class PlayerGameRunner:
             )
         applied = True
         try:
-            session.apply(seat, dec.action)
+            self._state004_apply(state, f"action-{seat}-{dec.action.type.value}", lambda: session.apply(seat, dec.action))
         except Exception as e:
             applied = False
             # Never let a single apply kill the whole blood-battle hand
@@ -632,8 +705,9 @@ class InteractiveRunner:
         """Deal, full opening (all seats), start_play → discard phase."""
         runner = self._base
         gid = runner.game_id
-        state = create_dealt_game(gid, config=runner.config)
+        state = create_dealt_game(gid, config=runner.config, rng_version=runner.rng_version)
         runner.state = state
+        runner._initialize_state010(state)
         cfg = runner.config
         join_cfg = cfg.to_dict()
         join_cfg.setdefault("theme", "green")

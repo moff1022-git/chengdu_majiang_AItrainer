@@ -1,0 +1,4 @@
+unit_id,task17_status_before,audit_decision,task18_current_status,reason,final_report,task17_history_modified
+STATE-001,PARTIAL,AUDITED,AUDITED,14/14 AC and 8/8 semantic pass; four E4 classes; all E5 references and hashes valid,docs/spec-v3/audit/B1-B_final_independent_audit_report.md,false
+STATE-011,PARTIAL,AUDITED,AUDITED,14/14 AC and 8/8 semantic pass; four E4 classes; all E5 references and hashes valid,docs/spec-v3/audit/B1-B_final_independent_audit_report.md,false
+STATE-004,PARTIAL,AUDITED,AUDITED,14/14 AC and 8/8 semantic pass; four E4 classes; all E5 references and hashes valid,docs/spec-v3/audit/B1-B_final_independent_audit_report.md,false

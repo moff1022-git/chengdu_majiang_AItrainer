@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from engine.audit import canonical_hash
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -139,11 +140,21 @@ class ScoreService:
     ) -> None:
         if not transfers:
             return
+        ordered = tuple(p.score for p in sorted(state.players, key=lambda item: item.seat))
+        conserved = tuple(
+            LedgerTransfer(t.from_seat, t.to_seat, t.amount)
+            for t in transfers
+            if t.amount != 0
+        )
+        expected_after, delta = apply_conserved_transfers(ordered, conserved)
         for t in transfers:
             if t.amount == 0:
                 continue
             _player(state, t.from_seat).score -= t.amount
             _player(state, t.to_seat).score += t.amount
+        actual_after = tuple(p.score for p in sorted(state.players, key=lambda item: item.seat))
+        if actual_after != expected_after or sum(delta) != 0:
+            raise LedgerInvariantError("SCORE_NOT_ZERO_SUM")
         if state.score_events is None:
             state.score_events = []
         state.score_events.append(
@@ -411,3 +422,56 @@ def build_score_ledger(
 
 def ledger_net(lines: list[dict[str, Any]]) -> int:
     return sum(int(x.get("delta") or 0) for x in lines)
+@dataclass(frozen=True, slots=True)
+class LedgerTransfer:
+    payer: int
+    receiver: int
+    amount: int
+
+
+class LedgerInvariantError(ValueError):
+    def __init__(self, code: str) -> None:
+        self.code = code
+        super().__init__(code)
+
+
+def apply_conserved_transfers(balances: tuple[int, ...], transfers: tuple[LedgerTransfer, ...]) -> tuple[tuple[int, ...], tuple[int, ...]]:
+    """SCORE-001 atomic int64 transfer aggregation with zero-sum enforcement."""
+    if not balances:
+        raise LedgerInvariantError("TRANSFER_SCHEMA")
+    delta = [0] * len(balances)
+    for transfer in transfers:
+        if not isinstance(transfer.amount, int) or isinstance(transfer.amount, bool) or transfer.amount <= 0:
+            raise LedgerInvariantError("AMOUNT_RANGE")
+        if not 0 <= transfer.payer < len(balances) or not 0 <= transfer.receiver < len(balances):
+            raise LedgerInvariantError("SEAT_RANGE")
+        if transfer.payer == transfer.receiver:
+            raise LedgerInvariantError("SELF_TRANSFER")
+        delta[transfer.payer] -= transfer.amount
+        delta[transfer.receiver] += transfer.amount
+    if sum(delta) != 0:
+        raise LedgerInvariantError("SCORE_NOT_ZERO_SUM")
+    after = tuple(value + change for value, change in zip(balances, delta))
+    if any(not -(2**63) <= value <= 2**63 - 1 for value in (*delta, *after)):
+        raise LedgerInvariantError("SCORE_OVERFLOW")
+    return after, tuple(delta)
+
+
+class ConservedScoreLedger:
+    """SCORE-001 append-only idempotent event ledger."""
+    def __init__(self, balances: tuple[int, ...]) -> None:
+        self.balances=balances; self.events: dict[str, tuple[str, dict[str, Any]]] = {}; self.prev_hash: str|None=None
+    def apply_event(self, *, event_id: str, layer: str, reason: str, transfers: tuple[LedgerTransfer,...]) -> dict[str,Any]:
+        if not event_id: raise LedgerInvariantError("TRANSFER_SCHEMA")
+        if layer not in {"atomic","round_settlement","match_total"}: raise LedgerInvariantError("TRANSFER_SCHEMA")
+        payload={"event_id":event_id,"layer":layer,"reason":reason,"transfers":[{"from_seat":t.payer,"to_seat":t.receiver,"amount":t.amount} for t in transfers]}
+        payload_hash=canonical_hash(payload)
+        if event_id in self.events:
+            old_hash,old=self.events[event_id]
+            if old_hash != payload_hash: raise LedgerInvariantError("DUPLICATE_SCORE_EVENT")
+            return {**old,"idempotent":True}
+        after,delta=apply_conserved_transfers(self.balances,transfers)
+        record={**payload,"before":self.balances,"delta":delta,"after":after,"sum_delta":sum(delta),"prev_hash":self.prev_hash}
+        event_hash=canonical_hash(record); result={**record,"event_hash":event_hash,"idempotent":False}
+        self.balances=after; self.prev_hash=event_hash; self.events[event_id]=(payload_hash,result)
+        return result

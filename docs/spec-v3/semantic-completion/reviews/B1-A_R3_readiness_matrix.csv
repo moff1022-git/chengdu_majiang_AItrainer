@@ -1,0 +1,4 @@
+unit_id,spec_decisions_approved,frozen_interface_approved,semantic_deltas,test_deltas,evidence_deltas,upstream_status,interface_status,implementation_ready,required_order,remaining_precode_blocker
+STATE-010,true,false,8,3,2,satisfied,PENDING_CANONICAL_PROFILE,false,1,OPTION-J2 and CONTRACTS/PARAMS 2.0 approval pending
+ALGO-009,true,false,8,4,2,batch-internal STATE-010 registry,PENDING_CANONICAL_PROFILE,false,2,OPTION-J2 and MIG-CONFIG-110-200 approval pending
+ALGO-011,true,false,8,5,2,batch-internal STATE-010 version registry,PENDING_CANONICAL_PROFILE,false,2,OPTION-J2 and CONTRACTS 2.0 approval pending

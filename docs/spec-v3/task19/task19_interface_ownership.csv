@@ -1,0 +1,9 @@
+interface,owner_batch,owner_terminal,concurrent_writers,change_rule
+RoundState DTO/capabilities,T19-B2A1,Terminal 1,1,Proposal and approval required outside owner batch
+PlayerRoundState DTO,T19-B2A1,Terminal 1,1,Proposal and approval required outside owner batch
+ALGO-002 analyze_hand_v1,T19-B2A1,Terminal 1,1,Proposal and approval required outside owner batch
+GameState legacy v5 adapter,T19-B2A1,Terminal 1,1,Proposal and approval required outside owner batch
+PlayerViewV2,GLOBAL-INTERFACE,Terminal 0,1,Proposal and approval required outside owner batch
+error code registry,GLOBAL-INTERFACE,Terminal 0,1,Proposal and approval required outside owner batch
+audit evidence schema,GLOBAL-INTERFACE,Terminal 0,1,Proposal and approval required outside owner batch
+Task19 progress schema,TASK19-CONTROL,Terminal 0,1,Proposal and approval required outside owner batch

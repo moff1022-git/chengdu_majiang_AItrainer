@@ -1,0 +1,18 @@
+{
+  "decision_version": "MODEL001-SIM-LABELS 1.0.0",
+  "label_schema_version": "MODEL001-LABEL-SCHEMA 1.0.0",
+  "target_metadata": {
+    "cleared_target": "CURRENT_HIDDEN_STATE",
+    "dominant_suit_target": "CURRENT_HIDDEN_STATE",
+    "shape_target": "EVENTUAL_TERMINAL_OUTCOME"
+  },
+  "examples": [
+    {"id":"CURRENT-01","dingque":"wan","concealed_suits":{"wan":0,"tong":5,"tiao":3},"meld_suits":{"wan":0,"tong":3,"tiao":0},"expected":{"cleared_dingque":1,"dominant_suit":"tong"}},
+    {"id":"CURRENT-02","dingque":"tiao","concealed_suits":{"wan":4,"tong":4,"tiao":1},"meld_suits":{"wan":0,"tong":0,"tiao":0},"expected":{"cleared_dingque":0,"dominant_suit":"mixed"}},
+    {"id":"CURRENT-03","dingque":"wan","concealed_suits":{"wan":0,"tong":0,"tiao":0},"meld_suits":{"wan":0,"tong":0,"tiao":0},"expected":{"cleared_dingque":1,"dominant_suit":"mixed"}},
+    {"id":"SHAPE-01","terminal":{"hu":true,"seven_pairs":true,"pure_suit":true,"all_pongs":false,"standard":false},"expected_shape":"seven_pairs"},
+    {"id":"SHAPE-02","terminal":{"hu":true,"seven_pairs":false,"pure_suit":true,"all_pongs":true,"standard":true},"expected_shape":"pure_suit"},
+    {"id":"SHAPE-03","terminal":{"hu":false,"data_complete":true},"expected_shape":"other"},
+    {"id":"SHAPE-04","terminal":{"hu":true,"data_complete":false},"expected_shape":"other"}
+  ]
+}

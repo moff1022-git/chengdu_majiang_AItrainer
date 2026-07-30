@@ -10,6 +10,7 @@ from pathlib import Path
 
 from engine.config import EngineConfig
 from engine.reward import RewardConfig
+from engine.rng_v2 import derive_coordinate_seed
 
 
 def run_random_batch(
@@ -21,6 +22,7 @@ def run_random_batch(
     seed: int = 0,
     max_steps: int = 10_000,
     player_specs: str | None = None,
+    rng_version: int = 1,
 ) -> dict:
     log_dir = Path(log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -36,6 +38,12 @@ def run_random_batch(
 
     for i in range(n_games):
         game_id = f"batch-{seed}-{i}"
+        if rng_version == 2:
+            game_seed = derive_coordinate_seed(game_id=game_id, stream_name="training_noise", consumer_kind="trainer", consumer_id="batch", event_id="game", sample_index=i).sample_seed
+        elif rng_version == 1:
+            game_seed = rng.randint(0, 2**30)
+        else:
+            raise ValueError("rng_version must be 1 or 2")
         if player_specs:
             from engine.orchestrator import run_players_game
 
@@ -45,7 +53,7 @@ def run_random_batch(
                 player_specs,
                 game_id=game_id,
                 config=cfg,
-                base_seed=seed + i * 17,
+                base_seed=game_seed,
                 log_dir=log_dir,
                 reward_config=reward_cfg,
                 max_steps=max_steps,
@@ -58,7 +66,7 @@ def run_random_batch(
                 game_id,
                 num_players=num_players,
                 config=cfg,
-                rng=random.Random(rng.randint(0, 2**30)),
+                rng=random.Random(game_seed),
                 max_steps=max_steps,
                 log_dir=log_dir,
                 reward_config=reward_cfg,
@@ -75,6 +83,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--games", type=int, default=10)
     parser.add_argument("--log-dir", type=str, default=None)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--rng-version", type=int, choices=(1, 2), default=1)
     parser.add_argument(
         "--num-players",
         type=int,
@@ -101,6 +110,7 @@ def main(argv: list[str] | None = None) -> None:
         num_players=args.num_players,
         seed=args.seed,
         player_specs=args.players,
+        rng_version=args.rng_version,
     )
     print(summary)
 

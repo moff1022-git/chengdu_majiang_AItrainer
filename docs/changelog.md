@@ -1,7 +1,483 @@
 # Changelog
 
+## 2026-07-30（Task 19 剩余开发并行执行总计划）
+
+- 重验 96/81 单元、207 边无环图、Task18 当前状态及 B2-A1-DESIGN-1.0.0；将 81 单元重分为 40 个小批次、14 个 wave 和 6 条主轨道。
+- 生成 Task19 批次/单元/依赖/并行/文件/接口/worktree/集成/审计/风险/重规划/状态/进度/工具设计及四终端提示词。
+- `task19_progress_tracker.md` 含 96 个唯一单元，初始分布 15 AUDITED / 3 READY / 76 WAITING DESIGN / 1 INTEGRATED / 1 SCAFFOLDED；计划/进度验证错误计数全为0。
+- 因当前主工作树 dirty 且无包含已审计成果的 clean checkpoint，结论 `TASK19_WAITING_FOR_APPROVAL`。本轮未实现业务代码/测试/进度工具，未执行 Git 写操作，未改单元或 Task17 状态。
+
+## 2026-07-30（B2-A1 设计审批生效）
+
+- 按用户“执行任务1和2”，逐项批准 B2A1-DEC-001～012 的推荐 Option A，并批准 24 semantic、12 test、6 evidence、42 AC、9 interface、43 parameter 及 6 visibility 定义。
+- 生成 `B2-A1_approval_form.md`，设计版本为 `B2-A1-DESIGN-1.0.0`；执行授权切换为 `READY_FOR_IMPLEMENTATION`，实施尚未开始。
+- 本轮仅更新设计/决策/授权文档，未改业务代码、既有测试断言、Locked/Frozen、STATE-002/003/ALGO-002 状态或 Task17 历史。
+
+## 2026-07-30（Task 18 B2-A1 设计闭环）
+
+- 以 Locked STATE-002/003、ALGO-002、Task16 Frozen、B1-A effective contracts 及 B1-B 已审计边界为权威，生成设计、决策、接口、参数、可见性、调用链和执行授权包。
+- 结构化闭环为每单元 8 semantic / 4 direct-test / 2 evidence / 14 AC，共 24/12/6/42；另有 9 项接口分类、43 行准确 Locked 参数引用和 6 项信息边界。
+- 识别 12 项非唯一语义/接口决策并全部保持 PENDING；状态 `WAITING_FOR_DESIGN_APPROVAL`，`business_code_authorized=false`。未改业务代码、既有测试断言、Locked/Frozen、单元状态或 Task17 历史。
+
+## 2026-07-30（Task 18 B1-B 关闭后队列刷新）
+
+- 重读 Task18A 87 单元矩阵、23 批次、单元依赖图、完成路径、Task18 当前视图及 B1-A/B1-B 审计；移除已完成 6 单元后生成 81 单元队列。
+- 机器校验为 0 重复、0 遗漏、0 AUDITED 混入，96 节点/207 边依赖图无环；MODEL-001 外部校准门禁不传播到独立确定性单元。
+- 选定唯一下一批 `B2-A1 = STATE-002 -> STATE-003 -> ALGO-002`；因逐单元语义/接口决策尚未 Approved，授权为 `WAITING_FOR_DESIGN_APPROVAL`，未修改业务代码、Locked/Frozen 或 Task17 历史状态。
+
+## 2026-07-30（B1-B 最终证据包修复与审计签署）
+
+- 不修改业务代码或既有测试断言，生成 final E4/E5/AC、证据 manifest、严格校验 JSON、最终测试报告和独立审计签署。
+- E5 42 行与 42 个唯一 Delta 全部通过外键检查：缺失引用、重复 Delta、无法解析引用均为 0；E4 每单元四类证据齐全，哈希均为实际文件 SHA-256 或 null。
+- 全仓复跑 463 passed / 0 failed / 1 skipped（44.78s）；唯一 macOS Tk GUI skip 与 B1-B 无关。签署结论 `READY_TO_PROMOTE`，Task18 当前视图三单元为 AUDITED，Task17 历史不变。
+
 按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
+
+## 2026-07-30（B1-B 最终缺口关闭与 AUDITED）
+
+- 补齐STATE-001 100次完整跨进程Match复现、STATE-011四座成对隐藏扰动、STATE-004全phase×event笛卡尔与胡/碰/三杠事务效果验收。
+- 干净重建独立E4与42行E5（24 semantic + 12 test + 6 evidence），无历史/summary/superseded行。
+- 定向94 passed；全仓463 passed / 1 skipped。最终独立审计为24/24 semantic、12/12 test、6/6 evidence、42/42 AC PASS。
+- STATE-001、STATE-011、STATE-004在Task18当前视图中均升为AUDITED，B1-B关闭；Task17历史文件不变。B2-A1移为仅设计复核的立即可执行批次。
+
+## 2026-07-30（B1-B 最终独立验收）
+
+- 重新独立复核 Approved 权威链、24/12/6 Delta、42 AC、生产调用图、Frozen 兼容和两项补充决策。
+- 定向 86 passed；全仓 455 passed / 1 skipped；未修改业务代码或测试断言。
+- 有效 AC 结论为 34 PASS / 1 FAIL / 7 BLOCKED；STATE-001/011/004 均保持 TESTED，未达 AUDITED。
+- 剩余缺口是 STATE-001 100次完整跨进程、STATE-011 事务绑定隐藏扰动、STATE-004 全笛卡尔/胡杠响应分支和干净最终 E5。B1-B 不关闭，B2-A1 保持阻断。
+
+## 2026-07-30（STATE-011 legacy deal golden 批准与 B1-B 证据刷新）
+
+- 按用户“执行任务1和2”批准 `STATE-011-LEGACY-DEAL-GOLDEN-1.0.0`，冻结 legacy-v1 四 seeds、骰子、庄家、逐座有序手牌和55张有序牌墙。
+- 不可变夹具 canonical SHA-256 为 `e806f33e58780a1ccdbaf306a417cd8d181dedd1173053ec4a98d5eada0547c5`，生产 DealTransaction 逐字段匹配。
+- 刷新 STATE-011 独立 E4/E5；定向 86 passed，全仓 455 passed / 1 skipped。
+- 三单元均达到 TESTED；本任务为证据生成而非最终独立审计，因此未标 AUDITED、未关闭 B1-B。
+
+## 2026-07-30（STATE-004 权威适配决策与 B1-B 剩余缺口实施）
+
+- 按用户“执行任务1-2”授权批准 `B1-B-STATE004-AUTHORITY-1.0.0`，选择 transactional legacy adapter，否决 post-commit observer-only。
+- PlayerGameRunner 的 opening、draw 和 seat action 已通过 STATE-004 事务适配器；失败恢复 GameState、不加版本、不通知。
+- STATE-001 生产请求支持 Approved FrozenConfig canonical bytes；STATE-011 添加 shuffle/deal/conservation 三故障阶段精确错误与零提交验证。
+- 定向 85 passed；全仓 454 passed / 1 skipped。STATE-001/004 升为 TESTED，STATE-011 保持 PARTIAL；未生成队列刷新。
+
+## 2026-07-30（B1-B 返工切片与再独立验收）
+
+- 将 MatchController、DealTransaction 与 RoundStateMachine 实际接入 PlayerGameRunner；新增同步提交、RNG 三域安全引用、可注入发牌故障和 authority hash 兼容转换记录。
+- 新增 B1-B 返工验收测试；定向 69 passed，全仓 452 passed / 1 skipped。
+- 再独立审计确认原孤立 facade 问题已关闭，但 FrozenConfig 生产冻结、批准前 legacy golden、STATE-004 权威效果事务与全量 Oracle 仍不完整；三单元仍为 PARTIAL。
+- 当前为 16/24 semantic PASS、19 PASS / 11 FAIL / 12 BLOCKED AC；B1-B 不关闭，B2-A1 不刷新。
+
+## 2026-07-30（B1-B 独立验收审计重执行）
+
+- 独立重新验证 Approved 权威链、生产调用图、Locked/Frozen/B1-A 兼容性、当前测试与运行证据；未接受开发 E4/E5 声明为当然事实。
+- 三单元独立结论均为 `PARTIAL`；24 条 semantic Delta 中 6 PASS，42 项 AC 为 7 PASS / 22 FAIL / 13 BLOCKED。
+- 独立产出 13 条 E4、24 条 semantic E5 加 1 条 artifact manifest，记录 12 项缺陷；B1-B 不得关闭，B2-A1 保持依赖阻断。
+- 定向 61 passed；全仓 448 passed / 1 skipped；子进程兼容 2 passed。本轮未修改业务代码、测试断言、Locked/Frozen 或 Task 17 历史状态。
+
+## 2026-07-30（Codex CLI 多安装处置）
+
+- 已将默认 `codex` 解析切换到 npm 版，`codex --version` 现在输出 `codex-cli 0.146.0`。
+- `Get-Command codex -All` / `where.exe codex` 目前仅显示 npm 入口；WinGet 链接 `C:\Users\moff1\AppData\Local\Microsoft\WinGet\Links\codex.exe` 已删除。
+- WinGet 包目录中的残留二进制仍未能完全清理，原因是 Windows ACL 拒绝访问；本轮保留该残留作为后续清理事项，不影响当前默认命令。
+
+## 2026-07-30（开发环境：启动并核对 CC Switch 现有配置）
+
+- CC Switch 已启动，`cc-switch` 进程正常运行，主窗口可用。
+- 本地 `~/.cc-switch` 数据目录已存在，数据库中已有现成 provider；Codex 侧当前仍停留在默认 provider。
+- 本轮未对 provider、代理、启动项或其他持久化设置做改动。
+
+## 2026-07-30（开发环境：安装 CC Switch v3.19.0）
+
+- 从官方 `farion1231/cc-switch` GitHub Release 下载 Windows x64 MSI；SHA-256 与发布资产记录一致。
+- 静默安装成功（MSI 返回码 0），注册版本 3.19.0，位置为 `C:\Users\moff1\AppData\Local\Programs\CC Switch\`。
+- 未启动首次配置，未修改麻将训练器业务代码、规格、测试或产品状态。
+
+## 2026-07-30（B1-B独立审计）
+
+- 独立复核42项AC：7 PASS、22 FAIL、13 UNPROVEN；结论REJECTED_REWORK_REQUIRED
+- 发现STATE-001/STATE-004新门面未进入真实生产调用链，既有E4生产链声明不成立
+- 记录12项整改发现，覆盖FrozenConfig冻结、玩家装配、并发CAS、Deal故障/RNG域/边界、Round GameState/outbox集成及逐Delta E5
+- 定向68 passed、全仓449 passed；Task17状态不变，B1-B队列改为AUDIT_REJECTED_REWORK_REQUIRED
+
+## 2026-07-30（B1-B批准、终审授权与实现）
+
+- 批准B1-B-DESIGN-1.0.0；重跑终审得到READY_WITH_MODEL001_SIMULATION_LIMITATION，授权范围仅STATE-001/STATE-011/STATE-004
+- 新增Match原子控制、Deal事务门面和Round Locked状态机，保持旧runner、GameState v5、legacy replay/RNG兼容
+- 新增12项测试以及B1-B E4/E5证据；定向68 passed，全仓449 passed
+- 队列更新为IMPLEMENTED_PENDING_INDEPENDENT_AUDIT；Task17状态未改变，未标记AUDITED
+
+## 2026-07-30（PRE-DEV-FINAL-GATE-001-R1：B1-B设计审查包）
+
+- 为STATE-001、STATE-011、STATE-004生成24条semantic、12条test、6条evidence Delta以及42条逐项验收Oracle；结论为REVIEW_REQUIRED，未授权编码
+- 明确真实依赖拓扑、STATE-004 Locked phase枚举、三单元生产缺口、原子性/可见性/确定性及接口影响
+- 新增B1-A ACTIVE authority correction及authority map R1，统一清理FG-002旧PENDING派生引用，分类为MUST_FIX_BEFORE_AUTHORIZATION
+- CSV结构与引用自检通过；定向77 passed；全仓437 passed、0 failed、0 skipped
+
+## 2026-07-30（MODEL-001模拟标签A/A/C批准与实现门禁）
+
+- 批准current cleared/dominant标签、暗手+副露dominant并列规则及terminal shape回填方案C
+- 新增MODEL001-LABEL-SCHEMA 1.0.0合同、示例、10条测试向量和审批表
+- 生成器门禁由BLOCKED_BY_LABEL_SPEC_DECISION更新为IMPLEMENTATION_READY；未编码、未生成数据、未改变MODEL-001状态
+
+## 2026-07-30（MODEL-001模拟生成器编码前标签门禁）
+
+- 发现标签时点、dominant_suit计数/并列和shape重叠/未完成结构尚无唯一Approved定义
+- 按任务约束停止编码，新增三项PENDING最小标签决策包和门禁报告
+- 未生成数据、未访问网络/模型、未修改MODEL-001审计状态
+
+## 2026-07-30（Task 18执行队列推进）
+
+- 生成TASK18-QUEUE-2当前队列，将B1-A标为COMPLETED
+- B1-B依赖满足，移动为IMMEDIATELY_EXECUTABLE FOR DESIGN REVIEW，单元STATE-001/STATE-011/STATE-004
+- 当前批次分布为1完成、1立即设计、3外部数据门禁、18依赖阻断；Task18A原始队列保持历史不变
+
+## 2026-07-30（Task 18 B1-A权威状态登记）
+
+- 创建Task 18审计状态增量，将STATE-010、ALGO-009、ALGO-011由PARTIAL登记为AUDITED
+- 生成当前96单元CSV、JSON与摘要；当前分布12 AUDITED、82 PARTIAL、1 INTEGRATED、1 SCAFFOLDED
+- 保持Task17历史文件和9/1/85/1历史分布不变，明确历史状态与当前状态引用边界
+
+## 2026-07-30（B1-A第三轮缺口关闭：42/42 AC）
+
+- 完成orchestrator四座STATE-010装配与归档、信息隔离和跨进程复现
+- 完成ALGO-009阶段/版本/边界/E4/幂等闭环及ALGO-011七字段审计投影、完整版本和调度闭环
+- Golden 18/18、专项57 passed、全量423 passed
+- 第三轮审计42 PASS/0 FAIL，结论AUDITED_CANDIDATE；未修改Task17历史文件
+
+## 2026-07-30（B1-A第二轮缺口关闭与再审计）
+
+- 新增STATE-010闭集/重复校验、owned resolve结果和性能基线
+- 新增ALGO-009 v2 reload、fallback、迁移元数据、扩展边界与1MB性能验收，最大9.58ms
+- 新增ALGO-011 1—256 UTF-8 ID边界、跨进程复现及orchestrator rng_version传播
+- Golden 18/18、全量417 passed；第二轮42项AC由11/31提升为24 PASS/18 FAIL
+- 独立审计仍NOT_AUDITED，Task17三个单元保持PARTIAL
+
+## 2026-07-30（B1-A任务1-6继续：Golden/E4/E5与42项AC审计）
+
+- 将60行权威参数元数据生成到生产注册表，并把Humanlike真实决策RP写链接入逐座STATE-010 CAS store
+- 增加ALGO-009纯legacy迁移、严格v1.1前置验证及只写v2的原子writer
+- 增加ALGO-011受限SeedTrace store和training runner显式rng v2路径
+- 机器执行18/18 Executable Golden全部通过；E4扩展为12条正常/失败生产轨迹并生成E5 SHA-256 manifest
+- 全量回归401 passed；独立审计42项AC为11 PASS、31 FAIL，保持Task17三单元PARTIAL
+
+## 2026-07-30（B1-A清单1-5：合同批准、R4与首个实现切片）
+
+- 批准OPTION-J2、CONTRACTS/PARAMS 2.0及1.1→2.0迁移边，R4编码门禁通过
+- 实现STATE-010的60 ID注册、GP冻结、四座RP隔离/CAS/归档基础
+- 实现ALGO-009显式迁移和CDMJ canonical-jcs-nfc-v2编码/hash基础
+- 实现ALGO-011 legacy兼容、无状态逻辑坐标、受控trace_ref及显式v2发牌/回放记录入口
+- 新增12个B1-A测试；专项与相关回归30 passed，全量399 passed
+- 从三个真实生产入口采集E4正常路径及SHA-256 manifest
+- 独立审计为REVIEW_REQUIRED/NOT_AUDITED；未降低Task17验收标准，三个单元仍保持PARTIAL
+
+## 2026-07-30（Task 18B-R3：B1-A正式版本变更包与Golden合同）
+
+- 生成CONTRACTS 2.0/PARAMS 2.0正式变更提案、版本矩阵、三条迁移边、有效规格覆盖层和待填写审批表；保持PARAMS 1.1 legacy读取与旧hash不变，新writer只写v2
+- 识别RFC 8785与Locked int64冲突，推荐但未批准`OPTION-J2 / CDMJ canonical-jcs-nfc-v2 profile`；因此最终状态为BLOCKED_BY_CANONICAL_PROFILE_DECISION
+- 扫描60项参数，无Decimal canonical字段，登记`NO_DECIMAL_FIELDS_IN_CANONICAL_CONFIG`
+- 将19个向量分为18个可执行Golden和1个说明性示例，补齐执行目标、完整输入、版本、字节级canonical/SHA-256、错误码及BLAKE2b-64参数
+- 生成R1有效覆盖层：83条泛化SEM-PARAMETER标为SUPERSEDED，24条semantic、12条test和6条evidence delta保持ACTIVE；42项AC绑定到新版本门禁
+- 更正非Locked验收矩阵中的SHA-256措辞；Locked措辞仅进入合同v2提案，未直接修改
+- Windows Python 3.12.10标准全量回归387 passed、0 failed、0 skipped，耗时217.34秒
+- 撤回上一条过早的IMPLEMENTATION_READY结论；尚需批准canonical profile、合同版本包和1.1→2.0迁移边，未修改业务代码或测试断言
+
+## 2026-07-30（清单1-3：Frozen v2提案、批准与B1-A R3复审）
+
+> 已被后续Task 18B-R3正式版本包覆盖：该轮未独立裁决canonical profile，不构成编码授权。
+
+- 创建并由项目负责人批准`B1-A-FROZEN-V2 1.0.0`，冻结CONTRACTS/PARAMS 2.0、NFC+JCS canonical、v1只读适配、显式迁移与回滚
+- 将v2策略DecisionResult改为安全seed_trace_ref，完整SeedTraceV2Restricted隔离到受限引擎/trainer/audit存储，解决Frozen v1的隐藏随机材料暴露冲突
+- 完成R3门禁复审，STATE-010、ALGO-009、ALGO-011均为IMPLEMENTATION_READY；STATE-010先行，ALGO-009/011随后并行
+- Windows Python 3.12.10全量回归387 passed、0 failed、0 skipped，耗时218.65秒
+- 同步首批实现设计和R1历史报告状态；未修改业务代码、测试断言、现有Frozen v1、Task17/18A状态或其他批次
+
+## 2026-07-30（B1-A九项规格决策批准）
+
+- 项目负责人明确批准Task 18B-R2九项决策全部选择A；以`project_owner_user`、UTC `2026-07-30T04:39:21Z`和`B1-A-DECISIONS 1.0.0`登记到审批表、决策矩阵及golden元数据
+- 解除BLOCKED_BY_SPEC_DECISION；因canonical v2选项要求改变Frozen canonical bytes，门禁转为BLOCKED_BY_INTERFACE_APPROVAL，需先完成CONTRACTS 2.0.0、PARAMS 2.0.0和迁移边审批
+- 批准本身未修改Locked/Frozen规格、业务代码、测试断言、Task 17/18A状态或其他批次，也不等同于允许编码
+
+## 2026-07-30（Task 18B-R2：B1-A九项规格决策包）
+
+- 为STATE defaults、RP archive、migration graph、extensions、canonical number/Unicode、config fallback、RNG version/coordinate九项阻断生成正式PENDING决策卡；每项含两个选项、兼容/跨语言/持久化/安全/测试/迁移/回滚分析和可复制规范文字
+- 推荐保护现有PARAMS 1.1、legacy-v1回放及三条旧随机流；新录制显式rng v2，无状态逻辑坐标禁止调度和共享index材料
+- canonical推荐采用legacy/v2双轨；NFC+RFC8785 JCS新字节规则明确要求CONTRACTS 2.0.0、PARAMS 2.0.0和迁移边，未修改Frozen契约
+- 生成19条golden（10正向、9反向），独立验证legacy当前值及canonical bytes/SHA-256；统一SHA-256为32字节/64个小写十六进制字符
+- 登记4处B1-A相关hash位数措辞问题，Locked算法规格与Task16 Frozen契约只报告未修改
+- Windows Python 3.12.10全量回归387 passed、0 failed、0 skipped，耗时133.82秒
+- 新增逐项审批表，九项均保持PENDING；未修改业务代码、测试断言、Task 17/18A状态或其他批次
+
+## 2026-07-30（Task 18B-R1：B1-A实现设计复审与修正）
+
+- 独立复审STATE-010、ALGO-009、ALGO-011，撤回原implementation-ready结论并改为BLOCKED_BY_SPEC_DECISION；明确9项需先批准的默认/null、归档、迁移、canonical和随机版本/坐标决策
+- 将B1-A拆为24条具体semantic delta、12条test delta和6条evidence delta，建立SeedTrace字段级可见性与7项接口影响分析；42条AC改为42个不同的客观oracle
+- 冻结旧随机兼容策略为legacy-v1结果零变化，新规范公式使用显式新版本；并发派生禁止共享可变index和调度序号
+- 回溯83单元并删除全部83条无具体参数ID/行为差异的机械SEM-PARAMETER；同步修正矩阵、目录和汇总为目标1245、已实现映射1069、缺失176、总delta 591
+- 接口统计由83 NO_INTERFACE_CHANGE修正为80 NO_INTERFACE_CHANGE + 3 COMPATIBLE_EXTENSION；新增Frozen SeedTrace必填坐标字段被识别为breaking并禁止
+- Windows Python 3.12.10全量回归387 passed、0 failed、0 skipped，耗时154.91秒；未修改业务代码、测试断言、Locked/Frozen规格、Task 17/18A历史文件或其他批次
+
+## 2026-07-30（Task 18B：83 单元实现语义差距基线）
+
+- 对 Task 18A 的 83 个 semantic-completion 单元逐项建立 Locked 目标语义、当前生产语义和缺失语义对照；确认 83 个均为 VALID，未发现误分类、规格冲突或规格不完整
+- 采用 15 个来源化语义面盘点出目标 1,245、静态正向映射已实现 986、缺失 259，并拆分为 674 个带 Locked 来源、独立验收标准和实施顺序的 semantic/test/evidence delta
+- 完成 83 个单元的接口影响分析，均可在现有 Frozen 契约后内部补全，无待批准 Breaking change
+- 为首批 B1-A（STATE-010、ALGO-009、ALGO-011）形成可直接编码设计、42 条 AC-01～AC-14 验收矩阵和完整开发提示词；结论为 implementation_ready
+- Windows Python 3.12.10 全量回归 387 passed、0 failed、0 skipped，耗时 121.97 秒
+- 新增 `docs/spec-v3/semantic-completion/` 七项交付及 `tools/task18b_semantic_baseline.py`；未修改业务代码、测试断言、Locked 规格、Task 17/18A 历史产物或版本号
+
+## 2026-07-30（Task 18A：87 单元缺口分型与批次规划）
+
+- 基于 Task 17 权威矩阵、Task 15 试点、Task 16 Frozen 公共契约、96 单元规格及当前实现/测试目录，对全部 87 个非 AUDITED 单元逐行完成 12 类缺口和主要完成路径分型
+- 路径分布为 83 semantic completion、1 full implementation（HEUR-016）、3 external data（MODEL-001、MODEL-005、AUDIT-012）；没有在缺乏新证据时升级状态或推断 evidence-only
+- 将 87 个唯一单元分配到 23 个 1～10 单元的依赖有序批次；修正 Task 17 阶段标签并非完整拓扑序的问题，确认首批内部顺序为 STATE-010 → ALGO-009/ALGO-011
+- 单列 MODEL-001 合规10,000样本、隔离label zone、分组切分、校准指标与泄漏门禁；该轨与B1～B3并行
+- Windows Python 3.12.10 全量回归 387 passed、0 failed、0 skipped，耗时234.46秒
+- 新增七项 plans/reports 交付及 `tools/task18a_generate_plan.py` 可复现生成器；未修改业务代码、测试断言、Locked规格、Task 17原始产物或版本号
+
+## 2026-07-30（Task 17：96 单元审计状态重新明确）
+
+- 以 audit 目录 Task 17 的 summary、gap matrix、catalog、report、dependency graph 与 JUnit 为唯一依据，复核 96 行、分类计数、状态透视及证据计数
+- 明确最终状态为 9 AUDITED、1 INTEGRATED、85 PARTIAL、1 SCAFFOLDED；MODEL-001 是唯一 INTEGRATED，HEUR-016 是唯一 SCAFFOLDED
+- 说明代码/测试线索不等于 AUDITED：代码证据 95、测试证据 94，但可归属运行证据仅 10；96 个单元均有追踪证据
+- 新增 `docs/spec-v3/audit/task17_96_unit_audit_clarification.md`，完整列示全部 96 个 ID、分类结果、证据口径、风险和批次含义
+- 本轮未修改业务代码、测试断言、Locked 规格、Task 17 机器可读产物或版本号
+
+## 2026-07-30（项目进度初始化与当前基线核验）
+
+- 按规定读序恢复项目上下文，确认主线为 Spec v3 Task 18，`MODEL001-DATA-001` 继续阻断 MODEL-001 校准，但不阻断 B1–B3 确定性/启发式实施
+- 核验本地 `main` / `423326e`、应用版本 `0.2.1`，并登记工作树 650 个 tracked changes、18 个 untracked entries；全部视为既有改动保留
+- Windows Python 3.12.10 全量测试通过：387 passed、0 failed、0 skipped，耗时 117.21 秒
+- 仅同步 `LATEST.md` 与 changelog，未修改业务代码、测试断言、Locked 规格或版本号
+
+## 2026-07-30（Task 17 / Tasks 1–5人工保存检查点）
+
+- 固化当前恢复基线：Task 17已完成；Tasks 1–5停在`MODEL001-DATA-001`，尚未启动B1–B6批量实现
+- 在LATEST登记推荐恢复顺序及关键报告路径；未修改业务代码、测试断言或Locked规范
+- 保留全部既有未提交修改，未执行Git提交或破坏性工作树操作
+
+## 2026-07-30（Tasks 1–5执行门禁）
+
+- 复核MODEL-001最终校准条件，确认仓库缺少Locked规格要求的10,000样本冻结发布、隔离标签、分组切分和模型产物
+- 拒绝将历史日志或规则fallback自生成标签伪装为ECE/Brier验收数据；MODEL-001保持INTEGRATED并登记`MODEL001-DATA-001`
+- 确认该缺口不阻断B1–B3，但B4模型校准、B6外部评价受数据门禁约束，B5受B1/B2生产引擎依赖约束
+- 新增`docs/spec-v3/reports/task18_tasks_1_5_execution_gate.md`；未修改业务代码或测试断言
+
+## 2026-07-30（Task 17：96 单元真实基线复审）
+
+- 以 Task 14/15 四类证据标准逐项重审 96 个锁定单元，未直接沿用旧“33/61/2”结论
+- 新基线为 9 AUDITED、1 INTEGRATED、85 PARTIAL、1 SCAFFOLDED、0 BLOCKED；AUDITED 均具备代码、测试、运行和追踪四类证据
+- 重新验证候选文件、AST 符号、生产调用线索与测试函数，剔除 13 条当前失效候选引用并补正 ALGO-011 漏列证据；AU-001～AU-096 迁移及 96/96 规格追踪完整
+- 记录 RULE-001、ALGO-002、ALGO-008、SCORE-004、AUDIT-009 的内部职责拆分复核建议，保持锁定外部门面和 ID 不变
+- Python 3.12 全量测试 386 passed、1 skipped；新增 `docs/spec-v3/audit/` 五项基线交付、JUnit 与 `tools/task17_rebaseline.py`
+- 本轮未修改业务代码、规则文档或测试断言
+
+## 2026-07-29（Spec v3 Locked与M0实现差距审计）
+
+- 正式锁定`SPEC-V3-3.0.0`，冻结36份规范文件和2份上游来源的逐文件SHA-256；集合hash为`6df28948e37dd95c57c9060c6e7e7d28a8243b86e8844a133ab33b6641c1e4ec`
+- 新增`SPEC_V3_LOCK_MANIFEST.md/.csv`，明确证据层不进入规范hash以及版本化解锁/重锁规则
+- 完成96行M0实现差距盘点：80 ADAPT、15 REWRITE、1 ADD；目标主文件、v3测试模块和JSONL均为0/96
+- 保存50个候选代码文件hash及game_id/状态、PlayerView、事件、ScoreTransfer四类baseline fixture
+- 运行全量旧基线：357 passed、1 skipped；结果不作为v3 E3，全部单元仍E1/Not Evaluated
+- 交付`docs/spec-v3/09-implementation-audit/`；本轮未修改业务代码，保留既有dirty worktree
+
+## 2026-07-29（CDI-003批准与Spec v3最终锁定审计）
+
+- 根据用户明确批准，将总规范、开发指南/任务卡/迁移计划、测试策略/用例目录/golden、审计标准/清单及模板提升为Approved/Approved Template
+- 保留实现、测试代码、JSONL、运行证据及AUDITED状态为Not Implemented/Not Evaluated，未把文档批准冒充工程证据
+- 重跑96单元跨层集合、576父测试、890 TC、1344 AC、AU-001～096迁移、60参数及状态/证据/性能边界检查
+- 最终Open为Critical 0 / High 0 / Medium 1 / Low 1，达到规范锁定建议门禁，结论更新为`READY FOR SPEC LOCK`
+- 更新三份最终审计报告、总规范、旧冲突报告和LATEST；未修改业务代码或运行pytest/回放/训练
+
+## 2026-07-29（Spec v3 一致性修复与复审）
+
+- 统一STATE-004唯一RoundPhase；开发指南新增事件—phase映射及STATE-001 Match状态分层，关闭CDI-001
+- 正式证据等级统一为E0—E5；旧EV隔离为legacy历史字段并增加保守迁移规则，关闭CDI-002
+- 新增60行`parameter_registry.csv`，登记GP/RP名称、范围、生命周期、可见性、source hash、consumer和边界测试，关闭CDI-004
+- 删除开发指南第二套5/20/5/50ms性能数字，规定AC-12只读Approved单元规格，关闭CDI-006
+- 重跑96单元、576父测试、890 TC、1344 AC、96旧AU及60参数检查；当前Critical 0 / High 1 / Medium 1 / Low 1，仍不建议锁定
+- 更新三份复审报告、旧冲突报告、总规范和LATEST；未修改业务代码或执行pytest/回放/训练
+
+## 2026-07-29（Spec v3 全量跨文档一致性审计）
+
+- 对`docs/spec-v3/`执行目录、规格、开发、测试、验收、追踪、迁移、参数、公式、I/O、状态、证据、隐藏信息和HEUR边界全量审计；未修改程序代码
+- 验证96/96跨层覆盖、576个父测试、890个细化TC、1344个AC和AU-001～096迁移的集合完整性与唯一性
+- 记录Critical 0 / High 3 / Medium 3 / Low 1；High为状态枚举未映射、EV/E证据等级未统一、核心候选文档仍为Draft
+- 根据锁定门禁结论标记`NOT READY FOR LOCK`，未把结构完整误报为实现、运行或AUDITED通过
+- 交付`docs/spec-v3/08-review/{cross_document_consistency_report.md,unresolved_issues.md,final_readiness_report.md}`，并同步旧冲突报告、总规范与LATEST结论
+
+## 2026-07-29（Spec v3 审计与验收规范 Draft）
+
+- 定义E0—E5累计证据等级、证据新鲜度、缺陷严重度和AUDITED/STALE/REVOKED状态
+- 为96单元生成AC-01～AC-14共1344项hard验收清单，覆盖用户要求的全部实现、测试、运行、追踪、性能、泄漏与指标检查
+- AUDITED要求八项条件、14项检查、至少E4及无开放High/Critical同时满足；外部/发布声明按适用项E5
+- 新增单元证据包和审计报告模板，当前所有实现证据仍NOT_EVALUATED/E0
+- 交付 `docs/spec-v3/06-audit-acceptance/`及`tools/generate_spec_v3_acceptance_checklist.py`；未运行pytest或审计业务实现
+
+## 2026-07-29（Spec v3 测试策略与用例目录 Draft）
+
+- 对96单元逐项判断11类测试适用性，生成96行覆盖矩阵和890个适用TC测试卡
+- 每用例定义完整前置、输入、命名seed、操作、expected、误差、状态变化、日志、失败和自动化位置，并关联Approved父测试合同
+- 为ALGO-001～011与SCORE-001～006登记51个正常/边界/非法golden来源
+- 全部单元强制隐藏信息差分与同seed回放；HEUR按允许域/统计分布、MODEL按校准指标验收
+- 新测试目录为Draft，代码/向量未实现且证据Not Evaluated；未运行pytest
+- 交付 `docs/spec-v3/05-test-spec/{test_strategy.md,test_case_catalog.md,golden_vectors.md,coverage_matrix.csv}`及生成器
+
+## 2026-07-29（Spec v3 开发实施指南 Draft）
+
+- 新增总体开发指南，定义目标模块、公共结构/接口、状态机、事件总线、规则与AI调用、配置/RNG、日志回放、错误、性能、阶段和禁止方式
+- 为96个锁定单元生成开发任务卡，逐卡关联建议文件、现有候选、依赖、实施步骤、Approved测试合同和完成定义
+- 新增现有代码分阶段迁移计划，规定适配器、影子比较、单权威切换、兼容、回滚和旧路径退役门禁
+- 指南为Draft，代码符合度仍Not Evaluated；未修改业务代码或运行pytest
+- 交付 `docs/spec-v3/04-development-guide/` 与`tools/generate_spec_v3_development_cards.py`
+
+## 2026-07-29（Spec v3 全部测试规格 Approved）
+
+- 根据用户明确批准，将测试规格索引及六份分类测试规格由Draft提升为Approved
+- 96行执行清单同步为规格Approved，576个测试合同成为后续测试实现和验收的权威依据
+- 同步测试规格生成器，确保重复生成保持Approved状态
+- 测试代码/向量仍Not Implemented，证据仍Not Evaluated；本轮未修改业务代码或运行pytest
+
+## 2026-07-29（Spec v3 96单元可执行测试规格 Draft）
+
+- 为96个Approved单元建立每单元N/B/I/P/R/X六类可执行测试合同，共576个唯一测试ID
+- 生成六份分类测试规格、96行执行清单与统一索引，冻结计划pytest模块、JSONL向量、oracle、误差、执行命令和证据门禁
+- 按方法边界分别定义确定精确断言、启发式统计允许域、模型校准/泄漏、训练生产等价和审计证据链测试
+- 测试规格为Draft，计划测试代码与向量仍Not Implemented，未运行pytest或形成EV3证据
+- 交付 `docs/spec-v3/05-test-spec/` 与可重复生成工具 `tools/generate_spec_v3_test_specs.py`
+
+## 2026-07-29（Spec v3 全部单元规格 Approved）
+
+- 根据用户明确批准，将六份spec-v3单元规格文档由Draft提升为Approved，覆盖全部96个单元
+- 将96行追踪矩阵同步为 `Approved / Not Evaluated`，严格区分规范批准与实现验收
+- 更新总实现规范和冲突报告并关闭CF-002；这是当时局部检查结论，后续已由全量一致性审计取代；实现、测试、运行及发布证据仍未验收
+- 本轮未修改业务代码或执行pytest、回放、训练和发布审计
+
+## 2026-07-29（AUDIT 14 单元完整规格 Draft）
+
+- 为 `AUDIT-001～AUDIT-014` 编写统一23栏规格，覆盖日志、hash链、回放、不变量、测试证据、指标、追踪、发布、外部评价、架构和证据治理
+- 规定审计truth隔离、append-only证据、canonical顺序、稳定错误码、脱敏/保留、新鲜度及hard门禁语义
+- 将总规范和96行追踪矩阵的详细规格覆盖更新为96/96，并在冲突报告关闭AUDIT规格缺口CF-001
+- 六份详细规格仍为Draft / Not Evaluated，未授权业务代码实现；本轮未修改业务代码或运行pytest
+- 交付 `docs/spec-v3/03-unit-specs/audit_specs.md`，并同步总规范、追踪矩阵、冲突报告和状态基线
+
+## 2026-07-29（AI Implementation Spec v3 集成 Draft）
+
+- 生成只汇总和引用、不复制单元详细定义的 `docs/spec-v3/AI_implementation_spec_v3.md`
+- 新增96行规则→参数→单元→模块追踪矩阵，覆盖目录全部输入/输出、方法类别、RNG、可见性与详细规格状态
+- 在总规范记录AU-001～AU-096迁移，并区分确定规则/算法、启发式、概率/可训练模型、训练和审计truth边界及公式规范等级
+- 完成跨文档结构检查；锁定来源hash、目录/迁移/端点/链接通过，发现AUDIT-001～014详细规格缺失和现有规格仍为Draft两项阻断
+- 交付 `docs/spec-v3/07-traceability/rule_parameter_unit_matrix.csv` 与 `docs/spec-v3/08-review/spec_conflict_report.md`；未修改业务代码或运行pytest
+
+## 2026-07-29（TRAIN 9 单元训练环境规格 Draft）
+
+- 为 `TRAIN-001～TRAIN-009` 编写episode、观测/动作/mask、奖励、非法动作、自博弈、对手池、回放、快照、并行、数据、评估和性能规格
+- 强制训练/生产复用同一规则、状态和计分引擎；禁止训练包装复制或简化房规
+- 隐藏truth仅供隔离的评估器/标签区使用；策略观测、模型输入和势能函数不得读取
+- 所有奖励追踪到真实计分事件或显式可见势能差，塑形默认关闭；状态Draft / Not Evaluated，未修改业务代码或运行训练
+- 交付 `docs/spec-v3/03-unit-specs/training_environment_specs.md`
+
+## 2026-07-29（MODEL 5 单元模型接口与基线规格 Draft）
+
+- 为 `MODEL-001～MODEL-005` 编写模型接口、规则基线、训练数据、切分防泄漏、校准、阈值、回退、时限和解释规格
+- 覆盖对手清缺/主体花色/牌型、听牌/等待/点炮风险、跨局风格学习、真人行为拟合、候选动作概率分布及模型产物生命周期
+- 禁止隐藏手牌、墙序、oracle和未来信息进入线上特征；终局公开或离线truth只允许进入独立label zone
+- 所有概率模型要求Brier/log loss/ECE及可靠性证据，并绑定确定性规则回退；状态Draft / Not Evaluated，未训练模型或修改业务代码
+- 交付 `docs/spec-v3/03-unit-specs/probabilistic_model_specs.md`
+
+## 2026-07-29（HEUR 23 单元启发式规格 Draft）
+
+- 为 `HEUR-001～HEUR-023` 编写可实现、可量化且不假设唯一正确动作的统一23栏规格
+- 每单元区分不可违反的规范约束、默认基线、可调参数和可训练软替换；模型替换仍受合法性、可见性、mandatory、回退和审计门禁约束
+- 覆盖换三张、定缺、计划/转向、碰杠过胡、弃牌/换听、防守扣牌、注意/有限搜索、满意停止、人类失误和思考节奏
+- 硬门禁以零非法、零规则违例、零泄漏和100% seed复现验收；软行为以方向效应、regret、分布及95% CI验收，无真人数据不虚构真人相似结论
+- 交付 `docs/spec-v3/03-unit-specs/human_heuristic_specs.md`；状态Draft / Not Evaluated，未修改业务代码或运行pytest
+
+## 2026-07-29（ALGO/SCORE 17 单元数值规格 Draft）
+
+- 为 `ALGO-001～ALGO-011` 与 `SCORE-001～SCORE-006` 编写完整数值规格，覆盖输入向量、范围、公式、顺序、舍入、边界/null、复杂度、输出、不变量、golden、测试向量、误差、错误码和审计字段
+- 严格区分规范公式与基线公式，禁止训练模型替代确定算法；覆盖向听/进张/等待、可见/未见/墙内估计、候选/Q、配置/视图/随机流及完整计分链
+- 对胡、杠、花猪、查大叫、退税、呼叫转移和累计账本规定逐事件、逐层和总账零和；当前简化查叫与未实现退税显式保留为基线差距
+- 交付 `docs/spec-v3/03-unit-specs/deterministic_algorithm_scoring_specs.md`；状态 Draft / Not Evaluated，未修改业务代码或运行pytest
+
+## 2026-07-29（RULE/STATE 28 单元规格卡 Draft）
+
+- 为 `RULE-001～RULE-016` 与 `STATE-001～STATE-012` 编写统一 23 栏完整规格卡，覆盖输入输出、处理流程、状态转移、不变量、错误码、并发、日志、测试和验收
+- 建立同输入/状态/规则/种子唯一结果的确定性总契约，并细化牌张守恒、发牌、换三张、定缺、摸打、碰杠胡、多人响应、过胡、胡后退出、牌墙终止和隐藏信息隔离 hard gate
+- 代码、测试和运行证据均保留显式占位，状态为 Draft / Not Evaluated；本轮未修改程序代码或运行 pytest
+- 交付 `docs/spec-v3/03-unit-specs/deterministic_rule_state_specs.md`
+
+## 2026-07-29（UNIT-CATALOG 1.0.0 Locked）
+
+- 将原子性审查结果冻结为开发、测试和验收共用的 96 单元正式目录，按 9 种类型明确分层
+- 为每个单元登记来源、GP/RP、依赖/消费者、输入/输出、确定性、可训练性、RNG、可见性、优先级和当前证据状态
+- 产生具有 96 节点和 221 条直接边的依赖图，修正 game_id 随机流与 Match 初始化循环后通过 DAG 和反向消费者一致性校验
+- 交付 `docs/spec-v3/02-unit-catalog/{locked_unit_catalog.md,locked_unit_catalog.csv,dependency_graph.md}`；未修改代码或运行测试
+
+## 2026-07-29（Spec v3 96 单元边界审查）
+
+- 对 AU-001～AU-096 逐项判定 KEEP/SPLIT/MERGE/RENAME/REMOVE，建立完整 old→new many-to-many CSV
+- 建议 96 个新单元，分为 RULE/ALGO/HEUR/MODEL/STATE/SCORE/TRAIN/AUDIT 八类，各自有单一职责和独立验收边界
+- 移除 3 个无独立运行价值的治理汇总项，新增牌墙/发牌、game_id 随机流、策略失败回退和模型生命周期 4 个缺失单元
+- 交付 `docs/spec-v3/02-unit-catalog/{unit_boundary_review.md,unit_migration_map.csv,proposed_unit_catalog.md}`；未修改代码或运行测试
+
+## 2026-07-29（Spec v3 Mac 接续核验）
+
+- 按 spec-v3 交接读序恢复来源清单、96 行证据矩阵、证据分级和单元模板上下文
+- 确认两份锁定来源哈希与基线一致，Mac Python 3.12.13 / pytest 9.1.1 环境可用
+- 新增 `docs/spec-v3/08-review/MAC_CONTINUATION_CHECK_2026-07-29.md`，完成交接队列第 1 项
+- 未运行测试或修改程序代码；下一步为 33 个 P0 legacy rows 的人工证据复核
+
+## 2026-07-29（F0033 Humanlike AI 完整软件设计 Draft）
+
+- 重新归一两份成都麻将 AI 源规格和实现审计，创建覆盖 96 个审计单元的完整软件设计
+- AU-001～AU-096 逐项给出具体流程、量化目标和证据类型，并定义全局 K-01～K-12 门禁
+- 补充九模块边界、Humanlike 决策管线、Q 公式、状态机、错误处理、训练评估和发布规则
+- 本轮只落盘 Draft、索引和状态，不修改业务代码或宣称目标已实测达成
+
+## 2026-07-29（F0031/F0032 量化能力审查）
+
+- 验证 F0031 指标方法、阈值、分母和统计口径，以及 F0032 grain、切分、覆盖和质量门禁
+- 结论为 Needs revision：框架可用，但尚无 96 单位原子化 ID 和逐项 metric/data/threshold/evidence crosswalk
+- 指出 G3/G4 校准、G5 上下文与概率契约、真人来源和 F0032 实际数据 release 等阻断项
+- 提出 AU-001～AU-096 机器可读矩阵及 Q0～Q5 分阶段量化路线
+- 报告：`docs/status/F0031_F0032_QUANTIFICATION_REVIEW_2026-07-29.md`
+
+## 2026-07-29（F0032 Humanlike 评估数据集规划 Draft）
+
+- 新增 F0032 Draft，规划规则 golden、模拟对局、真人试点、冻结真人评估和挑战集五类数据
+- 定义决策级 schema、PlayerView/标签/受限真值隔离、玩家级切分、覆盖规模、版本和质量门禁
+- 明确真人原始数据不进入 Git，正式测试集永不参与训练，授权不明或规则不可识别的数据不得进入正式评估
+- 本轮只落盘数据规格、索引和状态，未采集数据或修改代码
+
+## 2026-07-29（F0031 人类化功能量化验收规格 Draft）
+
+- 新增 F0031 Draft，将“人类化”拆为机制可信、行为可辨识、策略合格、真人相似和学习有效五级结论
+- 定义安全/语义/风格/强度/真人相似/学习/性能七组门禁及样本量、配对 seed、座位轮换和置信区间口径
+- 明确无合规真人牌谱时真人相似度只能为 Not Evaluated，不得以工程测试替代效果结论
+- 本轮只落盘规格、索引和状态，不修改业务代码
+
+## 2026-07-29（规格审计结论澄清）
+
+- 确认“缺乏量化目标和效果指标”是人类化效果无法明确判定的重要原因，但不是唯一原因
+- 进一步区分三类缺口：需求不可操作化、实现与规格缺少直接追踪证据、缺少外部基准与真人数据
+- 指出规则正确性/确定性等工程指标已有量化门禁；模糊主要集中在人类化语义、策略强度和真人相似度
+
+## 2026-07-29（两份 AI 规格实现审计）
+
+- 逐章对照人类化决策规则 v1 与程序实现规范 v2.0.0，形成 96 个功能审计单元
+- 结论：33 完成、61 部分完成、2 未实现；工程底座强，但人类化语义深度、训练模式和真人效果证据仍有缺口
+- 交付 Markdown、canonical artifact JSON 和自包含 HTML；HTML validation/package/structural verification 通过
+- 证据：当前全量 358 passed；沿用 F0028/F0030 批跑、审计、性能和人工快速验收记录
+- 报告：`docs/status/SPEC_IMPLEMENTATION_AUDIT_2026-07-29.md`
+
+## 2026-07-29（F0005 Windows creationflags 回归修复）
+
+- `SubprocessTransport` 仅在 win32 显式传入中性的 `creationflags=0`
+- macOS/Linux 不传 Windows 专用参数；不启用曾导致管道异常的 `CREATE_NEW_PROCESS_GROUP`
+- 对齐 F0005 跨平台 Popen 契约并补回归测试验证
+- 定向兼容测试 16 passed；全量 358 passed in 355.49s
 
 ## 2026-07-29（F0030 Done）
 
@@ -831,6 +1307,12 @@
 - **M03 Done**：向听 / 胡形 / 成都番型 + `fan_cap`
 - **M02 Done**：换三张 + 定缺开局状态机
 - **M01 Done**：牌/牌墙/game_id/掷骰定庄/发牌/状态 JSON
+- **Spec v3 可实施性试点**：选择10个代表单元，补齐守恒、账本、注意、概率回退和PlayerView hash入口；定向10 passed，全量367 passed/1 skipped；形成选择、实施、规格反馈及JUnit证据。严格保持NOT AUDITED，等待High反馈是否修订后再继续。
+- **SPEC-V3-3.0.1**：经用户批准解决试点8项High规格问题，新增兼容路径、可执行fixture、HEUR-019计算图、MODEL-001校准manifest、SCORE-001幂等事件、AUDIT-003字节公式和E3/E4两阶段门禁；Critical/High均0，不涉及业务代码。
+- **SPEC-V3-3.0.2**：解决试点剩4项Medium，明确RULE-003查询版本、ALGO-001 region、TRAIN-003 codec及统一性能证据；10单元E3复验全通过，定向10 passed，全仓367 passed/1 skipped。
+- **任务15批量开发准入审计**：结论FAIL。定向10/10与全仓367/1通过，但实现完成70%、关键分支55.7%、严格I/O完整0%、公式可执行70%、完整决策trace证据0%，且有10项High；4 INTEGRATED/3 TESTED/3 PARTIAL/0 AUDITED。
+- **任务15复修重审 / SPEC-V3-3.0.3**：补齐公共I/O与88分支合同、真实hash/UTC证据、10单元生产接线和固定seed双跑。定向13 passed，全量370 passed/1 skipped，分支98.9%，轨迹复现100%；新准入结论PASS，9 AUDITED/1 INTEGRATED。
+- **任务16 / SPEC-V3-3.1.0**：冻结`CDMJ-CONTRACTS 1.0.0`公共接口、数据可见性和版本策略，新增3份JSON Schema与16项契约测试；全量386 passed/1 skipped，45项锁定集hash验证通过。
 
 ### 文档
 
@@ -847,3 +1329,25 @@
 - 里程碑 **M01**：`Approved` → 实现 → **`Done`**
 - 确立 **Docs-First** 开发规范：`docs/DEVELOPMENT.md`、`AGENTS.md`、收尾报告 §2.1
 - 系统总设计基线：`PLAN.md`
+## 2026-07-30 — MODEL-001最小模拟数据生成器实现
+
+- 新增`training/model001/generate.py`及CLI，使用生产牌局引擎、合法动作与PlayerView-only四风格玩家生成模拟训练样本。
+- 实现当前时点`cleared_dingque`/`dominant_suit`truth标签、终局`shape`restricted回填、game级稳定split、输出自动验证和失败manifest。
+- 新增`tests/model001/test_generate.py`的12项专项测试与`docs/spec-v3/guides/model001_sim_generator.md`使用说明。
+- 1000请求smoke实际生成1317条、2个完整牌局、非法动作0、manifest有效；全仓回归435 passed。未训练模型或修改MODEL-001审计状态。
+## 2026-07-30 — MODEL-001正式模拟数据、训练与校准指标
+
+- 完成smoke独立质量复核并生成10595条正式模拟样本；15局完整结束，game级train/validation/test切分无交叉。
+- 新增`training/model001/train.py`，以PlayerView公开证据训练三个独立categorical Naive Bayes概率头；新增确定性和信息隔离测试。
+- 产出模型artifact与Brier/log-loss/ECE报告；因Approved阈值缺失，明确不宣称校准通过，外部有效性仍未评估。
+- 新增smoke复核、正式数据验收、模拟训练校准三份报告；全仓437 passed。MODEL-001审计状态未变。
+## 2026-07-30 — PRE-DEV-FINAL-GATE-001独立终审
+
+- 直接复核Task15—18、Locked/Frozen/批准决策、代码、测试、生成器和正式模拟数据，输出九项终审文件及修复提示词。
+- 结论`NOT_READY_SPEC`：当前第一批B1-B缺少Approved具体三类Delta、接口影响和验收绑定，未授权任何编码范围。
+- Task17 9/1/85/1历史基线保持；83条泛化SEM-PARAMETER全部SUPERSEDED；当前ACTIVE 24 semantic/12 test/6 evidence且仅覆盖B1-A。
+- 同seed小生成逐文件hash一致；正式数据仅限SIMULATION；全仓437 passed、定向69 passed。
+## 2026-07-30 — Codex CLI 多安装诊断
+
+- 确认 WinGet 0.144.6 与 npm 0.146.0 并存，默认命令因 `PATH` 顺序解析到 WinGet 入口。
+- 确认此前升级写入 npm 安装，未改变默认命令实际版本；本轮未执行升级、卸载或 `PATH` 修改。

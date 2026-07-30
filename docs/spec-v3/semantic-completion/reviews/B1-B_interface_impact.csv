@@ -1,0 +1,12 @@
+unit_id,surface,current_interface,required_interface,impact,compatibility_strategy,affected_callers,approval_required,blocking_reason
+STATE-001,input DTO,PlayerGameRunner constructor parameters,Frozen MatchCreateRequest facade,COMPATIBLE_EXTENSION,keep constructor adapter and route new callers through facade,display/app.py main.py training/env.py,false,
+STATE-001,output DTO,GameResult per hand,Frozen MatchContext/MatchResult plus existing GameResult,COMPATIBLE_EXTENSION,add match controller without changing GameResult,STATE-004 STATE-006 STATE-008 TRAIN-001 SCORE-006,false,
+STATE-001,errors/audit,ValueError/PlayError/partial on_join,stable error envelope and STATE-001 record,COMPATIBLE_EXTENSION,translate at facade boundary; legacy exceptions preserved for legacy callers,orchestrator audit consumers,false,
+STATE-011,deal API,create_dealt_game returns GameState and accepts rng_version,Frozen DealResult transaction facade with GameState adapter,COMPATIBLE_EXTENSION,preserve create_dealt_game signature/default legacy-v1,orchestrator session training/env,false,
+STATE-011,RNG/SeedTrace,int rng_version and internal seeds,approved legacy/v2 selector plus safe trace_ref,NO_INTERFACE_CHANGE,use B1-A Frozen v2 fields; never expose restricted trace,deal replay audit trainer,false,
+STATE-011,persistence/replay,GameState schema v5 and replay rng metadata,no schema rewrite; new audit envelope references existing state,COMPATIBLE_EXTENSION,old replay selects legacy and new records explicit v2,persistence replay,false,
+STATE-004,state enum,free-form lowercase GameState.phase,RoundPhase facade with exact Locked enum and legacy mapping,COMPATIBLE_EXTENSION,do not replace persisted phase in first slice; one-to-one adapter,opening blood_battle orchestrator env replay,false,
+STATE-004,transition result,direct mutation/PlayError,Frozen TransitionResult error/version/audit envelope,COMPATIBLE_EXTENSION,legacy functions call adapter then retain existing public behavior,RULE-006 RULE-014 STATE-002 STATE-009 TRAIN-001,false,
+STATE-004,audit/outbox,decision audit and scattered notifications,per-transition STATE-004 record plus commit-after outbox,COMPATIBLE_EXTENSION,append new versioned record fields; readers ignore compatible optional event type,AUDIT-001 AUDIT-005,false,
+B1-B,Frozen contracts,Task16 v1 plus approved B1-A v2,no removal/change of Frozen fields,NO_INTERFACE_CHANGE,new facades remain internal/versioned extensions,all,false,
+

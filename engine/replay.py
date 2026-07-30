@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from engine.persistence import PersistenceError, load_game
+from engine.rng_v2 import select_rng_version
 from engine.state import GameState
 
 
@@ -23,6 +24,7 @@ class ReplaySession:
         self.path = Path(path)
         self._frames: list[GameState] = []
         self._index = 0
+        self.rng_version = "legacy-v1"
         self._load()
 
     def _load(self) -> None:
@@ -42,6 +44,7 @@ class ReplaySession:
             if not line:
                 continue
             row = json.loads(line)
+            self.rng_version = select_rng_version(row) if row.get("record_format") else "legacy-v1"
             if row.get("kind") == "snapshot" and "state" in row:
                 frames.append(GameState.from_dict(row["state"], strict=False))
             elif row.get("type") == "state" and "state" in row:
@@ -94,6 +97,8 @@ class StepRecorder:
         row = {
             "i": self._i,
             "kind": "snapshot",
+            "record_format": "rng-v2-new-record",
+            "rng_version": 2,
             "state": state.to_dict(),
         }
         self._append(row)
@@ -113,6 +118,8 @@ class StepRecorder:
             "seat": seat,
             "action": action,
             "reason": reason,
+            "record_format": "rng-v2-new-record",
+            "rng_version": 2,
         }
         self._append(row)
         self._i += 1

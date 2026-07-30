@@ -3,7 +3,7 @@
 from engine.action import Action, ActionType
 from engine.blood_battle import GameResult, PlayError, apply_action, start_play
 from engine.config import EngineConfig
-from engine.deal import create_dealt_game
+from engine.deal import DealRequest, DealTransaction, FrozenDealResult, create_dealt_game
 from engine.deck import Deck, build_full_wall, deal_hands, shuffle_wall
 from engine.dice import DiceResult, roll_dice
 from engine.exchange import (
@@ -13,6 +13,9 @@ from engine.exchange import (
 )
 from engine.fan import FanError, FanResult, FanTable, WinContext, compute_fan
 from engine.game_id import DerivedSeeds, derive_seeds, generate_game_id, normalize_game_id
+from engine.rng_v2 import SeedTraceRestricted, derive_coordinate_seed, select_rng_version
+from engine.match import MatchController, MatchCreateRequest, MatchContext, MatchResult, SeatBinding
+from engine.round_state_machine import RoundPhase, RoundSnapshot, RoundStateMachine, TransitionRequest, TransitionResult
 from engine.hand_utils import MeldView
 from engine.legal import legal_actions
 from engine.opening import (
@@ -45,6 +48,7 @@ __all__ = [
     "ActionType",
     "Deck",
     "DerivedSeeds",
+    "SeedTraceRestricted",
     "DiceResult",
     "EngineConfig",
     "ExchangeError",
@@ -52,6 +56,19 @@ __all__ = [
     "FanResult",
     "FanTable",
     "GameResult",
+    "DealRequest",
+    "DealTransaction",
+    "FrozenDealResult",
+    "MatchController",
+    "MatchCreateRequest",
+    "MatchContext",
+    "MatchResult",
+    "SeatBinding",
+    "RoundPhase",
+    "RoundSnapshot",
+    "RoundStateMachine",
+    "TransitionRequest",
+    "TransitionResult",
     "GameSession",
     "GameState",
     "MeldView",
@@ -79,6 +96,7 @@ __all__ = [
     "create_dealt_game",
     "deal_hands",
     "derive_seeds",
+    "derive_coordinate_seed",
     "generate_game_id",
     "get_opening_status",
     "ids_to_tiles",
@@ -92,6 +110,7 @@ __all__ = [
     "roll_dice",
     "run_opening_with_choices",
     "shanten",
+    "select_rng_version",
     "shuffle_wall",
     "start_play",
     "state_from_json",

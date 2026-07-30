@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import dataclass
+from engine.audit import canonical_hash
 
 from engine.action import Action, ActionType
 from engine.hand_utils import melds_from_raw
@@ -54,6 +56,29 @@ def legal_discards(state: GameState, seat: int) -> list[Action]:
     return out
 
 
+@dataclass(frozen=True, slots=True)
+class LegalDiscardQueryResult:
+    legal_actions: tuple[Action, ...]
+    state_version_before: int
+    state_version_after: int
+    input_hash: str
+    output_hash: str
+    forced_dingque: bool
+
+
+def query_legal_discards(state: GameState, seat: int) -> LegalDiscardQueryResult:
+    """RULE-003 validated, zero-write production query envelope."""
+    if state.phase != "discard": raise ValueError("WRONG_PHASE")
+    if state.current_seat != seat: raise ValueError("NOT_ACTOR")
+    player=_player(state,seat)
+    if player.dingque is None: raise ValueError("DINGQUE_UNSET")
+    before=canonical_hash(state.to_dict()); version=int(state.schema_version)
+    actions=tuple(legal_discards(state,seat))
+    forced=force_discard_dingque(state) and any(t.suit==player.dingque for t in player.hand)
+    if canonical_hash(state.to_dict()) != before or int(state.schema_version) != version: raise RuntimeError("INVARIANT_FAILED")
+    return LegalDiscardQueryResult(actions,version,version,before,canonical_hash([a.to_dict() for a in actions]),forced)
+
+
 def legal_actions(state: GameState, seat: int) -> list[Action]:
     """Return legal actions for seat in current phase."""
     if state.phase == "finished":
@@ -72,7 +97,7 @@ def legal_actions(state: GameState, seat: int) -> list[Action]:
         if state.current_seat != seat:
             return []
         actions: list[Action] = []
-        actions.extend(legal_discards(state, seat))
+        actions.extend(query_legal_discards(state, seat).legal_actions)
 
         # Self HU
         melds = melds_from_raw(p.melds)

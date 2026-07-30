@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "status": "APPROVED_OPTION_A",
+  "decision_version": "B1-A-DECISIONS 1.0.0",
+  "approved_by": "project_owner_user",
+  "approved_at": "2026-07-30T04:39:21Z",
+  "hash_definition": "SHA-256，32字节，序列化为64个小写十六进制字符。",
+  "vector_count": 19,
+  "vectors": [
+    {
+      "vector_id": "GV-001",
+      "decision_id": "SPEC-DECISION-STATE-DEFAULTS",
+      "kind": "positive",
+      "name": "explicit-null-only-allowed",
+      "input": {
+        "GP-003": {
+          "early_end_score": null
+        }
+      },
+      "expected": {
+        "accepted": true
+      }
+    },
+    {
+      "vector_id": "GV-002",
+      "decision_id": "SPEC-DECISION-STATE-DEFAULTS",
+      "kind": "negative",
+      "name": "missing-required",
+      "input": {
+        "GP-003": {
+          "starting_score": 0
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "SCHEMA_INVALID",
+        "result": null
+      }
+    },
+    {
+      "vector_id": "GV-003",
+      "decision_id": "SPEC-DECISION-RP-ARCHIVE",
+      "kind": "positive",
+      "name": "new-round-no-copy",
+      "input": {
+        "archived_RP_028": {
+          "emotion": 0.8
+        },
+        "next_round": true
+      },
+      "expected": {
+        "next_RP_028": "created_from_round_default_or_profile",
+        "direct_copy": false
+      }
+    },
+    {
+      "vector_id": "GV-004",
+      "decision_id": "SPEC-DECISION-RP-ARCHIVE",
+      "kind": "negative",
+      "name": "write-after-archive",
+      "input": {
+        "lifecycle": "FINALIZED",
+        "write": "RP-010"
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "LIFECYCLE_VIOLATION"
+      }
+    },
+    {
+      "vector_id": "GV-005",
+      "decision_id": "SPEC-DECISION-MIGRATION-GRAPH",
+      "kind": "positive",
+      "name": "only-current-edge",
+      "input": {
+        "from": [
+          "CDMJ-AI-RULES 1.0.0",
+          "CDMJ-AI-PARAMS 1.0.0",
+          "CDMJ-AI-IMPL 2.0.0"
+        ],
+        "to": [
+          "CDMJ-AI-RULES 1.0.0",
+          "CDMJ-AI-PARAMS 1.1.0",
+          "CDMJ-AI-IMPL 2.1.0"
+        ]
+      },
+      "expected": {
+        "steps": [
+          "move GP-024..027 to each players[i].cognitive_parameters",
+          "update parameter versions"
+        ],
+        "unique": true
+      }
+    },
+    {
+      "vector_id": "GV-006",
+      "decision_id": "SPEC-DECISION-MIGRATION-GRAPH",
+      "kind": "negative",
+      "name": "no-path",
+      "input": {
+        "from": "PARAMS 0.9",
+        "to": "PARAMS 1.1"
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "MIGRATION_FAILED"
+      }
+    },
+    {
+      "vector_id": "GV-007",
+      "decision_id": "SPEC-DECISION-EXTENSIONS",
+      "kind": "positive",
+      "name": "declared-empty-containers",
+      "input": {
+        "GP-002.extensions": [],
+        "GP-004.extensions": []
+      },
+      "expected": {
+        "accepted": true,
+        "included_in_hash": true
+      }
+    },
+    {
+      "vector_id": "GV-008",
+      "decision_id": "SPEC-DECISION-EXTENSIONS",
+      "kind": "negative",
+      "name": "non-empty-current-extension",
+      "input": {
+        "GP-002.extensions": [
+          {
+            "x": 1
+          }
+        ]
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "PARAM_UNKNOWN"
+      }
+    },
+    {
+      "vector_id": "GV-009",
+      "decision_id": "SPEC-DECISION-CANONICAL-NUMBER",
+      "kind": "positive",
+      "name": "negative-zero",
+      "input": {
+        "n": -0.0
+      },
+      "expected": {
+        "canonical_utf8_hex": "7b226e223a307d",
+        "canonical_utf8_text": "{\"n\":0}",
+        "sha256_hex": "f3013f933b9fb80ab6d995e7ad9da36f683837ba1d81e950c943d40111eac2f0"
+      }
+    },
+    {
+      "vector_id": "GV-010",
+      "decision_id": "SPEC-DECISION-CANONICAL-NUMBER",
+      "kind": "positive",
+      "name": "integer-and-fraction",
+      "input": {
+        "i": 1,
+        "n": 1.5
+      },
+      "expected": {
+        "canonical_utf8_hex": "7b2269223a312c226e223a312e357d",
+        "canonical_utf8_text": "{\"i\":1,\"n\":1.5}",
+        "sha256_hex": "4b21570638983ad0758c77281df1c36dacff5fafc34826e94602155d0255c0f1"
+      }
+    },
+    {
+      "vector_id": "GV-011",
+      "decision_id": "SPEC-DECISION-CANONICAL-NUMBER",
+      "kind": "negative",
+      "name": "non-finite",
+      "input": {
+        "n": "NaN token"
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "NON_FINITE",
+        "canonical_bytes": null
+      }
+    },
+    {
+      "vector_id": "GV-012",
+      "decision_id": "SPEC-DECISION-CANONICAL-UNICODE",
+      "kind": "positive",
+      "name": "nfd-normalizes-to-nfc",
+      "input": {
+        "key": "e+U+0301",
+        "value": "e+U+0301"
+      },
+      "expected": {
+        "canonical_utf8_hex": "7b22c3a9223a22c3a9227d",
+        "canonical_utf8_text": "{\"é\":\"é\"}",
+        "sha256_hex": "e8b55b29bf172acb65a8ec20d1762cd9d6112c7abd6799895503d9151b8f42ab"
+      }
+    },
+    {
+      "vector_id": "GV-013",
+      "decision_id": "SPEC-DECISION-CANONICAL-UNICODE",
+      "kind": "negative",
+      "name": "normalization-key-collision",
+      "input": {
+        "keys": [
+          "é",
+          "é"
+        ]
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "SCHEMA_INVALID",
+        "canonical_bytes": null
+      }
+    },
+    {
+      "vector_id": "GV-014",
+      "decision_id": "SPEC-DECISION-CONFIG-FALLBACK",
+      "kind": "positive",
+      "name": "hot-reload-failure-keeps-active",
+      "input": {
+        "active_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "candidate": "invalid"
+      },
+      "expected": {
+        "accepted": false,
+        "active_hash_after": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "error_code": "SCHEMA_INVALID"
+      }
+    },
+    {
+      "vector_id": "GV-015",
+      "decision_id": "SPEC-DECISION-CONFIG-FALLBACK",
+      "kind": "negative",
+      "name": "cold-start-invalid",
+      "input": {
+        "active_config": null,
+        "candidate": "invalid"
+      },
+      "expected": {
+        "started": false,
+        "accepted": false,
+        "result": null,
+        "error_code": "SCHEMA_INVALID"
+      }
+    },
+    {
+      "vector_id": "GV-016",
+      "decision_id": "SPEC-DECISION-RNG-VERSION",
+      "kind": "positive",
+      "name": "legacy-v1-fixed-for-exchange",
+      "input": {
+        "game_id": "fixed-for-exchange",
+        "rng_version_missing_in_legacy_replay": true
+      },
+      "expected": {
+        "selected_version": "legacy-v1",
+        "master_seed": 2403837098037711652,
+        "shuffle_seed": 2403837098037711652,
+        "dice_seed": 9581831241709401729,
+        "exchange_seed": 8864912832000149886
+      }
+    },
+    {
+      "vector_id": "GV-017",
+      "decision_id": "SPEC-DECISION-RNG-VERSION",
+      "kind": "negative",
+      "name": "new-record-missing-version",
+      "input": {
+        "record_format": "post-decision",
+        "rng_version": null
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "SCHEMA_INVALID"
+      }
+    },
+    {
+      "vector_id": "GV-018",
+      "decision_id": "SPEC-DECISION-RNG-COORDINATE",
+      "kind": "positive",
+      "name": "stateless-coordinate",
+      "input": {
+        "game_id": "demo",
+        "algorithm_version": 2,
+        "rng_version": 2,
+        "stream_name": "policy_noise",
+        "consumer_kind": "policy",
+        "consumer_id": "seat-0",
+        "event_id": "event-42",
+        "sample_index": 0
+      },
+      "expected": {
+        "master_input_hex": "43444d4a2d524e47006d617374657200000464656d6f00020002",
+        "master_seed": 1435199040579534962,
+        "stream_input_hex": "43444d4a2d524e470073747265616d0013ead9ec63b98072000c706f6c6963795f6e6f6973650002",
+        "stream_seed": 915727465774839924,
+        "coordinate_input_hex": "43444d4a2d524e4700636f6f7264000cb551474493f874000c706f6c6963795f6e6f6973650006706f6c6963790006736561742d3000086576656e742d34320000000000000000",
+        "sample_seed": 1912371584853373347
+      }
+    },
+    {
+      "vector_id": "GV-019",
+      "decision_id": "SPEC-DECISION-RNG-COORDINATE",
+      "kind": "negative",
+      "name": "forbidden-scheduler-coordinate",
+      "input": {
+        "coordinate": {
+          "worker_completion_order": 3,
+          "system_time": 123
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "error_code": "SCHEMA_INVALID"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+finding_id,severity,unit_ids,category,evidence,impact,required_fix
+B1B-AUD-001,HARD_BLOCKER,STATE-001,PRODUCTION_INTEGRATION,rg生产代码只有定义和engine.__init__导出,Match语义未进入PlayerGameRunner或training真实链,建立MatchController→PlayerGameRunner适配并采E4
+B1B-AUD-002,HARD_BLOCKER,STATE-004,PRODUCTION_INTEGRATION,orchestrator/opening/blood_battle均未引用RoundStateMachine,权威phase仍由旧代码直接赋值,让生产转换经兼容adapter提交
+B1B-AUD-003,HARD_BLOCKER,STATE-001|STATE-004,EVIDENCE_RUNTIME,E4把直接门面调用声明为production_call_chain=true,运行证据陈述与代码调用图冲突,撤销旧E4有效性并重采真实链
+B1B-AUD-004,HARD_BLOCKER,STATE-001,SEMANTIC,请求只携config_hash不携FrozenConfig,无法证明配置快照冻结或中途突变拒绝,绑定FrozenConfigV2对象和canonical bytes
+B1B-AUD-005,HARD_BLOCKER,STATE-001|STATE-011|STATE-004,ATOMICITY_CONCURRENCY,controller/transaction/machine均无锁且并发Oracle缺失,单写CAS在并发下未证明,实现线性化提交或明确单线程执行器隔离并测试
+B1B-AUD-006,HARD_BLOCKER,STATE-001,PLAYER_ASSEMBLY,factory对象准备后未构造runner也未调用on_join,玩家装配主流程缺失,完成两阶段装配和失败清理
+B1B-AUD-007,HARD_BLOCKER,STATE-011,ERROR_AND_FAULT_INJECTION,五个要求错误码中多个不可达且三阶段故障未注入,零提交和错误准确性未闭环,增加provider注入和逐码测试
+B1B-AUD-008,HARD_BLOCKER,STATE-001|STATE-011|STATE-004,VISIBILITY,没有四座PlayerView/隐藏扰动/递归投毒专项测试,86单元边界计划在B1-B未执行,补生产PlayerView边界套件
+B1B-AUD-009,HARD_BLOCKER,STATE-011,RNG_DOMAIN,结果只含shuffle trace_ref,缺dice/exchange域隔离与RNG_STREAM_MISSING行为,输出restricted audit域引用并验证互异
+B1B-AUD-010,HARD_BLOCKER,STATE-004,STATE_AND_OUTBOX,RoundSnapshot不含牌权属/pending claims且notify只是元组,杠/响应/原子outbox语义未实现,与GameState/blood_battle/audit writer集成
+B1B-AUD-011,MUST_FIX,STATE-001|STATE-011|STATE-004,TEST_CLOSURE,42 AC只有7 PASS/22 FAIL/13 UNPROVEN,全仓绿只证明无回归不能证明审计退出,按acceptance audit补Oracle
+B1B-AUD-012,MUST_FIX,STATE-001|STATE-011|STATE-004,EVIDENCE_TRACE,现E5每单元一行且无性能基线,未达到逐Delta双向追溯与Locked性能基线要求,生成24条逐Delta E5及三单元延迟分布

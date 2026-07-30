@@ -1,0 +1,11 @@
+unit_id,required_branches,covered_branches,coverage_percent,missing_branch_ids,evidence
+RULE-003,8,8,100.0,,tests/spec_v3/test_rule_003.py;full regression legal/orchestrator tests
+RULE-016,8,8,100.0,,tests/spec_v3/test_rule_016.py;tests/humanlike_v2/test_player_view_v2.py
+ALGO-001,8,8,100.0,,tests/spec_v3/test_algo_001.py
+ALGO-010,8,8,100.0,,tests/spec_v3/test_algo_010.py;tests/humanlike_v2/test_player_view_v2.py
+HEUR-019,10,10,100.0,,tests/spec_v3/test_heur_019.py;tests/humanlike_v2/test_cognition.py
+MODEL-001,10,9,90.0,M001-B09,tests/spec_v3/test_model_001.py;calibration manifest absent
+STATE-005,8,8,100.0,,tests/spec_v3/test_state_005.py;tests/humanlike_v2/test_player_view_v2.py
+SCORE-001,10,10,100.0,,tests/spec_v3/test_score_001.py;tests/test_score.py;tests/test_score_ledger.py
+TRAIN-003,9,9,100.0,,tests/spec_v3/test_train_003.py;tests/humanlike_v2/test_training_contract_v2.py
+AUDIT-003,9,9,100.0,,tests/spec_v3/test_audit_003.py;tests/humanlike_v2/test_audit_replay.py

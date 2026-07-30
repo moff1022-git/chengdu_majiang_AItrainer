@@ -1,0 +1,4 @@
+﻿unit_id,previous_status,new_status,decision,authority,ac_result,four_evidence_classes,evidence_refs,effective_date,historical_files_modified
+ALGO-009,PARTIAL,AUDITED,APPROVED,project_owner_user: execute tasks 1-2,14/14 PASS,PASS,docs/spec-v3/reports/B1-A_acceptance_audit_matrix.csv; tests/spec_v3/test_b1a_algo009.py; docs/spec-v3/evidence/task18b_b1a/B1-A_golden_execution.json,2026-07-30,false
+ALGO-011,PARTIAL,AUDITED,APPROVED,project_owner_user: execute tasks 1-2,14/14 PASS,PASS,docs/spec-v3/reports/B1-A_acceptance_audit_matrix.csv; tests/spec_v3/test_b1a_algo011.py; docs/spec-v3/evidence/task18b_b1a/B1-A_E5_manifest.json,2026-07-30,false
+STATE-010,PARTIAL,AUDITED,APPROVED,project_owner_user: execute tasks 1-2,14/14 PASS,PASS,docs/spec-v3/reports/B1-A_acceptance_audit_matrix.csv; tests/spec_v3/test_b1a_state010.py; docs/spec-v3/evidence/task18b_b1a/B1-A_runtime_evidence.json,2026-07-30,false

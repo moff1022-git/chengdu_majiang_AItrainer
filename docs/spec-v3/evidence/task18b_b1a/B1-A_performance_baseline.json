@@ -1,0 +1,35 @@
+{
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "state010_resolve_60": {
+    "samples": 500,
+    "p50_us": 77,
+    "p95_us": 166,
+    "p99_us": 223,
+    "max_us": 479
+  },
+  "state010_snapshot_33": {
+    "samples": 500,
+    "p50_us": 18,
+    "p95_us": 59,
+    "p99_us": 63,
+    "max_us": 95
+  },
+  "algo009_canonical_1mb": {
+    "samples": 50,
+    "p50_us": 4423,
+    "p95_us": 7955,
+    "p99_us": 9580,
+    "max_us": 9580
+  },
+  "algo011_coordinate": {
+    "samples": 500,
+    "p50_us": 6,
+    "p95_us": 7,
+    "p99_us": 16,
+    "max_us": 65
+  },
+  "algo009_under_50ms": true
+}

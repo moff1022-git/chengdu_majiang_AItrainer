@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from engine.tile import Suit, Tile
@@ -98,8 +99,60 @@ def physical_tile(tile_id: int) -> PhysicalTile:
 
 
 def build_physical_wall() -> list[PhysicalTile]:
-    return [physical_tile(tile_id) for tile_id in range(PHYSICAL_TILE_COUNT)]
+    wall = [physical_tile(tile_id) for tile_id in range(PHYSICAL_TILE_COUNT)]
+    regions = {name: [] for name in PHYSICAL_REGIONS}
+    regions["wall"] = [tile.tile_id for tile in wall]
+    validate_physical_ownership(regions)
+    return wall
 
 
 def face_of(tile: Tile | PhysicalTile) -> Tile:
     return tile.face if isinstance(tile, PhysicalTile) else tile
+
+
+class PhysicalOwnershipError(ValueError):
+    """Stable ALGO-001 validation failure carrying a specification error code."""
+
+    def __init__(self, code: str, detail: str = "") -> None:
+        self.code = code
+        super().__init__(f"{code}: {detail}" if detail else code)
+
+
+PHYSICAL_REGIONS = (
+    "wall", *(f"hand:S{i}" for i in range(4)), *(f"discard:S{i}" for i in range(4)),
+    *(f"meld:S{i}" for i in range(4)), *(f"exchange_pool:S{i}" for i in range(4)),
+    "pending_discard", "pending_gang", "removed",
+)
+
+
+def validate_physical_ownership(regions: Mapping[str, Sequence[int]]) -> dict[str, object]:
+    """ALGO-001 canonical ownership projection and 108-tile conservation check."""
+    if not isinstance(regions, Mapping):
+        raise PhysicalOwnershipError("SCHEMA_INVALID")
+    unknown = sorted(set(regions) - set(PHYSICAL_REGIONS))
+    if unknown:
+        raise PhysicalOwnershipError("REGION_UNKNOWN", ",".join(unknown))
+    missing_regions = sorted(set(PHYSICAL_REGIONS) - set(regions))
+    if missing_regions:
+        raise PhysicalOwnershipError("REGION_MISSING", ",".join(missing_regions))
+    owners: dict[int, str] = {}
+    face_counts = [0] * 27
+    region_counts: dict[str, int] = {}
+    for region in sorted(regions):
+        values = regions[region]
+        if not isinstance(region, str) or not isinstance(values, (list, tuple)):
+            raise PhysicalOwnershipError("SCHEMA_INVALID")
+        region_counts[region] = len(values)
+        for tile_id in values:
+            if not isinstance(tile_id, int) or isinstance(tile_id, bool) or not 0 <= tile_id < 108:
+                raise PhysicalOwnershipError("PHYSICAL_ID_RANGE", repr(tile_id))
+            if tile_id in owners:
+                raise PhysicalOwnershipError("OWNERSHIP_DUPLICATE", str(tile_id))
+            owners[tile_id] = region
+            face_counts[tile_id // 4] += 1
+    missing = sorted(set(range(108)) - owners.keys())
+    if missing:
+        raise PhysicalOwnershipError("OWNERSHIP_MISSING", ",".join(map(str, missing)))
+    if any(count > 4 for count in face_counts):
+        raise PhysicalOwnershipError("FACE_COUNT_EXCEEDED")
+    return {"conserved": True, "region_counts": region_counts, "face_counts": tuple(face_counts), "owner_by_id": tuple(owners[i] for i in range(108))}

@@ -1,0 +1,424 @@
+{
+  "task": "Task 18 current executable queue",
+  "generated_on": "2026-07-30",
+  "current_test_baseline": {
+    "python": "3.12.10",
+    "tests": 423,
+    "passed": 423,
+    "failed": 0,
+    "skipped": 0,
+    "time_seconds": 181.87
+  },
+  "immediately_executable_batches": [
+    "B1-B"
+  ],
+  "dependency_blocked_batches": [
+    "B2-A1",
+    "B1-C1",
+    "B2-A2",
+    "B1-C2",
+    "B1-C3",
+    "B1-C4",
+    "B2-B",
+    "B3-A",
+    "B3-B",
+    "B4-A",
+    "B3-C",
+    "B5-A",
+    "B4-A2",
+    "B5-B",
+    "B5-C",
+    "B6-A",
+    "B6-B",
+    "B5-DATA"
+  ],
+  "external_data_gated_batches": [
+    "B4-DATA-MODEL001",
+    "B4-B",
+    "B6-C"
+  ],
+  "batch_unit_ids": {
+    "B1-A": [
+      "STATE-010",
+      "ALGO-009",
+      "ALGO-011"
+    ],
+    "B4-DATA-MODEL001": [
+      "MODEL-001"
+    ],
+    "B1-B": [
+      "STATE-001",
+      "STATE-011",
+      "STATE-004"
+    ],
+    "B2-A1": [
+      "STATE-002",
+      "STATE-003",
+      "ALGO-002"
+    ],
+    "B1-C1": [
+      "RULE-001",
+      "RULE-002",
+      "RULE-005",
+      "RULE-006",
+      "RULE-015"
+    ],
+    "B2-A2": [
+      "ALGO-006",
+      "STATE-009"
+    ],
+    "B1-C2": [
+      "RULE-004",
+      "RULE-007",
+      "RULE-008",
+      "RULE-010",
+      "RULE-011",
+      "RULE-012"
+    ],
+    "B1-C3": [
+      "RULE-009",
+      "RULE-013",
+      "RULE-014",
+      "SCORE-002",
+      "SCORE-003"
+    ],
+    "B1-C4": [
+      "SCORE-004",
+      "SCORE-005",
+      "SCORE-006"
+    ],
+    "B2-B": [
+      "ALGO-003",
+      "ALGO-004",
+      "ALGO-005",
+      "ALGO-007",
+      "ALGO-008",
+      "STATE-006",
+      "STATE-007",
+      "STATE-008",
+      "STATE-012"
+    ],
+    "B3-A": [
+      "HEUR-001",
+      "HEUR-002",
+      "HEUR-004",
+      "HEUR-006",
+      "HEUR-008",
+      "HEUR-011",
+      "HEUR-020",
+      "HEUR-022"
+    ],
+    "B3-B": [
+      "HEUR-003",
+      "HEUR-005",
+      "HEUR-014",
+      "HEUR-007",
+      "HEUR-009",
+      "HEUR-010",
+      "HEUR-012",
+      "HEUR-017",
+      "HEUR-021",
+      "HEUR-023"
+    ],
+    "B4-A": [
+      "MODEL-002",
+      "MODEL-003"
+    ],
+    "B3-C": [
+      "HEUR-013",
+      "HEUR-015",
+      "HEUR-016",
+      "HEUR-018"
+    ],
+    "B5-A": [
+      "TRAIN-001",
+      "TRAIN-002",
+      "TRAIN-004",
+      "TRAIN-005"
+    ],
+    "B4-A2": [
+      "MODEL-004"
+    ],
+    "B5-B": [
+      "TRAIN-006",
+      "TRAIN-009"
+    ],
+    "B5-C": [
+      "TRAIN-007"
+    ],
+    "B6-A": [
+      "AUDIT-001",
+      "AUDIT-002",
+      "AUDIT-004",
+      "AUDIT-005",
+      "AUDIT-006",
+      "AUDIT-007"
+    ],
+    "B6-B": [
+      "AUDIT-010",
+      "AUDIT-008",
+      "AUDIT-009",
+      "AUDIT-011",
+      "AUDIT-013",
+      "AUDIT-014"
+    ],
+    "B5-DATA": [
+      "TRAIN-008"
+    ],
+    "B4-B": [
+      "MODEL-005"
+    ],
+    "B6-C": [
+      "AUDIT-012"
+    ]
+  },
+  "entry_criteria": {
+    "B1-A": "STATE-010无未满足单元依赖；先完成STATE-010，再并行ALGO-009/ALGO-011；MODEL001数据缺口不阻断",
+    "B4-DATA-MODEL001": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；所需冻结数据/模型/评价发布已到位并通过schema、来源、许可和泄漏预检",
+    "B1-B": "B1-A三个单元已按Task18当前状态独立AUDITED；STATE-001/STATE-011/STATE-004规格Locked；工作树已保护；开始前建立本批语义差距和接口影响基线",
+    "B2-A1": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B1-B",
+    "B1-C1": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B2-A1",
+    "B2-A2": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B1-C1",
+    "B1-C2": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B1-C1",
+    "B1-C3": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B1-C2",
+    "B1-C4": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B1-C3",
+    "B2-B": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B1-C4|B2-A2",
+    "B3-A": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B2-B",
+    "B3-B": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B3-A",
+    "B4-A": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B2-B|B3-A",
+    "B3-C": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B3-B|B4-A",
+    "B5-A": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B2-B",
+    "B4-A2": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B5-A",
+    "B5-B": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B5-A",
+    "B5-C": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B5-B",
+    "B6-A": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B2-B",
+    "B6-B": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B6-A|B5-B",
+    "B5-DATA": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；前置=B6-B|B5-A",
+    "B4-B": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；所需冻结数据/模型/评价发布已到位并通过schema、来源、许可和泄漏预检",
+    "B6-C": "Task17基线与Frozen公共契约未变；批次规格Locked；工作树已保护；前置批次独立审计通过；所需冻结数据/模型/评价发布已到位并通过schema、来源、许可和泄漏预检"
+  },
+  "exit_criteria": {
+    "B1-A": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B1-A内3个单元不得以批量PASS替代逐单元AC验收",
+    "B4-DATA-MODEL001": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B4-DATA-MODEL001内1个单元不得以批量PASS替代逐单元AC验收",
+    "B1-B": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B1-B内3个单元不得以批量PASS替代逐单元AC验收",
+    "B2-A1": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B2-A1内3个单元不得以批量PASS替代逐单元AC验收",
+    "B1-C1": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B1-C1内5个单元不得以批量PASS替代逐单元AC验收",
+    "B2-A2": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B2-A2内2个单元不得以批量PASS替代逐单元AC验收",
+    "B1-C2": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B1-C2内6个单元不得以批量PASS替代逐单元AC验收",
+    "B1-C3": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B1-C3内5个单元不得以批量PASS替代逐单元AC验收",
+    "B1-C4": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B1-C4内3个单元不得以批量PASS替代逐单元AC验收",
+    "B2-B": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B2-B内9个单元不得以批量PASS替代逐单元AC验收",
+    "B3-A": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B3-A内8个单元不得以批量PASS替代逐单元AC验收",
+    "B3-B": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B3-B内10个单元不得以批量PASS替代逐单元AC验收",
+    "B4-A": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B4-A内2个单元不得以批量PASS替代逐单元AC验收",
+    "B3-C": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B3-C内4个单元不得以批量PASS替代逐单元AC验收",
+    "B5-A": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B5-A内4个单元不得以批量PASS替代逐单元AC验收",
+    "B4-A2": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B4-A2内1个单元不得以批量PASS替代逐单元AC验收",
+    "B5-B": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B5-B内2个单元不得以批量PASS替代逐单元AC验收",
+    "B5-C": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B5-C内1个单元不得以批量PASS替代逐单元AC验收",
+    "B6-A": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B6-A内6个单元不得以批量PASS替代逐单元AC验收",
+    "B6-B": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B6-B内6个单元不得以批量PASS替代逐单元AC验收",
+    "B5-DATA": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B5-DATA内1个单元不得以批量PASS替代逐单元AC验收",
+    "B4-B": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B4-B内1个单元不得以批量PASS替代逐单元AC验收",
+    "B6-C": "每个单元独立具备代码、直接测试、可归属运行、追踪四类证据；关键分支与信息边界门禁通过；固定seed/版本/状态复现；性能达Locked阈值；全量回归通过；开发人与独立审计结论分离；批次B6-C内1个单元不得以批量PASS替代逐单元AC验收"
+  },
+  "regression_scope": {
+    "B1-A": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有ALGO/STATE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B4-DATA-MODEL001": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有MODEL定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B1-B": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有STATE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B2-A1": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有ALGO/STATE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B1-C1": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有RULE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B2-A2": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有ALGO/STATE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B1-C2": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有RULE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B1-C3": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有RULE/SCORE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B1-C4": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有SCORE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B2-B": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有ALGO/STATE定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B3-A": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有HEUR定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B3-B": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有HEUR定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B4-A": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有MODEL定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B3-C": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有HEUR定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B5-A": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有TRAIN定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B4-A2": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有MODEL定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B5-B": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有TRAIN定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B5-C": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有TRAIN定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B6-A": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有AUDIT定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B6-B": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有AUDIT定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B5-DATA": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有TRAIN定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B4-B": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有MODEL定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复",
+    "B6-C": "新增tests/spec_v3直接/分支/异常/性质测试；相关现有AUDIT定向测试；contracts与固定seed回放；全仓pytest；失败时只在实施任务修复"
+  },
+  "boundary_test_scope": {
+    "B1-A": "覆盖STATE-010|ALGO-009|ALGO-011；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B4-DATA-MODEL001": "覆盖MODEL-001；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B1-B": "覆盖STATE-001|STATE-011|STATE-004；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B2-A1": "覆盖STATE-002|STATE-003；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B1-C1": "覆盖RULE-001|RULE-002|RULE-005|RULE-006|RULE-015；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B2-A2": "覆盖STATE-009；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B1-C2": "覆盖RULE-004|RULE-007|RULE-008|RULE-010|RULE-011|RULE-012；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B1-C3": "覆盖RULE-009|RULE-013|RULE-014|SCORE-002|SCORE-003；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B1-C4": "覆盖SCORE-004|SCORE-005|SCORE-006；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B2-B": "覆盖ALGO-008|STATE-006|STATE-007|STATE-008|STATE-012；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B3-A": "覆盖HEUR-001|HEUR-002|HEUR-004|HEUR-006|HEUR-008|HEUR-011|HEUR-020|HEUR-022；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B3-B": "覆盖HEUR-003|HEUR-005|HEUR-014|HEUR-007|HEUR-009|HEUR-010|HEUR-012|HEUR-017|HEUR-021|HEUR-023；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B4-A": "覆盖MODEL-002|MODEL-003；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B3-C": "覆盖HEUR-013|HEUR-015|HEUR-016|HEUR-018；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B5-A": "覆盖TRAIN-001|TRAIN-002|TRAIN-004|TRAIN-005；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B4-A2": "覆盖MODEL-004；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B5-B": "覆盖TRAIN-006|TRAIN-009；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B5-C": "覆盖TRAIN-007；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B6-A": "覆盖AUDIT-001|AUDIT-002|AUDIT-004|AUDIT-005|AUDIT-006|AUDIT-007；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B6-B": "覆盖AUDIT-008|AUDIT-009|AUDIT-014；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B5-DATA": "覆盖TRAIN-008；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B4-B": "覆盖MODEL-005；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离",
+    "B6-C": "覆盖AUDIT-012；PlayerView白名单、对手暗手/墙序递归sentinel、对象引用/缓存/日志隔离、隐藏字段删除或扰动不改变同可见状态决策；权威引擎全知权限与策略边界分离"
+  },
+  "recommended_order": [
+    "B1-B",
+    "B4-DATA-MODEL001",
+    "B2-A1",
+    "B1-C1",
+    "B2-A2",
+    "B1-C2",
+    "B1-C3",
+    "B1-C4",
+    "B2-B",
+    "B3-A",
+    "B3-B",
+    "B4-A",
+    "B3-C",
+    "B5-A",
+    "B4-A2",
+    "B5-B",
+    "B5-C",
+    "B6-A",
+    "B6-B",
+    "B5-DATA",
+    "B4-B",
+    "B6-C"
+  ],
+  "parallel_groups": {
+    "P1": [
+      "B1-B",
+      "B2-A1",
+      "B1-C1",
+      "B2-A2",
+      "B1-C2",
+      "B1-C3",
+      "B1-C4",
+      "B2-B"
+    ],
+    "P2": [
+      "B3-A",
+      "B3-B",
+      "B4-A",
+      "B3-C",
+      "B5-A",
+      "B4-A2",
+      "B5-B",
+      "B6-A"
+    ],
+    "P3": [
+      "B4-DATA-MODEL001",
+      "B5-C",
+      "B6-B",
+      "B5-DATA",
+      "B4-B"
+    ],
+    "P4": [
+      "B6-C"
+    ],
+    "notes": [
+      "同组仅表示上游满足后可并行，不覆盖dependency_batches",
+      "MODEL-001数据轨与B1/B2/B3工程轨并行，不能传播为确定性开发阻塞",
+      "开发实现与独立审计必须由不同执行步骤完成"
+    ]
+  },
+  "updated_on": "2026-07-30",
+  "queue_version": "TASK18-QUEUE-2",
+  "status_authority": "docs/spec-v3/audit/task18_current_96_unit_status.json",
+  "historical_task18a_baseline": {
+    "AUDITED": 9,
+    "INTEGRATED": 1,
+    "PARTIAL": 85,
+    "SCAFFOLDED": 1,
+    "BLOCKED": 0
+  },
+  "current_status_distribution": {
+    "AUDITED": 12,
+    "INTEGRATED": 1,
+    "PARTIAL": 82,
+    "SCAFFOLDED": 1,
+    "BLOCKED": 0
+  },
+  "completed_batches": [
+    "B1-A",
+    "B1-B"
+  ],
+  "completed_batch_evidence": {
+    "B1-A": {
+      "unit_ids": [
+        "STATE-010",
+        "ALGO-009",
+        "ALGO-011"
+      ],
+      "audit_result": "42/42 PASS",
+      "status_delta": "docs/spec-v3/audit/task18_b1a_audit_status_delta.csv",
+      "e5_manifest": "docs/spec-v3/evidence/task18b_b1a/B1-A_E5_manifest.json",
+      "full_regression": "423 passed"
+    },
+    "B1-B": {
+      "unit_ids": ["STATE-001", "STATE-011", "STATE-004"],
+      "audit_result": "42/42 PASS",
+      "audit_report": "docs/spec-v3/audit/B1-B_independent_audit_report.md",
+      "e5_trace": "docs/spec-v3/evidence/task18b_b1b_independent/B1-B_E5_trace.csv",
+      "full_regression": "463 passed / 1 skipped"
+    }
+  },
+  "batch_status": {
+    "B1-A": "COMPLETED",
+    "B4-DATA-MODEL001": "EXTERNAL_DATA_GATED",
+    "B1-B": "COMPLETED",
+    "B2-A1": "IMMEDIATELY_EXECUTABLE_FOR_DESIGN_REVIEW",
+    "B1-C1": "DEPENDENCY_BLOCKED",
+    "B2-A2": "DEPENDENCY_BLOCKED",
+    "B1-C2": "DEPENDENCY_BLOCKED",
+    "B1-C3": "DEPENDENCY_BLOCKED",
+    "B1-C4": "DEPENDENCY_BLOCKED",
+    "B2-B": "DEPENDENCY_BLOCKED",
+    "B3-A": "DEPENDENCY_BLOCKED",
+    "B3-B": "DEPENDENCY_BLOCKED",
+    "B4-A": "DEPENDENCY_BLOCKED",
+    "B3-C": "DEPENDENCY_BLOCKED",
+    "B5-A": "DEPENDENCY_BLOCKED",
+    "B4-A2": "DEPENDENCY_BLOCKED",
+    "B5-B": "DEPENDENCY_BLOCKED",
+    "B5-C": "DEPENDENCY_BLOCKED",
+    "B6-A": "DEPENDENCY_BLOCKED",
+    "B6-B": "DEPENDENCY_BLOCKED",
+    "B5-DATA": "DEPENDENCY_BLOCKED",
+    "B4-B": "EXTERNAL_DATA_GATED",
+    "B6-C": "EXTERNAL_DATA_GATED"
+  },
+  "next_batch": {
+    "batch_id": "B2-A1",
+    "unit_ids": [
+      "STATE-002",
+      "STATE-003",
+      "ALGO-002"
+    ],
+    "dependency_batches": [
+      "B1-B"
+    ],
+    "dependency_status": "SATISFIED",
+    "implementation_authorized": false,
+    "implementation_status": "DESIGN_REVIEW_REQUIRED",
+    "required_next_action": "为B2-A1建立并批准具体semantic/test/evidence Delta、接口影响和42项AC；终审授权前不得编码",
+    "implementation_evidence": {
+      "dependency_evidence": "B1-B 42/42 PASS; 24/24 semantic; 12/12 test; 6/6 evidence",
+      "targeted_tests": "94 passed",
+      "full_regression": "463 passed / 1 skipped",
+      "independent_audit": "AUDITED",
+      "audit_report": "docs/spec-v3/audit/B1-B_independent_audit_report.md"
+    }
+  }
+}

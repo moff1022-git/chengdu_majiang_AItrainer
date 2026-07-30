@@ -13,6 +13,7 @@ from typing import Any
 
 from app_paths import configs_dir
 from players.humanlike.config import HumanlikeConfig, load_config
+from players.humanlike.config_v2 import FrozenConfigV2, freeze_v2, migrate_1_1_to_2_0, validate_and_freeze
 
 
 def default_config_path() -> Path:
@@ -63,6 +64,37 @@ def save_raw(data: dict[str, Any], path: str | Path | None = None) -> HumanlikeC
     return config
 
 
+def validate_and_migrate_v2(data: dict[str, Any], *, source_hash: str | None = None) -> FrozenConfigV2:
+    """Production v2 validation entry; caller decides whether to persist the result."""
+    if data.get("parameter_version") == "CDMJ-AI-PARAMS 1.1.0":
+        # Reuse the established 60-field validator before migration; v2 never
+        # weakens the Locked v1.1 field/range/cross-constraint contract.
+        validate_raw(data)
+        migrated = migrate_1_1_to_2_0(data, source_hash=source_hash)
+    else:
+        migrated = data
+    return validate_and_freeze(migrated, source_hash=source_hash)[0]
+
+
+def save_v2_raw(data: dict[str, Any], path: str | Path, *, source_hash: str | None = None) -> FrozenConfigV2:
+    """Atomically persist canonical v2 bytes; this writer never emits v1."""
+    destination = Path(path)
+    frozen = validate_and_migrate_v2(data, source_hash=source_hash)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fd, name = tempfile.mkstemp(prefix=".humanlike_v2_", suffix=".json", dir=destination.parent)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(frozen.canonical_bytes)
+            stream.write(b"\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(name, destination)
+    finally:
+        if os.path.exists(name):
+            os.unlink(name)
+    return frozen
+
+
 def config_summary(path: str | Path | None = None) -> dict[str, Any]:
     source = Path(path) if path else default_config_path()
     config = load_config(source)
@@ -74,4 +106,3 @@ def launch_settings_window(path: str | Path | None = None) -> subprocess.Popen:
     if path:
         cmd += ["--config", str(path)]
     return subprocess.Popen(cmd, cwd=str(Path(__file__).resolve().parents[2]))
-

@@ -1,0 +1,69 @@
+{
+  "authority": "Task 18 current status = immutable Task 17 baseline + approved B1-A delta",
+  "effective_date": "2026-07-30",
+  "unit_count": 96,
+  "status_distribution": {
+    "AUDITED": 12,
+    "INTEGRATED": 1,
+    "PARTIAL": 82,
+    "SCAFFOLDED": 1
+  },
+  "audited_units": [
+    "RULE-003",
+    "RULE-016",
+    "ALGO-001",
+    "ALGO-009",
+    "ALGO-010",
+    "ALGO-011",
+    "HEUR-019",
+    "STATE-005",
+    "STATE-010",
+    "SCORE-001",
+    "TRAIN-003",
+    "AUDIT-003"
+  ],
+  "promoted_units": [
+    "STATE-010",
+    "ALGO-009",
+    "ALGO-011"
+  ],
+  "task17_history_modified": false,
+  "source_sha256": "507dc8755cbadc3a21943f92b2e40c328fcab7e8e0b43e94f8be979f1cfc7d43",
+  "category_distribution": {
+    "ALGO": {
+      "AUDITED": 4,
+      "PARTIAL": 7
+    },
+    "AUDIT": {
+      "AUDITED": 1,
+      "PARTIAL": 13
+    },
+    "HEUR": {
+      "AUDITED": 1,
+      "PARTIAL": 21,
+      "SCAFFOLDED": 1
+    },
+    "MODEL": {
+      "INTEGRATED": 1,
+      "PARTIAL": 4
+    },
+    "RULE": {
+      "AUDITED": 2,
+      "PARTIAL": 14
+    },
+    "SCORE": {
+      "AUDITED": 1,
+      "PARTIAL": 5
+    },
+    "STATE": {
+      "AUDITED": 2,
+      "PARTIAL": 10
+    },
+    "TRAIN": {
+      "AUDITED": 1,
+      "PARTIAL": 8
+    }
+  },
+  "matrix": "docs/spec-v3/audit/task18_current_96_unit_status.csv",
+  "delta": "docs/spec-v3/audit/task18_b1a_audit_status_delta.csv"
+}

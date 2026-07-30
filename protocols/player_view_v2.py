@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Any, Mapping
+from engine.audit import canonical_hash
 
 PLAYER_VIEW_VERSION = 2
 
@@ -41,6 +42,11 @@ class PlayerViewV2:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "payload", freeze_mapping(self.payload))
+
+    @property
+    def stable_hash(self) -> str:
+        """STATE-005 hash over every frozen, policy-visible field."""
+        return canonical_hash({"game_id": self.game_id, "self_seat": self.self_seat, "phase": self.phase, "event_index": self.event_index, "view_version": self.view_version, "payload": thaw(self.payload)})
 
     def to_legacy_dict(self) -> dict[str, Any]:
         result = thaw(self.payload)

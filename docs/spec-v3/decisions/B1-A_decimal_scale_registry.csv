@@ -1,0 +1,2 @@
+﻿field_path,parameter_id,numeric_type,scale,rounding_mode,min,max,serialized_positive_example,serialized_boundary_example,source_reference,approval_status
+__registry_conclusion__,N/A,NO_DECIMAL_FIELDS_IN_CANONICAL_CONFIG,N/A,N/A,N/A,N/A,N/A,N/A,docs/spec-v3/07-traceability/parameter_registry.csv (60/60 rows scanned); docs/spec-v3/contracts/common_contracts.md §2/§8,CLOSED_NO_DECIMAL_FIELDS
