@@ -2,33 +2,28 @@
 
 ## Outcome
 
-`CHECKPOINT_READY_FOR_FINAL_APPROVAL`
+`CHECKPOINT_AUTHORIZED_FOR_CREATION`
 
-The 110 owner-decision rows remain fully resolved. The ten former B1-A audit-recheck files received a new scoped audit at `2026-07-30T22:51:08+08:00`; this does not infer historical hashes. It records their current bytes as the new audit-time baseline after verifying Approved E5 attribution, current diffs, direct tests, runtime evidence, and trace hashes.
+The final checkpoint provenance package is self-contained. The ten named approval and review artifacts, the provenance manifest, and the self-containment validation are explicit repository-relative entries in the include list. No wildcard is used.
 
 ## Counts
 
-- Candidates: 7574
-- Include candidates: 236
-- Excludes: 7337
-- Deferred later-batch files: 1
-- Owner decisions remaining: 0
-- Audit rechecks remaining: 0
+- Include paths: 248
+- Exclude paths: 7337
+- Deferred paths: 1
+- Owner decisions unresolved: 0
+- Audit rechecks unresolved: 0
+- Missing include paths: 0
+- Include-to-exclude required dependencies: 0
 
-## Scoped B1-A re-audit
+## Non-circular provenance rule
 
-- Units: STATE-010, ALGO-009, ALGO-011
-- Direct tests: 36 passed twice; 0 failed; 0 skipped
-- Python: 3.12.13; pytest: 8.4.2
-- E5: 42 rows / 42 unique delta IDs
-- E4 runtime evidence: 12 rows
-- Current full per-file SHA-256 values: `task19_checkpoint_b1a_supplemental_manifest.csv`
-- Scope result: all ten files PASS and are eligible for checkpoint inclusion
+`task19_checkpoint_final_include_paths.txt` lists itself. Its SHA-256 is stored in the independent provenance manifest. The provenance manifest lists itself with an empty `sha256` field and its stable final `byte_size`; it does not attempt to hash itself. No circular or guessed hash is used.
 
-## Closure
+## Integrity
 
-Audited production code, audited direct tests, B2-A1 prerequisites, fixtures, Locked/Frozen authority, Task 19 plans/status, and MODEL-001 wiring are present. No necessary include-to-exclude dependency was identified. Task 19 plan and progress validations remain PASS.
+The scoped B1-A production and test hashes remain identical to the supplemental audit manifest. Task 19 plan and progress validations remain PASS. No environment directory or secret is included.
 
 ## Safety
 
-No Git add, commit, tag, stash, clean, reset, checkout, deletion, business-code edit, or test-assertion edit was performed.
+No business code, test, Locked/Frozen specification, or status file was modified. No Git write operation was executed.
