@@ -6,11 +6,35 @@
 
 - **引擎**：108 张（万筒条）、掷骰定庄、换三张、定缺、血战行牌、一炮多响、成都番型与可配置 `fan_cap`
 - **计分 / Reward / JSONL**：可配置稠密与终局奖励，局级日志
-- **玩家**：`random`、`rule_ai`、`human`（独立子进程座位窗；**1–3 人类** + AI，布局 A/B/C/D）
+- **玩家**：`random`、`rule_ai`、`rule_ai_plus`、`humanlike_v2`，以及 `human` 独立子进程座位窗（**1–3 人类** + AI，布局 A/B/C/D）
 - **显示**：绿/蓝主题；主窗大厅/牌桌/结算；座位窗操作与观战；推荐出牌/进张；主窗掷骰动画与细化出牌日志
 - **存档**：JSON 存档、逐步快照、崩溃策略
 - **训练**：`ChengduMahjongEnv`（`reset` / `step` / `legal_actions`）+ 批跑 runner
-- **分发**：**Windows x64** 与 **macOS arm64** 均可下载 **PyInstaller / Nuitka** 预构建包（[Release v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)）
+- **分发**：Task 19 完成版本 [v0.3.0](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.0)；历史 v0.2.1 仍提供 Windows/macOS 预构建包
+
+## 四种 AI 模式
+
+| AI 类型 | 核心逻辑 | 状态与记忆 | 决策特点 | 适用场景 |
+|---|---|---|---|---|
+| `random` | 在合法动作中随机选择 | 无长期计划和对手模型 | 最快、强度最低；作为随机基线 | 引擎压力测试、负向基线 |
+| `rule_ai` | 胡/杠/碰优先，出牌以向听数和基础分析排序 | 仅使用当前局面 | 稳定、快速、可解释 | 基础规则 AI、回归基线 |
+| `rule_ai_plus` | `rule_ai` 加 F0011/S2 牌型预测、危险度和综合弃牌评分 | 使用当前公开局面和增强分析；不是独立 Player 类 | 分析更深但计算耗时明显增加 | 强规则基线、能力对比 |
+| `humanlike_v2` | PlayerView-only 候选评估 + 有界认知策略 | 按座位维护有限记忆、注意、计划、情绪和公开对手印象 | 允许可解释的合法次优选择，强调人类化、确定性和可审计性 | 人类化打法研究、训练与回放 |
+
+### Humanlike v2 详细功能
+
+- **有限信息边界**：决策只读取 `PlayerView v2` 可见字段，不访问对手暗手、牌墙真值或训练 oracle。
+- **合法性优先**：强制动作和唯一合法动作不会被候选裁剪；所有认知扰动都必须产生合法动作。
+- **独立座位认知**：s0-s3 分别维护认知状态，避免多个 AI 共享同一玩家记忆或人格。
+- **有限记忆与遗忘**：记录公开事件和模糊对手印象，按容量和衰减规则遗忘，不保存隐藏信息。
+- **注意与满意停止**：根据局面复杂度选择重点信息，在达到可接受方案后停止继续搜索，模拟有限计算资源。
+- **主计划与备选计划**：结合牌质、定缺、速度、价值、防守和灵活性形成计划；局面显著变化时允许重启计划。
+- **风格与状态变化**：保守、平衡、激进等 profile 会影响风险、候选和阈值；情绪与比分只作有界调整。
+- **有界噪声**：只在分数接近的候选中产生可复现扰动；明显优劣局面不随机破坏最佳动作。
+- **确定性复现**：相同配置、game_id、seat、决策序号和 PlayerView 序列产生相同动作、认知状态和 trace。
+- **决策审计**：记录候选、评分、注意、计划、RNG 坐标、选择理由和耗时，可验证 hash 链并进行策略回放。
+- **训练契约**：支持固定动作编码、合法 mask、PlayerView-only 观测以及真实得分与塑形奖励分离。
+- **能力边界**：Humanlike 表示工程机制目标，不代表已经由真人牌谱证明真人相似度或竞技强度；MODEL-001 真人校准仍是独立后续功能。
 
 ### 界面预览
 
@@ -38,7 +62,7 @@
 
 ## 版本
 
-- **当前应用版本**：**0.2.1**（权威：根目录 [`version.py`](version.py)）  
+- **当前应用版本**：**0.3.0**（权威：根目录 [`version.py`](version.py)）  
 - **规则**：[docs/VERSIONING.md](docs/VERSIONING.md)（SemVer；与存档 schema / 座位协议分线）  
 - **进度基线**：[docs/status/LATEST.md](docs/status/LATEST.md) · 变更：[docs/changelog.md](docs/changelog.md)  
 - 查询：`.venv/bin/python main.py --version`
@@ -55,7 +79,8 @@
 | **macOS arm64** | `…-macOS-arm64-PyInstaller.zip` | 解压后打开 `.app`（必要时 `xattr -cr`） |
 | **macOS arm64** | `…-macOS-arm64-Nuitka.zip` | 路径含中文时建议拷到 `/Applications` |
 
-- **发布页**：[v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)  
+- **当前发布页**：[v0.3.0](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.0)  
+- **历史预构建包**：[v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)  
 - **Windows 日志**：`%APPDATA%\ChengduMahjongAITrainer\logs\`  
 - **macOS 日志**：`~/Library/Application Support/ChengduMahjongAITrainer/logs/`  
 - 未签名：Windows SmartScreen / macOS Gatekeeper 可能提示，从可信来源获取后「仍要运行」即可。
