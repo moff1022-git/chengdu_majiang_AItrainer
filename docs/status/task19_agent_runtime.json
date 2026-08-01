@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-08-01T11:19:05+08:00",
+  "agents": [
+    {
+      "name": "/root",
+      "status": "RUNNING",
+      "current_work": "Task 19 orchestration",
+      "started_at": "2026-07-30T23:00:30+08:00",
+      "last_heartbeat": "2026-08-01T11:18:37+08:00",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null
+    },
+    {
+      "name": "/root/train_audit_design_reaudit",
+      "status": "COMPLETED",
+      "current_work": "B2-A1 evidence checkpoint 259b3e1 complete: 42/42 AC, findings 0",
+      "started_at": "2026-07-31T22:08:14+08:00",
+      "last_heartbeat": "2026-07-31T22:16:01+08:00",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null
+    },
+    {
+      "name": "/root/b2a1_independent_audit",
+      "status": "INTERRUPTED",
+      "current_work": "Superseded audit; restart after remediation evidence",
+      "started_at": null,
+      "last_heartbeat": null,
+      "requires_human_confirmation": false,
+      "confirmation_reason": null
+    },
+    {
+      "name": "/root/train_audit_design_reaudit/stage5_review",
+      "status": "COMPLETED",
+      "current_work": "Stage 5 read-only review completed",
+      "started_at": null,
+      "last_heartbeat": null,
+      "requires_human_confirmation": false,
+      "confirmation_reason": null
+    },
+    {
+      "name": "/root/b2a1_final_clean_audit",
+      "status": "COMPLETED",
+      "current_work": "Verified complete: clean-archive PASS for 259b3e1, P0=0 P1=0, 66 directed, 560 full",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "started_at": "2026-07-31T22:43:01+08:00",
+      "last_heartbeat": "2026-07-31T22:43:01+08:00"
+    },
+    {
+      "name": "/root/d10_design",
+      "status": "COMPLETED",
+      "current_work": "Historical T19-D10 design and audit complete",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "started_at": "2026-07-31T23:03:20+08:00",
+      "last_heartbeat": "2026-07-31T23:03:20+08:00"
+    },
+    {
+      "name": "/root/b2a1_tracker_update",
+      "status": "COMPLETED",
+      "current_work": "Historical B2-A1 tracker update complete",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "started_at": "2026-07-31T23:03:57+08:00",
+      "last_heartbeat": "2026-07-31T23:03:57+08:00"
+    },
+    {
+      "name": "/root/d02_design_rereview2",
+      "status": "WAITING",
+      "current_work": "Waiting for W04 T19-M02 and T19-T02 remediation commit before independent rereview",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "started_at": "2026-08-01T11:04:35+08:00",
+      "last_heartbeat": "2026-08-01T11:13:21+08:00"
+    },
+    {
+      "name": "/root/t01_implementation",
+      "status": "RUNNING",
+      "current_work": "W04 T19-D05 verification and evidence",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "started_at": "2026-08-01T11:10:29+08:00",
+      "last_heartbeat": "2026-08-01T11:18:02+08:00"
+    },
+    {
+      "name": "/root/w03_design_review",
+      "status": "RUNNING",
+      "current_work": "W04 T19-M02 and T19-T02 remediation then T19-D12/D14 rereview",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "started_at": "2026-08-01T11:04:36+08:00",
+      "last_heartbeat": "2026-08-01T11:19:05+08:00"
+    }
+  ]
+}

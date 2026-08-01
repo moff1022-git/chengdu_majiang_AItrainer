@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-08-01T11:18:02+08:00",
+  "work_items": [
+    {
+      "batch_id": "T19-D05",
+      "wave": "W04",
+      "gate": "VERIFY",
+      "state": "DISPATCHED",
+      "owner": "/root/t01_implementation",
+      "last_event": "implementation_candidate:f127591",
+      "next_action": "WAIT_FOR_VERIFIER",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T11:18:02+08:00",
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-D14",
+      "wave": "W04",
+      "gate": "DESIGN_REVIEW",
+      "state": "REMEDIATING",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "finding:P1-W04-D14-001",
+      "next_action": "DISPATCH_FIXER",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-W04-D14-001": 1
+      },
+      "updated_at": "2026-08-01T11:18:02+08:00"
+    },
+    {
+      "batch_id": "T19-M02",
+      "wave": "W04",
+      "gate": "DESIGN_REVIEW",
+      "state": "REMEDIATING",
+      "owner": "/root/w03_design_review",
+      "last_event": "finding:P1-MODEL004-IDENTITY",
+      "next_action": "DISPATCH_FIXER",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-MODEL004-IDENTITY": 1
+      },
+      "updated_at": "2026-08-01T11:18:02+08:00"
+    },
+    {
+      "batch_id": "T19-T02",
+      "wave": "W04",
+      "gate": "DESIGN_REVIEW",
+      "state": "REMEDIATING",
+      "owner": "/root/w03_design_review",
+      "last_event": "finding:P1-TRAIN005-LEDGER_AND_PERF",
+      "next_action": "DISPATCH_FIXER",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-TRAIN005-LEDGER_AND_PERF": 1
+      },
+      "updated_at": "2026-08-01T11:18:02+08:00"
+    }
+  ]
+}
