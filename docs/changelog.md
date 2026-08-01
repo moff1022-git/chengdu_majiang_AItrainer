@@ -1506,3 +1506,5 @@
 - F0037: 新增 RP envelope/payload 双视图及存档 round-trip/legacy migration；生成 12 预设 smoke 并明确动态 preset 注入尚未实现。全量回归 `526 passed, 1 skipped`。
 - F0037: 增加 per-player humanlike preset 注入，12 预设 smoke 改为真实加载对应配置；新增注入测试，全量回归 `527 passed, 1 skipped`。
 - F0037: 完成 RP 双视图 UI（envelope/payload/audit_only）及独立归档范围；全量回归 `527 passed, 1 skipped`。
+- F0036: 新增 humanlike_v2 人格预设选择及报告记录；新增可选并发线程数 1/5/10/20/50/100。
+- F0036: 完成全量回归与 1/5/10/20 线程并发 smoke；各线程档位 4 局均通过。
