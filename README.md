@@ -10,7 +10,7 @@
 - **显示**：绿/蓝主题；主窗大厅/牌桌/结算；座位窗操作与观战；推荐出牌/进张；主窗掷骰动画与细化出牌日志
 - **存档**：JSON 存档、逐步快照、崩溃策略
 - **训练**：`ChengduMahjongEnv`（`reset` / `step` / `legal_actions`）+ 批跑 runner
-- **分发**：**Windows x64** 与 **macOS arm64** 均可下载 **PyInstaller / Nuitka** 预构建包（[Release v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)）
+- **分发**：Task 19 完成版本已发布为 [v0.3.0](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.0)；历史 v0.2.1 仍提供 Windows/macOS 预构建包
 
 ### 界面预览
 
@@ -38,14 +38,15 @@
 
 ## 版本
 
-- **当前应用版本**：**0.2.1**（权威：根目录 [`version.py`](version.py)）  
+- **当前发布版本**：**0.3.0**（Task 19：96/96 AUDITED、14/14 waves、40/40 batches）  
+- **发布源码分支**：[`release/v0.3.0`](https://github.com/moff1022-git/chengdu_majiang_AItrainer/tree/release/v0.3.0)；完整源码归档位于该分支的 `releases/v0.3.0/`  
 - **规则**：[docs/VERSIONING.md](docs/VERSIONING.md)（SemVer；与存档 schema / 座位协议分线）  
 - **进度基线**：[docs/status/LATEST.md](docs/status/LATEST.md) · 变更：[docs/changelog.md](docs/changelog.md)  
 - 查询：`.venv/bin/python main.py --version`
 
 ## 预构建下载（Release）
 
-无需本机安装 Python，可直接使用发布包：
+v0.3.0 提供 Task 19 完整源码归档；以下预构建附件仍来自 v0.2.1：
 
 | 平台 | 推荐附件 | 说明 |
 |------|----------|------|
@@ -55,7 +56,8 @@
 | **macOS arm64** | `…-macOS-arm64-PyInstaller.zip` | 解压后打开 `.app`（必要时 `xattr -cr`） |
 | **macOS arm64** | `…-macOS-arm64-Nuitka.zip` | 路径含中文时建议拷到 `/Applications` |
 
-- **发布页**：[v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)  
+- **当前发布页**：[v0.3.0](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.0)  
+- **历史预构建包**：[v0.2.1](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1)  
 - **Windows 日志**：`%APPDATA%\ChengduMahjongAITrainer\logs\`  
 - **macOS 日志**：`~/Library/Application Support/ChengduMahjongAITrainer/logs/`  
 - 未签名：Windows SmartScreen / macOS Gatekeeper 可能提示，从可信来源获取后「仍要运行」即可。
