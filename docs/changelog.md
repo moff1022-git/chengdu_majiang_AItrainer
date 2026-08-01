@@ -1512,3 +1512,4 @@
 - F0036: batch 模式新增按座位选择 humanlike_v2 人格预设，并将预设传入运行与报告。
 - F0036: 修复 capability 人格预设记录与目标座位注入，避免预设列表嵌套。
 - F0036: 调整 batch 座位配置交互，humanlike_v2 人格预设与对应座位同步选择。
+- F0036: batch 模式接入 ThreadPoolExecutor 并发执行，修复选择 10 线程仍串行的问题。

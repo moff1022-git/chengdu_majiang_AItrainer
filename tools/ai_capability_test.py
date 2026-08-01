@@ -305,24 +305,36 @@ def main(argv: list[str] | None = None) -> int:
     else:
         ids = game_ids(args.games)
         code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
-        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
+        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "threads": args.threads, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
     config_data = json.loads(config_path.read_text(encoding="utf-8"))
     ids = config_data["game_ids"]
     batch_presets = config_data.get("presets", batch_presets or [None] * 4)
+    if args.resume:
+        args.threads = int(config_data.get("threads", args.threads or 1))
     code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
     global STOP
     signal.signal(signal.SIGINT, lambda *_: globals().__setitem__("STOP", True))
     wall_start = time.perf_counter()
     report_stamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
-    for index in range(len(rows), args.games):
+    pending = list(range(len(rows), args.games))
+    def execute_batch(index):
+        try:
+            return index, run_game(specs, ids[index], batch_presets)
+        except Exception as exc:
+            return index, {"game_id": ids[index], "status": "FAILED", "finished_reason": "runner_exception", "error_type": type(exc).__name__, "error": str(exc), "scores": {}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]}
+    with ThreadPoolExecutor(max_workers=args.threads) as pool:
+      futures = [pool.submit(execute_batch, index) for index in pending]
+      iterator = (execute_batch(index) for index in pending) if args.threads == 1 else (future.result() for future in as_completed(futures))
+      for index, row in iterator:
         if STOP: break
-        rows.append(run_game(specs, ids[index], batch_presets))
+        rows.append(row)
+        rows.sort(key=lambda item: ids.index(item.get("game_id", "")))
         elapsed = time.perf_counter() - wall_start
         rate = elapsed / max(1, len(rows) - (index - (len(rows) - 1)))
         eta = rate * (args.games - len(rows))
         write_outputs(out, rows, specs, args.games, True, code, presets=batch_presets, report_stamp=report_stamp)
         (out / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
-        score_text = " ".join(f"s{s}:{rows[-1]['scores'][str(s)]}" for s in range(4))
+        score_text = " ".join(f"s{s}:{row.get('scores', {}).get(str(s), 0)}" for s in range(4))
         print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
     print()
     write_outputs(out, rows, specs, args.games, len(rows) < args.games, code, presets=batch_presets, report_stamp=report_stamp)
