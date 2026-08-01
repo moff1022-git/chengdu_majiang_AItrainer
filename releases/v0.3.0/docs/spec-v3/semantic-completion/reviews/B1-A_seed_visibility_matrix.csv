@@ -1,0 +1,10 @@
+﻿field,engine_visible,strategy_visible,trainer_visible,audit_visible,persisted,sensitive,future_information_risk,rationale
+game_id,yes,opaque request/game identity only,yes,hash preferred,yes,conditional,low alone,Frozen字段；策略无需原始值进行随机派生
+algorithm_version,yes,version label only,yes,yes,yes,no,low,回放选择必需，不提供seed能力
+master_seed,yes,NO,restricted controller only,restricted,restricted/encrypted,yes,critical,可推导牌墙及全部子流
+stream_name,yes,rng_used boolean or opaque trace_ref only,own-domain names only,yes,audit restricted,yes,medium,暴露后续随机域和行为类型
+index_before,yes,NO,own logical coordinate only,yes,audit restricted,yes,high,与seed/流结合可定位未来抽样
+index_after,yes,NO,own logical coordinate only,yes,audit restricted,yes,high,泄露消费量和下一位置
+seed_hash,yes,opaque trace_ref only; raw hash NO,restricted,yes,yes restricted,yes,medium,即使单向也可作为跨局关联/字典验证材料
+consumer_id_hash (compatible audit extension),yes,NO,own job ref,yes,audit only,yes,low,审计并发坐标，不进入Frozen SeedTrace/策略DTO
+logical_index_hash (compatible audit extension),yes,NO,own job ref,yes,audit only,yes,low,证明调度无关，不暴露原始future index

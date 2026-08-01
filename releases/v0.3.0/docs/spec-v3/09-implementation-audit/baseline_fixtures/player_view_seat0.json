@@ -1,0 +1,146 @@
+{
+  "event_index": 0,
+  "game_id": "spec-v3-m0-baseline-001",
+  "payload": {
+    "current_seat": null,
+    "deadline_ms": null,
+    "dealer_seat": 1,
+    "discard_history": [],
+    "exchange_direction_public": null,
+    "last_public_event": {
+      "cancel_action": null,
+      "draw_source": null,
+      "face_id": null,
+      "seat": null,
+      "thinking_time": null,
+      "type": null
+    },
+    "legal_actions": [],
+    "other_players": [
+      {
+        "dingque": null,
+        "discard_pile": [],
+        "hand_count": 14,
+        "hu_order": null,
+        "is_dealer": true,
+        "last_win": null,
+        "melds": [],
+        "score": 0,
+        "seat": 1,
+        "status": "active"
+      },
+      {
+        "dingque": null,
+        "discard_pile": [],
+        "hand_count": 13,
+        "hu_order": null,
+        "is_dealer": false,
+        "last_win": null,
+        "melds": [],
+        "score": 0,
+        "seat": 2,
+        "status": "active"
+      },
+      {
+        "dingque": null,
+        "discard_pile": [],
+        "hand_count": 13,
+        "hu_order": null,
+        "is_dealer": false,
+        "last_win": null,
+        "melds": [],
+        "score": 0,
+        "seat": 3,
+        "status": "active"
+      }
+    ],
+    "self_player": {
+      "dingque": null,
+      "discard_pile": [],
+      "hand": [
+        "wan_1",
+        "wan_8",
+        "tong_1",
+        "tong_2",
+        "tong_3",
+        "tong_3",
+        "tong_4",
+        "tong_9",
+        "tiao_1",
+        "tiao_3",
+        "tiao_3",
+        "tiao_7",
+        "tiao_8"
+      ],
+      "hand_count": 13,
+      "hu_order": null,
+      "is_dealer": false,
+      "last_win": null,
+      "melds": [],
+      "physical_hand": [
+        {
+          "face_id": "wan_1",
+          "tile_id": 2
+        },
+        {
+          "face_id": "wan_8",
+          "tile_id": 30
+        },
+        {
+          "face_id": "tong_1",
+          "tile_id": 36
+        },
+        {
+          "face_id": "tong_2",
+          "tile_id": 42
+        },
+        {
+          "face_id": "tong_3",
+          "tile_id": 44
+        },
+        {
+          "face_id": "tong_3",
+          "tile_id": 45
+        },
+        {
+          "face_id": "tong_4",
+          "tile_id": 48
+        },
+        {
+          "face_id": "tong_9",
+          "tile_id": 68
+        },
+        {
+          "face_id": "tiao_1",
+          "tile_id": 74
+        },
+        {
+          "face_id": "tiao_3",
+          "tile_id": 81
+        },
+        {
+          "face_id": "tiao_3",
+          "tile_id": 83
+        },
+        {
+          "face_id": "tiao_7",
+          "tile_id": 99
+        },
+        {
+          "face_id": "tiao_8",
+          "tile_id": 103
+        }
+      ],
+      "score": 0,
+      "seat": 0,
+      "status": "active"
+    },
+    "turn_index": 0,
+    "wall": {
+      "remaining_exact": 55
+    }
+  },
+  "phase": "dealt",
+  "self_seat": 0,
+  "view_version": 2
+}

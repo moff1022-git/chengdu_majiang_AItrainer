@@ -17,7 +17,7 @@
 2. 换三张、定缺、摸打、碰杠胡、血战终局可完整运行。
 3. AI 不提交非法动作，不崩溃或被 crash policy 替换。
 4. 固定 `game_id` 下策略动作可重复。
-5. `rule_ai`、`current_s2` 和 human 模式未被 F0028-3 破坏。
+5. `rule_ai`、`rule_ai_plus` 和 human 模式未被 F0028-3 破坏。
 6. UI、日志和存档中没有显示其他玩家暗牌、牌墙顺序或 Oracle 信息。
 
 人工测试不是自动测试的替代。开始前应确认自动基线仍为 `321 passed / 1 skipped`。
@@ -127,12 +127,12 @@ Windows 将解释器替换为 `.\.venv\Scripts\python.exe`，其余参数不变�
 
 ```bash
 .venv/bin/python main.py play --players rule_ai,rule_ai,rule_ai,rule_ai --game-id manual-rule --headless
-.venv/bin/python main.py play --players current_s2,current_s2,current_s2,current_s2 --game-id manual-s2 --headless
+.venv/bin/python main.py play --players rule_ai_plus,rule_ai_plus,rule_ai_plus,rule_ai_plus --game-id manual-s2 --headless
 ```
 
 - [ ] 两种旧策略仍可识别并完整结束。
 - [ ] 默认大厅/CLI 没有自动改成 `humanlike_v2`。
-- [ ] current_s2 的现有分析/推荐能力没有因 `_engine_state` 注入收窄而报错。
+- [ ] rule_ai_plus 的现有分析/推荐能力没有因 `_engine_state` 注入收窄而报错。
 
 ## 4. 完整规则场景集
 

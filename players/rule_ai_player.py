@@ -25,7 +25,7 @@ class RuleAIPlayer(BasePlayer):
         if "strategy_id" in self.config:
             self.strategy_id = str(self.config.get("strategy_id"))
         sid = getattr(self, "strategy_id", None) or "rule_ai"
-        if not self.name or self.name in ("RuleAIPlayer", "rule_ai", "current_s2"):
+        if not self.name or self.name in ("RuleAIPlayer", "rule_ai", "rule_ai_plus"):
             tag = sid if sid != "rule_ai" else "RuleAI"
             self.name = f"{tag}-{seat}"
 

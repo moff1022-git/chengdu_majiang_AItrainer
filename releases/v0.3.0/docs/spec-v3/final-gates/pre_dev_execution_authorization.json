@@ -1,0 +1,20 @@
+{
+  "gate_result": "READY_WITH_MODEL001_SIMULATION_LIMITATION",
+  "authorized_batch_id": "B1-B",
+  "authorized_unit_ids": ["STATE-001", "STATE-011", "STATE-004"],
+  "authorized_code_scope": ["engine/match.py", "engine/deal.py", "engine/round_state_machine.py", "engine/orchestrator.py compatibility adapters only", "engine/__init__.py exports only"],
+  "authorized_test_scope": ["tests/spec_v3/test_state_001.py", "tests/spec_v3/test_state_011.py", "tests/spec_v3/test_state_004.py", "B1-B contract/regression tests"],
+  "forbidden_files": ["Locked specifications", "Task16 Frozen contracts", "Task17 historical CSV/JSON/status", "Task18A historical files", "SUPERSEDED deltas", "MODEL-001 status", "legacy golden expected values", "unrelated batches"],
+  "effective_spec_files": ["docs/spec-v3/03-unit-specs/deterministic_rule_state_specs.md", "docs/spec-v3/contracts/common_contracts.md", "docs/spec-v3/contracts/versioning_policy.md", "docs/spec-v3/decisions/B1-A_authority_correction.md", "docs/spec-v3/decisions/B1-A_effective_spec_overlay.md"],
+  "effective_delta_files": ["docs/spec-v3/semantic-completion/reviews/B1-B_semantic_deltas.csv", "docs/spec-v3/semantic-completion/reviews/B1-B_test_deltas.csv", "docs/spec-v3/semantic-completion/reviews/B1-B_evidence_deltas.csv", "docs/spec-v3/semantic-completion/reviews/B1-B_interface_impact.csv", "docs/spec-v3/semantic-completion/reviews/B1-B_acceptance_matrix.csv"],
+  "approved_decisions": ["B1-B-DESIGN-1.0.0", "SPEC-DECISION-STATE-DEFAULTS:A", "SPEC-DECISION-RP-ARCHIVE:A", "SPEC-DECISION-MIGRATION-GRAPH:A", "SPEC-DECISION-EXTENSIONS:A", "SPEC-DECISION-CANONICAL-NUMBER:A/OPTION-J2", "SPEC-DECISION-CANONICAL-UNICODE:A", "SPEC-DECISION-CONFIG-FALLBACK:A", "SPEC-DECISION-RNG-VERSION:A", "SPEC-DECISION-RNG-COORDINATE:A"],
+  "active_contract_versions": ["CDMJ-AI-RULES 1.0.0", "CDMJ-AI-PARAMS 2.0.0 new writer/1.1.0 legacy reader", "CDMJ-CONTRACTS 2.0.0 new writer/1.0.0 legacy reader", "CDMJ canonical-jcs-nfc-v2 profile"],
+  "model001_status": "INTEGRATED",
+  "model001_validation_scope": "SIMULATION",
+  "model001_data_status": "ACCEPTED_FOR_SIMULATION_DEVELOPMENT_WITH_LIMITATIONS",
+  "test_baseline": {"python": "3.12.10", "passed": 437, "failed": 0, "skipped": 0, "duration_seconds": 210.45},
+  "blocking_issues": [],
+  "non_blocking_issues": ["MODEL-001 external validity NOT_EVALUATED", "MODEL-001 rare shape class coverage remains limited"],
+  "required_independent_audit": true,
+  "next_prompt_file": "docs/spec-v3/final-gates/next_authorized_development_prompt.md"
+}

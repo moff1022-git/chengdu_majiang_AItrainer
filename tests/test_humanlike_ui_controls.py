@@ -2,7 +2,7 @@ from display.lobby_view import humanlike_status, toggle_humanlike_players
 
 
 def test_global_toggle_preserves_humans_and_enables_all_ai():
-    enabled = toggle_humanlike_players("human,rule_ai,random,current_s2")
+    enabled = toggle_humanlike_players("human,rule_ai,random,rule_ai_plus")
     assert enabled == "human,humanlike_v2,humanlike_v2,humanlike_v2"
     assert humanlike_status(enabled) == "开启"
 

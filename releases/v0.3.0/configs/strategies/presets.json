@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "default_id": "rule_ai",
+  "strategies": [
+    {
+      "id": "rule_ai",
+      "label": "规则AI",
+      "short_label": "规则",
+      "player": "rule_ai",
+      "use_f0011": false,
+      "description": "M08 分析管线：向听/进张/危险（不含 F0011 综合顾问）"
+    },
+    {
+      "id": "random",
+      "label": "随机AI",
+      "short_label": "随机",
+      "player": "random",
+      "use_f0011": false,
+      "description": "合法动作均匀随机"
+    },
+    {
+      "id": "current_s2",
+      "label": "当前策略·S2",
+      "short_label": "当前S2",
+      "player": "rule_ai",
+      "use_f0011": true,
+      "profile": "configs/strategies/current_s2.json",
+      "description": "当前仓库默认强度：F0010 M1–L3+DH+S0–S2 预测 + F0011 综合出牌"
+    },
+    {
+      "id": "humanlike_v2",
+      "label": "人类化AI·v2",
+      "short_label": "人类v2",
+      "player": "humanlike_v2",
+      "use_f0011": false,
+      "description": "F0028-3：仅使用 PlayerView v2 的确定性基础策略"
+    }
+  ]
+}

@@ -61,7 +61,7 @@ class SeatUIHub:
         self._ready_wait_active: bool = False
         # Per-seat AI type overrides from seat window settings (next hand)
         # seat -> strategy preset id or player key (human seats ignored)
-        # e.g. "random" | "rule_ai" | "current_s2"
+        # e.g. "random" | "rule_ai" | "rule_ai_plus"
         self.seat_ai_types: dict[int, str] = {}
         self.seat_auto_start: dict[int, bool] = {}
         # F0010: seats that enabled opponent-hand prediction (public view only).
@@ -565,7 +565,7 @@ class SeatUIHub:
                 known = set(list_strategy_ids()) | {"random", "rule_ai"}
                 ok = key in known or get_preset(key) is not None
             except Exception:
-                ok = key in ("random", "rule_ai", "current_s2")
+                ok = key in ("random", "rule_ai", "rule_ai_plus")
             if ok:
                 # Never override human seat type (F0020: multi-human)
                 if int(seat) in set(self.human_seats):

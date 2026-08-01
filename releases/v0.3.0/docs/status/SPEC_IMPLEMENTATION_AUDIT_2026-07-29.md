@@ -1,0 +1,201 @@
+# 两份成都麻将 AI 规格的实现审计
+
+> 日期：2026-07-29  
+> 审计对象：`成都麻将AI人类化决策规则_v1.md`、`成都麻将AI训练模拟器程序实现规范_v2.0.0.md`  
+> 代码基线：APP 0.2.1 / state 5 / PlayerView 2 / PARAMS 1.1 / IMPL 2.1  
+> 最新门禁：358 passed in 355.49s
+
+## 技术摘要
+
+**结论：工程底座已基本完成，但不能认定两份源规格“全部功能完整实现”。** 当前代码已经形成可运行的成都血战规则引擎、108 张实体牌守恒、PlayerView 信息隔离、可插拔 Humanlike v2、有限记忆/注意力/满意停止、有界扰动、Audit v1 和训练契约 v2。其合法性、确定性和基础兼容性证据较强。
+
+本报告共划分 96 个功能审计单元：33 个完成、61 个部分完成、2 个未实现。该分布是审计判断，不是代码覆盖率或产品完成百分比。
+
+主要缺口在语义深度和效果证明：人类化策略对第 7—10 章的复杂做牌、对手假设、风险和多轮计划采用简化启发式；RP-033 局间学习没有形成完整的可持续画像更新；训练环境没有实现四智能体统一自博弈、离线行为克隆或回放强化学习；没有真人牌谱对照，因此只能证明“具有人类化机制”，不能证明“达到真人水平”或“策略更强”。
+
+## 评价口径与证据范围
+
+| 等级 | 判定标准 |
+|---|---|
+| 完成 | 有生产代码锚点，并有直接自动测试、批跑或验收证据 |
+| 部分完成 | 接口或近似算法已存在，但只覆盖部分语义、配置分支或证据不足 |
+| 未实现 | 当前没有对应生产能力，或仅有参数/状态占位 |
+| 无法验证效果 | 功能存在，但缺少真人数据、基线对照或体验实验 |
+
+审计使用源文档 SHA-256、当前代码、358 项 pytest、F0028-2～6/F0030 验收记录和既有批跑。文档中的 `Done` 只作为线索，不作为完成证据。人工 GUI 快速验收不能替代完整策略效果评估。
+
+## 人类化决策规则：第 0—6 章
+
+| 规则范围 | 功能要求 | 代码与测试证据 | 完成度 | 实际效果与边界 |
+|---|---|---|---|---|
+| 0. 范围与合法性优先 | 血战、有限信息、合法性优先、唯一合法动作直出 | `engine/legal.py`、`players/humanlike/candidates.py`；legal-only、mandatory、泄漏测试 | 完成 | 强制动作不会被候选裁剪；2/3/4 人也可运行，超出源规则默认四人范围 |
+| 0. 可见信息边界 | 仅使用人类界面可见信息，公开范围由配置控制 | `protocols/player_view_builder.py`、`player_view_v2.py`；GP-021 全可见性测试、oracle 隔离测试 | 完成 | 生产 Humanlike v2 为 PlayerView-only；训练 oracle 仍存在但隔离在 `training/oracle.py` |
+| 1. 游戏开始 | 读取规则、座位、局数；初始化局内记忆并保留模糊对手印象 | config、runtime、`CognitiveState.reset_round()`；跨局有界公开印象测试 | 部分完成 | 能保留有界公共印象；没有稳定的玩家身份系统，跨桌长期画像和完整历史习惯学习未实现 |
+| 2. 学习规则 | 读取换牌/定缺/响应/番型/结算/公开范围等全部房规并形成风格 | GP-001～027 validator、engine adapter、compatibility matrix、四座 profile | 部分完成 | 27 GP 均注册并验证；部分房规是配置模型而非所有组合均有引擎分支和对照测试 |
+| 2. 风格动态变化 | 保守/平衡/激进随比分、局数、牌质和对手变化 | profile、cognition/policy 的 level/style 单调测试、score-gap 噪声门禁 | 部分完成 | 风格会改变阈值、候选和扰动；对剩余局数、名次目标的系统效用建模较浅 |
+| 3. 定庄与座位 | 庄家、上下对家、活动顺序、胡后重排 | `engine/deal.py`、`blood_battle.py`、state；game_id/dice/血战继续测试 | 完成 | 座位与轮转可靠；庄家自定义加分/连庄组合没有完整矩阵测试 |
+| 3. 独立对手模型 | 按座位分别建模且早期保留不确定性 | `PublicBelief.opponent_suit_pressure`、memory tokens | 部分完成 | 按座位分离公开压力，但不是源规范要求的完整多假设概率模型 |
+| 4. 初始手牌整理 | 13/14 张、花色/对子/刻子/搭子/重叠结构、普通/七对/清一色方向 | `engine/shanten.py`、humanlike hand analyzer、F0010/F0011 分析 | 部分完成 | 标准与七对向听可靠；Humanlike 特征将复杂结构压缩为 speed/value/defense/flexibility，未保留全部拆解与等待形状 |
+| 4. 初步计划可修正 | 初始方向不能锁死，后续信息可推翻 | `plan.py`、`cognition.py` 的 plan inertia/restart | 部分完成 | 有主/备计划和重启阈值；计划标签较粗，非第 7 章完整计划空间 |
+| 5. 换三张合法性 | 同花色三张、方向交换、接收后重算 | `engine/exchange.py`、opening；14 项 exchange/dingque 测试、实体牌转移测试 | 完成 | 规则和实体牌守恒充分验证，支持固定/骰子等方向 |
+| 5. 换牌策略 | 保护强结构、优先弱张、相近方案降低送牌、来源仅作弱线索 | Humanlike evaluator 的 exchange danger/结构评分、belief | 部分完成 | 能基于结构和公开危险排序，但没有逐条实现刻子/顺子/对子保护与来源可信度模型 |
+| 6. 定缺选择 | 0 张优先、少而散优先、保护强结构、清一色仅自然影响 | dingque action evaluator、shanten dingque、opening tests | 部分完成 | 有数量和结构启发式；清一色潜力、风格和清缺成本没有完整联合评估 |
+| 6. 清缺约束 | 缺门未清只能打缺、不能胡，后期避免花猪 | `engine/legal.py`、win_check、blood_battle；强制出缺与禁止胡测试 | 完成 | 规则层强约束可靠；缺门内部“更安全/少送牌”的细粒度顺序仍是近似策略 |
+
+## 人类化决策规则：第 7—14 章
+
+| 规则范围 | 功能要求 | 代码与测试证据 | 完成度 | 实际效果与边界 |
+|---|---|---|---|---|
+| 7.1 做牌方向 | 方向是动态目标，不是固定牌型 | `plan.py`、`cognition.py`；计划惯性/重启测试 | 部分完成 | 具备 clear_dingque/fast_win/value_hand/defend/balanced 等标签；牌型空间明显少于源规则 |
+| 7.2 花色环境 | 根据四家定缺组合判断两门可用牌环境 | PlayerView dingque、belief suit pressure | 部分完成 | 可读取四家定缺和公开副露；没有对源文档列出的全部定缺组合逐案编码和测试 |
+| 7.3 逐家方向 | 为每名对手维护两门、清一色、七对、对对胡、听牌等假设 | F0010 hand prediction；Humanlike `PublicBelief` | 部分完成 | F0010 有较丰富预测，但 Humanlike v2 生产决策只消费简化花色压力/危险度，不是完整贝叶斯假设分布 |
+| 7.4–7.8 动态调整 | 随手牌、公开牌、碰杠、对手进度和阶段调整 | hand features、public belief、phase、plan restart | 部分完成 | 新观测会重算特征与计划；阶段性阈值和逐条策略未全部落地 |
+| 7.9 胡牌人数 | 胡后重估速度、风险和活动顺序 | active seats、blood battle、PlayerView status | 部分完成 | 规则顺序会更新；策略效用只间接反映，未实现完整“第几胡”收益曲线 |
+| 7.10 比分/剩余局 | 领先求稳、落后追分、目标名次 | scores、GP-027、score-gap 噪声门禁 | 部分完成 | 分差会抑制噪声并进入部分评价；多局目标与剩余局数未形成完整 match utility |
+| 7.11 玩家风格/水平 | 不同水平、风格影响候选、深度、风险与牌型 | GP-023/026，profile 单调测试 | 部分完成 | 参数确实影响候选/阈值/扰动；尚无足够行为案例证明所有风格维度均可辨识 |
+| 7.12–7.13 冲突与复核 | 速度、番数、防守、计划冲突时加权并持续复核 | Q evaluator、plan inertia/restart、trace | 部分完成 | 有统一评分与复核机制；评分项是粗粒度代理，不是所有源规则冲突顺序 |
+| 7.14 全番型配置 | 只考虑启用番型、叠加/互斥、封顶后的边际价值 | `engine/fan.py`、fan table、hand_value proxy | 部分完成 | 规则计番支持常见番型与封顶；Humanlike 的价值评估未完整枚举配置番型关系 |
+| 7.15 活牌与摸牌机会 | 区分未见牌和估计墙内活牌，考虑剩余摸牌次数 | belief unseen counts、runtime RP-018/021 | 部分完成 | 未见牌有实现；Humanlike 决策中墙内分配和摸牌上下界使用有限，不能视为精确概率模型 |
+| 7.16 先胡/顺序 | 权衡先胡、做大、继续血战风险 | speed/value/defense 与 score | 部分完成 | 能权衡速度和价值，但没有独立、可校验的胡牌顺序效用函数 |
+| 7.17 主/备计划 | 同时维护主计划和备选计划，条件触发切换 | PlanSnapshot、CognitiveState、trace v2 | 完成 | 有主备计划及惯性/重启；计划内容仍是有限标签集 |
+| 8.1–8.4 算牌顺序 | 先自己后别人，按信息可信度、阶段和已胡玩家更新 | hand analyzer → belief → plan 管线；attention | 部分完成 | 处理顺序明确且只用公开信息；可信度层级与完整事件影响多为启发式 |
+| 8.5 有限记忆 | 衰减、模糊、显著事件强化、遗忘后不无因精确恢复 | `memory.py`；衰减/模糊/强化/容量测试 | 完成 | 以可见事件步数为时间，行为确定可复现；不是神经或个体化长期记忆 |
+| 8.6–8.7 行为序列/反观察 | 根据出牌顺序和行为变化推断，也考虑自己的信息暴露 | discard history、F0010 predictor、memory | 部分完成 | 能消费出牌序列；Humanlike v2 未显式建模“对手如何观察自己”的二阶信念 |
+| 8.8 信息边界 | 局中公开信息与终局公开信息分离 | immutable PlayerView audit、view hash、终局不覆写测试 | 完成 | private audit 保留历史观测；普通 legacy steps 仍含全状态，按私有文件管理 |
+| 8.9 剩余机会 | 估计各家剩余摸牌机会，碰杠胡后重算 | state/runtime 有活动顺序和 wall；RP slot | 部分完成 | 引擎轮转准确；策略侧没有完整的区间模拟器作为主要决策输入 |
+| 9.1 响应优先 | 合法性先于策略，多人响应确定解析 | legal/session/blood_battle；响应与多响测试 | 完成 | 胡优先与多人胡确定；GP-008 所有优先组合未形成完整参数化测试矩阵 |
+| 9.2 胡牌响应 | 自摸/点炮/抢杠、可放弃/强制胡、过胡 | win_check/legal/blood_battle、qiang-gang 与 pass-hu 状态 | 部分完成 | 核心胡路径存在；“最后若干张能胡必胡”和所有过胡恢复模式证据不足 |
+| 9.3 杠牌响应 | 明/暗/补杠、抢杠、杠分、补牌与风险权衡 | blood_battle/score/legal；杠与抢杠代码、基础测试 | 部分完成 | 规则转移实现较完整；AI 对杠后风险、呼叫转移和收益的评估较粗 |
+| 9.4 碰牌响应 | 碰后结构、速度、暴露、后续出牌和让序 | PONG legal/apply、profile peng preference | 部分完成 | 合法性和偏好实现；是否碰主要由简化加分，不是完整多因素推演 |
+| 9.5 摸牌后判断 | 胡/杠/出牌重新排序并更新计划 | orchestrator → policy 决策管线 | 完成 | 每次请求基于新 PlayerView 重算；真实 deadline 不参与策略随机源 |
+| 10.1–10.5 出牌 | 清缺、牌效、听前/听后、结构保留与候选排序 | shanten/ukeire、candidate/evaluator、F0011 | 部分完成 | 基础牌效可靠；Humanlike v2 没有覆盖源文档全部拆搭/听牌保留细则 |
+| 10.6 防守风险 | 多家主观风险、点炮损失与安全牌 | belief danger、F0010 danger、defense score | 部分完成 | 有公开信息危险代理；不是规范中的逐家听牌×等待×损失概率公式 |
+| 10.7–10.13 人类表现 | 节奏、不完全理性、安全牌储备、扣牌、信息表达、多轮计划、理由冲突 | cognition/policy 的 think-time、bounded noise、plan、trace | 部分完成 | 有可复现思考时间和近似候选扰动；不真实 sleep，扣牌/诈唬/多轮序列计划未完整实现 |
+| 11. 胡后处理 | 胡牌退出摸打、公开范围、继续观察和结算 | blood battle status、PlayerView visibility、score events | 完成 | 血战继续与公开范围实现；已胡 AI 的持续学习深度有限 |
+| 12. 终局计分 | 胡/杠/花猪/查叫/退税/呼叫转移/封顶、总分与排名 | score/fan/result/reward；计分、账本、会话分数测试 | 部分完成 | 常见路径和账本可审计；全部平台配置组合、真实房规夹具和边界顺序未穷尽 |
+| 13. 玩家模型 | 水平、风格、情绪、记忆一致性、局后约束、解释记录 | config/profile、cognition、audit trace v2 | 部分完成 | 人格/情绪/解释已接入；长期学习和真人风格校准未实现 |
+| 14. 有限认知 | Top-K 注意、有限候选/深度、满意停止、惯性、近似选择、超时默认 | attention/memory/cognition/policy；10 项 cognition 测试 | 完成 | 机制完整且确定可复现；有限推演是启发式评估，不是深层未来状态搜索 |
+
+## 人类化决策规则：第 15—18 章与参数
+
+| 规则范围 | 功能要求 | 代码与测试证据 | 完成度 | 实际效果与边界 |
+|---|---|---|---|---|
+| 15. 总体流程 | 配置→发牌→换牌→定缺→血战→结算→归档的统一流程 | orchestrator/session/opening/blood_battle；完整局和 2/3/4 人批跑 | 完成 | 生产流程可跑通且确定；事件类型并非完全按源规范的原子事件对象实现 |
+| 16. 阶段边界 | 第一阶段只做人类化规则与接口，不承诺自动学习最优策略 | F0028 分层架构、profile opt-in | 完成 | 明确保留 rule_ai/current_s2 基线，不引入深度学习框架 |
+| 17. GP 注册 | GP-001～027 完整、唯一、可验证、可追踪 | config validator、default/compatibility、traceability | 完成 | F0030 后 GP-024～027 迁到逐玩家，权威版本升级 PARAMS 1.1 |
+| 17. RP 注册 | RP-001～033 的生命周期、更新与归档 | `runtime.py`；exactly-33/lifecycle 测试 | 部分完成 | 33 个槽位齐全；部分 RP 是摘要或占位，未逐项实现源公式的全部动态语义 |
+| 17. RP-033 学习输出 | 仅用公开信息更新下一局画像并受历史长度限制 | runtime 注册、round reset 保留印象 | 未实现 | 没有完整 `Profile_next` 学习率更新和持久化画像；当前主要是策略实例内的有界公开印象 |
+| 18. 数值校验 | 类型、枚举、范围、权重、版本、冲突显式失败 | strict config、settings service、engine adapter；非法配置测试 | 完成 | 启动/保存校验强；运行期所有派生概率并非统一通过一个数值校验器 |
+| 18. Q 评价 | speed/live/fan/risk/plan/match 六项归一化加权和有界噪声 | evaluator/cognition/policy、trace | 部分完成 | 当前确定性 evaluator 实际主要用 speed/hand_value/defense/flexibility；认知层补计划/噪声，但与源公式并非一一同构 |
+| 18. 概率约束 | 对手假设归一、保留不确定性、死叫严格、未见不等于墙内 | visible/unseen、belief、view audit | 部分完成 | 核心信息边界正确；未形成完整归一化假设分布、墙内活牌概率与死叫判定链 |
+
+## 程序实现规范：第 0—10 章
+
+| 规范范围 | 工程要求 | 代码与测试证据 | 完成度 | 实际效果与边界 |
+|---|---|---|---|---|
+| 0–1. 版本与源绑定 | 保存 RULES/PARAMS/IMPL 版本和源 SHA-256，未知组合拒绝 | config constants/compatibility；源 hash 实测匹配 | 完成 | 当前权威已演进到 PARAMS 1.1 / IMPL 2.1，loader 兼容 1.0/2.0 |
+| 1.3 冲突裁决 | 规则、参数、不变量、实现顺序明确；冲突不静默默认 | config/engine adapter 明确失败 | 部分完成 | 配置冲突可拒绝；部分平台规则仍由现有 EngineConfig 默认值承载，未全部做到单一 GP 权威 |
+| 2. IR-001～018 | 实体去重、活牌分层、账本分层、强制候选、Top-K、可见性、不可变历史等 | physical tile/view/runtime/audit/cognition | 部分完成 | 关键不变量落地；估计活牌、剩余摸牌区间、完整账本层级和贝叶斯解释仍有简化 |
+| 3. 九模块架构 | controller/engine/state/view/policy/resolver/scoring/audit/training 分离 | 对应 `engine/`、`protocols/`、`players/humanlike/`、`training/` | 完成 | 未照搬建议 `src/`，而是在既有仓库模块内实现；权威边界清楚 |
+| 3.1 Match Controller | 锁 GP、四玩家、多局比分、终止、版本/seed | orchestrator/runner/session/config/game_id | 部分完成 | 单局与连续比分可用；自定义整场排名、提前结束和完整 match object 能力有限 |
+| 3.2 Rule Engine | 发换定、摸打碰杠胡、过胡、多响应、血战终止 | engine modules；规则测试和随机完整局 | 完成 | 核心规则可运行；GP-008/009/010 所有平台变体未完整矩阵验证 |
+| 3.3 State Store | 保存完整真实状态，仅授权模块读取 | `GameState` schema 5、oracle 分离 | 完成 | AI 私有认知不写入 GameState；这与规范 PlayerRoundState 示例不同但边界更安全 |
+| 3.4 Player View | 独立白名单观测，隐藏字段不存在而非置空 | builder/v2；GP-021、泄漏、隐藏哨兵测试 | 完成 | PlayerView v2 强类型冻结；wire 仍保留 v1 legacy mapping |
+| 3.5 Human-like Policy | 记忆→注意→结构→信念→计划→候选→推演→停止→扰动→trace | humanlike 模块链、trace v2 | 部分完成 | 顺序和机制存在；信念、计划和推演比规范简化 |
+| 3.6 Action Resolver | 按 GP-008 确定解析多人响应，顺序不受返回时序影响 | session/blood_battle/legal | 部分完成 | 胡/碰/杠核心确定；全部可配置优先模式的直接测试不足 |
+| 3.7 Scoring | GP-011～020 驱动胡、杠、转移、终局调整 | fan/score/config/ledger tests | 部分完成 | 常见番型和基础结算已实现；并非所有配置组合和番型关系均有代码/夹具证明 |
+| 3.8 Replay/Audit | 事件、状态/view/config hash、候选、RNG、计分 | Audit v1、legacy steps；篡改/截断/复演测试 | 部分完成 | 决策审计很强；完整规则事件重演仍依赖 legacy steps，未统一成规范的全事件日志 |
+| 3.9 Training wrapper | 生产规则引擎复用到训练，支持单/多智能体/自博弈 | `ChengduMahjongEnv` v1/v2 | 部分完成 | 单 learner + 固定对手完成；统一四智能体/自博弈接口未实现 |
+| 4.1 牌编码 | 0～26 face、0～107 physical id，守恒按实体 | physical_tile/deck/state migration；实体牌测试 | 完成 | UI/策略边界仍投影 face，兼顾兼容性 |
+| 4.2 玩家与活动顺序 | 固定 seat、HU_EXITED、active seats | state/blood_battle | 完成 | 项目还支持 2/3 人，这是兼容扩展 |
+| 4.3 手牌与组合 | concealed ids、counts、meld、dingque、pass-hu 一致 | state/physical tile/invariants | 部分完成 | 权威以实体手牌为主并投影 face；`tile_type_counts`不作为长期独立字段，符合不重复权威原则 |
+| 4.4 可见牌 | 实体去重后聚合 own/discard/meld/hu/gang | PlayerView builder、belief 去重 | 完成 | 被认领弃牌与副露去重有自动测试/批跑证据 |
+| 4.5 计分对象 | match-before/ledger/end-adjust/result/match-after 分层 | scores、score_events、result/session totals | 部分完成 | 账本与总分可核对；数据类字段命名未完全按规范五层显式呈现 |
+| 5. 配置模型 | 27 GP、4 profile、强类型、冻结、hash、版本组合 | config/default/compatibility/settings；11 config tests | 完成 | F0030 将 4 个认知 GP 逐座化，旧配置确定迁移 |
+| 6. Round/Player/View 状态 | 运行态、玩家态、可见态分层，33 RP 生命周期 | state/runtime/PlayerView | 部分完成 | 核心字段齐全但不是规范 TypeScript 接口逐字段照搬；AI 认知保留在策略侧 |
+| 7. 状态机/事件 | CONFIGURED→SETTLED，标准顺序，原子事件后 hash/断言 | engine phase/orchestrator/audit/invariants | 部分完成 | 阶段顺序可运行；没有每一种规范原子事件都作为统一不可变事件并逐事件写 hash |
+| 8. 合法行动与解析 | 无吃、定缺约束、碰/明暗补杠/抢杠、多响 | legal/blood_battle/session/score | 完成 | 主要规则路径已实现；少数参数化恢复/强制胡边界测试仍不足 |
+| 9. AI 决策管线 | 只读上下文、mandatory、有限候选、满意停止、有界噪声 | humanlike view/candidates/cognition/policy | 完成 | “有限 lookahead”主要是单步特征近似，非完整状态树搜索 |
+| 10.1 手牌分析 | 标准/七对/特殊牌型、Top-N 拆解、弃牌向听、等待形状 | shanten/F0011/humanlike hand analyzer | 部分完成 | 标准和七对覆盖好；Humanlike v2 不输出全部拆解/等待形状/配置特殊牌型状态 |
+| 10.2–10.5 信念/风险 | unseen 与墙内 live 分离、清缺概率、假设贝叶斯更新、逐家风险 | belief/F0010 danger/predict | 部分完成 | 公开信息启发式可用；未严格实现规范公式和完整假设集合 |
+| 10.6–10.9 注意/记忆/摸牌/Q | Top-K、指数衰减、剩余摸牌区间、六项 Q | attention/memory/runtime/evaluator | 部分完成 | 注意和记忆完成度高；摸牌机会和 Q 公式语义不完全 |
+
+## 程序实现规范：第 11—19 章
+
+| 规范范围 | 工程要求 | 代码与测试证据 | 完成度 | 实际效果与边界 |
+|---|---|---|---|---|
+| 11.1 训练模式 | 规则对规则、学习对规则、单智能体、四智能体自博弈、离线 BC、回放 RL、域随机化 | runner/env/player registry | 部分完成 | 规则对规则和单 learner 固定对手可用；四智能体统一接口、BC、回放 RL、域随机化未实现 |
+| 11.2 观测空间 | 手牌/副露/定缺/弃牌序列/活动座位/墙/比分/过胡/mask/可选认知 | `observations_v2.py`，921 维 flat；2/3/4 人形状/泄漏测试 | 部分完成 | 大部分块已实现；cognitive 在配置模型存在但 env 默认路径未形成完整可切换训练输入，过胡表达也较弱 |
+| 11.3 动作空间 | 结构动作、固定 mask、非法 raise 或惩罚终止 | codec v2 635 项、env v2；roundtrip/mask/非法测试 | 完成 | v2 显式 opt-in；v1 保留 legal-list index 语义 |
+| 11.4 奖励 | 真实得分为主、PlayerView 势能塑形、真实/塑形分离 | reward_v2/env/metrics；shaping 与 true score 测试 | 完成 | 默认关闭 shaping；没有为具体 RL 算法调参或证明提升收敛 |
+| 11.5 Episode | 单局/整场长 episode、合法跨局状态继承 | env 单局、session 多局分数 | 部分完成 | 单局 episode 完成；带跨局认知/比分的长 episode 训练接口未完整实现 |
+| 12.1 事件日志 | 每原子事件写 public payload、private hash、state before/after/config hash | legacy episode/steps + Audit v1 | 部分完成 | decision audit 有 hash 链；未形成一套完全覆盖所有原子规则事件的统一日志 |
+| 12.2 AI 决策日志 | view、记忆、注意、计划、legal/candidate/checked/score/stop/RNG/action/time | DecisionTrace v2、Audit v1 | 完成 | private audit 可验证/篡改检测；需按敏感文件管理，未提供公开脱敏导出 |
+| 12.3 确定性回放 | 同配置/seed/策略/事件得到同墙、状态、动作、结算 | game_id tests、audit replay、60 局 9294 决策复演 | 部分完成 | 策略输入序列复演和 state hash 证据很强；完整事件重演仍分散在 legacy steps |
+| 13.1–13.4 接口 | RuleEngine/ViewBuilder/Policy/Scoring 的清晰接口 | Python 模块函数、GameSession、BasePlayer、DecisionResult | 完成 | 接口为项目原生 Python 形态，不照搬 TypeScript 示例；功能边界等价 |
+| 13.5 训练接口 | reset/step/mask/clone/restore、多玩家 ActionMap | env reset/step/mask | 部分完成 | 单 learner reset/step/mask 完成；公开 clone/restore 和多玩家 ActionMap 未实现 |
+| 14.1 每事件断言 | 守恒、张数、actor、HU_EXITED、清缺、legal、view、账本、状态机 | invariants/state/legal/view/audit | 部分完成 | 关键守恒/泄漏/legal 有强证据；不是所有事件都统一自动执行十项断言 |
+| 14.2 单元测试清单 | 换牌、定缺、碰杠胡、多响、过胡、终局结算、回放等 | 358 pytest 分布于 engine/humanlike/training | 部分完成 | 大多数主路径覆盖；最后若干张强制胡、过胡恢复矩阵、查大叫/退税/呼叫转移等直接用例不足 |
+| 14.3 属性测试 | 随机合法局验证守恒、mask、泄漏、复现 | 随机批跑、参数化 2/3/4 人、固定 seed | 部分完成 | 达到属性式目标，但未使用系统化 property-based 生成/缩减框架，状态空间覆盖不可量化 |
+| 14.4 章节对照测试 | 每个源规则章节固定 GP/RP 案例与不同 profile 允许行为集 | 分散单测、F0028 验收 | 未实现 | 没有一套第 0～18 章逐章编号的完整 golden-case 测试库；本报告不能替代可执行对照测试 |
+| 14.5 回归指标 | 规则率、复现率、打法指标、风格差异、真人分布对比 | metrics_v2、批跑零非法/泄漏/守恒、性能报告 | 部分完成 | 工程质量指标已具备；规则差异率、风格统计显著性和真人牌谱差异未报告 |
+| 15. 源规则追踪 | 章节→GP/RP→模块；每参数 consumer/test；派生特征来源/版本/索引 | 60 条 PARAMETER_TRACES、F0028 文档 | 部分完成 | GP/RP 参数追踪完整；派生特征没有全部声明 formula version、visibility、normalization 和训练索引 |
+| 16. 项目结构 | 领域分层且规则/AI/训练/回放分开 | engine/protocols/players/training | 完成 | 按既有仓库兼容落地，未创建平行 `src/`，这是批准过的实现差异 |
+| 17. 实施顺序 | 规则→视图隔离→基础策略→认知→训练 | F0028-1～6 历史 | 完成 | 实施顺序和门禁符合规范 |
+| 18. 版本/兼容 | 三版本分线、未知组合拒绝、发布物含 schema/测试/迁移 | config compatibility、version.py、acceptance docs | 部分完成 | 版本读取与迁移完成；尚未形成包含本次全部审计材料的正式发布包/tag |
+| 19. 完成定义 | 配置驱动、守恒、无泄漏、确定响应、可审计、全追踪、有限认知、复现、全测试 | 当前证据综合 | 部分完成 | 核心不变量满足；因配置分支、逐章对照、训练模式和效果验证缺口，不满足“全部完成”的严格定义 |
+
+## 测试与运行效果证据
+
+| 证据 | 当前结果 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|
+| 全量 pytest | 358 passed / 355.49s（Windows Python 3.12.10） | 当前自动化回归在该环境全部通过 | 未覆盖的房规组合或策略语义不会因此自动成立 |
+| F0028-3 批跑 | 2/3/4 人 150 局、23392 决策，零崩溃/非法；固定 seed 复现 | Humanlike v2 可合法、稳定运行 | 打法质量或真人相似度 |
+| F0028-4 批跑 | 150 局零认知崩溃/非法；单决策 p95 1.1968ms | 认知层性能与安全性 | 情绪/风格是否符合真人统计分布 |
+| F0028-5 审计 | 60 局、9294 决策全部链验证和策略复演；1.375× 开销 | 决策输入、动作、RNG 与认知摘要可审计 | 单靠策略复演不能替代全规则事件重演 |
+| F0028-6 训练 | 150 局零非法/泄漏/守恒；obs+mask p95 0.4917ms；v2/v1 1.0847× | v2 训练契约稳定且性能达标 | 尚无训练算法、收敛曲线或收益提升 |
+| F0030 | 逐座配置、迁移、hash、GUI 控件测试与 2/3/4 人批跑 | 四座认知参数独立且可生效 | 尚无系统性 profile A/B 行为差异报告 |
+| 人工快速验收 | Human 换三张修复后可进入定缺并正常出牌 | GUI/子进程关键路径可操作 | 完整 MT-06～17、长期稳定性及策略体验 |
+
+## 效果评价
+
+| 维度 | 评价 | 依据与边界 |
+|---|---|---|
+| 规则正确性 | 较高，但非全配置完备 | 核心血战、守恒、合法性、计分主路径有测试；复杂平台房规组合缺少矩阵 |
+| 信息隔离 | 高 | PlayerView v2 白名单、oracle 隔离、泄漏测试和 audit 拒绝机制 |
+| 可复现与审计 | 高 | game_id、canonical hash、Audit v1、策略复演和跨 hash seed 证据 |
+| 人类化机制 | 中高 | 有人格、有限记忆、注意、满意停止、计划惯性、情绪、有界噪声 |
+| 人类化语义深度 | 中 | 复杂做牌/对手/防守规则被压缩为少量启发式特征和计划标签 |
+| 策略强度 | 未验证 | 没有与强基线或真人牌谱的胜率、得分、弃牌分布对照 |
+| 真人相似度 | 未验证 | 没有真人数据、盲测或统计距离；“Humanlike”是架构目标，不是已证实效果 |
+| 训练可用性 | 中高（契约层） | 固定 action/mask/obs/reward/metrics 已有；具体算法、多智能体和离线训练未实现 |
+| 产品可用性 | 中高 | UI 开关/参数窗、Human 子进程、2/3/4 人均可运行；完整人工验收未结束 |
+
+## 实现边界与关键风险
+
+1. `humanlike_v2` 是显式可选 profile，不替换 `rule_ai/current_s2`；因此旧行为兼容，但默认体验不自动获得新策略。
+2. Humanlike 策略只读 PlayerView；F0010 的 oracle 评估工具仍可用于离线诊断，不能把其结果混入生产策略证据。
+3. `PublicBelief` 当前是确定性公开启发式，不是规范第 10 章的完整贝叶斯对手手牌/听牌模型。
+4. 认知“搜索深度”主要调节候选检查和近似评价，不等于展开多层真实状态树。
+5. 模型思考时间写入 trace，但测试/训练不真实 sleep；它证明可复现节奏参数，不证明 GUI 中已还原真人时间分布。
+6. 训练 v2 是单 learner 契约；四智能体统一环境、自博弈调度、行为克隆、回放 RL 和域随机化仍在边界外。
+7. schema 1～4 有合成迁移测试，但真实历史存档夹具尚未验证。
+8. 工作树存在大量跨机文件模式/换行变化，审计结论基于当前可读内容和通过测试，不代表 Git 工作树已适合直接发布。
+
+## 建议的完成路线
+
+1. 建立 `tests/spec_trace/`：按源规则第 0～18 章编号提供固定 GP/RP、允许行为集、状态转移和结算 golden cases。
+2. 优先补齐高风险规则测试矩阵：GP-008/009/010、查大叫、退税、呼叫转移、死叫、尾牌强制胡和庄家变体。
+3. 将 Humanlike belief 升级为逐对手归一化假设分布，并把公开证据、置信上限和最小不确定性写入 trace。
+4. 将 Q 评价明确对齐 speed/live/fan/risk/plan/match 六项，逐项声明公式版本、可见级别、归一范围和测试。
+5. 落地 RP-033 的公开信息局间学习与持久化边界，先做可关闭、可回滚的对手印象更新。
+6. 新增 profile A/B 固定场景与批量统计，证明保守/平衡/激进、novice/expert 的行为差异稳定且方向正确。
+7. 接入匿名真人牌谱后，比较弃牌分布、碰杠率、做牌路线和思考时间；在此之前不要宣称真人水平。
+8. 若训练是近期目标，再单独规格化多智能体 ActionMap/self-play 和离线数据格式，不与现有单 learner v2 静默混用。
+
+## 仍需回答的问题
+
+- 产品目标更重“真人相似度”还是“胜率/得分强度”？两者的评价集和权重不同。
+- 哪一套成都房规组合是发布权威基线？当前 GP 支持面大于直接测试面。
+- 是否有可合法使用的真人牌谱及思考时间数据？没有数据就只能验证机制，不能验证相似度。
+- RP-033 应只在同一 match 内学习，还是跨 session 持久化到玩家身份？后者涉及隐私、版本和遗忘策略。

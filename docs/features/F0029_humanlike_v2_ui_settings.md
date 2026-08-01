@@ -33,7 +33,7 @@
 
 - 新增一行 `Humanlike AI v2：开启/关闭`，另有 `参数…` 按钮/点击区域。
 - 开启：把当前玩家配置中的所有非 `human` 座位设置为 `humanlike_v2`；人类座位不变。
-- 关闭：仅把当前为 `humanlike_v2` 的座位恢复为 `rule_ai`；已有 `random/current_s2` 不被覆盖。
+- 关闭：仅把当前为 `humanlike_v2` 的座位恢复为 `rule_ai`；已有 `random/rule_ai_plus` 不被覆盖。
 - 切换玩家预设后，开关值由实际 `players_spec` 重新计算：全部 AI 座均为 humanlike 时显示“开启”，否则显示“关闭/混合”。
 - 变更在下一局开始时生效；若桌面已有运行中牌局，不热替换玩家实例。
 
@@ -118,7 +118,7 @@
 6. 合法保存后重新加载 hash 改变；下一局玩家使用新 hash，当前局 hash 不变。
 7. 恢复默认、备份、导入、导出和并发修改保护通过。
 8. 800×600 大厅和现有座位窗最小尺寸无控件遮挡；green/blue 主题可读。
-9. 原有 rule_ai/random/current_s2、CLI 和 Human 窗口行为不回归。
+9. 原有 rule_ai/random/rule_ai_plus、CLI 和 Human 窗口行为不回归。
 10. 全量 pytest、compileall 通过，并完成人工点击验收。
 
 ## 8. Out of Scope

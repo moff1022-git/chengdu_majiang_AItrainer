@@ -1498,7 +1498,7 @@ class TkSeatApp:
                 choices = [
                     ("rule_ai", "规则"),
                     ("random", "随机"),
-                    ("current_s2", "当前S2"),
+                    ("rule_ai_plus", "当前S2"),
                 ]
                 known = {c[0] for c in choices}
             cur = self.ai_type if self.ai_type in known else "rule_ai"
@@ -1573,7 +1573,7 @@ class TkSeatApp:
 
             known = set(list_strategy_ids()) | {"rule_ai", "random"}
         except Exception:
-            known = {"rule_ai", "random", "current_s2"}
+            known = {"rule_ai", "random", "rule_ai_plus"}
         if key not in known:
             return
         self.ai_type = key
@@ -1688,7 +1688,7 @@ class TkSeatApp:
                 choices = [
                     ("rule_ai", "规则AI"),
                     ("random", "随机AI"),
-                    ("current_s2", "当前策略·S2"),
+                    ("rule_ai_plus", "当前策略·S2"),
                 ]
                 known = {c[0] for c in choices}
                 get_preset = lambda _k: None  # type: ignore

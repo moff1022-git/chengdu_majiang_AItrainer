@@ -1,0 +1,22 @@
+{
+  "progress_tracker_format": "MARKDOWN",
+  "progress_tracker_row_count": 96,
+  "progress_tracker_unique_unit_count": 96,
+  "progress_tracker_duplicate_count": 0,
+  "progress_tracker_missing_unit_count": 0,
+  "progress_tracker_unexpected_unit_count": 0,
+  "progress_tracker_header_valid": true,
+  "progress_tracker_section_order_valid": true,
+  "progress_tracker_markdown_parse_error_count": 0,
+  "progress_status_enum_error_count": 0,
+  "progress_substatus_enum_error_count": 0,
+  "progress_percent_formula_error_count": 0,
+  "audited_not_100_percent_count": 0,
+  "unaudited_with_100_percent_count": 0,
+  "task17_status_mutation_count": 0,
+  "missing_next_action_count": 0,
+  "invalid_blocking_reference_count": 0,
+  "missing_update_metadata_count": 0,
+  "multiple_progress_file_writer_count": 0,
+  "progress_summary_mismatch_count": 0
+}

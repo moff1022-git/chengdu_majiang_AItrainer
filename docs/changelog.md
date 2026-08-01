@@ -1,5 +1,99 @@
 # Changelog
 
+## 2026-08-01 — MODEL-001 F0035 工程门禁
+
+- 新增独立数据集 validator，覆盖模拟数据准入、feature/label 隔离、分组泄漏检查、正式 provenance 门禁和文件 SHA-256 记录。
+- MODEL-001 模拟数据 10,595 条校验通过；外部有效性仍为 `NOT_EVALUATED`，不改变 `INTEGRATED` 状态。
+
+## 2026-08-01 — Task 19 权威状态同步
+
+- 将 integration worktree revision 14 tracker、orchestrator state 和 agent runtime 同步到主目录，两者现在均为 `41/96 AUDITED`。
+- 保留 T02 人工门禁：性能 workload 语义未自动选择，未降低标准或改变权威语义。
+
+## 2026-08-01 — Task 19 M02 独立审计收口
+
+- MODEL-004 独立 clean-archive 审计 PASS：`0 P0/0 P1/0 P2`，定向 `70 passed`，全量 `776 passed, 1 skipped`，更新 Task 19 为 `41/96 AUDITED`。
+- T02 保持 ADR-0001 人工门禁：不自动选择性能 workload 语义，不降低门禁，不改变权威 legal/view/hash 语义。
+
+## 2026-08-01 — Task 19 W04 D05/D12/D14 审计收口
+
+- D05 最终 clean-archive 审计 PASS：RULE-007/008/012 达成真实 PONG/MING_GANG transition exactly-once、legacy golden、E4/E5/AC 门禁，更新为 AUDITED。
+- D12/D14 修复后 clean-archive 审计 PASS：ALGO-008/STATE-007/STATE-012 更新为 AUDITED。W04 累计 `40/96 AUDITED`。
+- T02 实际环境性能标准与批准 contract-transition workload 存在语义冲突，已按 ADR-0001 进入唯一人工门禁，暂停修复，不降标或改变权威语义。
+
+## 2026-08-01 — Task 19 CLI 重启后自动续跑设计
+
+- 将 F0034 调整为会话内 Root Orchestrator + CLI 重启后 Startup Reconciler；CLI 关闭期间任务暂停，重启后无需再输入“继续 Task 19”。
+- 增加仓库状态恢复顺序、幂等键和人工门禁跨 session 保留规则。
+- 明确排除 `launchd`、Windows Task Scheduler、常驻守护进程和其他外臨自动唤醒程序；未修改 Task 19 业务代码或审计门禁。
+- 新增 `reconcile-startup` 只读恢复入口，自动选择权威 integration worktree 并输出幂等续派队列；`AGENTS.md` 要求 Task 19 新 session 在读取基线后立即执行。调度/runtime 专项 `18 passed`。
+
+## 2026-08-01（Task 19 监控器多工作区修复）
+
+- 监控器自动发现 Git worktree 并选择最先进的有效 Task 19 tracker；同状态时优先 integration 分支，避免主工作区或 detached 审计副本覆盖实时进度。
+- 新增 `--workspace`、source/branch/HEAD/tracker/runtime 元数据、候选源摘要和 runtime fallback/lag 标志。
+- 过期 runtime 中的 RUNNING 现在投影为 STALE；14 项监控/runtime 测试通过，实际显示从主工作区 `15/96` 修正为 integration `27/96`。
+
+## 2026-07-31（Codex CLI 无人值守配置与重启检查点）
+
+- 新增项目级 `.codex/config.toml`：`on-request + auto_review + workspace-write`，仅对已信任的本仓库生效，允许工作区/`/private/tmp` 写入与 workspace-write 网络访问。
+- 已将 B2-A1 commit `259b3e1` 独立 clean-archive 终审 PASS 和 CLI 重启后恢复顺序固化到 `LATEST.md`；重启后先集成 B2-A1，再完成 D10/W01，然后继续 W02–W14。
+
+## 2026-07-31（Task 19 平台与不可逆操作扩展授权）
+
+- 项目所有者授权 Task 19 必需的平台强制权限、Git/外部不可逆操作按自动同意处理，不再对话式二次询问。
+- 平台强制弹窗不能被仓库授权绕过；Root 直接发起请求，并用 `confirm-open/confirm-close` 在监控器中标记挂起状态。
+- 授权不扩大 Task 19 范围；push、发布、删除、tag 移动和历史重写仅在完成任务必需、目标精确且最小范围时执行。
+
+## 2026-07-31（Task 19 动态进度监控）
+
+- 用户明确授权实现长时间无人值守任务的动态状态程序，`task19_progress_tool_design.md` 的只读监控范围升为 Approved；可写 `apply-delta` 仍未授权。
+- 新增 `tools/task19_monitor.py`：动态显示 14 wave / 40 batch / 96 unit 的已完成、进行中、未开始、累计时间和 tracker 新鲜度；支持 `--once`、`--json`、`--interval`和 `--started-at`。
+- 新增 `tests/test_task19_monitor.py`；3 项测试通过，验证 14/40/96 覆盖、状态投影与时长格式。
+- 监控器增加 Agent 面板，从 `docs/status/task19_agent_runtime.json` 显示运行/完成/中断/过期状态、当前工作、已运行时间和心跳年龄；`RUNNING` 心跳超过 60 秒自动投影为 `STALE`。
+- Agent 面板增加 `requires_human_confirmation` 和原因；顶部汇总待人工确认数，当前为 0。只有 Orchestrator 明确登记的真实门禁才显示 YES，过期/中断不自动误报。
+- 监控器增加总体、W01–W14 和 40 个 batch 的 evidence-gate 进度百分比，按所属单元 tracker `progress` 等权平均；当前权威快照显示总体 21.61%、W01 13.75%。
+- 交互终端增加 ANSI 状态颜色：需要人工确认红色、运行中蓝色、已完成绿色、待运行白色；中断/过期红色。非 TTY、JSON 和 `NO_COLOR` 保持无颜色文本。
+- 修正 Root 误显示 `STALE`：Agent 状态保留 Orchestrator 最后明确登记的 `RUNNING`，心跳超过 60 秒另行显示红色 `HEARTBEAT STALE` 警告，不再用快照新鲜度覆盖 Agent 状态。
+- 修复 Agent 列表不完整：补入遗漏的嵌套 `stage5_review`，当前快照 4 个 Agent 与会话 API 一致；面板增加 `Registered agents` 和 `Agent snapshot age`。
+- Agent 状态增加 `WAITING` 黄色，表示已创建但等待依赖/任务/资源/调度；与白色 `NOT_STARTED` 明确区分。
+- 新增 `tools/task19_agent_runtime.py` Orchestrator 钩子：`sync` 原子替换完整 Agent 树，`upsert` 记录单 Agent 生命周期且不丢失其他条目，`heartbeat` 刷新 Root。新增 3 项专用测试，与监控器合计 `8 passed`。
+- 修复平台授权弹窗不更新监控状态：增加 `confirm-open/confirm-close` 生命周期钩子，强制在发起权限请求前置红色 `confirm=YES`，请求结束后清除。端到端开/关模拟通过，Agent 同步+监控合计 `11 passed`。
+
+## 2026-07-31（W01 无人值守闭环阶段结果）
+
+- MODEL-001 R4、TRAIN-009、RULE-015 和 AUDIT-010 已分别完成独立复审 PASS；设计批准线仍不自动宣称业务实现/AUDITED。
+- B2-A1 `0327f32` 在测试全绿下被独立审计判 FAIL：生产权威路由不完整、outbox/副露合同缺口、E4 占位/过期 hash 和 E5 AC 外键不全。修复检查点 `9fdd945` 已关闭 claimed-tile 与 outbox 两项 P1；剩余需以 STATE-004 最终提交事件重建完整权威路由和真实 E4/E5。
+
+## 2026-07-31（Task 19 统一持续授权）
+
+- 项目所有者指令“统一授权，后续授权均自动同意，不要再询问”；自此 Task 19 范围内的实现、修复、测试、复审、独立审计、推荐语义选择、共享路径接线、scoped commit、集成和状态回写默认自动同意。详见 `docs/status/TASK19_STANDING_AUTORIZATION_2026-07-31.md`。
+- 统一授权不降低 Locked/Frozen、AC/E4/E5 或独立审计门禁，不替代系统强制的外部权限；外部 push/发布、删除、历史重写或凭据操作默认跳过而不阻塞其他工作。
+
+## 2026-07-31（W01 合并所有者硬门禁批准）
+
+- 项目所有者批准 RULE-015 向量 `A,A,A,A,A,A,A,A,A,A,A,B`、AUDIT-010 向量 `A,A,A,A,A`，并临时授权 Orchestrator 修改 B2-A1 已批验收所必需的共享生产路径和新增专用集成测试。详见 `docs/status/TASK19_W01_MERGED_OWNER_GATE_2026-07-31.md`。
+- 授权不包含修改既有测试断言、Locked/Frozen、push、发布、删除或将设计批准直接升级为 AUDITED；W01 无人值守闭环已恢复。
+
+## 2026-07-31（ADR-0001 批准与 W01 无人值守试运行）
+
+- 项目所有者批准 ADR-0001，状态由 Proposed 更新为 Accepted；实际并行调度 MODEL-001 独立审计、B2-A1 闭环和 W01 设计复核/机械修订。
+- MODEL-001 R3 虽全仓 490 passed / 1 skipped，独立审计仍因 `private memory` 边界绕过和 manifest 合同违反判 FAIL；B2-A1 63 项测试通过但因共享生产路径所有权与 42 AC 缺口停在硬门禁；TRAIN-009 `06fd0b1` 复审发现 4 处机械绑定遗漏。未降低验收、未集成 FAIL 提交。
+
+## 2026-07-31（Task 19 多 Agent 自动化流程诊断）
+
+- 确认现有 Terminal 0～3 方案将用户变成手动消息总线，且固定多窗口/分支没有按依赖图、写路径和任务成本调度，造成等待、交接和重复授权浪费。
+- 新增 Proposed `docs/adr/0001-agent-orchestrated-unattended-development.md`：建议用单 Orchestrator 按需调度实现/修复/复审/独立审计 Agent，默认无人值守闭环，只在新语义、扩权、不可逆操作、用户改动冲突或连续失败时请示。本轮未改业务代码或现有授权状态。
+
+## 2026-07-31（策略设计补充资料与 W01 进展核对）
+
+- 读取根目录 `成都麻将ai策略设计补充资料md.md`，确认其为 ChatGPT 对话导出而非 Approved 规格；其完整策略流程、K-01～K-12 和 AU-001～AU-096 主体已落入 Draft `docs/features/F0033_humanlike_ai_complete_software_design.md`。
+- 根据 Git/worktree 事实刷新 `docs/status/LATEST.md`：记录 B2-A1 未提交草案、RULE-015 `2064eaa` 待批决策、TRAIN-009 `21ea400` 待 Terminal 0 复核、AUDIT-010 待批，以及 MODEL-001 repair `badea8e` 待独立复审。本轮未改业务代码或测试。
+
+## 2026-07-31（Mac 目录初始化 / Task 19 基线同步）
+
+- 核对 `main` @ `65e8dcb`、`task19-w01-baseline` tag、`task19/w01-b2a1` 分支、checkpoint 最终授权与 B2-A1 Approved 设计授权；更新 `docs/status/LATEST.md`，纠正旧快照中“checkpoint 待批准 / B2-A1 不可编码”的过期描述。本轮未改业务代码或测试。
+
 ## 2026-07-30（Task 19 剩余开发并行执行总计划）
 
 - 重验 96/81 单元、207 边无环图、Task18 当前状态及 B2-A1-DESIGN-1.0.0；将 81 单元重分为 40 个小批次、14 个 wave 和 6 条主轨道。
@@ -31,7 +125,7 @@
 - E5 42 行与 42 个唯一 Delta 全部通过外键检查：缺失引用、重复 Delta、无法解析引用均为 0；E4 每单元四类证据齐全，哈希均为实际文件 SHA-256 或 null。
 - 全仓复跑 463 passed / 0 failed / 1 skipped（44.78s）；唯一 macOS Tk GUI skip 与 B1-B 无关。签署结论 `READY_TO_PROMOTE`，Task18 当前视图三单元为 AUDITED，Task17 历史不变。
 
-按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。  
+按时间倒序记录**已完成**的文档与实现摘要（非自动生成）。
 配合 `docs/status/LATEST.md` 作**跨机/跨 session 同步基线**（见 `docs/DEVELOPMENT.md` §2.2）。
 
 ## 2026-07-30（B1-B 最终缺口关闭与 AUDITED）
@@ -617,7 +711,7 @@
 ### 实现 — 只读 PlayerView v2 的确定性 humanlike_v2
 
 - 新增七个 `players/humanlike/` 策略模块：上下文、belief、牌效、计划、候选、评价和玩家生命周期
-- 注册选配 `humanlike_v2` 与大厅策略 preset；rule_ai/current_s2 默认行为不变
+- 注册选配 `humanlike_v2` 与大厅策略 preset；rule_ai/rule_ai_plus 默认行为不变
 - orchestrator 全知 `_engine_state` 注入缩窄为 legacy RuleAI，humanlike_v2 无该通道
 - DecisionTrace v1、RP 写入、mandatory 候选和稳定 8 位评分落地，策略不消费 RNG
 - 全量 321 passed / 1 skipped；2/3/4 人各 50 局共 150 局、23392 次决策零策略崩溃/非法动作
@@ -768,15 +862,15 @@
 | ARP 无路径 | `ARPINSTALLLOCATION` 写入安装目录 |
 | 版本显示 0.2.1.0 | ProductVersion 改为 **0.2.1** 三段 |
 
-- 重打 MSI 后请 **以管理员身份** 安装验证  
-- 文档 WINDOWS_BUILD §8 补充错误码表  
+- 重打 MSI 后请 **以管理员身份** 安装验证
+- 文档 WINDOWS_BUILD §8 补充错误码表
 
 ## 2026-07-26（F0027 · MSI 中文乱码修复）
 
 ### 修复 — 安装程序中文乱码
 
-- 根因：MSI 字符串表为 **ANSI 代码页**；曾用 `Codepage=65001`/UTF-8 → 控制面板/开始菜单乱码  
-- 修正：`Codepage=936`（GBK）+ `Language=2052`；`gen_msi_product_wxs.py` 生成 **GBK** 编码 `Product.wxs`  
+- 根因：MSI 字符串表为 **ANSI 代码页**；曾用 `Codepage=65001`/UTF-8 → 控制面板/开始菜单乱码
+- 修正：`Codepage=936`（GBK）+ `Language=2052`；`gen_msi_product_wxs.py` 生成 **GBK** 编码 `Product.wxs`
 - 请重新 `build_msi_windows.ps1` 后安装验证「成都麻将AI训练器」
 
 ## 2026-07-26（F0027 · Windows MSI）
@@ -794,9 +888,9 @@
 
 ### 文档 — 根 README 对齐 Windows 发布
 
-- 功能「分发」改为 **Win x64 + macOS arm64** 双平台预构建  
-- 删除「Windows 打包（规划中）/ F0025 Draft」；改为 **预构建下载** + **本机构建**（Win/Mac 分节）  
-- 含 Release 附件表、Windows 解压示例、构建命令与日志路径  
+- 功能「分发」改为 **Win x64 + macOS arm64** 双平台预构建
+- 删除「Windows 打包（规划中）/ F0025 Draft」；改为 **预构建下载** + **本机构建**（Win/Mac 分节）
+- 含 Release 附件表、Windows 解压示例、构建命令与日志路径
 
 ## 2026-07-26（F0025 · Release 发布）
 
@@ -805,7 +899,7 @@
 - 附件：
   - `ChengduMahjongAITrainer-0.2.1-windows-x64-PyInstaller.zip`（约 40 MB）
   - `ChengduMahjongAITrainer-0.2.1-windows-x64-Nuitka.zip`（约 42 MB）
-- 页面：https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1  
+- 页面：https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1
 - Release 说明已改为 **Windows x64 + macOS arm64** 双平台
 
 ## 2026-07-26（F0025 · 本机构建）
@@ -813,7 +907,7 @@
 ### 工程 — Windows 双包本机构建成功
 
 - **PyInstaller**：`dist/pyinstaller/…/ChengduMahjongAITrainer.exe` · `--version` 0.2.1
-- **Nuitka**：`dist/nuitka/pyinstaller_entry.dist/ChengduMahjongAITrainer.exe` · 冒烟通过  
+- **Nuitka**：`dist/nuitka/pyinstaller_entry.dist/ChengduMahjongAITrainer.exe` · 冒烟通过
   （首次 MinGW 下载曾失败，重试后 gcc 15.2 缓存成功；脚本加 `--lto=no` 加速链接）
 - 副本：`releases/windows/*-PyInstaller`、`*-Nuitka`（gitignore）
 
@@ -845,26 +939,26 @@
 
 ### 文档 / 工程 — README 功能界面五图
 
-- 根 `README.md` **功能 → 界面预览**：大厅、主窗口（游戏中）、人类/AI 座位（游戏中）、计分窗口  
-- 图片：`docs/media/readme/01_lobby.png` … `05_result.png` + `MANIFEST.json`  
-- 脚本：`tools/capture_readme_screenshots.py`（主窗 pygame 真渲染；座位无屏幕权限时用资源拼合）  
-- 发版强制刷新：[`F0026`](features/F0026_readme_screenshots.md) · `VERSIONING` 步骤 4b · `DEVELOPMENT`  
+- 根 `README.md` **功能 → 界面预览**：大厅、主窗口（游戏中）、人类/AI 座位（游戏中）、计分窗口
+- 图片：`docs/media/readme/01_lobby.png` … `05_result.png` + `MANIFEST.json`
+- 脚本：`tools/capture_readme_screenshots.py`（主窗 pygame 真渲染；座位无屏幕权限时用资源拼合）
+- 发版强制刷新：[`F0026`](features/F0026_readme_screenshots.md) · `VERSIONING` 步骤 4b · `DEVELOPMENT`
 
 ## 2026-07-26（仓库公开）
 
 ### 工程 — GitHub visibility
 
-- 仓库由 **private → public**：https://github.com/moff1022-git/chengdu_majiang_AItrainer  
+- 仓库由 **private → public**：https://github.com/moff1022-git/chengdu_majiang_AItrainer
 - 历史 changelog 中「private」表述仅描述导入当时状态，以当前 **public** 为准
 
 ## 2026-07-26（F0025 Windows 打包 · 文档）
 
 ### 文档 — Windows 打包规格（Draft）
 
-- 新增 [`docs/features/F0025_windows_packaging.md`](features/F0025_windows_packaging.md)：PyInstaller + Nuitka、onedir、`--seat-window`、须在 Windows 构建  
-- 新增 [`docs/packaging/WINDOWS_BUILD.md`](packaging/WINDOWS_BUILD.md)：前置条件、手动命令、验收 W1–W11、与 macOS 差异  
-- 交叉链接：`MACOS_BUILD.md` §7、`VERSIONING.md`、功能索引、`DOC_CODE_BASELINE`  
-- `.gitignore`：忽略 `releases/windows/**` 与本地 windows zip / `*.exe`  
+- 新增 [`docs/features/F0025_windows_packaging.md`](features/F0025_windows_packaging.md)：PyInstaller + Nuitka、onedir、`--seat-window`、须在 Windows 构建
+- 新增 [`docs/packaging/WINDOWS_BUILD.md`](packaging/WINDOWS_BUILD.md)：前置条件、手动命令、验收 W1–W11、与 macOS 差异
+- 交叉链接：`MACOS_BUILD.md` §7、`VERSIONING.md`、功能索引、`DOC_CODE_BASELINE`
+- `.gitignore`：忽略 `releases/windows/**` 与本地 windows zip / `*.exe`
 - **未实现**：`packaging/windows/*` 脚本（待 `确认 F0025` 后编码；验收须在 Windows 主机）
 
 ## 2026-07-26（文档审计）
@@ -891,13 +985,13 @@
 - 打包：`app_paths`、`--seat-window`、Nuitka 同步 `releases/macos/`
 
 ### 文档
-- `docs/VERSIONING.md` 版本规则  
-- `docs/packaging/MACOS_BUILD.md` 打包  
-- 功能索引 F0020–F0024  
+- `docs/VERSIONING.md` 版本规则
+- `docs/packaging/MACOS_BUILD.md` 打包
+- 功能索引 F0020–F0024
 
 ### 打包
 - 用 **0.2.1** 重打 PyInstaller + Nuitka macOS `.app`（产物本地 `dist/` / `releases/macos/`，不进 git）
-- **GitHub Release** 已发布：https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1  
+- **GitHub Release** 已发布：https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.2.1
   - PyInstaller / Nuitka 各一 zip（arm64）
 
 ---
@@ -906,9 +1000,9 @@
 
 ### 功能 — 主窗出牌日志细化（F0024）
 
-- 解析完整 `score_events`：摸/打/碰/杠/胡/计分/行牌开始/流局  
-- 中文牌名（3万/9筒）；回合号 `T12`；终局胡序与得分摘要  
-- 侧栏按事件类型着色；容量 400  
+- 解析完整 `score_events`：摸/打/碰/杠/胡/计分/行牌开始/流局
+- 中文牌名（3万/9筒）；回合号 `T12`；终局胡序与得分摘要
+- 侧栏按事件类型着色；容量 400
 - 代码：`play_log_format.py`、`app._ingest_play_log`、`play_log_panel.py`
 
 ### 功能 — 主窗每轮掷骰定庄展示（F0023）
@@ -920,8 +1014,8 @@
 
 ### 修复 — 座位窗弃牌多行显示
 
-- **现象**：AI/人类「本家弃牌」像单行排，右侧裁切显示不全  
-- **修复**：按真实扩展区宽度多行换行（compact 牌面 + chrome）；多行时纵向可滚；标题显示行×列与张数  
+- **现象**：AI/人类「本家弃牌」像单行排，右侧裁切显示不全
+- **修复**：按真实扩展区宽度多行换行（compact 牌面 + chrome）；多行时纵向可滚；标题显示行×列与张数
 - 代码：`players/seat_window.py`；测：`test_discard_grid_multi_row_narrow_ext`
 - **续**：去掉弃牌区右侧滚动条（仍可用滚轮滚动）
 
@@ -972,9 +1066,9 @@
 
 ### 修复 — 座位窗胡牌提示 / 副露尺寸 / 中文类型
 
-1. **胡牌无提示**：`hu_banner` 曾 `pack(before=meta_row)`，但横幅在 `mid`、meta 在 `op_status_fr`，跨父级 pack 静默失败 → 改挂 `op_info_fr`（状态栏下），始终可见；AI 窗同步显示  
-2. **AI 副露过大裁切**：固定 `tw=28` 在小 AI 窗溢出 → 副露牌面改与**手牌同宽**  
-3. **副露类型英文**：`pong`/`ming_gang`… → **碰/明杠/暗杠/加杠/吃**（`meld_kind_label`）  
+1. **胡牌无提示**：`hu_banner` 曾 `pack(before=meta_row)`，但横幅在 `mid`、meta 在 `op_status_fr`，跨父级 pack 静默失败 → 改挂 `op_info_fr`（状态栏下），始终可见；AI 窗同步显示
+2. **AI 副露过大裁切**：固定 `tw=28` 在小 AI 窗溢出 → 副露牌面改与**手牌同宽**
+3. **副露类型英文**：`pong`/`ming_gang`… → **碰/明杠/暗杠/加杠/吃**（`meld_kind_label`）
 - 代码：`players/seat_window.py`；测：`test_meld_kind_label_zh`
 
 ### 修复 — 人类手牌选中无加框/高亮
@@ -1161,7 +1255,7 @@
 
 - **座位窗刷新防闪烁（加强）**：手牌指纹**剔除**对手分数/手牌数；对手 HUD 结构稳定时仅 in-place 改文字；选中高亮**不放大、不改 padding**；content width 缓存
 - **F0012 座位窗推荐出牌标记**：`discard_recommend.py`；非听最多 3 张 / 听牌则全部可听张；角标序号；焦点显示进张（万筒条序）；**剩余张数在进张牌面上方**（不遮挡）；换三张按手牌索引；手牌 in-place 更新 + 进张条预留高度减闪烁
-- **策略预设 + 座位窗「当前策略·S2」**：`configs/strategies/presets.json`、`current_s2.json`（导出 F0010-S 常量）；`players/strategy_presets.py`；`registry` 支持 `current_s2`（rule_ai + F0011）；观战座 AI 策略三选：规则 / 随机 / **当前S2**（下局生效）；CLI `--players current_s2,...`
+- **策略预设 + 座位窗「当前策略·S2」**：`configs/strategies/presets.json`、`rule_ai_plus.json`（导出 F0010-S 常量）；`players/strategy_presets.py`；`registry` 支持 `rule_ai_plus`（rule_ai + F0011）；观战座 AI 策略三选：规则 / 随机 / **当前S2**（下局生效）；CLI `--players rule_ai_plus,...`
 
 ## 2026-07-12
 
@@ -1351,3 +1445,42 @@
 
 - 确认 WinGet 0.144.6 与 npm 0.146.0 并存，默认命令因 `PATH` 顺序解析到 WinGet 入口。
 - 确认此前升级写入 npm 安装，未改变默认命令实际版本；本轮未执行升级、卸载或 `PATH` 修改。
+## 2026-08-01
+
+- 调整 Task 19 方案一：对已批准、口径明确的 T02 TRAIN-005 workload 门禁自动放行并恢复派发；保留真正新语义和安全冲突的人工门禁。
+- W09 T19-D13 和 T19-H02 分别通过 clean-archive 独立审计（各 `P0/P1/P2=0/0/0`）；已自动进入 W10 T19-A01/H03 设计派发。
+- W10 T19-A01/H03 设计包已通过独立复审（各 `P0/P1/P2=0/0/0`），已自动派发实现。
+- W10 T19-A01 `5e6621a` 和 T19-H03 `eb3dcb6` 实现与证据已提交，已并行进入独立审计。
+- W10 A01/H03 在 `760ad15` clean archive 均审计 PASS（各 `P0/P1/P2=0/0/0`）；W11 A06/H01/H08/X01 已自动准备设计派发。
+- W11 A06/H08 和 H01/X01 设计独立复审均 PASS，已自动派发实现。
+- W11 A06/H08 `bb53305` clean-archive 审计 PASS；H01/X01 实现与定向验证通过，但全量回归因执行环境禁止后台进程而保持验证阻断，未关闭 W11。
+- W11 H01/X01 最终以前台纯归档全量 `831 passed, 1 skipped` 闭环，`9015b58` 审计 PASS；W12 H04/M01/X02 已自动派发。
+- W12-W14 所有已派发批次均完成 clean-archive 独立审计，各 `P0/P1/P2=0/0/0`；已同步 orchestrator/runtime，待回写 tracker 96 单元汇总状态。
+- T03 `a05dc684` 和 A02 `c69ba0e` 专属 clean-archive 审计 PASS；Task 19 tracker 现已汇总为 `96/96 AUDITED`。
+- 消费 W09 H02/D13 独立设计复审 PASS 事件，将两项自动推进到 `IMPLEMENT/RUNNING` 并派发实现 Agent；同步 Root/Agent runtime 和 orchestrator 监控镜像。
+## 0.3.0 — 2026-08-01
+
+### 新增
+- 完成 Task 19 全部 96 个单元的工程审计闭环。
+- 增加 MODEL-001 分阶段开发方案：模拟数据用于工程开发，运行期 HUMAN 数据用于后续独立校准。
+- 增加 MODEL-001 数据来源标记与数据集 validator。
+- 增加 Task 19 状态监控、tracker reconciliation 和跨会话 runtime 状态同步。
+
+### 内部
+- Task 19 达到 14/14 waves、40/40 batches、96/96 AUDITED。
+- 生成 `releases/v0.3.0/` 完整源代码归档。
+# 2026-08-01
+
+- F0036: 新增无 UI AI 能力测试 runner，支持固定 game_id、四座 AI、断点续跑和胜负/得分/响应时间报告。
+- F0036: 增加启动前预计耗时确认；取消返回参数选择界面。
+- F0036: 交互式参数改为编号菜单选择，避免手工输入 AI 类型。
+- F0036: 增加普通模式和能力评估模式的实时 ASCII 进度条。
+- F0036: capability 模式增加已完成总局数/总局数显示。
+- F0036: capability 汇总报告文件名增加测试日期和时间。
+- F0036: 测试进度和报告增加按局数/固定 game_id/配置派生的唯一校验码。
+- F0036: capability 模式增加动态已运行时间和剩余时间 ETA。
+# 2026-08-01
+
+- M20: 新增 Task 19 全功能独立回归测试规格，批准无人值守自动运行方案。
+- M20: 新增独立自动测试调度器、失败重试、校验码、证据和时间戳报告输出。
+- M20: 完成独立全量回归：498 passed, 1 skipped；96 units、14 waves、40 batches 均有独立结果证据。

@@ -1,0 +1,5 @@
+﻿artifact,rules_version,parameter_version,contract_version,canonical_version,rng_version,reader,writer,status
+legacy config/read,CDMJ-AI-RULES 1.0.0,CDMJ-AI-PARAMS 1.1.0,CDMJ-CONTRACTS 1.0.0,legacy-json-v1,legacy-v1/missing old record only,v1 and v2 adapter,legacy writer frozen; no new production writes after cutover,READ_ONLY_COMPAT
+new config/write,CDMJ-AI-RULES 1.0.0,CDMJ-AI-PARAMS 2.0.0,CDMJ-CONTRACTS 2.0.0,canonical-jcs-nfc-v2 profile (OPTION-J2 pending),2,v2,v2 only,PENDING_PROFILE_APPROVAL
+legacy replay,CDMJ-AI-RULES 1.0.0,CDMJ-AI-PARAMS 1.1.0,CDMJ-CONTRACTS 1.0.0,legacy-json-v1,missing→legacy-v1,v2 legacy adapter,none,READ_ONLY_COMPAT
+new replay,CDMJ-AI-RULES 1.0.0,CDMJ-AI-PARAMS 2.0.0,CDMJ-CONTRACTS 2.0.0,canonical-jcs-nfc-v2 profile,2 explicit,v2,v2 only,PENDING_PROFILE_APPROVAL

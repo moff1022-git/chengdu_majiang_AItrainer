@@ -1,0 +1,7 @@
+unit_id,field_or_channel,visibility,rule,required_test,result
+STATE-002,authority_snapshot,AUTHORITY_ONLY,Full state and mutable references never cross policy boundary,Mutate opponent hand/wall/raw seed; PlayerView unchanged,APPROVED
+STATE-002,TrainingTruth/oracle,FORBIDDEN_POLICY_INPUT,Training-only object must not be imported or reachable,Recursive object/import scan zero paths,APPROVED
+STATE-003,own concealed hand,OWNER_ONLY,Owner sees approved projection; others see count/public effects,Four-seat sentinel perturbation,APPROVED
+STATE-003,opponent concealed/an-gang,AUTHORITY_ONLY_OR_GP021,Reveal only through GP-021/RULE-016,Swap hidden physical IDs; unrelated views unchanged,APPROVED
+ALGO-002,explicit counts/melds/dingque,CALLER_INPUT,Pure explicit input only,Monkeypatch GameState/wall/RNG/oracle access to fail,APPROVED
+ALGO-002,wall/opponents/seed/cache/training label,FORBIDDEN,"No reads, imports, globals or hidden memo state",Static import scan and paired hidden perturbation,APPROVED

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  WiX 3 product skeleton (F0027).
+  User-visible Chinese strings are injected at build time via candle -d* defines.
+  Database code page MUST be 936 (GBK) for Simplified Chinese ARP/shortcut display.
+  build_msi_windows.ps1 rewrites a GBK copy under %TEMP% before candle/light.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+      Id="*"
+      Name="$(var.ProductNameZh)"
+      Language="2052"
+      Codepage="936"
+      Version="$(var.ProductVersion)"
+      Manufacturer="$(var.Manufacturer)"
+      UpgradeCode="A7B3C1D2-E4F5-6789-ABCD-EF0123456789">
+
+    <Package
+        InstallerVersion="500"
+        Compressed="yes"
+        InstallScope="perMachine"
+        Platform="x64"
+        Description="$(var.ProductNameZh) $(var.ProductVersion)"
+        Comments="Chengdu Mahjong AI Trainer Windows x64 MSI (F0027)"
+        Manufacturer="$(var.Manufacturer)" />
+
+    <MajorUpgrade
+        DowngradeErrorMessage="$(var.DowngradeMsg)"
+        Schedule="afterInstallInitialize" />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Feature Id="MainFeature" Title="$(var.ProductNameZh)" Level="1"
+             Description="$(var.FeatureDesc)">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR" Name="ChengduMahjongAITrainer" />
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductNameZh)" />
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="StartMenuShortcut" Guid="B8C4D2E3-F5A6-7890-BCDE-F12345678901">
+        <Shortcut
+            Id="MainStartMenuShortcut"
+            Name="$(var.ProductNameZh)"
+            Description="$(var.ShortcutDesc)"
+            Target="[INSTALLDIR]ChengduMahjongAITrainer.exe"
+            WorkingDirectory="INSTALLDIR"
+            Advertise="no" />
+        <RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue
+            Root="HKCU"
+            Key="Software\ChengduMahjongAITrainer"
+            Name="StartMenuShortcut"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/moff1022-git/chengdu_majiang_AItrainer" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases" />
+  </Product>
+</Wix>

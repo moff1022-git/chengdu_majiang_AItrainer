@@ -11,7 +11,7 @@ def test_registry_exposes_humanlike_without_changing_old_defaults() -> None:
     assert PLAYER_REGISTRY["humanlike_v2"] is HumanlikeV2Player
     assert isinstance(create_player("humanlike_v2", seat=0, seed=7), HumanlikeV2Player)
     assert create_player("rule_ai", seat=0).__class__.__name__ == "RuleAIPlayer"
-    assert create_player("current_s2", seat=0).__class__.__name__ == "RuleAIPlayer"
+    assert create_player("rule_ai_plus", seat=0).__class__.__name__ == "RuleAIPlayer"
 
 
 @pytest.mark.parametrize("num_players", [2, 3, 4])

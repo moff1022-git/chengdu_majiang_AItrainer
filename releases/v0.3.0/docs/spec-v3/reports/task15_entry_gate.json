@@ -1,0 +1,24 @@
+{
+  "gate_result": "PASS",
+  "metrics": {
+    "pilot_implementation_completion_rate": 100.0,
+    "test_pass_rate": 100.0,
+    "critical_branch_coverage_rate": 98.9,
+    "coverage_measurement_method": "87 explicitly mapped specification branches / 88; source instrumentation unavailable",
+    "rule_traceability_coverage_rate": 100.0,
+    "input_output_definition_completeness_rate": 100.0,
+    "formula_executable_rate": 100.0,
+    "fixed_seed_decision_trace_reproducibility_rate": 100.0,
+    "unit_output_determinism_rate": 100.0,
+    "blocking_contradiction_count": 0,
+    "open_high_priority_issue_count": 0
+  },
+  "blocking_issues": [],
+  "high_priority_issues": [],
+  "units_allowed_for_next_stage": ["RULE-003","RULE-016","ALGO-001","ALGO-010","HEUR-019","MODEL-001","STATE-005","SCORE-001","TRAIN-003","AUDIT-003"],
+  "specification_changes_required": [],
+  "caveats": [
+    "MODEL-001 rule fallback is integrated, but a trained replacement cannot be marked AUDITED until the frozen 10000-sample calibration manifest passes",
+    "Critical branch coverage is specification-branch mapping because pytest-cov/coverage is not installed; it is not source branch instrumentation"
+  ]
+}

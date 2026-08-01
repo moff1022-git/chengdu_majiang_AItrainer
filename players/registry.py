@@ -35,7 +35,7 @@ def create_player(
     human_timeout_ms: int = 120_000,
 ) -> BasePlayer:
     """
-    spec: "random" | "rule_ai" | "humanlike_v2" | "human" | "current_s2" | "rule_ai:Bot1"
+    spec: "random" | "rule_ai" | "rule_ai_plus" | "humanlike_v2" | "human" | "rule_ai:Bot1"
 
     Strategy preset ids from ``configs/strategies/presets.json`` resolve to a
     base player type plus options (e.g. use_f0011).

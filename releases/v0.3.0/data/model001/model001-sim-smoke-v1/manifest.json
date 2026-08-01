@@ -1,0 +1,46 @@
+{
+  "actual_samples": 1317,
+  "class_counts": {
+    "cleared_dingque": {
+      "0": 564,
+      "1": 753
+    },
+    "dominant_suit": {
+      "mixed": 156,
+      "tiao": 412,
+      "tong": 411,
+      "wan": 338
+    },
+    "shape": {
+      "other": 1206,
+      "standard": 111
+    }
+  },
+  "cleared_target": "CURRENT_HIDDEN_STATE",
+  "dominant_suit_target": "CURRENT_HIDDEN_STATE",
+  "excluded_samples": 0,
+  "external_validity": "NOT_EVALUATED",
+  "feature_schema_version": "MODEL001-FEATURE-SCHEMA 1.0.0",
+  "games": 2,
+  "generator_version": "model001-sim-v1",
+  "illegal_actions": 0,
+  "label_schema_version": "MODEL001-LABEL-SCHEMA 1.0.0",
+  "requested_samples": 1000,
+  "ruleset_hash": "f60c5720bfe5aeb6f5adb31909a3c05b4f08078f240a2071c2e6267725dd5aba",
+  "seed": 20260730,
+  "shape_target": "EVENTUAL_TERMINAL_OUTCOME",
+  "style_counts": {
+    "aggressive": 342,
+    "balanced": 342,
+    "conservative": 291,
+    "legal-random": 342
+  },
+  "styles": [
+    "conservative",
+    "balanced",
+    "aggressive",
+    "legal-random"
+  ],
+  "valid": true,
+  "validation_scope": "SIMULATION"
+}

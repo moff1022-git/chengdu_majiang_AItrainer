@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-07-30T14:35:36.658692Z",
+  "git_write_operations_executed": false,
+  "total_file_count": 7574,
+  "classification_counts": {
+    "INCLUDE_TASK19_PLAN": 31,
+    "EXCLUDE_USER_OR_UNRELATED": 105,
+    "REQUIRES_OWNER_DECISION": 110,
+    "INCLUDE_AUDITED_RESULT": 11,
+    "REQUIRES_AUDIT_RECHECK": 10,
+    "EXCLUDE_ENVIRONMENT": 7232,
+    "INCLUDE_APPROVED_DESIGN": 75
+  },
+  "include_count": 117,
+  "exclude_count": 7457,
+  "owner_decision_count": 120,
+  "manifest_entry_count": 6,
+  "manifest_mismatch_count": 0,
+  "audited_artifact_recheck_count": 10,
+  "audited_artifact_recheck_paths": [
+    "engine/replay.py",
+    "players/humanlike/player.py",
+    "players/humanlike/settings_service.py",
+    "training/runner.py",
+    "engine/rng_v2.py",
+    "players/humanlike/config_v2.py",
+    "players/humanlike/state010.py",
+    "tests/spec_v3/test_b1a_algo009.py",
+    "tests/spec_v3/test_b1a_algo011.py",
+    "tests/spec_v3/test_b1a_state010.py"
+  ],
+  "secret_pattern_hit_count": 0,
+  "secret_pattern_hit_paths": [],
+  "local_machine_path_hit_count": 2,
+  "local_machine_path_hit_paths": [
+    "docs/changelog.md",
+    "docs/spec-v3/08-review/MAC_CONTINUATION_CHECK_2026-07-29.md"
+  ],
+  "large_file_count": 1,
+  "large_file_paths": [
+    ".venv-macos/lib/python3.12/site-packages/cv2/cv2.abi3.so"
+  ],
+  "task19_required_file_count": 21,
+  "task19_missing_file_count": 0,
+  "task19_missing_files": [],
+  "task19_plan_validation_pass": true,
+  "task19_progress_validation_pass": true,
+  "include_has_directory_wildcard": false,
+  "all_owner_decisions_listed": true
+}

@@ -1,0 +1,5 @@
+risk_id,blocking_type,affected_units,reason,mitigation,status
+T19-RISK-001,INTEGRATION_CONFLICT,ALL,Dirty main worktree cannot be a safe worktree baseline,Approve and create a clean checkpoint commit/tag without discarding user changes,OPEN
+T19-RISK-002,DESIGN_DECISION,ALL_EXCEPT_B2A1,Only B2-A1 has an Approved implementation design,Generate/approve each batch design before implementation,OPEN
+T19-RISK-003,INTERFACE_DECISION,SHARED_INTERFACES,Future batches may need B2-A1 or PlayerView shared interfaces,Terminal 0 owns proposals and replans waves,OPEN
+T19-RISK-004,EXTERNAL_DATA,MODEL-001|MODEL-005|TRAIN-008|AUDIT-012,External validity/data publication remains unavailable,Keep gate local to external-data track,OPEN

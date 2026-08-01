@@ -1,0 +1,14 @@
+decision_id,approved_option,approved_by,approved_at,decision_version,affected_units,version_interface_migration_effect,golden_or_contract,status,finding
+SPEC-DECISION-STATE-DEFAULTS,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,STATE-010,FrozenConfig/default validation,B1-A executable Golden,APPROVED_ACTIVE,none
+SPEC-DECISION-RP-ARCHIVE,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,STATE-010,RP lifecycle/archive,B1-A executable Golden,APPROVED_ACTIVE,none
+SPEC-DECISION-MIGRATION-GRAPH,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-009,explicit unique migration edges,MIG-CONFIG-110-200,APPROVED_ACTIVE,none
+SPEC-DECISION-EXTENSIONS,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-009,declared container only,B1-A executable Golden,APPROVED_ACTIVE,none
+SPEC-DECISION-CANONICAL-NUMBER,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-009,requires approved OPTION-J2 profile,CONTRACTS/PARAMS 2.0,APPROVED_BUT_STALE_DERIVED_REFS,version matrix and effective overlay still say pending
+SPEC-DECISION-CANONICAL-UNICODE,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-009,NFC canonical bytes,CONTRACTS/PARAMS 2.0,APPROVED_BUT_STALE_DERIVED_REFS,effective overlay still says pending
+SPEC-DECISION-CONFIG-FALLBACK,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-009,hot reload retains last valid,B1-A executable Golden,APPROVED_ACTIVE,none
+SPEC-DECISION-RNG-VERSION,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-011,legacy zero-change/new explicit v2,Frozen v2,APPROVED_ACTIVE,none
+SPEC-DECISION-RNG-COORDINATE,A,project_owner_user,2026-07-30T04:39:21Z,B1-A-DECISIONS 1.0.0,ALGO-011,stateless logical coordinates/Frozen SeedTrace,Frozen v2,APPROVED_ACTIVE,none
+SIM-LABEL-001,A,project_owner_user,2026-07-30 no precise time,MODEL001-SIM-LABELS 1.0.0,MODEL-001,current pre-action truth only,label contract 1.0.0,APPROVED_ACTIVE,none
+SIM-LABEL-002,A,project_owner_user,2026-07-30 no precise time,MODEL001-SIM-LABELS 1.0.0,MODEL-001,concealed+meld strict max/tie mixed,label contract 1.0.0,APPROVED_ACTIVE,none
+SIM-LABEL-003,C,project_owner_user,2026-07-30 no precise time,MODEL001-SIM-LABELS 1.0.0,MODEL-001,terminal restricted backfill priority,label contract 1.0.0,APPROVED_ACTIVE,none
+

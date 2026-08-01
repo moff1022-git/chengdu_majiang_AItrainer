@@ -1,0 +1,16 @@
+{
+  "status": "CHECKPOINT_READY_FOR_OWNER_APPROVAL",
+  "owner_approval_required": true,
+  "checkpoint_creation_authorized": false,
+  "git_write_operations_executed": false,
+  "include_path_count": 117,
+  "exclude_path_count": 7457,
+  "owner_decision_count": 120,
+  "manifest_mismatch_count": 0,
+  "audit_recheck_count": 10,
+  "secret_pattern_hit_count": 0,
+  "task19_plan_complete": true,
+  "plan_validation_pass": true,
+  "progress_validation_pass": true,
+  "next_action": "Owner reviews candidate/include/exclude/owner_decisions; then explicitly authorizes checkpoint creation"
+}

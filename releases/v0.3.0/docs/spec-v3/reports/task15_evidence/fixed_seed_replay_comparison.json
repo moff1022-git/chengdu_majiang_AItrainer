@@ -1,0 +1,16 @@
+{
+  "code_hash": "c6c27b030f3e81f58804d93242ef576d58e88865851c216a0052d2f7111c2f2f",
+  "config_hash": "66e7574c38ad73490004a7974577138c093891727a61912a198082678fda084b",
+  "decision_count": 43,
+  "final_record_hash": "036aa9961cce2e5c6e29471b5d5b79e666bddb90e2927169c58cd1565b55e65f",
+  "final_state_hash": "6ac439ec0431afd9763191e432b8ffa39c4099b577f47ec3e86db1a78aa6ac8c",
+  "game_id": "task15-fixed-seed-game",
+  "record_hashes_equal": true,
+  "reproducible": true,
+  "ruleset_hash": "5df58bb0d229ece6412f72d46dbe741a701524139cc482771b8235afe8a8415f",
+  "run_a": "docs/spec-v3/reports/task15_evidence/run_a/task15-fixed-seed-game.audit.jsonl",
+  "run_b": "docs/spec-v3/reports/task15_evidence/run_b/task15-fixed-seed-game.audit.jsonl",
+  "seed_source": "game_id+base_seed=45",
+  "state_hash_equal": true,
+  "timestamp_utc": "2026-07-29T16:12:03.301401Z"
+}

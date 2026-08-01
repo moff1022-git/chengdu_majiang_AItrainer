@@ -19,13 +19,13 @@
       "description": "合法动作均匀随机"
     },
     {
-      "id": "current_s2",
-      "label": "当前策略·S2",
+      "id": "rule_ai_plus",
+      "label": "增强规则AI·S2",
       "short_label": "当前S2",
       "player": "rule_ai",
       "use_f0011": true,
-      "profile": "configs/strategies/current_s2.json",
-      "description": "当前仓库默认强度：F0010 M1–L3+DH+S0–S2 预测 + F0011 综合出牌"
+      "profile": "configs/strategies/rule_ai_plus.json",
+      "description": "rule_ai 增强入口：F0010 M1–L3+DH+S0–S2 预测 + F0011 综合出牌"
     },
     {
       "id": "humanlike_v2",

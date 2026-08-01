@@ -1,0 +1,23 @@
+area,check,result,evidence,severity
+Task17,96 rows and unique IDs,PASS,unit_gap_matrix_v3.csv 96/96,NONE
+Task17,status distribution,PASS,9 AUDITED + 1 INTEGRATED + 85 PARTIAL + 1 SCAFFOLDED,NONE
+Task17,historical files unchanged by later status,PASS,task18 current status explicitly separate,NONE
+Delta,83 generic SEM-PARAMETER superseded,PASS,supersession map 83/83,NONE
+Delta,active kind separation,PASS,24 semantic + 12 test + 6 evidence,NONE
+Delta,B1-B concrete active design,FAIL,no B1-B R1-equivalent delta/interface/acceptance package,HARD_BLOCKER
+B1-A,nine decisions approved,PASS,A selected with approver/version/time,NONE
+B1-A,canonical profile authority cleanliness,FAIL,approval form says approved while active overlay/version matrix still pending,MUST_FIX_BEFORE_BATCH
+B1-A,Decimal closure,PASS,CLOSED_NO_DECIMAL_FIELDS,NONE
+B1-A,Golden contracts,PASS,18 executable + 1 illustrative; historical execution evidence exists,NONE
+B1-A,42 objective oracles,PASS,42 rows and 42 distinct objective_test_oracle,NONE
+MODEL-001,label decisions,PASS,A/A/C deterministic contract,NONE
+MODEL-001,generator local/no AI,PASS,static imports and runtime tests,NONE
+MODEL-001,small rerun determinism,PASS,same-seed three file hashes equal,NONE
+MODEL-001,formal data structural validity,PASS,10595 unique paired samples and no split crossing,NONE
+MODEL-001,five-class minimum 200 each,FAIL,seven_pairs=162 pure_suit=0 all_pongs=0,NON_BLOCKING_DEBT
+MODEL-001,external validity,NOT_EVALUATED,simulation only,NON_BLOCKING_DEBT
+Tests,targeted baseline,PASS,69 passed 0 failed 0 skipped,NONE
+Tests,full baseline,PASS,437 passed 0 failed 0 skipped,NONE
+Queue,current first batch,PASS,B1-B STATE-001 STATE-011 STATE-004,NONE
+Queue,implementation authorization,FAIL,current queue explicitly false and requires design approval,HARD_BLOCKER
+

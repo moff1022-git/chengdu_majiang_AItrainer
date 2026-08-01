@@ -1,0 +1,30 @@
+{
+  "delta_sum": 0,
+  "input": {
+    "base_score": 1,
+    "fan": 2,
+    "loser": 1,
+    "scores_before": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "winner": 0
+  },
+  "scores_after": {
+    "0": 4,
+    "1": -4,
+    "2": 0,
+    "3": 0
+  },
+  "transfers": [
+    {
+      "amount": 4,
+      "fan": 2,
+      "from_seat": 1,
+      "reason": "hu_dianpao",
+      "to_seat": 0
+    }
+  ]
+}

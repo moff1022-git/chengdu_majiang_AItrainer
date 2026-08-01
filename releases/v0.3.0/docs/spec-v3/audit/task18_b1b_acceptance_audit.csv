@@ -1,0 +1,43 @@
+unit_id,ac_id,audit_result,evidence,reason,required_remediation
+STATE-001,AC-STATE-001-01,FAIL,engine/match.py dataclass constructor,未知字段由Python TypeError拒绝而非SCHEMA_INVALID且未证明字段集合等于Locked,增加显式schema parser和未知字段错误向量
+STATE-001,AC-STATE-001-02,FAIL,MatchCreateRequest仅接收config_hash,未接收或冻结FrozenConfig canonical bytes；无法验证输入突变不影响context,绑定FrozenConfigV2快照并测试递归突变
+STATE-001,AC-STATE-001-03,UNPROVEN,test_state_001仅4座和重复seat,未执行2座/3座及排列规范化完整Oracle,补2/3/4座和输入排列性质测试
+STATE-001,AC-STATE-001-04,UNPROVEN,test_state_001仅0和10001,未执行1/10000以及int64初分和dealer边界,补全边界向量
+STATE-001,AC-STATE-001-05,FAIL,MatchController普通dict且无同步,test未执行100并发；无法证明单写commit,实现线程安全CAS并执行并发Oracle
+STATE-001,AC-STATE-001-06,FAIL,MatchController只构造factory对象从不调用on_join,零on_join是因为生产装配未实现而非原子装配证明,接入PlayerGameRunner两阶段装配并做第N座失败测试
+STATE-001,AC-STATE-001-07,UNPROVEN,仅starting_scores MappingProxy写入测试,bindings内部虽冻结但没有所有嵌套容器和序列化前后hash测试,增加递归不可变扫描
+STATE-001,AC-STATE-001-08,FAIL,rg显示MatchController未被PlayerView生产路径使用,没有四座PlayerView递归投毒或profile/seed对象图测试,接入策略投影并补边界测试
+STATE-001,AC-STATE-001-09,FAIL,全仓兼容测试通过但新投影无任何生产调用者,孤立门面不能证明下游STATE-004/006/008/TRAIN-001兼容,接入至少PlayerGameRunner和训练入口
+STATE-001,AC-STATE-001-10,PASS,test_state_001 round completion,最后一局COMPLETED且后续提交TERMINAL_STATE客观成立,
+STATE-001,AC-STATE-001-11,FAIL,tests只覆盖6个局部错误,Locked专用和通用错误没有逐码唯一反例且代码存在直接TypeError路径,建立完整错误向量
+STATE-001,AC-STATE-001-12,UNPROVEN,没有跨进程100次测试,单进程断言不能证明跨进程逐字节一致,增加subprocess确定性测试
+STATE-001,AC-STATE-001-13,FAIL,E4仅直接调用MatchController,未出现MatchController→PlayerGameRunner链；rg确认生产调用者为0,接线后重新采集真实E4
+STATE-001,AC-STATE-001-14,FAIL,E5只列范围且无性能基线,未提供每Delta双向行和创建/推进延迟分布,生成逐Delta trace与性能基线
+STATE-011,AC-STATE-011-01,FAIL,DealTransaction闭集正向测试,没有可注入重复physical_id反例命中DECK_DUPLICATE,增加受控wall provider故障注入
+STATE-011,AC-STATE-011-02,UNPROVEN,现有闭集间接覆盖face count,未执行每physical_id往返及三门各36的独立Oracle,补映射测试
+STATE-011,AC-STATE-011-03,UNPROVEN,legacy事务与同一当前函数结果比较,未与批准前独立Golden逐tile比较且缺版本字段回放选择未走reader,绑定冻结Golden和replay reader
+STATE-011,AC-STATE-011-04,FAIL,只生成shuffle safe ref,没有dice/exchange三域trace_ref比较且RNG_STREAM_MISSING无可达路径,增加域注册输出与未知流测试
+STATE-011,AC-STATE-011-05,PASS,test_state_011 player counts,2/3/4座庄14闲13与余墙公式成立,
+STATE-011,AC-STATE-011-06,UNPROVEN,未注入固定洗牌序列,没有逐seat physical_id发牌顺序Oracle,增加固定wall/dealer测试
+STATE-011,AC-STATE-011-07,PASS,test_state_011 closed set,hands+wall为0..107唯一闭集,
+STATE-011,AC-STATE-011-08,PASS,test_state_011 CAS/idempotency,同event不加版本且异payload/迟到拒绝成立,
+STATE-011,AC-STATE-011-09,FAIL,无shuffle/deal/conservation三阶段故障注入,正常异常捕获不能证明每个阶段零发布,加入三个故障点和authority before/after hash
+STATE-011,AC-STATE-011-10,FAIL,测试未构造四座PlayerView,无法证明墙序和他手不可见,补真实PlayerViewBuilder递归扫描
+STATE-011,AC-STATE-011-11,FAIL,没有隐藏墙序/他手扰动测试,无法证明相同可见状态投影hash不变,补成对状态投影Oracle
+STATE-011,AC-STATE-011-12,UNPROVEN,仅ThreadPool重复独立事务,未覆盖重试/取消/完成顺序且没有共享事务竞争,补100种调度性质测试
+STATE-011,AC-STATE-011-13,FAIL,RNG_STREAM_MISSING/DECK_DUPLICATE/DEAL_COUNT/CONSERVATION_FAILED无测试可达反例,补逐码故障向量
+STATE-011,AC-STATE-011-14,FAIL,E4进入create_dealt_game但未记录性能基线；E5仅单元汇总非逐Delta双向追溯,重采性能并展开E5
+STATE-004,AC-STATE-004-01,PASS,test_state_004 exact enum,10个Locked枚举准确且三个候选额外名不存在,
+STATE-004,AC-STATE-004-02,UNPROVEN,只测试三条opening边,未证明实际接受边集合等于Locked全部边,枚举完整合法边Oracle
+STATE-004,AC-STATE-004-03,UNPROVEN,只测一个非法跳转,未执行phase×event笛卡尔非边,增加参数化笛卡尔测试
+STATE-004,AC-STATE-004-04,UNPROVEN,测试覆盖迟到和同payload重试,未覆盖同ID异payload且无100并发线性化,补冲突与并发测试
+STATE-004,AC-STATE-004-05,PASS,test_state_004 HU_RESOLVED,胡牌座退出且仍有两活动座时进入DRAW,
+STATE-004,AC-STATE-004-06,UNPROVEN,只测一次两座同时退出,未覆盖第一/第二/第三胡及规范事件排序,补完整血战序列
+STATE-004,AC-STATE-004-07,FAIL,门面只改phase不操作牌权属,无法证明三类杠后仅owner取得补牌,接入blood_battle实际gang事务
+STATE-004,AC-STATE-004-08,FAIL,未测试claims清空且RoundSnapshot根本不含pending claims,扩充状态并接入响应解析
+STATE-004,AC-STATE-004-09,PASS,test_state_004 settlement,有效hash进入SETTLED且后续事件TERMINAL_STATE,
+STATE-004,AC-STATE-004-10,FAIL,没有commit前多故障点或authority GameState hash,门面snapshot不等于生产权威状态,接入working GameState事务并故障注入
+STATE-004,AC-STATE-004-11,FAIL,TransitionResult只返回字符串notify元组,没有audit持久化或outbox投递和去重,实现真实commit-after outbox并测试
+STATE-004,AC-STATE-004-12,FAIL,没有日志/PlayerView递归扫描,无法证明私有牌和完整SeedTrace隔离,增加生产链边界测试
+STATE-004,AC-STATE-004-13,UNPROVEN,没有跨进程完整transition hash链且audit字段不含Locked §18全集,补完整审计schema和subprocess回放
+STATE-004,AC-STATE-004-14,FAIL,E4仅直接调用RoundStateMachine且rg确认orchestrator/opening/blood_battle调用者为0,接线后覆盖全phase并记录延迟基线

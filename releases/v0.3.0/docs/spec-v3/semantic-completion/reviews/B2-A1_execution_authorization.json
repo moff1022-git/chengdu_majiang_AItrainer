@@ -1,0 +1,19 @@
+{
+  "batch_id": "B2-A1",
+  "design_version": "B2-A1-DESIGN-1.0.0",
+  "units": ["STATE-002", "STATE-003", "ALGO-002"],
+  "status": "READY_FOR_IMPLEMENTATION",
+  "design_package_complete": true,
+  "approved_decision_count": 12,
+  "pending_decision_count": 0,
+  "breaking_interface_count": 0,
+  "business_code_authorized": true,
+  "implementation_started": false,
+  "existing_test_assertion_changes_authorized": false,
+  "locked_frozen_changes_authorized": false,
+  "unit_status_changes_authorized": false,
+  "task17_history_modified": false,
+  "approval_basis": "Project owner instruction: execute tasks 1 and 2",
+  "implementation_order": ["STATE-002", "STATE-003", "ALGO-002"],
+  "scope_constraint": "Implementation must follow approved deltas and must not change Locked/Frozen or unrelated units"
+}

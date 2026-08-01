@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/spec-v3/evidence/task18b_b1a/B1-A_runtime_evidence.json",
+      "sha256": "6c51731812e6e1f49419260a13ed3b859ab1b123c6beb1dfefecf9496bdcd393"
+    },
+    {
+      "path": "docs/spec-v3/evidence/task18b_b1a/B1-A_golden_execution.json",
+      "sha256": "712816cbc918b5d8396fd4d60ea9e8f3d3193dc2dbb187eadcbd19eea7c9a642"
+    },
+    {
+      "path": "docs/spec-v3/evidence/task18b_b1a/B1-A_performance_baseline.json",
+      "sha256": "30485b2d3c10152559b8daaea1ac7556faebdb303e0fd1c0f58e6c86deba9ab2"
+    },
+    {
+      "path": "docs/spec-v3/reports/B1-A_acceptance_audit_matrix.csv",
+      "sha256": "7bdc459529883f4077e32ecc3ba06847a77010ee8053d5240d7d7ddb6ffe3f00"
+    },
+    {
+      "path": "docs/spec-v3/reports/B1-A_E5_trace_matrix.csv",
+      "sha256": "2a1c71bf19d6b308138d7a66ac1c562f251c9241dca47ce0a6eb4a3c6f9711fc"
+    }
+  ],
+  "ac_total": 42,
+  "ac_pass": 42,
+  "ac_fail": 0,
+  "audit_result": "AUDITED_CANDIDATE"
+}

@@ -1,0 +1,245 @@
+[
+  {
+    "unit_id": "STATE-010",
+    "scenario_id": "production-owned-state",
+    "input_hash": "df9f0819f65202a755c0c42fe83ba6dd5e53da4e9edb1ba2c362af0521ed4e3a",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "seed_ref": null,
+    "intermediate_result": {
+      "gp_version": 1,
+      "rp_version": 1,
+      "orchestrator_trace": {
+        "call_site": "PlayerGameRunner._initialize_state010",
+        "phase_before": "active",
+        "phase_after": "archived",
+        "committed_version": 0,
+        "owner_hashes": [
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04",
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04",
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04",
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04"
+        ],
+        "archive_hashes": [
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04",
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04",
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04",
+          "c3a4248efe2e850063fa818b702b0763ab18497d9803ed7fd0005049b5a34c04"
+        ],
+        "finished_reason": null
+      }
+    },
+    "final_output_hash": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea",
+    "call_site": "InteractiveRunner.setup→PlayerGameRunner._initialize_state010→_archive_state010",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_state010.py",
+    "accepted": true,
+    "error_code": null,
+    "latency_us": 338
+  },
+  {
+    "unit_id": "STATE-010",
+    "scenario_id": "wrong-owner",
+    "input_hash": "86831053a13fa03027d1c05555a344599421b7fac88684a67553f6dd00ce8488",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "seed_ref": null,
+    "intermediate_result": {
+      "state_hash_before": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea"
+    },
+    "final_output_hash": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea",
+    "call_site": "SeatRuntimeStore.update",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_state010.py",
+    "accepted": false,
+    "error_code": "LIFECYCLE_VIOLATION",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "STATE-010",
+    "scenario_id": "version-conflict",
+    "input_hash": "a4986c609b46711e8c140dcd1d8490ca63509ba4790fd2ada16f15bbf0476f4b",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "seed_ref": null,
+    "intermediate_result": {
+      "state_hash_before": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea"
+    },
+    "final_output_hash": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea",
+    "call_site": "SeatRuntimeStore.update",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_state010.py",
+    "accepted": false,
+    "error_code": "VERSION_CONFLICT",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "STATE-010",
+    "scenario_id": "unknown-rp",
+    "input_hash": "c53439b8b6ccdf654412505986bba7c2ba409c16107cc91f60f7a2335811adc7",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "seed_ref": null,
+    "intermediate_result": {
+      "state_hash_before": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea"
+    },
+    "final_output_hash": "4938703d62383ef5ed3c12e99b11667192a20b2466829ccff7607cab4ec251ea",
+    "call_site": "SeatRuntimeStore.update",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_state010.py",
+    "accepted": false,
+    "error_code": "UNKNOWN_PARAMETER",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "ALGO-009",
+    "scenario_id": "settings-v1.1-to-v2",
+    "input_hash": "787dfc6ad018f5ab71143086c6fe7eab012e6cafce6ea409289a295d6af72eb5",
+    "source_hash": "787dfc6ad018f5ab71143086c6fe7eab012e6cafce6ea409289a295d6af72eb5",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "contract_version": "CDMJ-CONTRACTS 2.0.0",
+    "canonical_version": "CDMJ canonical-jcs-nfc-v2 profile",
+    "seed_ref": null,
+    "intermediate_result": {
+      "schema_before_after": [
+        "CDMJ-AI-PARAMS 1.1.0",
+        "CDMJ-AI-PARAMS 2.0.0"
+      ],
+      "migration_steps": [
+        "MIG-CONFIG-110-200"
+      ],
+      "defaults": [],
+      "errors": [],
+      "canonical_size": 6400
+    },
+    "final_output_hash": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379",
+    "canonical_hash": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379",
+    "call_site": "settings_service.read_raw→validate_and_migrate_v2→validate_and_freeze",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo009.py",
+    "accepted": true,
+    "error_code": null,
+    "latency_us": 39652
+  },
+  {
+    "unit_id": "ALGO-009",
+    "scenario_id": "missing-required",
+    "input_hash": "16144e51898eeecfcfed70db65fe7da636d2b702b9e254a23d3d4525b677664a",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "contract_version": "CDMJ-CONTRACTS 2.0.0",
+    "canonical_version": "CDMJ canonical-jcs-nfc-v2 profile",
+    "seed_ref": null,
+    "intermediate_result": {
+      "active_hash_before": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379"
+    },
+    "final_output_hash": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379",
+    "call_site": "settings_service.validate_and_migrate_v2",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo009.py",
+    "accepted": false,
+    "error_code": "SCHEMA_INVALID",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "ALGO-009",
+    "scenario_id": "non-finite",
+    "input_hash": "0399917d8037a82f0e86255f164d5e05fafa2e1567896a17261aa794f0aff7f9",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "contract_version": "CDMJ-CONTRACTS 2.0.0",
+    "canonical_version": "CDMJ canonical-jcs-nfc-v2 profile",
+    "seed_ref": null,
+    "intermediate_result": {
+      "active_hash_before": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379"
+    },
+    "final_output_hash": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379",
+    "call_site": "settings_service.validate_and_migrate_v2",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo009.py",
+    "accepted": false,
+    "error_code": "NON_FINITE",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "ALGO-009",
+    "scenario_id": "unknown-field",
+    "input_hash": "490e681c52bc248e9cf9bd53b9e532994a2b939d0c360cc66f19041680eae4ca",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "contract_version": "CDMJ-CONTRACTS 2.0.0",
+    "canonical_version": "CDMJ canonical-jcs-nfc-v2 profile",
+    "seed_ref": null,
+    "intermediate_result": {
+      "active_hash_before": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379"
+    },
+    "final_output_hash": "61d2f27ff22ac7490009a047b7d85ac9f2ba3a4cbaa6514ccd7ccad9a056a379",
+    "call_site": "settings_service.validate_and_migrate_v2",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo009.py",
+    "accepted": false,
+    "error_code": "PARAM_UNKNOWN",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "ALGO-011",
+    "scenario_id": "b1a-production-evidence",
+    "game_id_hash": "72a26cbf5abed4ebf6d87ac5c66a6df2d054f577919db01f3d2acac05abb3cc3",
+    "input_hash": "e2ffb5106590ca75cd146dd6052289fd7ed2c6311f47bbc44ec2e83b95c5446c",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "algorithm_version": 2,
+    "rng_version": 2,
+    "seed_ref": "42312ad2dc443896af7fc86346ffb00de1db62346c5d0abb21ae4abd215e9adf",
+    "intermediate_result": {
+      "wall_size": 55,
+      "dealer": 0,
+      "algorithm_version": 2,
+      "rng_version": 2,
+      "master_hash": "ac054b6dafcb58867eb42d74d97cca94db853f9a85a35b82f3ada51a0ccfdbd8",
+      "stream_names": [
+        "shuffle"
+      ],
+      "seed_hashes": [
+        "e48ed6427e433ee7179781e57fc837d6385d31b5a68af784303b690393a12ed8"
+      ],
+      "coordinate_hash": "1a88acc0d4c8db4ebd3db873055a451466cb02ae888e8d318c376163120cbd05",
+      "trace_ref": "42312ad2dc443896af7fc86346ffb00de1db62346c5d0abb21ae4abd215e9adf"
+    },
+    "final_output_hash": "88261bcc5e7df84c374873083845e0c09a0198b1ea2791f22d8d356db794dad0",
+    "call_site": "create_dealt_game(rng_version=2)→derive_coordinate_seed; replay/worker use persisted version/logical coordinate",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo011.py",
+    "accepted": true,
+    "error_code": null,
+    "latency_us": 1571
+  },
+  {
+    "unit_id": "ALGO-011",
+    "scenario_id": "unknown-stream",
+    "input_hash": "bb9659470655e3c60972eb75c9693e4b31ed4d6b35c7506447ca845a61c0101f",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "rng_version": 2,
+    "seed_ref": null,
+    "intermediate_result": {},
+    "final_output_hash": null,
+    "call_site": "create_dealt_game/select_rng_version/derive_coordinate_seed",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo011.py",
+    "accepted": false,
+    "error_code": "STREAM_UNKNOWN",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "ALGO-011",
+    "scenario_id": "missing-new-version",
+    "input_hash": "6b67232f1a5b093026ff0aa524c92d800aeb35ec95313d1aad52dfd457f8d55d",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "rng_version": 2,
+    "seed_ref": null,
+    "intermediate_result": {},
+    "final_output_hash": null,
+    "call_site": "create_dealt_game/select_rng_version/derive_coordinate_seed",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo011.py",
+    "accepted": false,
+    "error_code": "SCHEMA_INVALID",
+    "latency_us": 0
+  },
+  {
+    "unit_id": "ALGO-011",
+    "scenario_id": "unsupported-deal-version",
+    "input_hash": "ab75f5dacaeadecdf5149c48eaf8eeb3c9fa608ce9f200fade4c3b800d5d19bb",
+    "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+    "rng_version": 2,
+    "seed_ref": null,
+    "intermediate_result": {},
+    "final_output_hash": null,
+    "call_site": "create_dealt_game/select_rng_version/derive_coordinate_seed",
+    "test_or_replay_ref": "tests/spec_v3/test_b1a_algo011.py",
+    "accepted": false,
+    "error_code": "VERSION_CONFLICT",
+    "latency_us": 0
+  }
+]

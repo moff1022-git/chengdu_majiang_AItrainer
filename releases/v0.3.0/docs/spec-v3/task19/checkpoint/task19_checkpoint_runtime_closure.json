@@ -1,0 +1,47 @@
+{
+  "source_commit": "423326ecf6e602f9c1c3392dd2a844b1e61ce9b3",
+  "generated_at": "2026-07-30T22:51:08+08:00",
+  "pytest_runs": [
+    {
+      "python": "3.12.13",
+      "pytest": "8.4.2",
+      "command": "PYTHONPATH=/Users/moff/Library/Python/3.9/lib/python/site-packages PYTHONPYCACHEPREFIX=/tmp/task19_b1a_reaudit_pycache /opt/homebrew/bin/python3.12 -m pytest -q tests/spec_v3/test_b1a_state010.py tests/spec_v3/test_b1a_algo009.py tests/spec_v3/test_b1a_algo011.py",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.54
+    },
+    {
+      "python": "3.12.13",
+      "pytest": "8.4.2",
+      "command": "same deterministic rerun",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.46
+    }
+  ],
+  "evidence_validation": {
+    "e5_rows": 42,
+    "unique_delta_ids": 42,
+    "runtime_e4_rows": 12,
+    "runtime_sha256": "6c51731812e6e1f49419260a13ed3b859ab1b123c6beb1dfefecf9496bdcd393",
+    "e5_sha256": "2a1c71bf19d6b308138d7a66ac1c562f251c9241dca47ce0a6eb4a3c6f9711fc",
+    "ac_sha256": "7bdc459529883f4077e32ecc3ba06847a77010ee8053d5240d7d7ddb6ffe3f00"
+  },
+  "audited_unit_count": 15,
+  "audited_production_closure_complete": true,
+  "audited_direct_test_closure_complete": true,
+  "b2a1_dependency_closure_complete": true,
+  "python_import_closure_checked": true,
+  "test_fixture_closure_checked": true,
+  "locked_frozen_authority_present": true,
+  "task19_plan_complete": true,
+  "current_status_present": true,
+  "model001_wiring_preserved": true,
+  "include_to_exclude_required_dependency_count": 0,
+  "include_to_exclude_required_dependencies": [],
+  "closure_blockers": [],
+  "task19_plan_validation_pass": true,
+  "task19_progress_validation_pass": true
+}

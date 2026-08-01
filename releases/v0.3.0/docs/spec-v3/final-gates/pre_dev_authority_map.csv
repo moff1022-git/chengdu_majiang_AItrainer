@@ -1,0 +1,23 @@
+source,scope,authority_class,effective_status,supersedes_or_notes,development_readable
+成都麻将AI人类化决策规则_v1.md,product rules,LOCKED,ACTIVE,root rule source,true
+成都麻将AI训练模拟器程序实现规范_v2.0.0.md,simulator implementation,LOCKED,ACTIVE,root implementation source,true
+docs/spec-v3/03-unit-specs,96 unit cards,LOCKED,ACTIVE,unit-specific requirements,true
+docs/spec-v3/audit/task17_96_unit_audit_clarification.md,Task17 96-unit status,ORIGINAL/HISTORICAL,ACTIVE_HISTORICAL,immutable 9/1/85/1 authority,false
+docs/spec-v3/audit/task18_current_96_unit_status.json,post-Task17 status delta,REPORT_ONLY,SEPARATE_CURRENT_VIEW,does not rewrite Task17,true
+docs/spec-v3/semantic-completion/semantic_delta_catalog.csv,Task18B original deltas,ORIGINAL/HISTORICAL,SUPERSEDED_IN_PART,do not use generic SEM-PARAMETER,false
+docs/spec-v3/semantic-completion/reviews/task18b_83_parameter_recheck.csv,83 parameter findings,REPORT_ONLY,ACTIVE_REFERENCE,removes unsupported parameter claims,true
+docs/spec-v3/semantic-completion/task18b_r1_supersession_map.csv,83 generic parameter deltas,ACTIVE_OVERLAY,ACTIVE,all 83 marked SUPERSEDED,false
+docs/spec-v3/semantic-completion/task18b_r1_effective_delta_catalog.csv,R1 effective deltas,ACTIVE_OVERLAY,ACTIVE,24 semantic + 12 test + 6 evidence for B1-A,true
+docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,B1-A production semantics,ACTIVE_OVERLAY,ACTIVE,24 concrete deltas,true
+docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,B1-A tests,ACTIVE_OVERLAY,ACTIVE,12 test deltas,true
+docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,B1-A evidence,ACTIVE_OVERLAY,ACTIVE,6 evidence deltas,true
+docs/spec-v3/decisions/B1-A_approval_form.md,nine B1-A decisions,APPROVED_DECISION,ACTIVE,A/A/A/A/A/A/A/A/A,true
+docs/spec-v3/decisions/B1-A_contract_v2_approval_form.md,OPTION-J2 contracts/params/migration,APPROVED_DECISION,ACTIVE,approved without precise timestamp,true
+docs/spec-v3/decisions/B1-A_frozen_contract_v2_approval.md,Frozen v2,APPROVED_DECISION,ACTIVE,approved,true
+docs/spec-v3/decisions/B1-A_effective_spec_overlay.md,B1-A overlay,ACTIVE_OVERLAY,CONFLICTING_STALE_PENDING,still says PENDING CANONICAL PROFILE APPROVAL,false
+docs/spec-v3/decisions/B1-A_version_matrix.csv,version selection,ACTIVE_OVERLAY,CONFLICTING_STALE_PENDING,new rows still PENDING_PROFILE_APPROVAL,false
+docs/spec-v3/decisions/MODEL-001_sim_label_decision_pack.md,simulation labels,APPROVED_DECISION,ACTIVE,A/A/C,true
+docs/spec-v3/contracts/model001_sim_label_contract.md,simulation label contract,LOCKED,ACTIVE,MODEL001-LABEL-SCHEMA 1.0.0,true
+docs/spec-v3/reports/MODEL-001_simulation_training_calibration_report.md,simulation metrics,REPORT_ONLY,ACTIVE_LIMITED,not external validity,false
+docs/spec-v3/plans/task18_execution_queue_current.json,current queue,ACTIVE_OVERLAY,ACTIVE,B1-B design review only,true
+

@@ -1,0 +1,19 @@
+source,scope,authority_class,effective_status,supersedes_or_notes,development_readable
+成都麻将AI人类化决策规则_v1.md,product rules,LOCKED,ACTIVE,root,true
+成都麻将AI训练模拟器程序实现规范_v2.0.0.md,simulator,LOCKED,ACTIVE,root,true
+docs/spec-v3/03-unit-specs/deterministic_rule_state_specs.md,B1-B unit cards,LOCKED,ACTIVE,STATE-001/004/011,true
+docs/spec-v3/audit/task17_96_unit_audit_clarification.md,Task17 status,ORIGINAL/HISTORICAL,ACTIVE_HISTORICAL,9/1/85/1 immutable,false
+docs/spec-v3/plans/task18_execution_queue_current.json,current batch,ACTIVE_OVERLAY,ACTIVE,B1-B design only,true
+docs/spec-v3/semantic-completion/task18b_r1_supersession_map.csv,generic parameter deltas,ACTIVE_OVERLAY,ACTIVE_SUPERSESSION,83 false for development,false
+docs/spec-v3/semantic-completion/reviews/B1-B_semantic_deltas.csv,B1-B production deltas,ACTIVE_OVERLAY,PENDING_APPROVAL,24 concrete,true
+docs/spec-v3/semantic-completion/reviews/B1-B_test_deltas.csv,B1-B test deltas,ACTIVE_OVERLAY,PENDING_APPROVAL,12 separate,true
+docs/spec-v3/semantic-completion/reviews/B1-B_evidence_deltas.csv,B1-B evidence deltas,ACTIVE_OVERLAY,PENDING_APPROVAL,6 separate,true
+docs/spec-v3/semantic-completion/reviews/B1-B_interface_impact.csv,B1-B interface,ACTIVE_OVERLAY,PENDING_APPROVAL,compatible extensions only,true
+docs/spec-v3/semantic-completion/reviews/B1-B_acceptance_matrix.csv,B1-B AC,ACTIVE_OVERLAY,PENDING_APPROVAL,42 distinct oracles,true
+docs/spec-v3/semantic-completion/reviews/B1-B_approval_form.md,B1-B approval,APPROVED_DECISION,PENDING,user action required,false
+docs/spec-v3/decisions/B1-A_contract_v2_approval_form.md,OPTION-J2/contracts/params/migration,APPROVED_DECISION,ACTIVE,overrides pending derived rows,true
+docs/spec-v3/decisions/B1-A_frozen_contract_v2_approval.md,Frozen v2,APPROVED_DECISION,ACTIVE,overrides pending derived rows,true
+docs/spec-v3/decisions/B1-A_authority_correction.md,B1-A pending conflict,ACTIVE_OVERLAY,ACTIVE,overrides stale pending text,true
+docs/spec-v3/decisions/B1-A_effective_spec_overlay.md,old derived overlay,ORIGINAL/HISTORICAL,SUPERSEDED_STATUS_LINES,pending title not current,false
+docs/spec-v3/decisions/B1-A_version_matrix.csv,old derived matrix,ORIGINAL/HISTORICAL,SUPERSEDED_STATUS_LINES,pending cells not current,false
+

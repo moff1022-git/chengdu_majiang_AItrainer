@@ -1,0 +1,61 @@
+{
+  "calibration_conclusion": "SIMULATION_METRICS_RECORDED_NOT_PASSED_WITHOUT_APPROVED_THRESHOLDS",
+  "external_validity": "NOT_EVALUATED",
+  "model_sha256": "6f674624779865d6108de5eafe0166e2d02fcec66214961dc3b6ee43e0cc6617",
+  "model_version": "MODEL001-SIM-NB 1.0.0",
+  "splits": {
+    "test": {
+      "cleared_dingque": {
+        "accuracy": 0.8665377176015474,
+        "brier": 0.18819314004927012,
+        "ece_10_bin": 0.09327217715960748,
+        "log_loss": 0.3309817539922655,
+        "samples": 1551,
+        "threshold_status": "NOT_EVALUATED_NO_APPROVED_THRESHOLD"
+      },
+      "dominant_suit": {
+        "accuracy": 0.46099290780141844,
+        "brier": 0.8721408302638223,
+        "ece_10_bin": 0.3616931661127949,
+        "log_loss": 2.337489049545357,
+        "samples": 1551,
+        "threshold_status": "NOT_EVALUATED_NO_APPROVED_THRESHOLD"
+      },
+      "shape": {
+        "accuracy": 0.9129593810444874,
+        "brier": 0.1579689975117715,
+        "ece_10_bin": 0.12066686957436679,
+        "log_loss": 0.4956578751538355,
+        "samples": 1551,
+        "threshold_status": "NOT_EVALUATED_NO_APPROVED_THRESHOLD"
+      }
+    },
+    "validation": {
+      "cleared_dingque": {
+        "accuracy": 0.8675496688741722,
+        "brier": 0.20219224302859126,
+        "ece_10_bin": 0.07785121666174627,
+        "log_loss": 0.34099218863125264,
+        "samples": 1359,
+        "threshold_status": "NOT_EVALUATED_NO_APPROVED_THRESHOLD"
+      },
+      "dominant_suit": {
+        "accuracy": 0.49374540103016923,
+        "brier": 0.6904602654632013,
+        "ece_10_bin": 0.26117890198237353,
+        "log_loss": 1.3643024190316972,
+        "samples": 1359,
+        "threshold_status": "NOT_EVALUATED_NO_APPROVED_THRESHOLD"
+      },
+      "shape": {
+        "accuracy": 0.8079470198675497,
+        "brier": 0.33018031407283455,
+        "ece_10_bin": 0.12526147992216327,
+        "log_loss": 1.2177103083349243,
+        "samples": 1359,
+        "threshold_status": "NOT_EVALUATED_NO_APPROVED_THRESHOLD"
+      }
+    }
+  },
+  "validation_scope": "SIMULATION"
+}

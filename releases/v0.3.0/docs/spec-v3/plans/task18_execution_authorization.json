@@ -1,0 +1,16 @@
+{
+  "task": "Task 18 post-B1-B execution authorization",
+  "effective_date": "2026-07-30",
+  "next_batch": "B2-A1",
+  "batch_name": "deterministic prerequisites / 确定性前置基础",
+  "unit_ids": ["STATE-002", "STATE-003", "ALGO-002"],
+  "status": "READY_FOR_IMPLEMENTATION",
+  "design_work_authorized": true,
+  "business_code_authorized": true,
+  "test_assertion_changes_authorized": false,
+  "reason": "B2-A1-DESIGN-1.0.0 approved; implementation has not started.",
+  "required_approval": null,
+  "implementation_order_after_approval": ["STATE-002", "STATE-003", "ALGO-002"],
+  "model001_external_gate_blocks_batch": false,
+  "task17_history_modified": false
+}

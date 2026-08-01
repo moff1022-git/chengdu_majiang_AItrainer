@@ -1,0 +1,4 @@
+unit_id,conclusion,semantic_pass,semantic_fail,ac_pass,ac_fail,ac_blocked,ac_not_applicable,e4_records,high_priority_defects,close_allowed,queue_refresh_allowed
+STATE-001,AUDITED,8,0,14,0,0,0,4,0,true,true
+STATE-011,AUDITED,8,0,14,0,0,0,4,0,true,true
+STATE-004,AUDITED,8,0,14,0,0,0,4,0,true,true

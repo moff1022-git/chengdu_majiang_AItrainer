@@ -1,0 +1,13 @@
+﻿delta_id,unit_id,test_type,target_semantic_delta_ids,test_oracle,fixtures,boundary_cases,production_code_path,acceptance_criteria
+TEST-STATE-010-01,STATE-010,direct,SEM-STATE-010-01|02,registry逐ID/逐字段等于Locked来源；四类错误码及零写入,60-row registry fixtures,missing/null/range/unknown/duplicate,真实registry API,断言业务结果和state hash，不仅断言可调用
+TEST-STATE-010-02,STATE-010,state-machine,SEM-STATE-010-03|04|06,每个合法转移得到准确phase/version；非法转移拒绝且snapshot不变,GP/RP event sequences,重复/迟到/并发/归档后写,真实STATE-010 transaction API,状态机与原子性逐转移判定
+TEST-STATE-010-03,STATE-010,visibility,SEM-STATE-010-05|08,扰动私有字段不改变同可见状态决策且策略对象图无私有字段,4-seat poison fixtures,引用/cache/log/派生字段,orchestrator→player decision,四座隔离与无泄漏
+TEST-ALGO-009-01,ALGO-009,pipeline,SEM-ALGO-009-01|02|07,逐阶段spy/结果证明固定顺序；每个失败点active bytes/hash不变,每版本配置fixture,无路径/循环/中途故障,settings/load_config production entry,迁移顺序和原子性客观可判
+TEST-ALGO-009-02,ALGO-009,schema,SEM-ALGO-009-03|04|05,未知/废弃/extensions/missing/null/nonfinite逐项准确结果或错误码,cross-product fixtures,false/0/empty/-0/NaN/Inf,真实validation API,每一输入类别有唯一oracle
+TEST-ALGO-009-03,ALGO-009,canonical-golden,SEM-ALGO-009-06,canonical bytes与SHA-256固定向量逐字节相等并跨进程一致,Unicode/number golden,NFC/NFD/nonBMP/2^53/-0/exponent,真实hash API,不能只比较两次hash相等
+TEST-ALGO-009-04,ALGO-009,integration,SEM-ALGO-009-01|07|08,settings保存/加载后active config及文件符合批准fallback语义,startup/hot-reload fixtures,失败恢复/并发保存,settings_service production chain,E3与E4分离；E4必须真实入口
+TEST-ALGO-011-01,ALGO-011,legacy-golden,SEM-ALGO-011-02|03,旧derive、dice、shuffle、hands、wall逐字段等于现有golden,captured legacy vectors,旧回放缺版本,create_dealt_game,任何legacy变化失败
+TEST-ALGO-011-02,ALGO-011,v2-golden,SEM-ALGO-011-01|04,规范拼接bytes/master/stream seed固定向量0误差,v2 byte vectors,ID长度/版本/stream,真实named stream API,不能只断言同调用相等
+TEST-ALGO-011-03,ALGO-011,concurrency,SEM-ALGO-011-05|06,100种调度排列每个逻辑坐标输出相同；重试不推进其他坐标,worker schedule fixtures,增减/取消/重试/乱序,trainer worker production adapter,不得使用共享mutable index
+TEST-ALGO-011-04,ALGO-011,visibility,SEM-ALGO-011-07,策略序列化字段白名单且无法推导future；审计可复算,SeedTrace poison fixtures,repr/log/cache/hash,real decision chain,敏感字段策略侧不可达
+TEST-ALGO-011-05,ALGO-011,error-atomicity,SEM-ALGO-011-08,所有非法输入result=null，映射/cache/index前后相同,invalid vectors,null/empty/too-long/unknown/overflow,named stream production API,稳定错误码且零部分输出

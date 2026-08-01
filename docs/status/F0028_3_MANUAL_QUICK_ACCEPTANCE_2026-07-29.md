@@ -24,7 +24,7 @@ MT-01、MT-02、MT-03 牌局运行、MT-05 通过；MT-04 首次执行发现的�
 | MT-02 固定 game_id 重复性 | Pass | 双跑各 209 个决策且完全一致；动作摘要 `529c9502f97082ca61bc359db624e498371b71d5799b5a2410fd2351fbd1b614`；终局及胡牌序列一致 |
 | MT-03 GUI 观战 | Partial Pass | 四观察窗创建/定位 `errors=0`；用户反馈“牌局正常”；策略列表中“人类化AI·v2”是否可见未单独回报 |
 | MT-04 Human 混合局 | **Pass** | 原 Blocker 已修复；定向 23 passed、全量 322 passed / 1 skipped；用户确认 Human 已进入定缺并正常出牌，日志未复现异常 |
-| MT-05 旧 AI 回归 | Pass | rule_ai 分数 `[-3,1,2,0]`；current_s2 分数 `[2,0,-2,0]`；均自然 `wall_empty` |
+| MT-05 旧 AI 回归 | Pass | rule_ai 分数 `[-3,1,2,0]`；rule_ai_plus 分数 `[2,0,-2,0]`；均自然 `wall_empty` |
 
 ## 阻塞缺陷分析
 
@@ -48,7 +48,7 @@ Human 窗口在 exchange 阶段选中三张同花色牌后，点击“确认换�
 
 - 归属：F0028-2 实体牌迁移的 opening/Human 边界遗漏。
 - 影响：任何包含 Human 且启用换三张的正常对局均可能被阻塞。
-- 不影响：纯 AI humanlike_v2、rule_ai、current_s2 headless 路径。
+- 不影响：纯 AI humanlike_v2、rule_ai、rule_ai_plus headless 路径。
 - 严重性：P0/Blocker（核心 Human 对局无法开始）。
 
 ### 建议修复

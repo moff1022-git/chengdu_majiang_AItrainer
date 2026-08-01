@@ -2,7 +2,7 @@
 
 Presets live under ``configs/strategies/``:
   - presets.json — selectable list for seat window
-  - current_s2.json — snapshot of hand_predict + F0011 flags
+  - rule_ai_plus.json — snapshot of hand_predict + F0011 flags
 """
 
 from __future__ import annotations
@@ -42,12 +42,12 @@ _FALLBACK: list[dict[str, Any]] = [
         "use_f0011": False,
     },
     {
-        "id": "current_s2",
+        "id": "rule_ai_plus",
         "label": "当前策略·S2",
         "short_label": "当前S2",
         "player": "rule_ai",
         "use_f0011": True,
-        "profile": "configs/strategies/current_s2.json",
+        "profile": "configs/strategies/rule_ai_plus.json",
     },
 ]
 
@@ -165,7 +165,7 @@ def apply_hand_predict_profile(profile: dict[str, Any] | None) -> list[str]:
 
 
 def ensure_profile_applied(strategy_id: str) -> None:
-    """Load and apply profile for current_s2-style presets (once per id)."""
+    """Load and apply profile for rule_ai_plus-style presets (once per id)."""
     p = get_preset(strategy_id)
     if not p or not p.get("profile"):
         return

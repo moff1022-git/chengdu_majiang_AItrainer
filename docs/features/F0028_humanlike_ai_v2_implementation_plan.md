@@ -55,7 +55,7 @@
 
 ### 3.2 新功能默认为显式 profile
 
-新增 `humanlike_v2` 玩家类型/策略 profile。在完成回归验证前，不直接替换 `rule_ai` 或 `current_s2`，以保留现有比较基线和回滚路径。
+新增 `humanlike_v2` 玩家类型/策略 profile。在完成回归验证前，不直接替换 `rule_ai` 或 `rule_ai_plus`，以保留现有比较基线和回滚路径。
 
 ### 3.3 版本线分离
 
@@ -232,7 +232,7 @@
 | 规则回归 | 换三张、定缺、碰/明暗补杠、抢杠胡、一炮多响、过胡、三家胡、流局、花猪/查叫/退税/呼叫转移/封顶 |
 | 属性测试 | 108 张守恒、同牌面 4 张、选择属于 legal mask、无泄漏、同种子同 trace |
 | 对照测试 | 规则文档第 0–18 章案例；不同 profile 使用“允许行为集”而非强制唯一动作 |
-| 批量测试 | 固定 seed 集、现有 `rule_ai/current_s2` 与 `humanlike_v2` 的行为/性能对比 |
+| 批量测试 | 固定 seed 集、现有 `rule_ai/rule_ai_plus` 与 `humanlike_v2` 的行为/性能对比 |
 | 兼容测试 | schema 1–4 旧存档读取、wire v1 兼容、2/3/4 人玩法、Human 子进程 |
 
 本功能每个切片必须先跑当前安全无头回归集；Tk 硬崩溃用例须先完成环境隔离，不能作为 F0028 的随机失败源。
@@ -259,7 +259,7 @@
 
 ## 8. 回滚与发布
 
-- `humanlike_v2` 为显式选配；关闭后回到 `rule_ai/current_s2`。
+- `humanlike_v2` 为显式选配；关闭后回到 `rule_ai/rule_ai_plus`。
 - 新观测/动作 codec 带版本，旧 env 入口在过渡期保留。
 - 新 schema/format/wire 如需升级，必须提供向前读取或明确迁移工具。
 - 不在中间切片将 `humanlike_v2` 设为默认玩家。
@@ -280,7 +280,7 @@
 2026-07-28 用户确认 F0028 方案，以下决议锁定：
 
 1. 按 6 个切片渐进实施，不一次性完整改造。
-2. `humanlike_v2` 先作为新 profile，不直接替换 `current_s2`。
+2. `humanlike_v2` 先作为新 profile，不直接替换 `rule_ai_plus`。
 3. 实体牌 ID 迁移列为 F0028 必做，用于去重、守恒和审计。
 4. 首个验收 profile 为“普通中等水平、中性风格”。
 

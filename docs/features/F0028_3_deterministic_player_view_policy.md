@@ -24,7 +24,7 @@ F0028-1 已提供 GP/RP 配置和追踪基座，F0028-2 已建立实体牌守恒
 - 为换三张、定缺、出牌、响应建立确定性候选生成、特征提取、归一化评分和稳定决胜规则。
 - 仅从可见牌、公开副露、弃牌、定缺、比分和墙余量建立基础 `PublicBelief`。
 - 复用 `engine.shanten`、F0010/F0011 中可改造成纯 PlayerView 输入的牌效/危险思想，不调用全知分析入口。
-- 注册选配 `humanlike_v2` 玩家；不替换 `rule_ai`、`current_s2` 或已有默认 profile。
+- 注册选配 `humanlike_v2` 玩家；不替换 `rule_ai`、`rule_ai_plus` 或已有默认 profile。
 - 将决策摘要写入 RP 生命周期并返回可测试的 `Decision.analysis`。
 - 覆盖 2/3/4 人局；默认四座 profile 仍按 F0028-1 配置。
 

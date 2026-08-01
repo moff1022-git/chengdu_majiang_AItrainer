@@ -1,0 +1,5 @@
+fixture,bytes,sha256
+docs/spec-v3/09-implementation-audit/baseline_fixtures/dealt_state.json,3074,f8905d8bdc9931f222b3278dc06048d72bb0283e26b92738637f8605d258a541
+docs/spec-v3/09-implementation-audit/baseline_fixtures/player_view_seat0.json,2902,73dee6bfefbce3b09dffe4e976f78ee824ca7751872a1e0ee80e258cade40f68
+docs/spec-v3/09-implementation-audit/baseline_fixtures/domain_event.json,122,3f6e45d7fc641006a1c77f4db95961d8f48c214f058cab041202197037dea7e4
+docs/spec-v3/09-implementation-audit/baseline_fixtures/score_transfer.json,404,0c9887cfeb8f31723e4ebb4894b940b2e0f5fb18bf8308f3eaa89a5b4dbcf0ee

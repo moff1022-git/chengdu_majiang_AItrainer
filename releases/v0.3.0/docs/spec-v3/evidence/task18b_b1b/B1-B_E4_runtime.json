@@ -1,0 +1,42 @@
+{
+  "evidence_version": "B1-B-E4-1.0.0",
+  "generated_at": "2026-07-30",
+  "production_call_chain": true,
+  "test_only_facade": false,
+  "scenario_id": "b1b-e4-fixed-v1",
+  "parameter_version": "CDMJ-AI-PARAMS 2.0.0",
+  "contract_version": "CDMJ-CONTRACTS 2.0.0",
+  "canonical_version": "CDMJ canonical-jcs-nfc-v2 profile",
+  "rng_version": 2,
+  "seed_reference": "opaque-safe-reference-only",
+  "units": {
+    "STATE-001": {
+      "call_site": "engine.match.MatchController.create",
+      "input_summary": "4 seats; 1 round; version 0; frozen hashes",
+      "candidate_or_intermediate": "RECEIVED->VALIDATED->RESOLVED->COMMITTED",
+      "final_output": "accepted=true; state_version=1",
+      "audit_ref": "89f52502b5473650362faba7610fb15981be93d98f6503105d62a2ffa2f2500d",
+      "result_hash": "1336beafaa5942af401ccccea664f9f840cdf3260c7aef480dcf1332c46a3161",
+      "test_reference": "tests/spec_v3/test_state_001.py"
+    },
+    "STATE-011": {
+      "call_site": "engine.deal.DealTransaction.execute->create_dealt_game",
+      "input_summary": "game_id=b1b-e4; 4 seats; rng v2; version 0",
+      "candidate_or_intermediate": "108 closed set; shuffled; 14/13/13/13; wall 55",
+      "final_output": "accepted=true; state_version=1",
+      "audit_ref": "7fa37fafe90daa1fdce892d88492130351c6d9fc0d813e98887f7b55fea821cd",
+      "result_hash": "2b7ae3d694cceb6d8c49d83046f0eb2cc02648a248b9f9be9b02d867d5c4e414",
+      "test_reference": "tests/spec_v3/test_state_011.py"
+    },
+    "STATE-004": {
+      "call_site": "engine.round_state_machine.RoundStateMachine.transition",
+      "input_summary": "CONFIGURED; DEAL_COMMITTED; version 0",
+      "candidate_or_intermediate": "guarded edge lookup and CAS",
+      "final_output": "DEALT; state_version=1",
+      "audit_ref": "6512e14747ba31e35c60794941d4172df5d855d57c7982af9d000199bfcf1766",
+      "result_hash": "6512e14747ba31e35c60794941d4172df5d855d57c7982af9d000199bfcf1766",
+      "test_reference": "tests/spec_v3/test_state_004.py"
+    }
+  },
+  "manifest_sha256": "9a816fdfc3085dc2ad74d4a6908a3e1ea8456f3c8fe035b06bfc879879564a67"
+}

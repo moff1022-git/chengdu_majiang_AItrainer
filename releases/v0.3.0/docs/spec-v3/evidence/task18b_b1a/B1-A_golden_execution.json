@@ -1,0 +1,145 @@
+[
+  {
+    "vector_id": "GV-001",
+    "passed": true,
+    "actual": {
+      "accepted": true
+    }
+  },
+  {
+    "vector_id": "GV-002",
+    "passed": true,
+    "actual": {
+      "error_code": "SCHEMA_INVALID"
+    }
+  },
+  {
+    "vector_id": "GV-004",
+    "passed": true,
+    "actual": {
+      "accepted": false,
+      "error_code": "LIFECYCLE_VIOLATION"
+    }
+  },
+  {
+    "vector_id": "GV-005",
+    "passed": true,
+    "actual": {
+      "accepted": true,
+      "parameter_version": "CDMJ-AI-PARAMS 1.1.0",
+      "implementation_version": "CDMJ-AI-IMPL 2.1.0",
+      "input_mutated": false
+    }
+  },
+  {
+    "vector_id": "GV-006",
+    "passed": true,
+    "actual": {
+      "error_code": "MIGRATION_FAILED"
+    }
+  },
+  {
+    "vector_id": "GV-007",
+    "passed": true,
+    "actual": {
+      "accepted": true,
+      "included_in_hash": true
+    }
+  },
+  {
+    "vector_id": "GV-008",
+    "passed": true,
+    "actual": {
+      "error_code": "PARAM_UNKNOWN"
+    }
+  },
+  {
+    "vector_id": "GV-009",
+    "passed": true,
+    "actual": {
+      "canonical_utf8_hex": "7b226e223a307d",
+      "sha256_hex": "f3013f933b9fb80ab6d995e7ad9da36f683837ba1d81e950c943d40111eac2f0"
+    }
+  },
+  {
+    "vector_id": "GV-010",
+    "passed": true,
+    "actual": {
+      "canonical_utf8_hex": "7b2269223a312c226e223a312e357d",
+      "sha256_hex": "4b21570638983ad0758c77281df1c36dacff5fafc34826e94602155d0255c0f1"
+    }
+  },
+  {
+    "vector_id": "GV-011",
+    "passed": true,
+    "actual": {
+      "error_code": "NON_FINITE"
+    }
+  },
+  {
+    "vector_id": "GV-012",
+    "passed": true,
+    "actual": {
+      "canonical_utf8_hex": "7b22c3a9223a22c3a9227d",
+      "sha256_hex": "e8b55b29bf172acb65a8ec20d1762cd9d6112c7abd6799895503d9151b8f42ab"
+    }
+  },
+  {
+    "vector_id": "GV-013",
+    "passed": true,
+    "actual": {
+      "error_code": "SCHEMA_INVALID"
+    }
+  },
+  {
+    "vector_id": "GV-014",
+    "passed": true,
+    "actual": {
+      "error_code": "SCHEMA_INVALID"
+    }
+  },
+  {
+    "vector_id": "GV-015",
+    "passed": true,
+    "actual": {
+      "error_code": "SCHEMA_INVALID"
+    }
+  },
+  {
+    "vector_id": "GV-016",
+    "passed": true,
+    "actual": {
+      "selected_version": "legacy-v1",
+      "master_seed": 2403837098037711652,
+      "shuffle_seed": 2403837098037711652,
+      "dice_seed": 9581831241709401729,
+      "exchange_seed": 8864912832000149886
+    }
+  },
+  {
+    "vector_id": "GV-017",
+    "passed": true,
+    "actual": {
+      "error_code": "SCHEMA_INVALID"
+    }
+  },
+  {
+    "vector_id": "GV-018",
+    "passed": true,
+    "actual": {
+      "master_input_hex": "43444d4a2d524e47006d617374657200000464656d6f00020002",
+      "master_seed": 1435199040579534962,
+      "stream_input_hex": "43444d4a2d524e470073747265616d0013ead9ec63b98072000c706f6c6963795f6e6f6973650002",
+      "stream_seed": 915727465774839924,
+      "coordinate_input_hex": "43444d4a2d524e4700636f6f7264000cb551474493f874000c706f6c6963795f6e6f6973650006706f6c6963790006736561742d3000086576656e742d34320000000000000000",
+      "sample_seed": 1912371584853373347
+    }
+  },
+  {
+    "vector_id": "GV-019",
+    "passed": true,
+    "actual": {
+      "error_code": "SCHEMA_INVALID"
+    }
+  }
+]

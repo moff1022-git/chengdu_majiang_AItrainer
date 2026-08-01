@@ -1,0 +1,8 @@
+finding_id,classification,scope,description,required_resolution
+FG-001,HARD_BLOCKER,B1-B,STATE-001 STATE-011 STATE-004 have no Approved batch-specific concrete semantic/test/evidence delta and interface-impact package,perform B1-B design review and obtain approval before coding
+FG-002,MUST_FIX_BEFORE_BATCH,B1-A contract authority,B1-A_effective_spec_overlay.md and B1-A_version_matrix.csv retain pending profile wording after OPTION-J2 approval,issue a report-only supersession/authority correction without changing Locked semantics
+FG-003,NON_BLOCKING_DEBT,MODEL-001 data,shape categories do not meet 200 each: seven_pairs 162 pure_suit 0 all_pongs 0,approve rare-class data strategy before final calibration
+FG-004,NON_BLOCKING_DEBT,MODEL-001 release,manifest omits eligible_samples file hashes and generator code hash,add versioned release-manifest contract before treating data as frozen calibration release
+FG-005,NON_BLOCKING_DEBT,MODEL-001 validation,external_validity remains NOT_EVALUATED and simulation cannot represent real players,retain simulation limitation and obtain independent real-player evaluation separately
+FG-006,HISTORICAL_ONLY,old reports,old 33/61/2 83 SEM-PARAMETER and earlier readiness phrases remain in historical/report files,keep classified historical and exclude from development inputs
+
