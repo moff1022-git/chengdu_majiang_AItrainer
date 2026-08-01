@@ -1508,3 +1508,4 @@
 - F0037: 完成 RP 双视图 UI（envelope/payload/audit_only）及独立归档范围；全量回归 `527 passed, 1 skipped`。
 - F0036: 新增 humanlike_v2 人格预设选择及报告记录；新增可选并发线程数 1/5/10/20/50/100。
 - F0036: 完成全量回归与 1/5/10/20 线程并发 smoke；各线程档位 4 局均通过。
+- F0036: 为 summary/report 的 JSON、CSV、Markdown 文件增加时间戳归档，同时保留无时间戳兼容指针。

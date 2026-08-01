@@ -113,23 +113,31 @@ def summarize(rows: list[dict], specs: list[str], requested: int, interrupted: b
     return {"requested": requested, "completed": len(rows), "interrupted": interrupted, "players": specs, "presets": presets or [None] * len(specs), "seats": seats}
 
 
-def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int, interrupted: bool, code: str | None = None, presets=None) -> None:
+def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int, interrupted: bool, code: str | None = None, presets=None, report_stamp: str | None = None) -> None:
+    report_stamp = report_stamp or datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
     summary = summarize(rows, specs, requested, interrupted, presets)
     if code:
         summary["verification_code"] = code
-    (out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    summary_text = json.dumps(summary, ensure_ascii=False, indent=2)
+    (out / f"summary_{report_stamp}.json").write_text(summary_text, encoding="utf-8")
+    (out / "summary.json").write_text(summary_text, encoding="utf-8")
     with (out / "games.jsonl").open("w", encoding="utf-8") as handle:
         for row in rows:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
-    with (out / "report.csv").open("w", newline="", encoding="utf-8") as handle:
+    report_csv = out / f"report_{report_stamp}.csv"
+    with report_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=summary["seats"][0].keys())
         writer.writeheader(); writer.writerows(summary["seats"])
+    report_csv_latest = out / "report.csv"
+    report_csv_latest.write_text(report_csv.read_text(encoding="utf-8"), encoding="utf-8")
     lines = ["# AI 能力测试报告", "", f"- 请求/完成：{requested}/{len(rows)}", f"- 状态：{'已中断（可续跑）' if interrupted else '已完成'}"]
     if code: lines.append(f"- 唯一校验码：`{code}`")
     lines += ["", "|座位|AI|胜局/胜率|Top1率|总分/均分|平均/P95响应(ms)|", "|---|---|---:|---:|---:|---:|"]
     for s in summary["seats"]:
         lines.append(f"|{s['seat']}|{s['player']}|{s['wins']} / {s['win_rate']:.2%}|{s['top1_rate']:.2%}|{s['total_score']} / {s['average_score']:.2f}|{s['avg_response_ms']:.3f} / {s['p95_response_ms']:.3f}|")
-    (out / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    report_text = "\n".join(lines) + "\n"
+    (out / f"report_{report_stamp}.md").write_text(report_text, encoding="utf-8")
+    (out / "report.md").write_text(report_text, encoding="utf-8")
 
 
 def capability_experiments(target: str) -> list[dict]:
@@ -140,16 +148,19 @@ def capability_experiments(target: str) -> list[dict]:
             for baseline in baselines for seat in range(4)]
 
 
-def estimate_seconds(games: int, mode: str = "batch", remaining_experiments: int | None = None) -> float:
-    """Conservative wall-clock estimate based on the mixed-AI smoke baseline."""
-    return games * (remaining_experiments if remaining_experiments is not None else (12 if mode == "capability" else 1)) * SECONDS_PER_GAME
+def estimate_seconds(games: int, mode: str = "batch", remaining_experiments: int | None = None, threads: int = 1) -> float:
+    """Estimate wall time with bounded parallel workers (including scheduler overhead)."""
+    experiments = remaining_experiments if remaining_experiments is not None else (12 if mode == "capability" else 1)
+    total = games * experiments
+    workers = max(1, min(int(threads), total))
+    return ((total + workers - 1) // workers) * SECONDS_PER_GAME
 
 
-def confirm_run(games: int, mode: str, target: str | None = None, *, input_fn=input) -> bool:
+def confirm_run(games: int, mode: str, target: str | None = None, threads: int = 1, *, input_fn=input) -> bool:
     experiments = 12 if mode == "capability" else 1
-    minutes = estimate_seconds(games, mode) / 60
+    minutes = estimate_seconds(games, mode, threads=threads) / 60
     label = f"目标 {target}，" if target else ""
-    answer = input_fn(f"\n即将开始：{label}{experiments} 个实验，共 {games * experiments} 局；预计耗时约 {minutes:.1f} 分钟。确认开始？[y/N] ")
+    answer = input_fn(f"\n即将开始：{label}{experiments} 个实验，共 {games * experiments} 局；并发线程 {threads}；预计耗时约 {minutes:.1f} 分钟。确认开始？[y/N] ")
     return answer.strip().lower() in {"y", "yes"}
 
 
@@ -208,7 +219,7 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
           for index, row in ((execute(i) for i in pending) if threads == 1 else (f.result() for f in as_completed([pool.submit(execute, i) for i in pending]))):
             if STOP: break
             rows.append(row)
-            write_outputs(run_dir, rows, experiment["players"], games, True)
+            write_outputs(run_dir, rows, experiment["players"], games, True, report_stamp=run_stamp)
             (run_dir / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
             completed_total = (number - 1) * games + len(rows)
             total = len(experiments) * games
@@ -216,7 +227,7 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
             rate = elapsed / completed_total if completed_total else 0.0
             eta = rate * (total - completed_total)
             print(f"\r能力评估 {progress_bar(completed_total, total)} 总局数 {completed_total}/{total} 校验码 {code} 实验 {number}/{len(experiments)} {name} 局 {len(rows)}/{games} 已运行 {elapsed:.1f}s 剩余约 {eta:.1f}s", end="", flush=True)
-        write_outputs(run_dir, rows, experiment["players"], games, len(rows) < games, presets=presets)
+        write_outputs(run_dir, rows, experiment["players"], games, len(rows) < games, presets=presets, report_stamp=run_stamp)
         target_stat = summarize(rows, experiment["players"], games, len(rows) < games)["seats"][experiment["seat"]]
         aggregate.append({"baseline": experiment["baseline"], "target_seat": f"s{experiment['seat']}", **target_stat})
         if STOP: break
@@ -255,7 +266,7 @@ def main(argv: list[str] | None = None) -> int:
             args.players = choose_players()
         if args.threads is None:
             args.threads = int(choose_option("并发线程数", [str(x) for x in THREAD_OPTIONS]))
-        if confirm_run(args.games, args.mode, args.target): break
+        if confirm_run(args.games, args.mode, args.target, args.threads): break
         print("已取消，返回参数选择。")
         args.games = None; args.target = None; args.players = None; args.mode = None; args.threads = None; args.humanlike_preset = None
     if args.mode == "capability":
@@ -282,18 +293,19 @@ def main(argv: list[str] | None = None) -> int:
     global STOP
     signal.signal(signal.SIGINT, lambda *_: globals().__setitem__("STOP", True))
     wall_start = time.perf_counter()
+    report_stamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
     for index in range(len(rows), args.games):
         if STOP: break
         rows.append(run_game(specs, ids[index]))
         elapsed = time.perf_counter() - wall_start
         rate = elapsed / max(1, len(rows) - (index - (len(rows) - 1)))
         eta = rate * (args.games - len(rows))
-        write_outputs(out, rows, specs, args.games, True, code)
+        write_outputs(out, rows, specs, args.games, True, code, report_stamp=report_stamp)
         (out / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
         score_text = " ".join(f"s{s}:{rows[-1]['scores'][str(s)]}" for s in range(4))
         print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
     print()
-    write_outputs(out, rows, specs, args.games, len(rows) < args.games, code)
+    write_outputs(out, rows, specs, args.games, len(rows) < args.games, code, report_stamp=report_stamp)
     return 130 if STOP else 0
 
 
