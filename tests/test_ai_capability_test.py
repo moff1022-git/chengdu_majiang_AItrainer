@@ -1,4 +1,4 @@
-from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_presets, confirm_run, game_ids, progress_bar, run_game, summarize, verification_code
+from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, game_ids, progress_bar, run_game, summarize, verification_code
 import tools.ai_capability_test as capability_test
 
 
@@ -79,6 +79,13 @@ def test_batch_preset_menu_only_prompts_humanlike_seats():
     presets = choose_batch_presets(["humanlike_v2", "random", "humanlike_v2", "rule_ai"], input_fn=lambda _: next(answers))
     assert presets[0] == list(capability_test.PRESET_IDS)[0]
     assert presets[1] is None
+    assert presets[2] == list(capability_test.PRESET_IDS)[1]
+
+def test_batch_configuration_selects_preset_immediately_after_each_seat():
+    answers = iter(["4", "1", "1", "4", "2", "2"])
+    specs, presets = choose_batch_configuration(input_fn=lambda _: next(answers))
+    assert specs == "humanlike_v2,random,humanlike_v2,rule_ai"
+    assert presets[0] == list(capability_test.PRESET_IDS)[0]
     assert presets[2] == list(capability_test.PRESET_IDS)[1]
 
 def test_capability_manifest_records_scalar_preset(tmp_path, monkeypatch):

@@ -185,6 +185,17 @@ def choose_players(*, input_fn=input) -> str:
     return ",".join(choose_option(f"选择 s{seat} AI 类型", list(TYPES), input_fn=input_fn) for seat in range(4))
 
 
+def choose_batch_configuration(*, input_fn=input) -> tuple[str, list[str | None]]:
+    """Choose each seat and its preset together before moving to next seat."""
+    specs, presets = [], []
+    for seat in range(4):
+        player = choose_option(f"选择 s{seat} AI 类型", list(TYPES), input_fn=input_fn)
+        specs.append(player)
+        presets.append(choose_option(f"选择 s{seat} humanlike_v2 人格预设", list(PRESET_IDS), input_fn=input_fn)
+                       if player == "humanlike_v2" else None)
+    return ",".join(specs), presets
+
+
 def choose_batch_presets(specs: list[str], *, input_fn=input) -> list[str | None]:
     """Prompt only for seats using humanlike_v2."""
     return [choose_option(f"选择 s{seat} humanlike_v2 人格预设", list(PRESET_IDS), input_fn=input_fn)
@@ -271,9 +282,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.target == "humanlike_v2" and args.humanlike_preset is None:
                 args.humanlike_preset = choose_option("humanlike_v2 人格预设", list(PRESET_IDS))
         elif args.players is None:
-            args.players = choose_players()
-        if args.mode == "batch" and args.players is not None and batch_presets is None:
-            batch_presets = choose_batch_presets([item.strip() for item in args.players.split(",")])
+            args.players, batch_presets = choose_batch_configuration()
         if args.threads is None:
             args.threads = int(choose_option("并发线程数", [str(x) for x in THREAD_OPTIONS]))
         if confirm_run(args.games, args.mode, args.target, args.threads): break
