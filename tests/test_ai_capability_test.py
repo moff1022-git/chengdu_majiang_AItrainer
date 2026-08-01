@@ -81,6 +81,14 @@ def test_batch_preset_menu_only_prompts_humanlike_seats():
     assert presets[1] is None
     assert presets[2] == list(capability_test.PRESET_IDS)[1]
 
+def test_capability_manifest_records_scalar_preset(tmp_path, monkeypatch):
+    monkeypatch.setattr(capability_test, "run_game", lambda specs, gid, presets=None: {"game_id": gid, "scores": {"0": 0, "1": 0, "2": 0, "3": 0}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]})
+    monkeypatch.setattr(capability_test, "write_outputs", lambda *args, **kwargs: None)
+    monkeypatch.setattr(capability_test, "STOP", False)
+    capability_test.run_capability_mode("humanlike_v2", 100, tmp_path, ["low_aggressive"] * 4, 1)
+    manifest = __import__('json').loads((tmp_path / "manifest.json").read_text())
+    assert manifest["humanlike_preset"] == "low_aggressive"
+
 
 def test_fixed_game_ids_are_numeric_and_unique():
     ids = game_ids(100)

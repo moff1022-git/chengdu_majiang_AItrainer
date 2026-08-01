@@ -463,3 +463,4 @@
 - 2026-08-02 F0036 任务 1-4：全量回归 `527 passed, 1 skipped`；并发 smoke 使用 1/5/10/20 线程各 4 局均完成，无失败。线程性能正式长测待独立基准数据补充。
 - 2026-08-02 F0036：所有 batch/capability 报告的 JSON、CSV、Markdown 正式文件均增加 `YYYYMMDD_HHMMSS` 时间戳；旧无时间戳文件保留为最新结果指针。针对性测试 `11 passed`。
 - 2026-08-02 F0036：修复 batch 模式未提示 humanlike_v2 人格预设；按座位仅对 humanlike_v2 显示预设菜单，并写入配置和报告。针对性测试 `12 passed`。
+- 2026-08-02 F0036：核查并修复 capability 模式 humanlike_v2 人格预设链路；预设现在按目标座位注入，manifest/实验报告记录标量预设。针对性测试 `13 passed`。

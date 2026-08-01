@@ -198,7 +198,8 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
     run_stamp = started_at.strftime("%Y%m%d_%H%M%S")
     ids_for_code = game_ids(games)
     code = verification_code(games=games, game_id_list=ids_for_code, players=[target] * 4, mode="capability", target=target)
-    manifest = {"mode": "capability", "target": target, "humanlike_preset": presets[0] if presets else None, "threads": threads, "games_per_experiment": games,
+    preset_id = presets[0] if isinstance(presets, (list, tuple)) else presets
+    manifest = {"mode": "capability", "target": target, "humanlike_preset": preset_id, "threads": threads, "games_per_experiment": games,
                 "started_at": started_at.isoformat(), "verification_code": code, "report_file": f"capability_report_{run_stamp}.md",
                 "experiments": experiments}
     (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -215,8 +216,8 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
         games_file = run_dir / "games.jsonl"
         rows = [json.loads(line) for line in games_file.read_text(encoding="utf-8").splitlines() if line] if games_file.exists() else []
         pending = list(range(len(rows), games))
+        exp_presets = [preset_id if (target == "humanlike_v2" and seat == experiment["seat"]) else None for seat in range(4)] if preset_id else None
         def execute(index):
-            exp_presets = [presets if (target == "humanlike_v2" and seat == experiment["seat"]) else None for seat in range(4)] if presets else None
             try:
                 return index, run_game(experiment["players"], ids[index], exp_presets)
             except Exception as exc:
@@ -225,7 +226,7 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
           for index, row in ((execute(i) for i in pending) if threads == 1 else (f.result() for f in as_completed([pool.submit(execute, i) for i in pending]))):
             if STOP: break
             rows.append(row)
-            write_outputs(run_dir, rows, experiment["players"], games, True, report_stamp=run_stamp)
+            write_outputs(run_dir, rows, experiment["players"], games, True, presets=exp_presets, report_stamp=run_stamp)
             (run_dir / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
             completed_total = (number - 1) * games + len(rows)
             total = len(experiments) * games
@@ -238,8 +239,8 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
         aggregate.append({"baseline": experiment["baseline"], "target_seat": f"s{experiment['seat']}", **target_stat})
         if STOP: break
     (output / "capability_summary.json").write_text(json.dumps({"target": target, "games_per_experiment": games, "verification_code": code, "completed_experiments": len(aggregate), "results": aggregate}, ensure_ascii=False, indent=2), encoding="utf-8")
-    lines = [f"# {target} AI 能力评估", "", f"每个基线每个座位：{games} 局", f"唯一校验码：`{code}`", f"人格预设：`{presets[0] if presets else '无'}`", f"并发线程数：`{threads}`", "", "|基线|目标座位|人格预设|胜率|Top1率|平均得分|平均响应(ms)|P95响应(ms)|", "|---|---|---|---:|---:|---:|---:|---:|"]
-    lines += [f"|{r['baseline']}|{r['target_seat']}|{presets[0] if presets else '无'}|{r['win_rate']:.2%}|{r['top1_rate']:.2%}|{r['average_score']:.2f}|{r['avg_response_ms']:.3f}|{r['p95_response_ms']:.3f}|" for r in aggregate]
+    lines = [f"# {target} AI 能力评估", "", f"每个基线每个座位：{games} 局", f"唯一校验码：`{code}`", f"人格预设：`{preset_id or '无'}`", f"并发线程数：`{threads}`", "", "|基线|目标座位|人格预设|胜率|Top1率|平均得分|平均响应(ms)|P95响应(ms)|", "|---|---|---|---:|---:|---:|---:|---:|"]
+    lines += [f"|{r['baseline']}|{r['target_seat']}|{preset_id or '无'}|{r['win_rate']:.2%}|{r['top1_rate']:.2%}|{r['average_score']:.2f}|{r['avg_response_ms']:.3f}|{r['p95_response_ms']:.3f}|" for r in aggregate]
     report_name = f"capability_report_{run_stamp}.md"
     report_text = "\n".join(lines) + "\n"
     (output / report_name).write_text(report_text, encoding="utf-8")
