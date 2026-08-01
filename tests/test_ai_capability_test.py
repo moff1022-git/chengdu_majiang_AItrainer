@@ -1,4 +1,4 @@
-from tools.ai_capability_test import capability_experiments, choose_option, confirm_run, game_ids, progress_bar, run_game, summarize, verification_code
+from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_presets, confirm_run, game_ids, progress_bar, run_game, summarize, verification_code
 import tools.ai_capability_test as capability_test
 
 
@@ -73,6 +73,13 @@ def test_capability_mode_rotates_target_across_all_seats():
     assert {item["baseline"] for item in experiments} == {"random", "rule_ai", "rule_ai_plus"}
     for item in experiments:
         assert item["players"][item["seat"]] == "humanlike_v2"
+
+def test_batch_preset_menu_only_prompts_humanlike_seats():
+    answers = iter(["1", "2"])
+    presets = choose_batch_presets(["humanlike_v2", "random", "humanlike_v2", "rule_ai"], input_fn=lambda _: next(answers))
+    assert presets[0] == list(capability_test.PRESET_IDS)[0]
+    assert presets[1] is None
+    assert presets[2] == list(capability_test.PRESET_IDS)[1]
 
 
 def test_fixed_game_ids_are_numeric_and_unique():

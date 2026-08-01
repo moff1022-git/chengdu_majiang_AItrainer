@@ -185,6 +185,12 @@ def choose_players(*, input_fn=input) -> str:
     return ",".join(choose_option(f"选择 s{seat} AI 类型", list(TYPES), input_fn=input_fn) for seat in range(4))
 
 
+def choose_batch_presets(specs: list[str], *, input_fn=input) -> list[str | None]:
+    """Prompt only for seats using humanlike_v2."""
+    return [choose_option(f"选择 s{seat} humanlike_v2 人格预设", list(PRESET_IDS), input_fn=input_fn)
+            if player == "humanlike_v2" else None for seat, player in enumerate(specs)]
+
+
 def run_capability_mode(target: str, games: int, output: Path, presets=None, threads: int = 1) -> int:
     output.mkdir(parents=True, exist_ok=True)
     experiments = capability_experiments(target)
@@ -253,6 +259,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--threads", type=int, choices=THREAD_OPTIONS, default=None)
     parser.add_argument("--humanlike-preset", choices=PRESET_IDS)
     args = parser.parse_args(argv)
+    batch_presets = None
     while True:
         if args.mode is None:
             args.mode = choose_option("测试模式", ["batch", "capability"])
@@ -264,11 +271,13 @@ def main(argv: list[str] | None = None) -> int:
                 args.humanlike_preset = choose_option("humanlike_v2 人格预设", list(PRESET_IDS))
         elif args.players is None:
             args.players = choose_players()
+        if args.mode == "batch" and args.players is not None and batch_presets is None:
+            batch_presets = choose_batch_presets([item.strip() for item in args.players.split(",")])
         if args.threads is None:
             args.threads = int(choose_option("并发线程数", [str(x) for x in THREAD_OPTIONS]))
         if confirm_run(args.games, args.mode, args.target, args.threads): break
         print("已取消，返回参数选择。")
-        args.games = None; args.target = None; args.players = None; args.mode = None; args.threads = None; args.humanlike_preset = None
+        args.games = None; args.target = None; args.players = None; args.mode = None; args.threads = None; args.humanlike_preset = None; batch_presets = None
     if args.mode == "capability":
         return run_capability_mode(args.target, args.games, Path(args.output) / f"capability_{args.target}_{args.games}", [args.humanlike_preset] * 4 if args.humanlike_preset else None, args.threads)
     specs = [item.strip() for item in args.players.split(",")]
@@ -286,9 +295,10 @@ def main(argv: list[str] | None = None) -> int:
     else:
         ids = game_ids(args.games)
         code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
-        config_path.write_text(json.dumps({"games": args.games, "players": specs, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
+        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
     config_data = json.loads(config_path.read_text(encoding="utf-8"))
     ids = config_data["game_ids"]
+    batch_presets = config_data.get("presets", batch_presets or [None] * 4)
     code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
     global STOP
     signal.signal(signal.SIGINT, lambda *_: globals().__setitem__("STOP", True))
@@ -296,16 +306,16 @@ def main(argv: list[str] | None = None) -> int:
     report_stamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
     for index in range(len(rows), args.games):
         if STOP: break
-        rows.append(run_game(specs, ids[index]))
+        rows.append(run_game(specs, ids[index], batch_presets))
         elapsed = time.perf_counter() - wall_start
         rate = elapsed / max(1, len(rows) - (index - (len(rows) - 1)))
         eta = rate * (args.games - len(rows))
-        write_outputs(out, rows, specs, args.games, True, code, report_stamp=report_stamp)
+        write_outputs(out, rows, specs, args.games, True, code, presets=batch_presets, report_stamp=report_stamp)
         (out / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
         score_text = " ".join(f"s{s}:{rows[-1]['scores'][str(s)]}" for s in range(4))
         print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
     print()
-    write_outputs(out, rows, specs, args.games, len(rows) < args.games, code, report_stamp=report_stamp)
+    write_outputs(out, rows, specs, args.games, len(rows) < args.games, code, presets=batch_presets, report_stamp=report_stamp)
     return 130 if STOP else 0
 
 
