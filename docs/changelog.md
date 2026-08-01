@@ -1479,8 +1479,30 @@
 - F0036: capability 汇总报告文件名增加测试日期和时间。
 - F0036: 测试进度和报告增加按局数/固定 game_id/配置派生的唯一校验码。
 - F0036: capability 模式增加动态已运行时间和剩余时间 ETA。
+- 修复 STATE-004 response recovery：fallback PASS 改为原子事务，避免恢复失败留下部分 pending claims 并终止长测。
 # 2026-08-01
 
 - M20: 新增 Task 19 全功能独立回归测试规格，批准无人值守自动运行方案。
 - M20: 新增独立自动测试调度器、失败重试、校验码、证据和时间戳报告输出。
 - M20: 完成独立全量回归：498 passed, 1 skipped；96 units、14 waves、40 batches 均有独立结果证据。
+# 2026-08-01
+
+- F0037: 新增按 96 单元分类的 Humanlike v2 参数设置方案 Draft。
+- F0037: 新增 96 单元到 60 个正式 GP/RP 参数组的完整反向关联矩阵。
+- F0037: 为全部正式参数增加其在牌局生命周期中的作用步骤类别。
+- F0037: 将完整作用步骤类别表直接合并进主方案文档。
+- F0037: 根据 Task 19 权威参数注册表，为全部 60 个 GP/RP 参数补充类型、取值范围或运行态计算公式。
+- F0037: 新增可再生的 277 行叶参数矩阵，覆盖四座默认值、类型/范围、作用步骤、权限、实现状态、96 单元消费者及 RP schema 缺口。
+- F0037: 设计 12 种 GP-023 人格预设及 GP-025/026 联动，补充 search-depth 水平映射、custom 继承规则、UI 方案和验收测试，规格进入 Review。
+- F0037: 完成 GP-023 12 种人格预设实现、设置窗口联动、custom 检测和 search-depth 有效上限；定向 32 passed，全量 506 passed/1 skipped，规格完成。
+- F0037: 新增 RP-001～RP-033 叶级 schema 设计草案，明确统一 envelope、核心字段合同、可见性、分权写入、迁移和回滚门禁。
+- F0037: 按批准规格开始 RP schema 实现：增加统一 envelope、canonical payload hash、篡改校验、旧裸 payload migration，并接入 RoundRuntime 写入校验。
+- F0037: 增加 engine/player_policy/audit RP 分权写入 adapter，并接入 Humanlike 写入；全量回归 511 passed/1 skipped。兼容裸 payload 的最终切换和 22 个 RP 写入点仍待完成。
+- F0037: 完成 RoundRuntime envelope 持久化与透明读取分离，迁移建局/事件/决策/终局路径，移除 Humanlike 裸 payload 覆盖；全量回归 511 passed/1 skipped。
+- F0037: 完成 RP schema 验收：增加公共事件镜像、隐藏字段校验、幂等 envelope 和剩余槽位占位写入；定向 21 passed，全量 514 passed/1 skipped。
+- F0037/Task20: 完成 RP schema 后续 1–5 项并执行独立全量回归；Task20 run `task20-20260802_000300`，96/96 units、14/14 waves、40/40 batches，校验码 `47C2B4BDBA3569F7`，`514 passed, 1 skipped`。
+- F0037/Task20: 新增 RP-010、RP-018～RP-022 的公开投影派生，加入无上帝视野字段硬拒绝和边界测试；Task20 run `task20-20260802_001439`，校验码 `D99B1482DFA2B868`，`521 passed, 1 skipped`。
+- F0037/Task20: 增强 RP-018 ukeire、RP-019 MODEL-001 posterior、RP-020 公开风险聚合，完成多座位隔离和 12 预设固定输入对比；Task20 run `task20-20260802_001956`，校验码 `64A377458C3A4C87`，`525 passed, 1 skipped`。
+- F0037: 新增 RP envelope/payload 双视图及存档 round-trip/legacy migration；生成 12 预设 smoke 并明确动态 preset 注入尚未实现。全量回归 `526 passed, 1 skipped`。
+- F0037: 增加 per-player humanlike preset 注入，12 预设 smoke 改为真实加载对应配置；新增注入测试，全量回归 `527 passed, 1 skipped`。
+- F0037: 完成 RP 双视图 UI（envelope/payload/audit_only）及独立归档范围；全量回归 `527 passed, 1 skipped`。

@@ -17,6 +17,8 @@ from players.humanlike.config import HumanlikeConfig, load_config
 from players.humanlike.evaluator import evaluate_candidates
 from players.humanlike.hand_analyzer import analyze_action
 from players.humanlike.policy import select_cognitively
+from players.humanlike.personality_presets import effective_search_depth
+from players.humanlike.public_derivation import derive_public_rps
 from players.humanlike.runtime import RoundRuntime
 from players.humanlike.state010 import SeatRuntimeStore
 from players.humanlike.view import PolicyInputError, build_decision_context
@@ -30,9 +32,10 @@ def default_humanlike_config_path() -> Path:
 class HumanlikeV2Player(BasePlayer):
     """F0028-4 cognitive policy limited to its received PlayerView sequence."""
 
-    def __init__(self, *args: Any, config_path: str | Path | None = None, **kwargs: Any) -> None:
+    def __init__(self, *args: Any, config_path: str | Path | None = None, preset_id: str | None = None, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._config_path = Path(config_path) if config_path else default_humanlike_config_path()
+        self.preset_id = preset_id
         self.humanlike_config: HumanlikeConfig | None = None
         self.profile = None
         self.runtime: RoundRuntime | None = None
@@ -45,7 +48,20 @@ class HumanlikeV2Player(BasePlayer):
             raise PolicyInputError("humanlike_v2 seat must be in 0..3")
         self.seat = seat
         self.config = dict(config or {})
-        self.humanlike_config = load_config(self._config_path)
+        if self.preset_id:
+            import tempfile
+            from players.humanlike.personality_presets import apply_personality_preset
+            raw = json.loads(self._config_path.read_text(encoding="utf-8"))
+            raw["players"][seat] = apply_personality_preset(raw["players"][seat], self.preset_id)
+            with tempfile.NamedTemporaryFile("w", suffix=".json", encoding="utf-8", delete=False) as handle:
+                json.dump(raw, handle, ensure_ascii=False)
+                override_path = Path(handle.name)
+            try:
+                self.humanlike_config = load_config(override_path, self._config_path.with_name("compatibility.json"))
+            finally:
+                override_path.unlink(missing_ok=True)
+        else:
+            self.humanlike_config = load_config(self._config_path)
         self.profile = self.humanlike_config.players[seat]
         player_payload = self.humanlike_config.normalized_dict()["players"][seat]
         self.player_config_hash = hashlib.sha256(json.dumps(player_payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
@@ -101,6 +117,9 @@ class HumanlikeV2Player(BasePlayer):
             profile=self.profile,
             config_hash=self.humanlike_config.config_hash,
         )
+        public_projection = dict(context.view.payload)
+        for parameter_id, payload in derive_public_rps(public_projection).items():
+            self._set_rp(parameter_id, payload)
         gp026 = self.profile.cognitive_parameters["GP-026"]
         gp022 = self.humanlike_config.global_parameters["GP-022"]
         gp025 = self.profile.cognitive_parameters["GP-025"]
@@ -148,6 +167,11 @@ class HumanlikeV2Player(BasePlayer):
             restart_reasons=restart_reasons,
         )
         trace = dict(decision.trace)
+        trace["configured_search_depth"] = int(gp026["search_depth"])
+        trace["effective_search_depth"] = effective_search_depth(
+            context.profile.level,
+            int(gp026["search_depth"]),
+        )
         trace["memory"] = memory_summary.to_dict()
         trace["attention"] = [item.to_dict() for item in attention]
         trace["personality"] = {
@@ -167,7 +191,7 @@ class HumanlikeV2Player(BasePlayer):
         self._set_rp("RP-023", {"count": len(candidates.candidates), "actions": [item.action.to_dict() for item in candidates.candidates]})
         self._set_rp("RP-024", memory_summary.to_dict() | {"cross_round_impressions": len(self.cognitive_state.opponent_impressions)})
         self._set_rp("RP-025", [item.to_dict() for item in attention])
-        self._set_rp("RP-026", {"selected_action": decision.selected.to_dict(), "score": selected_scored.score, "checked_count": trace["checked_count"], "stop_reason": trace["stop_reason"]})
+        self._set_rp("RP-026", {"selected_action": decision.selected.to_dict(), "score": selected_scored.score, "checked_count": trace["checked_count"], "stop_reason": trace["stop_reason"], "configured_search_depth": trace["configured_search_depth"], "effective_search_depth": trace["effective_search_depth"]})
         self._set_rp("RP-027", {"deadline_ms": int(request.deadline_ms or 0), "think_time_ms": trace["think_time_ms"], "time_pressure": bool(request.deadline_ms and trace["think_time_ms"] >= request.deadline_ms)})
         self._set_rp("RP-028", {"personality": trace["personality"], "plan_restarted": plan_restarted, "restart_reasons": list(restart_reasons)})
         self.runtime.append_decision(trace)
@@ -180,7 +204,7 @@ class HumanlikeV2Player(BasePlayer):
 
     def _set_rp(self, parameter_id: str, value: Any) -> None:
         assert self.runtime is not None and self.state010_store is not None and self.seat is not None
-        self.runtime.set_parameter(parameter_id, value)
+        self.runtime.set_enveloped_parameter(parameter_id, value, role="player_policy", owner_seat=self.seat)
         version = self.state010_store.version(self.seat)
         result = self.state010_store.update(actor_seat=self.seat, owner_seat=self.seat, changes={parameter_id: value}, expected_version=version)
         if not result.accepted:

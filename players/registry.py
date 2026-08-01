@@ -33,6 +33,7 @@ def create_player(
     training_mode: bool = True,
     theme: str = "green",
     human_timeout_ms: int = 120_000,
+    humanlike_preset: str | None = None,
 ) -> BasePlayer:
     """
     spec: "random" | "rule_ai" | "rule_ai_plus" | "humanlike_v2" | "human" | "rule_ai:Bot1"
@@ -77,7 +78,8 @@ def create_player(
         display = name
         if not display and opts.get("strategy_id"):
             display = str(opts["strategy_id"])
-        player = cls(name=display or "", seed=seed, training_mode=training_mode)
+        extra = {"preset_id": humanlike_preset} if cls is HumanlikeV2Player and humanlike_preset else {}
+        player = cls(name=display or "", seed=seed, training_mode=training_mode, **extra)
         if opts.get("use_f0011"):
             setattr(player, "use_f0011", True)
         if opts.get("strategy_id"):
@@ -94,6 +96,7 @@ def create_players(
     training_mode: bool = True,
     theme: str = "green",
     human_timeout_ms: int = 120_000,
+    humanlike_presets: list[str | None] | None = None,
 ) -> list[BasePlayer]:
     """
     specs: "human,rule_ai,rule_ai,rule_ai" or list of specs.
@@ -119,6 +122,7 @@ def create_players(
                 training_mode=training_mode,
                 theme=theme,
                 human_timeout_ms=human_timeout_ms,
+                humanlike_preset=humanlike_presets[i] if humanlike_presets and i < len(humanlike_presets) else None,
             )
         )
     return players

@@ -377,6 +377,29 @@
 - 外部校准仍为 MODEL-001 程序完成后的独立功能，不影响 Task 19 工程完成。
 # 当前应用版本：0.3.0
 
+## 2026-08-01 F0037 Humanlike v2 参数方案
+
+- 新增 Draft `docs/features/F0037_humanlike_v2_parameter_scheme_by_96_units.md`，按 Task 19 权威 96 单元的 RULE/STATE/ALGO/SCORE/HEUR/MODEL/TRAIN/AUDIT 分类设计参数设置边界。
+- 核心原则：HEUR 为主要可编辑区；规则、状态机、计分、信息边界、确定性、训练合同和审计门禁保持只读或锁定；下一步建立 60 个现有参数到 96 单元的精确映射。
+- 已生成 `F0037_96_unit_parameter_matrix.md/.csv`：60 个正式 GP/RP 参数组与 96 单元为多对多关系；91 个单元有直接 consumer 参数，ALGO-011、MODEL-005、STATE-011、AUDIT-006、AUDIT-007 无直接正式参数。
+- 已为全部 60 个 GP/RP 参数增加 `effect_step_category`，覆盖配置初始化、发牌、换三张、定缺、行牌、响应、认知决策、计分结算、跨局学习和审计等实际作用步骤，并同步到 96 单元矩阵。
+- 已将 60 行完整“参数种类 + 作用步骤类别”表直接并入 F0037 主方案第 3 章；单独打开主文件即可查看，不再依赖辅助文档。
+- 已依据 Task 19 权威 `parameter_registry.csv`，为 F0037 主方案中的 27 个 GP 与 33 个 RP 全部补充“类型、取值范围或公式”；RP 公式仅描述运行态派生/更新，不开放为用户输入。
+- 已生成 F0037 叶参数矩阵（277 行）：244 个当前真实配置叶字段、11 个已有部分统一 payload 的 RP 槽位、22 个仅有组级合同的 RP 槽位；明确区分实现事实与待批准 schema。
+- 已核查 GP-023 人格策略：当前由 4 档 `level`、3 种 `style` 与 6 个独立连续人格参数共同构成；`level` 已映射候选/注意/满意阈值/噪声，`style` 目前只直接修正满意停止阈值，项目尚无自动联动生成完整人格参数组的 preset。
+- F0037 已补充 12 种 `level × style` 完整人格预设、原子继承/custom 规则、水平到 search-depth 映射、UI 实现方案及 8 项测试门禁，状态由 Draft 推进到 Review；业务实现等待 Approved。
+- F0037 GP-023 已完成实现并验收：新增 12 个不可变预设、apply/detect/diff、设置窗口原子应用、custom 检测及有效 search-depth 上限；定向 32 passed，全量 `506 passed, 1 skipped`；文档状态更新为 Done。
+- 已新增 F0037 RP 叶级 schema 草案：覆盖 RP-001～RP-033 的统一 envelope、核心叶字段、生命周期、可见性、分权写入、迁移和验收门禁；尚未修改 runtime 代码，规格状态为 Draft。
+- F0037 RP schema 已获用户批准并开始实现：新增 `rp_schema.py` envelope/hash/校验/legacy migration，`RoundRuntime.set_parameter` 增加 envelope 校验；定向 schema/runtime/cognition 测试 `16 passed`。分权 adapter、22 个 RP 统一写入点和全量回归尚未完成，规格保持 In Progress。
+- F0037 RP schema 本轮新增 engine/player_policy/audit 分权写入 adapter，并接入 Humanlike 写入路径；定向 `18 passed`，全量 `511 passed, 1 skipped`。为保持旧读取器兼容，Humanlike 当前仍在 adapter 后保留裸 payload 覆盖；22 个 RP 统一写入点尚未全部完成，规格继续保持 In Progress。
+- F0037 RP schema 本轮完成 envelope 持久化路径：RoundRuntime 建局、事件、决策、终局均写入 envelope；新增 `envelope_snapshot()`，旧 `snapshot()` 透明返回 payload；Humanlike 不再裸 payload 覆盖。定向 `18 passed`，全量 `511 passed, 1 skipped`。22 个 RP 的完整业务写入点仍需后续补齐，规格保持 In Progress。
+- F0037 RP schema 已完成本轮验收：事件驱动公共 RP 镜像、隐藏字段拦截、幂等 hash、旧快照兼容和分权写入均通过；定向 `21 passed`，全量 `514 passed, 1 skipped`。schema 文档状态更新为 Done；部分 RP 仍是事件镜像/占位，不宣称完整业务计算。
+- 已完成 F0037 后续任务 1–5：事件镜像/派生入口、schema 核心校验、visibility/幂等/迁移测试和 Task 20 独立回归均通过。Task 20 run `task20-20260802_000300`，96/96 units、14 waves、40 batches，校验码 `47C2B4BDBA3569F7`，结果 `514 passed, 1 skipped`。
+- 已完成 RP 真实公共投影派生任务 1–5：新增 `public_derivation.py`，覆盖 RP-010、RP-018～RP-022；隐藏真值输入硬拒绝，Humanlike 仅消费公开投影。定向 `20 passed`，全量 `521 passed, 1 skipped`；Task20 run `task20-20260802_001439`，96/96 units、14 waves、40 batches，校验码 `D99B1482DFA2B868`。
+- 已完成 RP 真实派生后续任务 1–5：RP-018 使用自身手牌和权威 shanten/ukeire，RP-019 使用 MODEL-001 公开 posterior，RP-020 使用公开风险聚合，新增四座隔离测试和 12 预设固定输入报告 `docs/status/F0037_12_PRESET_COMPARISON.md`。全量 `525 passed, 1 skipped`；Task20 run `task20-20260802_001956`，校验码 `64A377458C3A4C87`。
+- 已完成 F0037 UI/存档后续：新增 RP envelope/payload 双视图、F0037-RP-1.0 存档 round-trip 与旧裸 payload migration；定向 `12 passed`，全量 `526 passed, 1 skipped`。12 预设 smoke 生成于 `data/ai_capability/results/f0037_12_presets_smoke/summary.json`，但 runner 尚未动态注入 preset，仅可作为运行验证，不能作为能力差异结论。
+- 已完成任务 1–4：支持 per-player `humanlike_preset` 注入、真实加载 12 预设 smoke、存档双视图/迁移测试、提交范围盘点；新增 preset 注入测试。全量 `527 passed, 1 skipped`。建议提交范围已盘点，未执行 Git commit。
+
 ## 2026-08-01 Task 20 规格批准
 
 - 已编制并批准 `docs/milestones/M20_task19_independent_full_regression.md`。
@@ -434,3 +457,5 @@
 - capability 模式最终汇总报告改为带启动时间的 `capability_report_YYYYMMDD_HHMMSS.md`；同时保留 `capability_report.md` 最新指针。回归测试现为 `8 passed`。
 - 普通与 capability 测试均新增唯一校验码：由局数、固定 game_id 清单、模式和玩家配置 SHA-256 派生；进度行、配置、summary 和报告均记录。回归测试现为 `9 passed`。
 - capability 模式进度行已补充动态“已运行”和“剩余约”时间，ETA 按实际已完成局数计算；回归测试保持 `9 passed`。
+- 修复 capability 长测暴露的 STATE-004 响应恢复原子性缺陷：失败动作回滚后，fallback PASS 现在也通过受保护事务提交，不再在事务外部分修改 `pending_claims`。固定失败序列与回滚测试通过；全量 `501 passed, 1 skipped`。
+- 2026-08-02 F0037 任务 3-4：完成 RP 存档 envelope/payload 双视图 UI；F0037 相关参数矩阵、RP schema/公开派生、12 预设及逐座注入已整理为独立提交范围。全量回归 `527 passed, 1 skipped`；其他工作区改动未纳入。

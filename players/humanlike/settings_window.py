@@ -4,6 +4,8 @@ import argparse, copy, json, tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 from players.humanlike.settings_service import default_config_path, read_raw, save_raw, validate_raw
+from players.humanlike.personality_presets import PRESET_IDS, apply_personality_preset, detect_personality_preset, personality_preset_diff
+from players.humanlike.rp_archive import dual_view, load_envelopes
 
 GP_TITLES = {
   1:"版本锁定",2:"成都麻将规则集",3:"局制与初始分",4:"牌组定义",5:"换三张",6:"定缺",7:"允许动作",8:"响应优先级",9:"过胡规则",10:"牌墙与终局",
@@ -51,6 +53,8 @@ class SettingsWindow:
             self._build_tab(title,[(f"GP-{i:03d}",gp[f"GP-{i:03d}"]) for i in range(start,end+1)],("global_parameters",))
         player_groups=[(f"座位 S{i}",p) for i,p in enumerate(self.data["players"])]
         self._build_tab("逐玩家设置",player_groups,("players",))
+        self._build_personality_presets_tab()
+        self._build_rp_view_tab()
         bar=tk.Frame(self.root,bg="#0d2818"); bar.pack(fill="x",padx=12,pady=8)
         for label,fn in (("重新载入",self.reload),("校验全部",self.validate),("保存（下局生效）",self.save),("导入…",self.import_file),("导出…",self.export_file)): tk.Button(bar,text=label,command=fn,bg="#e8f5e9",fg="#102019",activeforeground="#102019",padx=10).pack(side="left",padx=3)
         tk.Button(bar,text="关闭",command=self.root.destroy,bg="#ffe0b2",fg="#3e2723",activeforeground="#3e2723").pack(side="right")
@@ -97,6 +101,45 @@ class SettingsWindow:
             for part in path[:-1]: target=target[part]
             target[path[-1]]=value
         return out
+    def _build_personality_presets_tab(self):
+        frame=tk.Frame(self.book,bg="#102019"); self.book.add(frame,text="人格预设")
+        tk.Label(frame,text="选择后原子覆盖该座位的人格、GP-025 行为字段和 GP-026 认知字段；名称、seed、记忆和比赛目标保持不变。",bg="#102019",fg="#e8f5e9",wraplength=900,justify="left").pack(fill="x",padx=12,pady=10)
+        self.preset_vars={}
+        for seat in range(4):
+            row=tk.Frame(frame,bg="#12261c"); row.pack(fill="x",padx=12,pady=6)
+            tk.Label(row,text=f"座位 S{seat}",width=12,bg="#12261c",fg="#ffe082").pack(side="left")
+            current=detect_personality_preset(self.data["players"][seat]); var=tk.StringVar(value=current); self.preset_vars[seat]=var
+            box=ttk.Combobox(row,textvariable=var,values=PRESET_IDS,state="readonly",width=28); box.pack(side="left",padx=6)
+            tk.Button(row,text="应用预设",command=lambda s=seat:self.apply_preset(s),bg="#e8f5e9",fg="#102019").pack(side="left",padx=4)
+            tk.Label(row,text=f"当前：{current}",bg="#12261c",fg="#9fb8aa").pack(side="left",padx=8)
+    def apply_preset(self,seat):
+        try:
+            current=self._collect(); preset_id=self.preset_vars[seat].get(); diffs=personality_preset_diff(current["players"][seat],preset_id)
+            preview="\n".join(f"{d.path}: {d.before} → {d.after}" for d in diffs[:10])
+            if len(diffs)>10: preview+=f"\n…另有 {len(diffs)-10} 项"
+            if diffs and not messagebox.askyesno("确认应用人格预设",f"将覆盖座位 S{seat} 的 {len(diffs)} 个字段：\n\n{preview}",parent=self.root): return
+            updated=apply_personality_preset(current["players"][seat],preset_id)
+            for path,(var,old) in self.vars.items():
+                if len(path)<2 or path[0]!="players" or path[1]!=seat: continue
+                value=updated
+                for part in path[2:]: value=value[part]
+                var.set(json.dumps(value,ensure_ascii=False) if isinstance(value,list) else ("" if value is None else value))
+            self.status.set(f"已应用 {preset_id} 到 S{seat}；点击保存后下局生效")
+        except Exception as exc: messagebox.showerror("应用预设失败",str(exc),parent=self.root)
+    def _build_rp_view_tab(self):
+        frame=tk.Frame(self.book,bg="#102019"); self.book.add(frame,text="RP 双视图")
+        tk.Label(frame,text="选择 RP envelope 存档后，可切换 envelope 元数据视图与 payload 兼容视图；audit_only 默认隐藏。",bg="#102019",fg="#e8f5e9",wraplength=900,justify="left").pack(fill="x",padx=12,pady=8)
+        bar=tk.Frame(frame,bg="#102019"); bar.pack(fill="x",padx=12)
+        path_var=tk.StringVar(value=""); include_var=tk.BooleanVar(value=False)
+        tk.Entry(bar,textvariable=path_var,width=72).pack(side="left",padx=4)
+        def open_archive():
+            try:
+                data=dual_view(load_envelopes(path_var.get()),include_audit=include_var.get())
+                text.delete("1.0","end"); text.insert("end",json.dumps(data,ensure_ascii=False,indent=2,sort_keys=True))
+            except Exception as exc: messagebox.showerror("RP 存档读取失败",str(exc),parent=self.root)
+        tk.Button(bar,text="打开",command=open_archive,bg="#e8f5e9",fg="#102019").pack(side="left",padx=4)
+        tk.Checkbutton(bar,text="显示 audit_only",variable=include_var,bg="#102019",fg="#e8f5e9",selectcolor="#256d45").pack(side="left",padx=4)
+        text=tk.Text(frame,bg="#0d1812",fg="#d7ffd9",wrap="none"); text.pack(fill="both",expand=True,padx=12,pady=8)
     def validate(self):
         try: cfg=validate_raw(self._collect(),target=self.path); self.status.set(f"全部参数校验通过 · hash {cfg.config_hash[:12]}"); return True
         except Exception as exc: messagebox.showerror("参数校验失败",str(exc),parent=self.root); self.status.set(str(exc)); return False
