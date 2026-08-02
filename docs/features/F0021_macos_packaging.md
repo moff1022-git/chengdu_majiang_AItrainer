@@ -18,7 +18,7 @@
 | G1 | 提供 **PyInstaller** macOS 构建脚本与说明，产出可运行 `.app` / onedir |
 | G2 | 提供 **Nuitka** macOS 构建脚本与说明 |
 | G3 | 冻结后多座位子进程可用（`--seat-window` 再入同一二进制） |
-| G4 | `assets/` + `configs/` 正确加载；日志可写 |
+| G4 | `assets/`、`configs/`、Humanlike 参数注册表正确加载；日志可写 |
 
 ### Out of Scope
 
@@ -67,10 +67,13 @@
 
 见 `MACOS_BUILD.md` §4。单元：`tests/test_app_paths.py`。
 
+构建脚本必须把 `players/humanlike/parameter_registry_v2.json` 作为独立运行资源打入 App Bundle，并在构建结束时验证 `assets/`、`configs/` 和该参数注册表均存在；任一缺失时构建失败，不得发布。
+
 ---
 
 ## 5. 状态历史
 
 | 日期 | 状态 | 说明 |
 |------|------|------|
+| 2026-08-03 | Done | 补充 Humanlike 参数注册表运行资源合同与构建后强制校验 |
 | 2026-07-26 | Done | 用户要求生成 mac 版 PyInstaller + Nuitka 打包与文档 |

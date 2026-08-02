@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-03 — v0.3.1 首页与 macOS 打包修复
+
+- GitHub 首页按 v0.3.1 当前功能整体重写，增加 macOS arm64 PyInstaller/Nuitka 包及 SHA-256 清单的直接下载入口。
+- PyInstaller、Nuitka 构建脚本和可选 spec 永久补收 Humanlike 参数注册表。
+- 构建脚本增加 App Bundle、assets、configs、参数注册表与 CLI 冒烟强制门禁；缺失时不再静默成功。
+- 定向验证：`tests/test_app_paths.py` 7 passed；两个已发布 App 的版本、座位窗口和资源检查均通过。
+
 ## 0.3.1 — 2026-08-02
 
 - 新增 M21 Humanlike 提升计划草案：基于 Task 19 96 单元状态与《成都麻将AI人类化决策规则_v1.md》建立偏差分类、验收门禁和优化任务队列；仅文档变更。

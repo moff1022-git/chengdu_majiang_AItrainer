@@ -4,11 +4,11 @@
 |------|-----|
 | **平台** | macOS 12+（arm64 / x86_64；本文在 **Apple Silicon arm64** 上验证流程） |
 | **入口** | `main.py`（GUI 默认 `gui`；座位窗 `--seat-window`） |
-| **数据** | `assets/`、`configs/` 打入包；运行时日志写到 `~/Library/Application Support/ChengduMahjongAITrainer/` |
+| **数据** | `assets/`、`configs/`、`players/humanlike/parameter_registry_v2.json` 打入包；运行时日志写到 `~/Library/Application Support/ChengduMahjongAITrainer/` |
 | **工具** | [PyInstaller](https://pyinstaller.org/) · [Nuitka](https://nuitka.net/) |
 | **脚本** | `tools/packaging/build_pyinstaller_macos.sh` · `tools/packaging/build_nuitka_macos.sh` |
 | **规格** | [`docs/features/F0021_macos_packaging.md`](../features/F0021_macos_packaging.md) |
-| **版本** | 应用版本见 [`version.py`](../../version.py)（发布线 **0.2.1+**）；规则 [`docs/VERSIONING.md`](../VERSIONING.md) |
+| **版本** | 应用版本见 [`version.py`](../../version.py)（当前发布线 **0.3.1**）；规则 [`docs/VERSIONING.md`](../VERSIONING.md) |
 | **本机副本** | `releases/macos/*-PyInstaller.app` · `*-Nuitka.app`（不进 git） |
 
 ---
@@ -27,7 +27,7 @@
 
 因此必须：
 
-1. 把 `assets/`、`configs/` 作为数据文件打进包  
+1. 把 `assets/`、`configs/` 和 Humanlike 参数注册表作为数据文件打进包
 2. 冻结后能正确解析资源路径（`app_paths.resource_root`）  
 3. 可写目录用 `app_paths.logs_dir()`（勿写进 `.app` 只读区）  
 4. 优先 **onedir / 应用包目录结构**，避免 onefile 解压竞态（多子进程）
@@ -81,6 +81,7 @@ dist/pyinstaller/
   --paths . \
   --add-data "assets:assets" \
   --add-data "configs:configs" \
+  --add-data "players/humanlike/parameter_registry_v2.json:players/humanlike" \
   --hidden-import players.seat_window \
   --hidden-import players.human_proxy \
   --hidden-import players.registry \
@@ -100,7 +101,7 @@ dist/pyinstaller/
 | 选项 | 原因 |
 |------|------|
 | `--windowed` | 生成 `.app`，无终端黑框 |
-| `--add-data assets/configs` | 资源进包 |
+| `--add-data assets/configs/parameter_registry_v2.json` | 运行资源进包 |
 | `--collect-all pygame` | SDL 动态库与数据 |
 | `--collect-submodules …` | 避免动态 import 漏模块 |
 | `pyinstaller_entry.py` | 统一入口：主 GUI / `--seat-window` |
@@ -170,6 +171,7 @@ releases/macos/
   --include-package-data=pygame \
   --include-data-dir=assets=assets \
   --include-data-dir=configs=configs \
+  --include-data-file=players/humanlike/parameter_registry_v2.json=players/humanlike/parameter_registry_v2.json \
   --output-dir=dist/nuitka \
   --output-filename=ChengduMahjongAITrainer \
   packaging/macos/pyinstaller_entry.py
@@ -180,7 +182,7 @@ releases/macos/
 | `--standalone` | 自带依赖，可拷到无 Python 的 Mac |
 | `--macos-create-app-bundle` | 生成 `.app` |
 | `--enable-plugin=tk-inter` | 座位窗 Tk |
-| `--include-data-dir` | assets / configs |
+| `--include-data-dir` / `--include-data-file` | assets、configs 和 Humanlike 参数注册表 |
 
 首次编译较慢（C 编译）；后续增量会快一些。
 
@@ -214,6 +216,7 @@ releases/macos/
 | P7 | 牌面 / 主题 | green/blue 资源正常 |
 | P8 | 日志目录 | Application Support 下有 logs |
 | P9 | 再来一局 | Hub 复用 / 就绪确认仍可用 |
+| P10 | 运行资源门禁 | assets、configs、Humanlike 参数注册表均存在；缺失时脚本失败 |
 
 ---
 

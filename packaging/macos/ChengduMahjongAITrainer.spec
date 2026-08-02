@@ -21,6 +21,7 @@ if not ENTRY.is_file():
 datas = [
     (str(ROOT / "assets"), "assets"),
     (str(ROOT / "configs"), "configs"),
+    (str(ROOT / "players" / "humanlike" / "parameter_registry_v2.json"), "players/humanlike"),
 ]
 
 hiddenimports = [
