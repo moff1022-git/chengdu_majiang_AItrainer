@@ -23,6 +23,7 @@ nuitka-crash-report.xml
 
 # Virtual environments and local secrets
 .venv/
+.venv-macos/
 venv/
 .env
 .env.*
@@ -37,8 +38,14 @@ htmlcov/
 # Runtime data
 logs/
 saves/
+/data/
 *.log
 *.jsonl
+
+# Local release snapshots; publish manifests or packaged artifacts separately.
+/releases/v0.3.1/
+/releases/v0.3.1-clean-source/
+/releases/v0.3.1-clean-evidence/
 
 # Local backups / generated previews
 backup/
