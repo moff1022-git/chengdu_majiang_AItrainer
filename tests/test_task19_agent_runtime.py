@@ -1,0 +1,149 @@
+import json
+
+import pytest
+
+from tools.task19_agent_runtime import (
+    read_orchestrator, read_payload, reconcile_startup, record_finding, set_confirmation, sync_agents,
+    update_work_item, upsert_agent, validate_agent,
+)
+
+
+def agent(name="/root/worker", status="WAITING", work="Waiting for dependency"):
+    return {
+        "name": name,
+        "status": status,
+        "current_work": work,
+        "started_at": None,
+        "last_heartbeat": None,
+        "requires_human_confirmation": False,
+        "confirmation_reason": None,
+    }
+
+
+def test_sync_replaces_complete_tree_atomically(tmp_path):
+    path = tmp_path / "runtime.json"
+    sync_agents(path, [agent(), agent("/root/worker/reviewer", "COMPLETED", "Review completed")])
+    payload = read_payload(path)
+    assert [item["name"] for item in payload["agents"]] == ["/root/worker", "/root/worker/reviewer"]
+    assert json.loads(path.read_text())["schema_version"] == 1
+
+
+def test_upsert_preserves_tree_and_sets_running_times(tmp_path):
+    path = tmp_path / "runtime.json"
+    sync_agents(path, [agent()])
+    payload = upsert_agent(path, {"name": "/root/new", "status": "RUNNING", "current_work": "Implementing"})
+    assert len(payload["agents"]) == 2
+    running = next(item for item in payload["agents"] if item["name"] == "/root/new")
+    assert running["started_at"] and running["last_heartbeat"]
+
+
+def test_upsert_does_not_reset_existing_start_time(tmp_path):
+    path = tmp_path / "runtime.json"
+    original = agent("/root", "RUNNING", "Implementing")
+    original["started_at"] = "2026-07-30T23:00:30+08:00"
+    sync_agents(path, [original])
+    payload = upsert_agent(path, {"name": "/root", "status": "RUNNING", "current_work": "Reviewing"})
+    assert payload["agents"][0]["started_at"] == "2026-07-30T23:00:30+08:00"
+
+
+def test_confirmation_and_waiting_require_reasons():
+    with pytest.raises(ValueError, match="confirmation_reason"):
+        validate_agent({**agent(), "requires_human_confirmation": True})
+    waiting = agent(work="Idle")
+    waiting["status"] = "WAITING"
+    validate_agent(waiting)
+    assert waiting["current_work"].startswith("Waiting:")
+
+
+def test_confirmation_lifecycle_is_visible_and_reversible(tmp_path):
+    path = tmp_path / "runtime.json"
+    sync_agents(path, [agent("/root", "RUNNING", "Orchestrating")])
+    opened = set_confirmation(path, "/root", True, "Approve elevated full regression")
+    assert opened["agents"][0]["requires_human_confirmation"] is True
+    assert opened["agents"][0]["confirmation_reason"] == "Approve elevated full regression"
+    closed = set_confirmation(path, "/root", False)
+    assert closed["agents"][0]["requires_human_confirmation"] is False
+    assert closed["agents"][0]["confirmation_reason"] is None
+
+
+def test_confirmation_rejects_unknown_agent(tmp_path):
+    path = tmp_path / "runtime.json"
+    sync_agents(path, [agent()])
+    with pytest.raises(ValueError, match="unknown agent"):
+        set_confirmation(path, "/root/missing", True, "Approve")
+
+
+def test_orchestrator_persists_ready_and_dispatched_states(tmp_path):
+    path = tmp_path / "orchestrator.json"
+    update_work_item(path, {"batch_id": "T19-D05", "wave": "W04", "gate": "IMPLEMENT",
+                            "state": "READY_TO_DISPATCH", "owner": "/root", "next_action": "DISPATCH_IMPLEMENTER"})
+    update_work_item(path, {"batch_id": "T19-D05", "wave": "W04", "gate": "IMPLEMENT",
+                            "state": "DISPATCHED", "owner": "/root/worker", "next_action": "WAIT_FOR_AGENT"})
+    item = read_orchestrator(path)["work_items"][0]
+    assert item["state"] == "DISPATCHED" and item["owner"] == "/root/worker"
+
+
+def test_third_same_finding_requires_human_confirmation(tmp_path):
+    path = tmp_path / "orchestrator.json"
+    for _ in range(3):
+        payload = record_finding(path, "T19-D14", "W04", "DESIGN_REVIEW", "P1-SAME", "/root/fixer")
+    item = payload["work_items"][0]
+    assert item["state"] == "BLOCKED"
+    assert item["requires_human_confirmation"] is True
+    assert item["remediation_counts"]["P1-SAME"] == 3
+
+
+def test_startup_reconcile_resumes_stale_dispatched_work(tmp_path):
+    orchestrator = tmp_path / "orchestrator.json"
+    runtime = tmp_path / "runtime.json"
+    update_work_item(orchestrator, {
+        "batch_id": "T19-D05", "wave": "W04", "gate": "AUDIT",
+        "state": "DISPATCHED", "owner": "/root/old", "last_event": "verified:abc",
+        "next_action": "WAIT_FOR_AUDITOR", "requires_human_confirmation": False,
+    })
+    sync_agents(runtime, [agent("/root/old", "RUNNING", "Old session work")])
+    result = reconcile_startup(orchestrator, runtime)
+    assert result["auto_continue"] is True
+    assert result["resume_queue"][0]["action"] == "RECONCILE_AND_DISPATCH"
+    assert result["resume_queue"][0]["idempotency_key"] == "T19-D05:AUDIT:verified:abc:1"
+
+
+def test_startup_reconcile_preserves_human_gate(tmp_path):
+    orchestrator = tmp_path / "orchestrator.json"
+    runtime = tmp_path / "runtime.json"
+    update_work_item(orchestrator, {
+        "batch_id": "T19-D14", "wave": "W04", "gate": "AUDIT",
+        "state": "BLOCKED", "owner": "/root", "last_event": "finding:P1-SAME",
+        "next_action": "HUMAN_DECISION", "requires_human_confirmation": True,
+    })
+    sync_agents(runtime, [agent("/root", "RUNNING", "Old session work")])
+    result = reconcile_startup(orchestrator, runtime)
+    assert result["auto_continue"] is False
+    assert result["resume_queue"] == []
+    assert result["human_gates"][0]["batch_id"] == "T19-D14"
+
+
+def test_startup_reconcile_auto_authorizes_t02_contract_workload(tmp_path):
+    orchestrator = tmp_path / "orchestrator.json"
+    runtime = tmp_path / "runtime.json"
+    orchestrator.write_text(json.dumps({"schema_version": 1, "updated_at": "2026-08-01T00:00:00+08:00", "work_items": [{
+        "batch_id": "T19-T02", "wave": "W04", "gate": "VERIFY", "state": "BLOCKED",
+        "owner": "/root/w03_design_review",
+        "last_event": "human_gate:TRAIN005-PERFORMANCE-WORKLOAD-SEMANTICS",
+        "next_action": "HUMAN_DECISION", "requires_human_confirmation": True,
+        "confirmation_reason": "ambiguous workload", "remediation_counts": {},
+    }]}), encoding="utf-8")
+    runtime.write_text(json.dumps({"schema_version": 1, "updated_at": "2026-08-01T00:00:00+08:00", "agents": [agent("/root/w03_design_review", "WAITING", "Waiting for human decision")] }), encoding="utf-8")
+    result = reconcile_startup(orchestrator, runtime)
+    assert result["human_gates"] == []
+    assert result["resume_queue"][0]["batch_id"] == "T19-T02"
+    assert result["auto_continue"] is True
+
+def test_read_orchestrator_collapses_concurrent_batch_projection(tmp_path):
+    path = tmp_path / "orchestrator.json"
+    path.write_text(json.dumps({"schema_version": 1, "updated_at": "2026-08-01T00:00:00+08:00", "work_items": [
+        {"batch_id":"T19-D06","wave":"W05","gate":"DESIGN_REVIEW","state":"RUNNING","owner":"/root/a","updated_at":"2026-08-01T00:01:00+08:00"},
+        {"batch_id":"T19-D06","wave":"W05","gate":"AUDIT","state":"RUNNING","owner":"/root/b","updated_at":"2026-08-01T00:02:00+08:00"},
+    ]}), encoding="utf-8")
+    assert len(read_orchestrator(path)["work_items"]) == 1
+    assert read_orchestrator(path)["work_items"][0]["gate"] == "AUDIT"

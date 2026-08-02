@@ -1,0 +1,389 @@
+{
+  "rule_version": "CDMJ-AI-RULES 1.0.0",
+  "parameter_version": "CDMJ-AI-PARAMS 1.1.0",
+  "implementation_version": "CDMJ-AI-IMPL 2.1.0",
+  "ruleset": "chengdu_xuezhan_daodi",
+  "global_parameters": {
+    "GP-001": {
+      "rule_version": "CDMJ-AI-RULES 1.0.0",
+      "parameter_version": "CDMJ-AI-PARAMS 1.1.0",
+      "locked": true
+    },
+    "GP-002": {
+      "ruleset": "chengdu_xuezhan_daodi",
+      "platform_ruleset_id": "default",
+      "extensions": []
+    },
+    "GP-003": {
+      "total_rounds": 8,
+      "starting_score": 0,
+      "ranking": "total_score",
+      "early_end_score": null
+    },
+    "GP-004": {
+      "suits": [
+        "wan",
+        "tong",
+        "tiao"
+      ],
+      "ranks": 9,
+      "copies_per_type": 4,
+      "tile_types": 27,
+      "total_tiles": 108,
+      "extensions": []
+    },
+    "GP-005": {
+      "enabled": true,
+      "exchange_count": 3,
+      "same_suit_required": true,
+      "direction": "dice"
+    },
+    "GP-006": {
+      "enabled": true,
+      "force_discard_missing_suit": true,
+      "allow_hu_before_cleared": false
+    },
+    "GP-007": {
+      "draw": true,
+      "discard": true,
+      "peng": true,
+      "ming_gang": true,
+      "an_gang": true,
+      "bu_gang": true,
+      "qiang_gang_hu": true,
+      "chi": false
+    },
+    "GP-008": {
+      "priority_mode": "hu_gang_peng_pass",
+      "multi_hu": true,
+      "seat_priority": "nearest_from_discarder"
+    },
+    "GP-009": {
+      "pass_hu_mode": "until_value_increase",
+      "discard_hu_can_pass": true,
+      "self_draw_can_pass": false,
+      "qiang_gang_hu_can_pass": true,
+      "forced_hu_wall_threshold": 0
+    },
+    "GP-010": {
+      "total_tiles": 108,
+      "standard_wall_after_deal": 55,
+      "terminal_winners": 3,
+      "tail_reserved": 0,
+      "gang_draw_source": "wall_tail"
+    },
+    "GP-011": {
+      "patterns": [
+        {
+          "id": "standard",
+          "enabled": true
+        },
+        {
+          "id": "qingyise",
+          "enabled": true
+        },
+        {
+          "id": "qidui",
+          "enabled": true
+        },
+        {
+          "id": "duiduihu",
+          "enabled": true
+        }
+      ]
+    },
+    "GP-012": {
+      "relations": []
+    },
+    "GP-013": {
+      "base_score": 1,
+      "fan_cap": 5,
+      "gang_outside_cap": true
+    },
+    "GP-014": {
+      "mode": "add_base",
+      "bonus_fan": 0,
+      "fixed_bonus": 1,
+      "payers": "all_active_opponents"
+    },
+    "GP-015": {
+      "ming_gang_score": 1,
+      "an_gang_score": 2,
+      "bu_gang_score": 1,
+      "payment": "all_active_opponents",
+      "settlement": "immediate"
+    },
+    "GP-016": {
+      "enabled": true,
+      "scope": "latest_gang_only",
+      "multi_hu_mode": "copy_to_each_winner"
+    },
+    "GP-017": {
+      "enabled": true,
+      "penalty_fan": 0,
+      "fixed_score": 16,
+      "payees": "all_non_hu_non_huazhu"
+    },
+    "GP-018": {
+      "enabled": true,
+      "dead_wait": "invalid",
+      "valuation": "maximum_possible_fan"
+    },
+    "GP-019": {
+      "enabled": true,
+      "scope": "untransferred_gang_income"
+    },
+    "GP-020": {
+      "dealer_mode": "rotate",
+      "dealer_bonus_fan": 0,
+      "dealer_fixed_bonus": 0,
+      "continuations": 0
+    },
+    "GP-021": {
+      "wall_remaining": "public_exact",
+      "draw_source": "public_exact",
+      "exchange_source": "public_exact",
+      "concealed_gang_tiles": "hidden",
+      "hu_hand": "public_exact",
+      "draw_round_hand": "public_exact",
+      "thinking_time": "public_partial",
+      "cancel_action": "hidden"
+    },
+    "GP-022": {
+      "discard_timeout_ms": 15000,
+      "response_timeout_ms": 8000,
+      "max_performance_delay_ms": 2000,
+      "timeout_action": "auto_pass"
+    },
+    "GP-023": {
+      "profile_count": 4
+    }
+  },
+  "players": [
+    {
+      "player_id": 0,
+      "profile": {
+        "name": "normal_balanced_0",
+        "level": "expert",
+        "style": "aggressive",
+        "peng_preference": 0.7,
+        "gang_preference": 0.75,
+        "big_hand_preference": 0.75,
+        "defense_awareness": 0.35,
+        "plan_persistence": 0.45,
+        "thinking_speed": 0.65
+      },
+      "cognitive_parameters": {
+        "GP-024": {
+          "initial_strength": 0.65,
+          "forget_rate": 0.12,
+          "salience_boost": 0.35,
+          "cross_round_history": 8,
+          "learn_hidden_information": false
+        },
+        "GP-025": {
+          "emotional_stability": 0.55,
+          "habit_strength": 0.45,
+          "max_error_probability": 0.015,
+          "near_equal_randomness": 0.03,
+          "random_seed": 0
+        },
+        "GP-026": {
+          "min_candidates": 5,
+          "max_candidates": 12,
+          "search_depth": 4,
+          "attention_capacity": 20,
+          "satisfaction_threshold": 0.82,
+          "research_threshold": 0.35,
+          "decision_weights": {
+            "speed": 0.4,
+            "hand_value": 0.35,
+            "defense": 0.1,
+            "flexibility": 0.15
+          }
+        },
+        "GP-027": {
+          "weights": {
+            "round_score": 0.35,
+            "match_score": 0.25,
+            "rank": 0.15,
+            "risk": 0.15,
+            "stability": 0.1
+          },
+          "target_rank": 1,
+          "lead_gap": 16,
+          "trail_gap": 16
+        }
+      }
+    },
+    {
+      "player_id": 1,
+      "profile": {
+        "name": "normal_balanced_1",
+        "level": "normal",
+        "style": "balanced",
+        "peng_preference": 0.5,
+        "gang_preference": 0.5,
+        "big_hand_preference": 0.45,
+        "defense_awareness": 0.55,
+        "plan_persistence": 0.55,
+        "thinking_speed": 0.55
+      },
+      "cognitive_parameters": {
+        "GP-024": {
+          "initial_strength": 0.65,
+          "forget_rate": 0.12,
+          "salience_boost": 0.35,
+          "cross_round_history": 8,
+          "learn_hidden_information": false
+        },
+        "GP-025": {
+          "emotional_stability": 0.7,
+          "habit_strength": 0.55,
+          "max_error_probability": 0.04,
+          "near_equal_randomness": 0.08,
+          "random_seed": 1
+        },
+        "GP-026": {
+          "min_candidates": 3,
+          "max_candidates": 8,
+          "search_depth": 2,
+          "attention_capacity": 12,
+          "satisfaction_threshold": 0.72,
+          "research_threshold": 0.35,
+          "decision_weights": {
+            "speed": 0.35,
+            "hand_value": 0.25,
+            "defense": 0.25,
+            "flexibility": 0.15
+          }
+        },
+        "GP-027": {
+          "weights": {
+            "round_score": 0.35,
+            "match_score": 0.25,
+            "rank": 0.15,
+            "risk": 0.15,
+            "stability": 0.1
+          },
+          "target_rank": 1,
+          "lead_gap": 16,
+          "trail_gap": 16
+        }
+      }
+    },
+    {
+      "player_id": 2,
+      "profile": {
+        "name": "normal_balanced_2",
+        "level": "normal",
+        "style": "balanced",
+        "peng_preference": 0.5,
+        "gang_preference": 0.5,
+        "big_hand_preference": 0.45,
+        "defense_awareness": 0.55,
+        "plan_persistence": 0.55,
+        "thinking_speed": 0.55
+      },
+      "cognitive_parameters": {
+        "GP-024": {
+          "initial_strength": 0.65,
+          "forget_rate": 0.12,
+          "salience_boost": 0.35,
+          "cross_round_history": 8,
+          "learn_hidden_information": false
+        },
+        "GP-025": {
+          "emotional_stability": 0.7,
+          "habit_strength": 0.55,
+          "max_error_probability": 0.04,
+          "near_equal_randomness": 0.08,
+          "random_seed": 2
+        },
+        "GP-026": {
+          "min_candidates": 3,
+          "max_candidates": 8,
+          "search_depth": 2,
+          "attention_capacity": 12,
+          "satisfaction_threshold": 0.72,
+          "research_threshold": 0.35,
+          "decision_weights": {
+            "speed": 0.35,
+            "hand_value": 0.25,
+            "defense": 0.25,
+            "flexibility": 0.15
+          }
+        },
+        "GP-027": {
+          "weights": {
+            "round_score": 0.35,
+            "match_score": 0.25,
+            "rank": 0.15,
+            "risk": 0.15,
+            "stability": 0.1
+          },
+          "target_rank": 1,
+          "lead_gap": 16,
+          "trail_gap": 16
+        }
+      }
+    },
+    {
+      "player_id": 3,
+      "profile": {
+        "name": "normal_balanced_3",
+        "level": "normal",
+        "style": "balanced",
+        "peng_preference": 0.5,
+        "gang_preference": 0.5,
+        "big_hand_preference": 0.45,
+        "defense_awareness": 0.55,
+        "plan_persistence": 0.55,
+        "thinking_speed": 0.55
+      },
+      "cognitive_parameters": {
+        "GP-024": {
+          "initial_strength": 0.65,
+          "forget_rate": 0.12,
+          "salience_boost": 0.35,
+          "cross_round_history": 8,
+          "learn_hidden_information": false
+        },
+        "GP-025": {
+          "emotional_stability": 0.7,
+          "habit_strength": 0.55,
+          "max_error_probability": 0.04,
+          "near_equal_randomness": 0.08,
+          "random_seed": 3
+        },
+        "GP-026": {
+          "min_candidates": 3,
+          "max_candidates": 8,
+          "search_depth": 2,
+          "attention_capacity": 12,
+          "satisfaction_threshold": 0.72,
+          "research_threshold": 0.35,
+          "decision_weights": {
+            "speed": 0.35,
+            "hand_value": 0.25,
+            "defense": 0.25,
+            "flexibility": 0.15
+          }
+        },
+        "GP-027": {
+          "weights": {
+            "round_score": 0.35,
+            "match_score": 0.25,
+            "rank": 0.15,
+            "risk": 0.15,
+            "stability": 0.1
+          },
+          "target_rank": 1,
+          "lead_gap": 16,
+          "trail_gap": 16
+        }
+      }
+    }
+  ],
+  "seed": 0
+}

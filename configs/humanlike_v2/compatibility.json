@@ -1,0 +1,14 @@
+{
+  "supported": [
+    {
+      "implementation_version": "CDMJ-AI-IMPL 2.0.0",
+      "parameter_version": "CDMJ-AI-PARAMS 1.0.0",
+      "rule_version": "CDMJ-AI-RULES 1.0.0"
+    },
+    {
+      "implementation_version": "CDMJ-AI-IMPL 2.1.0",
+      "parameter_version": "CDMJ-AI-PARAMS 1.1.0",
+      "rule_version": "CDMJ-AI-RULES 1.0.0"
+    }
+  ]
+}

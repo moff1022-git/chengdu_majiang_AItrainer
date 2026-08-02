@@ -1,0 +1,9 @@
+{
+  "source_manifest": "releases/v0.3.1-clean-evidence/source_manifest.json",
+  "tests": {"passed": 498, "skipped": 1, "failed": 0, "excluded_stale_contract": ["tests/test_f0011_integrated.py"]},
+  "rule_direct_test_gaps": 11,
+  "document_reference_missing_review": 22,
+  "full_1000_trace_baseline": "NOT_YET_VERIFIED",
+  "git_worktree_clean": false,
+  "status": "CANDIDATE_NOT_RELEASE_READY"
+}

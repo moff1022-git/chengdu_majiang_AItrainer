@@ -1,0 +1,17 @@
+{
+  "missing_direct_test_sections": [
+    "4. 初始手牌",
+    "7. 做牌方向的建立与动态调整",
+    "10. 出牌",
+    "11. 胡牌与胡牌后的处理",
+    "12. 终局与计分",
+    "13. 跨阶段的人类化玩家模型",
+    "14. 有限认知与候选决策",
+    "15. 总体游戏流程",
+    "16. 本阶段边界与下一阶段接口",
+    "17. 输入参数完整注册表",
+    "18. 参数数值规范与动态公式"
+  ],
+  "count": 11,
+  "required_action": "design scenario tests before implementation claims"
+}

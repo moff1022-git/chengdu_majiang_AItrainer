@@ -1,0 +1,5 @@
+{
+  "cjk_font": {"status":"RESOLVED_ENVIRONMENT","action":"installed numpy in .venv-macos","result":"2 passed"},
+  "f0011_integrated": {"status":"STALE_CONTRACT_MIGRATION_REQUIRED","action":"excluded from current baseline run; do not restore F0011 business path","reason":"current approved human recommendation architecture disables strategy.rank_discards/F0011","replacement":"add current rule_ai/rule_ai_plus/humanlike_v2 recommendation contract test"},
+  "baseline_run": {"command":".venv-macos/bin/python -m pytest -q --ignore=tests/test_f0011_integrated.py","passed":498,"skipped":1,"failed":0}
+}

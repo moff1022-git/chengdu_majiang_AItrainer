@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-07-30T13:04:12.806931Z",
+  "source_commit": "423326ecf6e602f9c1c3392dd2a844b1e61ce9b3",
+  "e5_row_count": 42,
+  "unique_delta_id_count": 42,
+  "missing_runtime_evidence_reference_count": 0,
+  "duplicate_delta_id_count": 0,
+  "unparseable_reference_count": 0,
+  "e4_row_count": 12,
+  "e4_category_counts": {
+    "STATE-001": {
+      "NORMAL": 1,
+      "BOUNDARY": 1,
+      "FAILURE": 1,
+      "DETERMINISM": 1
+    },
+    "STATE-011": {
+      "NORMAL": 1,
+      "BOUNDARY": 1,
+      "FAILURE": 1,
+      "DETERMINISM": 1
+    },
+    "STATE-004": {
+      "NORMAL": 1,
+      "BOUNDARY": 1,
+      "FAILURE": 1,
+      "DETERMINISM": 1
+    }
+  },
+  "missing_e4_categories": {},
+  "invalid_e4_hash_count": 0,
+  "invalid_e5_artifact_hash_count": 0,
+  "missing_runtime_evidence_references": [],
+  "unparseable_references": [],
+  "invalid_hashes": [],
+  "result": "PASS"
+}

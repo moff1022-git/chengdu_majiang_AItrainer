@@ -1,0 +1,21 @@
+{
+  "unit_count": 96,
+  "remaining_unit_count": 81,
+  "unique_remaining_unit_count": 81,
+  "current_audited_count": 15,
+  "duplicate_count": 0,
+  "missing_count": 0,
+  "unexpected_count": 0,
+  "dependency_graph_acyclic": true,
+  "every_remaining_unit_has_batch": true,
+  "every_batch_has_track": true,
+  "every_parallel_batch_has_disjoint_write_paths": true,
+  "every_shared_interface_has_one_owner": true,
+  "every_wave_has_integration_order": true,
+  "task17_history_modified": false,
+  "B2_A1_decisions_preserved": true,
+  "progress_tracking_ready": true,
+  "progress_tracker_format": "MARKDOWN",
+  "progress_tracker_row_count": 96,
+  "progress_tracker_writer": "Terminal 0"
+}

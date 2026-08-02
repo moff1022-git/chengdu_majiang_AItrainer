@@ -1,0 +1,15 @@
+{
+  "main_matrix_units": 81,
+  "design_waiting": 78,
+  "current_status": {
+    "INTEGRATED": 1,
+    "PARTIAL": 79,
+    "SCAFFOLDED": 1
+  },
+  "classification": {
+    "REQUIRES_EVIDENCE": 77,
+    "SCAFFOLD_OR_EXTERNAL": 3,
+    "STATE_STALE_CANDIDATE": 1
+  },
+  "source_sha256": "9acf4e305d5e7d0a47d84202b0abeb87621434f9a599003a0ecfcac5f56ea354"
+}

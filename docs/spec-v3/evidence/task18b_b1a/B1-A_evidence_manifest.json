@@ -1,0 +1,19 @@
+{
+  "artifact": "docs/spec-v3/evidence/task18b_b1a/B1-A_runtime_evidence.json",
+  "sha256": "6c51731812e6e1f49419260a13ed3b859ab1b123c6beb1dfefecf9496bdcd393",
+  "record_count": 12,
+  "unit_ids": [
+    "STATE-010",
+    "STATE-010",
+    "STATE-010",
+    "STATE-010",
+    "ALGO-009",
+    "ALGO-009",
+    "ALGO-009",
+    "ALGO-009",
+    "ALGO-011",
+    "ALGO-011",
+    "ALGO-011",
+    "ALGO-011"
+  ]
+}

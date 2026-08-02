@@ -1,0 +1,4 @@
+﻿edge_id,source,target,operation,input_mutation,hash_behavior,approval_status
+MIG-CONFIG-100-110,RULES1.0/PARAMS1.0/IMPL2.0,RULES1.0/PARAMS1.1/IMPL2.1,move GP-024..027 from global to four independent player cognitive maps; update versions,forbidden,target legacy-json-v1 hash,APPROVED
+MIG-CONFIG-110-200,CONTRACTS1/PARAMS1.1/legacy-json-v1,CONTRACTS2/PARAMS2.0/canonical-jcs-nfc-v2-profile,validate strict v1; require empty extensions; add version discriminators; canonicalize and hash under approved profile,forbidden; atomic new object,old hash retained as source_hash; new SHA-256 produced,APPROVED
+MIG-REPLAY-LEGACY-ADAPTER,pre-rng-version replay,v2 reader legacy execution path,do not rewrite; select legacy-v1 derive_seeds,forbidden,legacy values unchanged,APPROVED

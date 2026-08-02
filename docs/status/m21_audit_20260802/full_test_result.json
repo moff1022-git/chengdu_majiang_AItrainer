@@ -1,0 +1,10 @@
+{
+  "command": ".venv-macos/bin/python -m pytest -q",
+  "passed": 500,
+  "skipped": 1,
+  "failed": 2,
+  "findings": [
+    {"test": "tests/test_cjk_font.py::test_resolve_ui_font_renders_chinese", "class": "ENVIRONMENT_DEPENDENCY", "detail": "pygame.surfarray unavailable because numpy is not installed in .venv-macos"},
+    {"test": "tests/test_f0011_integrated.py::test_pipeline_f0011_flag", "class": "STALE_CONTRACT_TEST", "detail": "test expects F0011 enabled, while current approved recommendation pipeline explicitly disables F0011"}
+  ]
+}

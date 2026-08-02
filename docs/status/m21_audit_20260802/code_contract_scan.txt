@@ -1,0 +1,39 @@
+tests/humanlike_v2/test_cognition.py:33:    cfg = load_config(default_humanlike_config_path())
+tools/eval_f0011.py:2:"""A6: compare baseline vs F0011 discard advisor on fixed eval set states.
+tools/eval_f0011.py:23:    p = argparse.ArgumentParser(description="F0011 discard advisor eval (A6)")
+players/humanlike/settings_window.py:6:from players.humanlike.settings_service import default_config_path, read_raw, save_raw, validate_raw
+players/humanlike/settings_window.py:305:    p=argparse.ArgumentParser(); p.add_argument("--config"); a=p.parse_args(); SettingsWindow(Path(a.config) if a.config else default_config_path()).run(); return 0
+tests/humanlike_v2/test_deterministic_policy.py:27:    cfg = load_config(default_humanlike_config_path())
+tests/humanlike_v2/test_config.py:15:COMPATIBILITY = ROOT / "configs" / "humanlike_v2" / "compatibility.json"
+tests/humanlike_v2/test_config.py:29:    first = load_config(DEFAULT)
+tests/humanlike_v2/test_config.py:30:    second = load_config(DEFAULT)
+tests/humanlike_v2/test_config.py:43:    assert load_config(_write(tmp_path, reordered), COMPATIBILITY).config_hash == load_config(DEFAULT).config_hash
+tests/humanlike_v2/test_config.py:51:        load_config(_write(tmp_path, data), COMPATIBILITY)
+tests/humanlike_v2/test_config.py:58:        load_config(_write(tmp_path, data), COMPATIBILITY)
+tests/humanlike_v2/test_config.py:65:        load_config(_write(tmp_path, data), COMPATIBILITY)
+tests/humanlike_v2/test_config.py:72:        load_config(_write(tmp_path, data), COMPATIBILITY)
+tests/humanlike_v2/test_config.py:79:        load_config(_write(tmp_path, data), COMPATIBILITY)
+tests/humanlike_v2/test_config.py:83:    cfg = load_config(DEFAULT)
+tests/humanlike_v2/test_config.py:97:    cfg = load_config(_write(tmp_path, data), COMPATIBILITY)
+tests/humanlike_v2/test_config.py:111:    adapter = HumanlikeEngineAdapter(load_config(DEFAULT))
+tests/test_f0011_integrated.py:1:"""F0011 integrated discard advisor A1–A5 smoke tests."""
+players/humanlike/config.py:301:def load_config(path: str | Path, compatibility_path: str | Path | None = None) -> HumanlikeConfig:
+players/humanlike/config.py:311:    compatibility = Path(compatibility_path) if compatibility_path else source.with_name("compatibility.json")
+players/humanlike/settings_service.py:19:def default_config_path() -> Path:
+players/humanlike/settings_service.py:24:    source = Path(path) if path else default_config_path()
+players/humanlike/settings_service.py:32:    destination = Path(target) if target else default_config_path()
+players/humanlike/settings_service.py:39:        return load_config(name, destination.with_name("compatibility.json"))
+players/humanlike/settings_service.py:48:    destination = Path(path) if path else default_config_path()
+players/humanlike/settings_service.py:99:    source = Path(path) if path else default_config_path()
+players/humanlike/settings_service.py:100:    config = load_config(source)
+players/humanlike/player.py:60:                self.humanlike_config = load_config(override_path, self._config_path.with_name("compatibility.json"))
+players/humanlike/player.py:64:            self.humanlike_config = load_config(self._config_path)
+players/strategy_presets.py:5:  - rule_ai_plus.json — snapshot of hand_predict + F0011 flags
+tests/humanlike_v2/test_settings_service.py:16:COMPAT = ROOT / "configs" / "humanlike_v2" / "compatibility.json"
+tests/humanlike_v2/test_settings_service.py:22:    (tmp_path / "compatibility.json").write_text(COMPAT.read_text(encoding="utf-8"), encoding="utf-8")
+players/analysis/integrated_discard.py:1:"""F0011: integrated discard advisor — offense + defense + junk safety.
+players/analysis/pipeline.py:20:    v = (os.environ.get("F0011") or os.environ.get("CMJ_F0011") or "").strip().lower()
+players/analysis/pipeline.py:38:      - None → env F0011 / CMJ_F0011 enables integrated advisor (A5)
+tests/humanlike_v2/test_personality_presets.py:19:    config = load_config(default_humanlike_config_path()).normalized_dict()
+players/analysis/danger.py:36:    """A1: optional F0010-weighted waits via f0010_ctx (F0011)."""
+players/analysis/discard_recommend.py:3:Uses the same ranking list as ``rank_discards`` / F0011 (already sorted best-first).

@@ -1,0 +1,1004 @@
+[
+  {
+    "source": "docs/status/LATEST.md",
+    "reference": "docs/milestones/M21_humanlike_improvement_plan.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/status/LATEST.md",
+    "reference": "docs/status/TASK19_DESIGN_STATUS_REVIEW_2026-08-02.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/status/LATEST.md",
+    "reference": "m21_audit_20260802/git_state.txt",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/status/LATEST.md",
+    "reference": "configs/humanlike_v2/compatibility.json",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/status/LATEST.md",
+    "reference": "tests/test_deal_fairness_generator.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/status/LATEST.md",
+    "reference": "tests/test_ai_capability_test.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/task19_monitor.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_task19_monitor.py",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/task19_agent_runtime.json",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/task19_agent_runtime.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/TASK19_STANDING_AUTORIZATION_2026-07-31.md",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/TASK19_W01_MERGED_OWNER_GATE_2026-07-31.md",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/adr/0001-agent-orchestrated-unattended-development.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0033_humanlike_ai_complete_software_design.md",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/DEVELOPMENT.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/task18b_semantic_baseline.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/task18a_generate_plan.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/audit/task17_96_unit_audit_clarification.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/reports/task18_tasks_1_5_execution_gate.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/task17_rebaseline.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "SPEC_V3_LOCK_MANIFEST.md/.csv",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/generate_spec_v3_acceptance_checklist.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/generate_spec_v3_development_cards.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/generate_spec_v3_test_specs.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/03-unit-specs/audit_specs.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/AI_implementation_spec_v3.md",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/07-traceability/rule_parameter_unit_matrix.csv",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/08-review/spec_conflict_report.md",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/03-unit-specs/training_environment_specs.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/03-unit-specs/probabilistic_model_specs.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/03-unit-specs/human_heuristic_specs.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/03-unit-specs/deterministic_algorithm_scoring_specs.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/03-unit-specs/deterministic_rule_state_specs.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/08-review/MAC_CONTINUATION_CHECK_2026-07-29.md",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0031_F0032_QUANTIFICATION_REVIEW_2026-07-29.md",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/SPEC_IMPLEMENTATION_AUDIT_2026-07-29.md",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0030_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0029_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0028_6_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_6_training_contract.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0028_5_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_5_decision_audit_replay.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0028_4_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_4_human_cognition.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "engine/opening.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0028_3_MANUAL_QUICK_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/testing/F0028_3_MANUAL_TEST_PLAN_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0028_3_ACCEPTANCE_2026-07-29.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_3_deterministic_player_view_policy.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_3_deterministic_player_view_policy.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0028_2_ACCEPTANCE_2026-07-28.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_2_physical_tiles_player_view_v2.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_2_physical_tiles_player_view_v2.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "configs/humanlike_v2/default.json",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "configs/humanlike_v2/compatibility.json",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/humanlike/config.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/humanlike/runtime.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/humanlike/traceability.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_human_wire.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_f0013_dirty_update.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/DOC_CODE_BASELINE.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/README.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_humanlike_ai_v2_implementation_plan.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0028_humanlike_ai_v2_implementation_plan.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/PROJECT_TAKEOVER_AUDIT_2026-07-28.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "features/F0027_windows_msi.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "packaging/windows/pyinstaller_entry.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "releases/windows/README.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_app_paths.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "features/F0025_windows_packaging.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/capture_readme_screenshots.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/capture_readme_screenshots.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "features/F0026_readme_screenshots.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0025_windows_packaging.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "features/F0025_windows_packaging.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/packaging/WINDOWS_BUILD.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "packaging/WINDOWS_BUILD.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/DOC_CODE_BASELINE.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "status/DOC_CODE_BASELINE.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/VERSIONING.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/packaging/MACOS_BUILD.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/dice_fx.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/seat_window.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/ui_chrome.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_lobby_view.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/VERSIONING.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/VERSIONING.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/VERSIONING.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/app.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_version.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/packaging/MACOS_BUILD.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0021_macos_packaging.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "packaging/macos/pyinstaller_entry.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_app_paths.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/seat_window.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/seat_window.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_seat_ui.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0020_multi_human_modes.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_f0020_multi_human.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/README.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/window_geometry.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/main_interior.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/table_view.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/seat_layout_play.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/UI_LAYOUT_ISSUE_CHECK.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0019_interior_element_scale.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/interior_scale.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_f0019_interior_scale.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_f0018_layout_geometry.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/backup_project.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/design/UI_DESIGN_STANDARD.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/gen_layout_schematics.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/design/UI_DESIGN_STANDARD.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/gen_layout_schematics.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/design/MAIN_WINDOW_LAYOUT.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/design/HUMAN_WINDOW_LAYOUT.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/design/AI_WINDOW_LAYOUT.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/gen_window_mockups_from_assets.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0018_ui_design_to_code_change_plan.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "assets/ASSETS.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/UI_MODIFICATION_TASK_LIST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/DEVELOPMENT.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/README.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0012_seat_discard_recommend_marks.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0013_seat_dirty_update.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_f0013_dirty_update.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "configs/strategies/presets.json",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/strategy_presets.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0010_S_shanten_diagnostics.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0010_S_shanten_quality_plan.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/analysis/discard_accuracy.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/discard_accuracy_set20_set50.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/set50_comparison.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "configs/f0010_eval_sets.json",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/eval_f0011.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_hand_predict.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/eval_hand_predict.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/F0010_predict_accuracy_analysis.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/status/2026-07-11.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/README.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/app.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/lobby_view.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "display/window_geometry.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/seat_window.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/seat_ui_hub.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "protocols/wire.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "protocols/subprocess_transport.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tools/regen_tiles_from_sample.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "players/view/responsive.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/conftest.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/features/F0001_window_geometry.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "training/spaces.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/test_env.py",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/DEVELOPMENT.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "training/model001/generate.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "tests/model001/test_generate.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "docs/spec-v3/guides/model001_sim_generator.md",
+    "exists": false,
+    "classification": "HISTORICAL_OR_MOVED"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "training/model001/train.py",
+    "exists": false,
+    "classification": "MISSING_REVIEW"
+  },
+  {
+    "source": "docs/changelog.md",
+    "reference": "data/fairness/*/manifest.json",
+    "exists": false,
+    "classification": "GENERATED_OR_EXCLUDED"
+  },
+  {
+    "source": "docs/milestones/M21_humanlike_improvement_plan.md",
+    "reference": "docs/status/LATEST.md",
+    "exists": true,
+    "classification": "VALID"
+  },
+  {
+    "source": "docs/milestones/M21_humanlike_improvement_plan.md",
+    "reference": "docs/changelog.md",
+    "exists": true,
+    "classification": "VALID"
+  }
+]

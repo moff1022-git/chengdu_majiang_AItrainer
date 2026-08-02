@@ -1,0 +1,21 @@
+section,code_paths,test_paths,code_match,test_match
+成都麻将“血战到底”AI人类化决策规则（第一阶段）,,,False,False
+0. 文档目的与适用范围,players/humanlike/plan.py|players/humanlike/attention.py|players/humanlike/rp_schema.py|players/humanlike/config.py|players/humanlike/public_derivation.py|players/humanlike/personality_presets.py|players/humanlike/memory.py|players/humanlike/hand_analyzer.py,tests/test_hand_predict.py|tests/test_result_view.py|tests/test_f0011_integrated.py|tests/test_discard_recommend.py|tests/test_f0018_layout_geometry.py|tests/test_reward.py|tests/test_persistence.py|tests/test_dice_fx.py,True,True
+1. 游戏开始,players/humanlike/attention.py|players/humanlike/rp_schema.py|players/humanlike/config.py|players/humanlike/public_derivation.py|players/humanlike/personality_presets.py|players/humanlike/memory.py|players/humanlike/settings_service.py|players/humanlike/hand_analyzer.py,tests/test_hand_predict.py|tests/test_episode_log.py|tests/test_session_scores.py|tests/test_f0020_multi_human.py|tests/test_f0011_integrated.py|tests/test_discard_recommend.py|tests/test_reward.py|tests/test_persistence.py,True,True
+2. 学习规则,players/humanlike/attention.py|players/humanlike/config.py|players/humanlike/state010.py|players/humanlike/config_v2.py|players/humanlike/evaluator.py,tests/test_hand_predict.py|tests/test_session_scores.py|tests/test_f0003_lobby_melds.py|tests/test_f0004_ready.py|tests/test_reward.py|tests/test_env.py|tests/test_seat_ui.py|tests/test_exchange_dingque.py,True,True
+3. 定庄与座位关系,players/humanlike/attention.py|players/humanlike/config.py|players/humanlike/belief.py,tests/test_hand_predict.py|tests/test_f0018_layout_geometry.py|tests/test_reward.py,True,True
+4. 初始手牌,players/humanlike/attention.py|players/humanlike/config.py|players/humanlike/hand_analyzer.py|players/humanlike/belief.py|players/humanlike/evaluator.py,,True,False
+5. 换三张,players/humanlike/config.py|players/humanlike/public_derivation.py|players/humanlike/personality_presets.py|players/humanlike/belief.py,tests/test_ai_capability_test.py,True,True
+6. 定缺,players/humanlike/config.py|players/humanlike/personality_presets.py,tests/test_hand_predict.py|tests/test_f0011_integrated.py,True,True
+7. 做牌方向的建立与动态调整,players/humanlike/config.py,,True,False
+8. 算牌与局面更新,players/humanlike/config.py|players/humanlike/traceability.py,tests/test_f0019_interior_scale.py,True,True
+9. 摸牌与响应：胡、杠、碰,players/humanlike/config.py|players/humanlike/hand_analyzer.py|players/humanlike/candidates.py,tests/humanlike_v2/test_config.py,True,True
+10. 出牌,players/humanlike/config.py,,True,False
+11. 胡牌与胡牌后的处理,players/humanlike/config.py,,True,False
+12. 终局与计分,players/humanlike/config.py,,True,False
+13. 跨阶段的人类化玩家模型,players/humanlike/config.py,,True,False
+14. 有限认知与候选决策,players/humanlike/config.py|players/humanlike/hand_analyzer.py|players/humanlike/evaluator.py,,True,False
+15. 总体游戏流程,players/humanlike/config.py,,True,False
+16. 本阶段边界与下一阶段接口,players/humanlike/config.py,,True,False
+17. 输入参数完整注册表,players/humanlike/config.py,,True,False
+18. 参数数值规范与动态公式,players/humanlike/config.py,,True,False

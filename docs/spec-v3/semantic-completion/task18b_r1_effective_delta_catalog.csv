@@ -1,0 +1,126 @@
+﻿delta_id,unit_id,delta_kind,effective_status,source_file,requirement,superseded_by,development_readable
+LEGACY-SEM-PARAMETER-RULE-001,RULE-001,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-002,RULE-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-004,RULE-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-005,RULE-005,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-006,RULE-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-007,RULE-007,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-008,RULE-008,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-009,RULE-009,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-010,RULE-010,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-011,RULE-011,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-012,RULE-012,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-013,RULE-013,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-014,RULE-014,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-RULE-015,RULE-015,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-002,ALGO-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-003,ALGO-003,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-004,ALGO-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-005,ALGO-005,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-006,ALGO-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-007,ALGO-007,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-008,ALGO-008,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-009,ALGO-009,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-ALGO-011,ALGO-011,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-001,HEUR-001,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-002,HEUR-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-003,HEUR-003,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-004,HEUR-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-005,HEUR-005,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-006,HEUR-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-007,HEUR-007,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-008,HEUR-008,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-009,HEUR-009,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-010,HEUR-010,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-011,HEUR-011,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-012,HEUR-012,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-013,HEUR-013,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-014,HEUR-014,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-015,HEUR-015,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-017,HEUR-017,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-018,HEUR-018,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-020,HEUR-020,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-021,HEUR-021,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-022,HEUR-022,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-HEUR-023,HEUR-023,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-MODEL-002,MODEL-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-MODEL-003,MODEL-003,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-MODEL-004,MODEL-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-001,STATE-001,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-002,STATE-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-003,STATE-003,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-004,STATE-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-006,STATE-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-007,STATE-007,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-008,STATE-008,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-009,STATE-009,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-010,STATE-010,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-011,STATE-011,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-STATE-012,STATE-012,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-SCORE-002,SCORE-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-SCORE-003,SCORE-003,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-SCORE-004,SCORE-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-SCORE-005,SCORE-005,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-SCORE-006,SCORE-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-001,TRAIN-001,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-002,TRAIN-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-004,TRAIN-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-005,TRAIN-005,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-006,TRAIN-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-007,TRAIN-007,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-008,TRAIN-008,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-TRAIN-009,TRAIN-009,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-001,AUDIT-001,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-002,AUDIT-002,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-004,AUDIT-004,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-005,AUDIT-005,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-006,AUDIT-006,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-007,AUDIT-007,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-008,AUDIT-008,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-009,AUDIT-009,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-010,AUDIT-010,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-011,AUDIT-011,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-013,AUDIT-013,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+LEGACY-SEM-PARAMETER-AUDIT-014,AUDIT-014,semantic_delta,SUPERSEDED,Task18B original generated semantic_delta_catalog,泛化参数接入（无具体参数行为差异）,R1 concrete deltas when unit is B1-A; otherwise future unit-specific review,false
+SEM-STATE-010-01,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,建立60项不可变ParameterDefinition注册表并启动时校验唯一性/完整性,,true
+SEM-STATE-010-02,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,按定义区分MISSING_REQUIRED、PARAM_NULL、OUT_OF_RANGE、UNKNOWN_PARAMETER/FIELD,,true
+SEM-STATE-010-03,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,在STATE-001创建match context前完成GP commit；提交后任何写返回LIFECYCLE_VIOLATION,,true
+SEM-STATE-010-04,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,以registry lifecycle生成RP授权矩阵；round_start创建，事件后按定义更新，round_end finalize+archive，新局新实例,,true
+SEM-STATE-010-05,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,每项seat-owned状态绑定owner_seat；读写必须匹配actor/seat；四座独立快照,,true
+SEM-STATE-010-06,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,实现单写者compare-and-swap事务；先在临时结果完成全校验再一次提交,,true
+SEM-STATE-010-07,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,新增模块内部State010Result，不改变Frozen跨模块DTO,,true
+SEM-STATE-010-08,STATE-010,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,策略仅消费现有PlayerView白名单及非敏感config_hash，不传registry对象或seed,,true
+SEM-ALGO-009-01,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,严格按Locked顺序纯函数流水线；每阶段只产临时值,,true
+SEM-ALGO-009-02,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,建立显式migration graph和逐边纯迁移函数；不允许跳跃或猜测,,true
+SEM-ALGO-009-03,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,普通未知键PARAM_UNKNOWN；废弃键仅由特定迁移消费；extensions按批准schema保留并参与canonical hash,,true
+SEM-ALGO-009-04,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,只在registry定义default时对缺失应用Locked默认；显式null仅nullable=true接受,,true
+SEM-ALGO-009-05,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,JSON解析后递归拒非有限；按批准numeric canonical策略标准化,,true
+SEM-ALGO-009-06,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,选定并文档化唯一字节算法，固化跨语言golden；hash=SHA256(bytes),,true
+SEM-ALGO-009-07,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,迁移/验证/hash全在临时对象；成功后一次替换/冻结,,true
+SEM-ALGO-009-08,ALGO-009,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,禁止静默fallback；是否允许显式degraded继续由规格决策；若允许必须accepted=false且old hash明确,,true
+SEM-ALGO-011-01,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,实现v2纯函数：domain+长度前缀+id+versions→master；master+流名+版本→seed,,true
+SEM-ALGO-011-02,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,保留legacy-v1 derive_seeds原字节/数值；新增规范版本走独立入口，绝不改变legacy函数结果,,true
+SEM-ALGO-011-03,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,新录制必须显式写版本；回放从持久化元数据选择；缺失版本行为等待决策，不按当前代码猜测,,true
+SEM-ALGO-011-04,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,建立版本化不可变stream registry；派生按名称纯函数；未知=STREAM_UNKNOWN,,true
+SEM-ALGO-011-05,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,"派生为无状态函数(seed(stream, logical_consumer, logical_index))；禁止全局next()/共享计数器",,true
+SEM-ALGO-011-06,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,坐标至少含stream_name+consumer_id+logical_event_id+draw_index；每次调用显式传入，不内部递增,,true
+SEM-ALGO-011-07,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,引擎/审计持有完整SeedTrace；策略边界仅给rng_used和不透明trace_ref，不给seed/master/index/未来流,,true
+SEM-ALGO-011-08,ALGO-011,semantic_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_semantic_deltas.csv,先验证ID/版本/registry/坐标，再构造不可变映射,,true
+TEST-STATE-010-01,STATE-010,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,registry逐ID/逐字段等于Locked来源；四类错误码及零写入,,true
+TEST-STATE-010-02,STATE-010,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,每个合法转移得到准确phase/version；非法转移拒绝且snapshot不变,,true
+TEST-STATE-010-03,STATE-010,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,扰动私有字段不改变同可见状态决策且策略对象图无私有字段,,true
+TEST-ALGO-009-01,ALGO-009,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,逐阶段spy/结果证明固定顺序；每个失败点active bytes/hash不变,,true
+TEST-ALGO-009-02,ALGO-009,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,未知/废弃/extensions/missing/null/nonfinite逐项准确结果或错误码,,true
+TEST-ALGO-009-03,ALGO-009,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,canonical bytes与SHA-256固定向量逐字节相等并跨进程一致,,true
+TEST-ALGO-009-04,ALGO-009,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,settings保存/加载后active config及文件符合批准fallback语义,,true
+TEST-ALGO-011-01,ALGO-011,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,旧derive、dice、shuffle、hands、wall逐字段等于现有golden,,true
+TEST-ALGO-011-02,ALGO-011,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,规范拼接bytes/master/stream seed固定向量0误差,,true
+TEST-ALGO-011-03,ALGO-011,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,100种调度排列每个逻辑坐标输出相同；重试不推进其他坐标,,true
+TEST-ALGO-011-04,ALGO-011,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,策略序列化字段白名单且无法推导future；审计可复算,,true
+TEST-ALGO-011-05,ALGO-011,test_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_test_deltas.csv,所有非法输入result=null，映射/cache/index前后相同,,true
+EVIDENCE-STATE-010-01,STATE-010,evidence_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,instrument real production entry; no test-only facade,,true
+EVIDENCE-STATE-010-02,STATE-010,evidence_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,same-scope manifest with artifact SHA-256,,true
+EVIDENCE-ALGO-009-01,ALGO-009,evidence_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,instrument real production entry; no test-only facade,,true
+EVIDENCE-ALGO-009-02,ALGO-009,evidence_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,same-scope manifest with artifact SHA-256,,true
+EVIDENCE-ALGO-011-01,ALGO-011,evidence_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,instrument real production entry; no test-only facade,,true
+EVIDENCE-ALGO-011-02,ALGO-011,evidence_delta,ACTIVE,docs/spec-v3/semantic-completion/reviews/B1-A_evidence_deltas.csv,same-scope manifest with artifact SHA-256,,true

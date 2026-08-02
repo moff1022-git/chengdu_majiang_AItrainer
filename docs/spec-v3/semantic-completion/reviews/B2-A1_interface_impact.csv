@@ -1,0 +1,10 @@
+symbol,units,classification,rationale,breaking_change,approval_status
+GameState,STATE-002|STATE-003,COMPATIBLE_ADAPTER,Legacy mutable v5 remains; adapter imports/exports validated snapshots; never policy-visible,false,APPROVED
+PlayerState,STATE-003,COMPATIBLE_ADAPTER,Legacy mutable fields map to additive immutable PlayerRoundState DTO,false,APPROVED
+RoundRuntime,STATE-002,REUSE_AS_IS,Policy RP lifecycle remains separate and consumes PlayerView events only; never authority owner,false,APPROVED
+PlayerViewV2,STATE-002|STATE-003,REUSE_AS_IS,Only existing whitelist projector may cross policy boundary,false,APPROVED
+apply_event,STATE-002|STATE-003,ADDITIVE_INTERFACE,Add authority transaction entrypoint; do not repurpose RoundRuntime.apply_event,false,APPROVED
+shanten,ALGO-002,COMPATIBLE_ADAPTER,Keep scalar legacy wrapper over approved versioned pure facade,false,APPROVED
+win_check,ALGO-002,REUSE_AS_IS,Consumer/cross-check only; no return-type change,false,APPROVED
+hand_analyzer,ALGO-002,COMPATIBLE_ADAPTER,Consume ALGO-002 result from own visible hand only,false,APPROVED
+legal_actions,STATE-003|ALGO-002,REUSE_AS_IS,Consumer of committed state/results; does not own mutation or algorithm,false,APPROVED

@@ -1,0 +1,717 @@
+{
+  "format": "cmj_save",
+  "format_version": 1,
+  "saved_at": "2026-07-29T16:12:03.148826+00:00",
+  "game_id": "task15-fixed-seed-game",
+  "schema_version": 5,
+  "engine_config": {
+    "num_players": 2,
+    "initial_score": 0,
+    "exchange_dir": "auto_dice",
+    "fan_cap": 0,
+    "multi_ron": true,
+    "base_score": 1,
+    "force_discard_dingque": true,
+    "enable_exchange": true
+  },
+  "players_meta": [
+    {
+      "seat": 0,
+      "type": "HumanlikeV2Player",
+      "name": "HumanlikeV2-0"
+    },
+    {
+      "seat": 1,
+      "type": "HumanlikeV2Player",
+      "name": "HumanlikeV2-1"
+    }
+  ],
+  "crash_log": [],
+  "state": {
+    "schema_version": 5,
+    "game_id": "task15-fixed-seed-game",
+    "master_seed": 10753821896213880510,
+    "phase": "finished",
+    "num_players": 2,
+    "dice": {
+      "d1": 4,
+      "d2": 4,
+      "total": 8
+    },
+    "dealer_seat": 1,
+    "wall_tile_ids": [
+      79,
+      38,
+      57,
+      73,
+      7,
+      98,
+      26,
+      46,
+      76,
+      6,
+      23,
+      49,
+      51,
+      25,
+      106,
+      9,
+      13,
+      8,
+      102,
+      20,
+      58,
+      21,
+      84,
+      30,
+      92,
+      103,
+      80,
+      17,
+      94,
+      66,
+      15,
+      35,
+      69,
+      71,
+      70,
+      54,
+      34,
+      62,
+      91,
+      3,
+      36,
+      50,
+      48,
+      44,
+      104,
+      101,
+      86,
+      22,
+      37,
+      42,
+      18,
+      59,
+      0,
+      43,
+      16,
+      45,
+      31,
+      96,
+      11,
+      14,
+      40,
+      32,
+      10,
+      105
+    ],
+    "players": [
+      {
+        "seat": 0,
+        "concealed_tile_ids": [
+          52,
+          53,
+          55,
+          81,
+          83,
+          89,
+          93,
+          97
+        ],
+        "score": 1,
+        "is_dealer": false,
+        "dingque": "wan",
+        "melds": [
+          {
+            "kind": "pong",
+            "tile_ids": [
+              60,
+              61,
+              63
+            ],
+            "source_seat": 1,
+            "claimed_discard_event": 5
+          },
+          {
+            "kind": "pong",
+            "tile_ids": [
+              72,
+              74,
+              75
+            ],
+            "source_seat": 1,
+            "claimed_discard_event": 8
+          }
+        ],
+        "discards": [
+          {
+            "event_index": 2,
+            "seat": 0,
+            "tile_id": 33,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 4,
+            "seat": 0,
+            "tile_id": 67,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 7,
+            "seat": 0,
+            "tile_id": 41,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 10,
+            "seat": 0,
+            "tile_id": 100,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 12,
+            "seat": 0,
+            "tile_id": 56,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 14,
+            "seat": 0,
+            "tile_id": 5,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 16,
+            "seat": 0,
+            "tile_id": 19,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 18,
+            "seat": 0,
+            "tile_id": 39,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 20,
+            "seat": 0,
+            "tile_id": 47,
+            "claimed_by": null,
+            "claim_kind": null
+          }
+        ],
+        "status": "finished",
+        "hu_order": 1,
+        "last_win": {
+          "fan": 0,
+          "zimo": true,
+          "loser": null
+        }
+      },
+      {
+        "seat": 1,
+        "concealed_tile_ids": [
+          12,
+          24,
+          27,
+          77,
+          78,
+          82,
+          85,
+          87,
+          88,
+          90,
+          95,
+          99,
+          107
+        ],
+        "score": -1,
+        "is_dealer": true,
+        "dingque": "tong",
+        "melds": [],
+        "discards": [
+          {
+            "event_index": 1,
+            "seat": 1,
+            "tile_id": 64,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 3,
+            "seat": 1,
+            "tile_id": 65,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 5,
+            "seat": 1,
+            "tile_id": 63,
+            "claimed_by": 0,
+            "claim_kind": "pong"
+          },
+          {
+            "event_index": 8,
+            "seat": 1,
+            "tile_id": 75,
+            "claimed_by": 0,
+            "claim_kind": "pong"
+          },
+          {
+            "event_index": 11,
+            "seat": 1,
+            "tile_id": 68,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 13,
+            "seat": 1,
+            "tile_id": 1,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 15,
+            "seat": 1,
+            "tile_id": 4,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 17,
+            "seat": 1,
+            "tile_id": 2,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 19,
+            "seat": 1,
+            "tile_id": 28,
+            "claimed_by": null,
+            "claim_kind": null
+          },
+          {
+            "event_index": 21,
+            "seat": 1,
+            "tile_id": 29,
+            "claimed_by": null,
+            "claim_kind": null
+          }
+        ],
+        "status": "active",
+        "hu_order": null,
+        "last_win": null
+      }
+    ],
+    "turn_index": 22,
+    "config": {
+      "num_players": 2,
+      "initial_score": 0,
+      "exchange_dir": "auto_dice",
+      "fan_cap": 0,
+      "multi_ron": true,
+      "base_score": 1,
+      "force_discard_dingque": true,
+      "enable_exchange": true
+    },
+    "current_seat": 0,
+    "exchange_dir_resolved": "counterclockwise",
+    "pending_exchange_tile_ids": {},
+    "exchange_log": [
+      {
+        "from_seat": 0,
+        "to_seat": 1,
+        "tiles": [
+          "wan_1",
+          "wan_8",
+          "wan_8"
+        ]
+      },
+      {
+        "from_seat": 1,
+        "to_seat": 0,
+        "tiles": [
+          "tong_2",
+          "tong_5",
+          "tong_5"
+        ]
+      }
+    ],
+    "last_discard_tile_id": 29,
+    "last_discard_seat": 1,
+    "response_seats": [],
+    "pending_claims": null,
+    "last_draw_tile_id": 52,
+    "after_gang_draw": false,
+    "qiang_gang_context": null,
+    "finished_reason": "last_one",
+    "score_events": [
+      {
+        "type": "start_play",
+        "turn_index": 0,
+        "payload": {
+          "dealer": 1
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 1,
+        "payload": {
+          "seat": 1,
+          "tile": "tong_8"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 1,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_7"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 2,
+        "payload": {
+          "seat": 0,
+          "tile": "wan_9"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 2,
+        "payload": {
+          "seat": 1,
+          "tile": "tiao_5"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 3,
+        "payload": {
+          "seat": 1,
+          "tile": "tong_8"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 3,
+        "payload": {
+          "seat": 0,
+          "tile": "tiao_3"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 4,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_8"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 4,
+        "payload": {
+          "seat": 1,
+          "tile": "tong_7"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 5,
+        "payload": {
+          "seat": 1,
+          "tile": "tong_7"
+        }
+      },
+      {
+        "type": "pong",
+        "turn_index": 5,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_7"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 7,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_2"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 7,
+        "payload": {
+          "seat": 1,
+          "tile": "tiao_4"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 8,
+        "payload": {
+          "seat": 1,
+          "tile": "tiao_1"
+        }
+      },
+      {
+        "type": "pong",
+        "turn_index": 8,
+        "payload": {
+          "seat": 0,
+          "tile": "tiao_1"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 10,
+        "payload": {
+          "seat": 0,
+          "tile": "tiao_8"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 10,
+        "payload": {
+          "seat": 1,
+          "tile": "tong_9"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 11,
+        "payload": {
+          "seat": 1,
+          "tile": "tong_9"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 11,
+        "payload": {
+          "seat": 0,
+          "tile": "tiao_7"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 12,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_6"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 12,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_4"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 13,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_1"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 13,
+        "payload": {
+          "seat": 0,
+          "tile": "wan_2"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 14,
+        "payload": {
+          "seat": 0,
+          "tile": "wan_2"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 14,
+        "payload": {
+          "seat": 1,
+          "tile": "tiao_4"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 15,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_2"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 15,
+        "payload": {
+          "seat": 0,
+          "tile": "wan_5"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 16,
+        "payload": {
+          "seat": 0,
+          "tile": "wan_5"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 16,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_1"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 17,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_1"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 17,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_1"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 18,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_1"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 18,
+        "payload": {
+          "seat": 1,
+          "tile": "tiao_3"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 19,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_8"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 19,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_3"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 20,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_3"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 20,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_7"
+        }
+      },
+      {
+        "type": "discard",
+        "turn_index": 21,
+        "payload": {
+          "seat": 1,
+          "tile": "wan_8"
+        }
+      },
+      {
+        "type": "draw",
+        "turn_index": 21,
+        "payload": {
+          "seat": 0,
+          "tile": "tong_5"
+        }
+      },
+      {
+        "type": "score",
+        "turn_index": 21,
+        "transfers": [
+          {
+            "reason": "hu_zimo",
+            "from_seat": 1,
+            "to_seat": 0,
+            "amount": 1,
+            "fan": 0
+          }
+        ],
+        "balances_after": {
+          "0": 1,
+          "1": -1
+        }
+      },
+      {
+        "type": "hu",
+        "turn_index": 21,
+        "payload": {
+          "seat": 0,
+          "fan": 0,
+          "zimo": true
+        }
+      }
+    ],
+    "hu_sequence": [
+      {
+        "seat": 0,
+        "fan": 0,
+        "zimo": true
+      }
+    ],
+    "hu_count": 1,
+    "end_settled": true,
+    "settle_tags": {
+      "hua_zhu": [],
+      "ting": [],
+      "not_ting": [
+        1
+      ]
+    },
+    "transit_tile_ids": [],
+    "winning_tile_ids": []
+  }
+}

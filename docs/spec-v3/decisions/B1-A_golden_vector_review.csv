@@ -1,0 +1,20 @@
+﻿vector_id,decision_id,previous_kind,vector_class,review_finding,execution_target,fix_applied,self_check
+GV-001,SPEC-DECISION-STATE-DEFAULTS,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,field_validator:GP-003.early_end_score,GV-001 scope explicit,PASS
+GV-002,SPEC-DECISION-STATE-DEFAULTS,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,complete_config_required_field_validator,hash/BLAKE/version metadata normalized,PASS
+GV-003,SPEC-DECISION-RP-ARCHIVE,positive,ILLUSTRATIVE_EXAMPLE,RP-033 learning adapter mapping is not part of this three-unit executable surface,RP archive illustration,hash/BLAKE/version metadata normalized,NOT_EXECUTED
+GV-004,SPEC-DECISION-RP-ARCHIVE,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,STATE-010 lifecycle validator,hash/BLAKE/version metadata normalized,PASS
+GV-005,SPEC-DECISION-MIGRATION-GRAPH,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-009 migration edge 1.0/2.0→1.1/2.1,GV-005 machine output fixture,PASS
+GV-006,SPEC-DECISION-MIGRATION-GRAPH,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-009 migration graph resolver,hash/BLAKE/version metadata normalized,PASS
+GV-007,SPEC-DECISION-EXTENSIONS,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-009 extensions validator,hash/BLAKE/version metadata normalized,PASS
+GV-008,SPEC-DECISION-EXTENSIONS,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-009 extensions validator,hash/BLAKE/version metadata normalized,PASS
+GV-009,SPEC-DECISION-CANONICAL-NUMBER,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,canonical-jcs-nfc-v2 encoder,hash/BLAKE/version metadata normalized,PASS
+GV-010,SPEC-DECISION-CANONICAL-NUMBER,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,canonical-jcs-nfc-v2 encoder,hash/BLAKE/version metadata normalized,PASS
+GV-011,SPEC-DECISION-CANONICAL-NUMBER,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,typed canonical encoder input,GV-011 typed non-finite explicit,PASS
+GV-012,SPEC-DECISION-CANONICAL-UNICODE,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,canonical-jcs-nfc-v2 encoder,hash/BLAKE/version metadata normalized,PASS
+GV-013,SPEC-DECISION-CANONICAL-UNICODE,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,NFC object-key collision validator,hash/BLAKE/version metadata normalized,PASS
+GV-014,SPEC-DECISION-CONFIG-FALLBACK,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-009 config activation state machine,hash/BLAKE/version metadata normalized,PASS
+GV-015,SPEC-DECISION-CONFIG-FALLBACK,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-009 config activation state machine,hash/BLAKE/version metadata normalized,PASS
+GV-016,SPEC-DECISION-RNG-VERSION,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-011 legacy replay reader/derive_seeds,hash/BLAKE/version metadata normalized,PASS
+GV-017,SPEC-DECISION-RNG-VERSION,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-011 new record schema validator,hash/BLAKE/version metadata normalized,PASS
+GV-018,SPEC-DECISION-RNG-COORDINATE,positive,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-011 rng-v2 coordinate derivation,hash/BLAKE/version metadata normalized,PASS
+GV-019,SPEC-DECISION-RNG-COORDINATE,negative,EXECUTABLE_GOLDEN,complete deterministic input and oracle,ALGO-011 coordinate schema validator,hash/BLAKE/version metadata normalized,PASS

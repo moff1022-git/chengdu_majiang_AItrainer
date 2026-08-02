@@ -1,0 +1,25 @@
+{
+  "units": 81,
+  "design": {},
+  "implementation": {},
+  "verification": {},
+  "audit": {},
+  "computed_done": 0,
+  "design_state": {
+    "APPROVED": 3,
+    "DRAFT": 78
+  },
+  "implementation_state": {
+    "IMPLEMENTED": 1,
+    "PARTIAL": 79,
+    "SCAFFOLDED": 1
+  },
+  "verification_state": {
+    "PARTIAL": 80,
+    "PASS": 1
+  },
+  "audit_state": {
+    "NOT_RUN": 80,
+    "PASS": 1
+  }
+}

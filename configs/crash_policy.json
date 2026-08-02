@@ -1,0 +1,8 @@
+{
+  "policy": "replace_player",
+  "timeout_ms": 120000,
+  "max_crashes": 3,
+  "fallback_player": "random",
+  "log_stack": true,
+  "restart_on_abort": false
+}

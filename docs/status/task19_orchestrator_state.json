@@ -1,0 +1,535 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-08-01T15:10:18+08:00",
+  "work_items": [
+    {
+      "batch_id": "T19-A02",
+      "wave": "W05",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/w03_design_review",
+      "last_event": "reconciliation_audit_pass:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {},
+      "updated_at": "2026-08-01T13:09:25+08:00"
+    },
+    {
+      "batch_id": "T19-T03",
+      "wave": "W05",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/w03_design_review",
+      "last_event": "reconciliation_audit_pass:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-T03-001": 1,
+        "P1-T03-002": 1,
+        "P1-T03-003": 1,
+        "P1-T03-004": 1,
+        "P1-T03-005": 1
+      },
+      "updated_at": "2026-08-01T13:51:57+08:00"
+    },
+    {
+      "batch_id": "T19-D05",
+      "wave": "W04",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/t01_implementation",
+      "last_event": "audit_pass:44f78da",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T12:32:00+08:00",
+      "remediation_counts": {
+        "P1-D05-PRODUCTION-CALL-EDGE": 2
+      }
+    },
+    {
+      "batch_id": "T19-D14",
+      "wave": "W04",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/t01_implementation",
+      "last_event": "audit_pass:669127fb",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-W04-D14-001": 1
+      },
+      "updated_at": "2026-08-01T11:52:00+08:00"
+    },
+    {
+      "batch_id": "T19-M02",
+      "wave": "W04",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/t01_implementation",
+      "last_event": "audit_pass:d071e4c",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-MODEL004-IDENTITY": 1
+      },
+      "updated_at": "2026-08-01T11:52:00+08:00"
+    },
+    {
+      "batch_id": "T19-T02",
+      "wave": "W04",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/w03_design_review",
+      "last_event": "audit_pass:79605ac",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "confirmation_reason": null,
+      "remediation_counts": {
+        "P1-TRAIN005-LEDGER_AND_PERF": 1
+      },
+      "updated_at": "2026-08-01T13:00:00+08:00"
+    },
+    {
+      "batch_id": "T19-D12",
+      "wave": "W04",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/t01_implementation",
+      "last_event": "verified:83627e6",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T11:52:00+08:00",
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-D06",
+      "wave": "W05",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:ed5748e",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {},
+      "updated_at": "2026-08-01T13:09:25+08:00"
+    },
+    {
+      "batch_id": "T19-A03",
+      "wave": "W06",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:a6d7e66",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T14:11:23+08:00",
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-D07",
+      "wave": "W06",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:f6a50b7",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T14:30:42+08:00",
+      "remediation_counts": {
+        "P1-D07-DESIGN-INCOMPLETE": 1,
+        "P1-D07-E5-AC-MISSING": 1,
+        "P1-D07-E4-MISSING-AND-FOREIGNKEY": 1
+      }
+    },
+    {
+      "batch_id": "T19-T04",
+      "wave": "W06",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:0fd936f",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T14:18:18+08:00",
+      "remediation_counts": {
+        "P1-T04-E4-MISSING-IN-COMMIT": 1,
+        "P1-T04-CANDIDATE-COMPLETE-TREE": 1
+      }
+    },
+    {
+      "batch_id": "T19-A04",
+      "wave": "W07",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:f352ce8",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T14:50:22+08:00",
+      "remediation_counts": {
+        "P1-A04-MANIFEST-WRONG-CANDIDATE": 1
+      }
+    },
+    {
+      "batch_id": "T19-D08",
+      "wave": "W07",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:2760ff4",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T14:46:08+08:00",
+      "remediation_counts": {
+        "P1-D08-E4-MISSING-IMPL-SHA": 1
+      }
+    },
+    {
+      "batch_id": "T19-A05",
+      "wave": "W08",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:5e4dd97",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T15:05:30+08:00",
+      "remediation_counts": {
+        "P1-W08-MANIFEST-E4-ARCHIVE": 1
+      }
+    },
+    {
+      "batch_id": "T19-D09",
+      "wave": "W08",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:5e4dd97",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T15:05:30+08:00",
+      "remediation_counts": {
+        "P1-W08-MANIFEST-E4-ARCHIVE": 1
+      }
+    },
+    {
+      "batch_id": "T19-D13",
+      "wave": "W09",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:77a0cbf:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T15:10:18+08:00",
+      "remediation_counts": {
+        "P1-D13-MANIFEST-SHA": 1,
+        "P1-D13-E4-ARCHIVE": 2,
+        "P1-D13-PRODUCTION-EDGE": 1,
+        "P1-D13-CLEAN-ARCHIVE-GIT-DEPENDENCY": 1
+      }
+    },
+    {
+      "batch_id": "T19-A01",
+      "wave": "W10",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:760ad15:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-A01-MANIFEST-SHA": 1,
+        "P1-A01-E4-ARCHIVE": 1
+      }
+    },
+    {
+      "batch_id": "T19-H03",
+      "wave": "W10",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:760ad15:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-H03-MANIFEST-SHA": 1,
+        "P1-H03-E4-ARCHIVE": 1
+      }
+    },
+    {
+      "batch_id": "T19-A06",
+      "wave": "W11",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:bb53305:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-A06-EVIDENCE-ARCHIVE": 1,
+        "P1-A06-FULL-FRESH-PERF": 1
+      }
+    },
+    {
+      "batch_id": "T19-H01",
+      "wave": "W11",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:9015b58:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-H01-MANIFEST-SHA": 2,
+        "P1-H01-IMPLEMENTATION-ARCHIVE": 2,
+        "P1-H01-CLEAN-ARCHIVE-GIT-DEPENDENCY": 1,
+        "P1-H01-VALIDATION-EVIDENCE-MISSING": 1,
+        "P1-H01-FULL-REGRESSION-SUMMARY": 4
+      }
+    },
+    {
+      "batch_id": "T19-H08",
+      "wave": "W11",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:bb53305:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-H08-EVIDENCE-ARCHIVE": 1,
+        "P1-H08-FULL-FRESH-PERF": 1
+      }
+    },
+    {
+      "batch_id": "T19-X01",
+      "wave": "W11",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:9015b58:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-X01-MANIFEST-SHA": 2,
+        "P1-X01-H01-DEPENDENCY-MISSING": 1,
+        "P1-X01-CLEAN-ARCHIVE-GIT-DEPENDENCY": 1,
+        "P1-X01-VALIDATION-EVIDENCE-MISSING": 1,
+        "P1-X01-FULL-REGRESSION-SUMMARY": 4
+      }
+    },
+    {
+      "batch_id": "T19-H04",
+      "wave": "W12",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:39fe7d1:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-M01",
+      "wave": "W12",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:6236fca:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-M01-MANIFEST-SHORT-SHA": 1
+      }
+    },
+    {
+      "batch_id": "T19-X02",
+      "wave": "W12",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:6236fca:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-X02-MANIFEST-SHORT-SHA": 1
+      }
+    },
+    {
+      "batch_id": "T19-H05",
+      "wave": "W13",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:4c83dba:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-H06",
+      "wave": "W13",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:770968d:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-H06-MANIFEST-DESIGN-SHA": 1
+      }
+    },
+    {
+      "batch_id": "T19-H07",
+      "wave": "W13",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:4c83dba:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-M03",
+      "wave": "W13",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:770968d:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-M03-MANIFEST-DESIGN-SHA": 1
+      }
+    },
+    {
+      "batch_id": "T19-H09",
+      "wave": "W14",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:cac7e3f:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-X03",
+      "wave": "W14",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:2b78934:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {
+        "P1-X03-MANIFEST-SHORT-SHA": 1
+      }
+    },
+    {
+      "batch_id": "T19-D07",
+      "wave": "W06",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-D08",
+      "wave": "W07",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-D09",
+      "wave": "W08",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-T04",
+      "wave": "W06",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-D13",
+      "wave": "W09",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-H01",
+      "wave": "W11",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-H03",
+      "wave": "W10",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-H06",
+      "wave": "W13",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "reconciliation_audit_pass",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "remediation_counts": {}
+    },
+    {
+      "batch_id": "T19-H02",
+      "wave": "W09",
+      "gate": "AUDIT",
+      "state": "COMPLETED",
+      "owner": "/root/d02_design_rereview2",
+      "last_event": "audit_pass:fd5232c:P0=0:P1=0:P2=0",
+      "next_action": "CLOSED_AUDITED",
+      "requires_human_confirmation": false,
+      "updated_at": "2026-08-01T15:09:32+08:00",
+      "remediation_counts": {
+        "P1-H02-MANIFEST-IMPLEMENTATION-SHA": 1,
+        "P1-H02-E4-ARCHIVE": 1
+      }
+    }
+  ]
+}
