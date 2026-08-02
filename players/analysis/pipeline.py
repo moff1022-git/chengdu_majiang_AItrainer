@@ -13,7 +13,6 @@ from engine.state import GameState
 from players.analysis.danger import danger_map_for_tiles
 from players.analysis.opponent_model import estimate_opponents
 from players.analysis.remain import remain_map, ukeire_count
-from players.analysis.strategy import rank_discards
 from players.analysis.types import AnalysisSnapshot, DiscardAdvice
 
 
@@ -29,6 +28,8 @@ def analyze_for_seat(
     legal_discards: Sequence[Action] | None = None,
     use_f0011: bool | None = None,
     f0011_top_k: int = 3,
+    humanlike_preset: str | None = None,
+    recommendation_algorithm: str = "humanlike_v2",
 ) -> AnalysisSnapshot:
     """
     Analysis snapshot for HUD / seat window.
@@ -55,13 +56,14 @@ def analyze_for_seat(
 
     uke_n = ukeire_count(uke_ids, remain)
 
-    if use_f0011 is None:
-        use_f0011 = _env_f0011()
+    use_f0011 = False
 
     disc_list = list(legal_discards) if legal_discards is not None else None
     ranks: list[DiscardAdvice] = []
     if disc_list is not None or len(hand) % 3 == 2:
-        if use_f0011:
+        from players.analysis.humanlike_recommend import rank_humanlike_discards
+        ranks = rank_humanlike_discards(state, seat, hand, melds, dingque, opponents, legal_discards=disc_list, algorithm=recommendation_algorithm, preset_id=humanlike_preset)
+        """if use_f0011:
             from players.analysis.integrated_discard import rank_discards_f0011
 
             ranks = rank_discards_f0011(
@@ -84,7 +86,24 @@ def analyze_for_seat(
                 dingque,
                 opponents,
                 legal_discards=disc_list,
-            )
+            )"""
+    if humanlike_preset and ranks:
+        from players.humanlike.personality_presets import apply_personality_preset
+        # Stable style adjustment over the existing legal ranking; no new actions.
+        weights = {"speed": 0.35, "hand_value": 0.25, "defense": 0.25, "flexibility": 0.15}
+        try:
+            probe = {"profile": {}, "cognitive_parameters": {"GP-025": {}, "GP-026": {}}}
+            cfg = apply_personality_preset(probe, humanlike_preset)
+            weights = cfg["cognitive_parameters"]["GP-026"].get("decision_weights", weights)
+            defense = float(cfg["profile"].get("defense_awareness", 0.55))
+            big = float(cfg["profile"].get("big_hand_preference", 0.45))
+        except Exception:
+            defense, big = 0.55, 0.45
+        for a in ranks:
+            a.score += (defense - 0.55) * (1.0 if a.danger in ("high", "critical") else -0.15)
+            a.score += (big - 0.45) * 0.01 * float(a.ukeire_after)
+        ranks.sort(key=lambda a: (-a.score, a.tile_id))
+        ranks = [type(a)(a.tile_id, i + 1, a.shanten_after, a.ukeire_after, a.danger, a.score, a.mark, list(a.ukeire_tiles or [])) for i, a in enumerate(ranks)]
 
     uniq: list[str] = []
     seen: set[str] = set()

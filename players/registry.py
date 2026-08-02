@@ -72,6 +72,9 @@ def create_player(
         # Defer subprocess spawn until orchestrator on_join with full config
         if seat is not None:
             player.seat = seat
+        if humanlike_preset:
+            setattr(player, "humanlike_preset", humanlike_preset)
+        setattr(player, "recommendation_algorithm", "rule_ai")
         if opts.get("use_f0011"):
             setattr(player, "use_f0011", True)
     else:

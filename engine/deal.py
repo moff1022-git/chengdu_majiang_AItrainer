@@ -8,12 +8,52 @@ from typing import Any, Mapping
 
 from engine.config import EngineConfig
 from engine.deck import Deck, build_full_wall, deal_hands
-from engine.dice import roll_dice
+from engine.dice import DiceResult, roll_dice
 from engine.game_id import derive_seeds, generate_game_id, normalize_game_id
 from engine.rng_v2 import RngV2Error, derive_coordinate_seed
 from engine.audit import canonical_hash
 from engine.state import GameState, PlayerState, config_snapshot
-from engine.tile import sorted_tiles
+from engine.tile import sorted_tiles, all_tile_faces
+from engine.physical_tile import PhysicalTile, physical_id_for
+from engine.tile import parse_tile
+
+def create_fixed_dealt_game(game_id: str, *, wall_order: list[str], initial_hands: dict[str, list[str]], dealer: int, config: EngineConfig) -> GameState:
+    """Create a dealt state from an audited face-level fixed dataset."""
+    expected = sorted(t.id for t in all_tile_faces() for _ in range(4))
+    if len(wall_order) != 108 or sorted(wall_order) != expected:
+        raise ValueError("fixed wall is not a conserved 108-tile wall")
+    if not 0 <= dealer < 4:
+        raise ValueError("fixed dealer must be a seat from 0 to 3")
+    if any(len(initial_hands.get(f"s{s}", [])) != (14 if s == dealer else 13) for s in range(4)):
+        raise ValueError("fixed initial hands must contain 14 dealer tiles and 13 tiles for each other seat")
+    remaining = list(wall_order[53:])
+    supplied = remaining + [tile for seat in range(4) for tile in initial_hands[f"s{seat}"]]
+    if sorted(supplied) != expected:
+        raise ValueError("fixed initial hands and remaining wall do not conserve the wall")
+    copies: dict[str, int] = {}
+    physical_wall: list[PhysicalTile] = []
+    for face_id in wall_order:
+        copy_index = copies.get(face_id, 0)
+        physical_wall.append(PhysicalTile(physical_id_for(parse_tile(face_id), copy_index), parse_tile(face_id)))
+        copies[face_id] = copy_index + 1
+    dealt_by_face: dict[str, list[PhysicalTile]] = {}
+    for tile in physical_wall[:53]:
+        dealt_by_face.setdefault(tile.id, []).append(tile)
+    physical_hands: dict[str, list[PhysicalTile]] = {}
+    for seat in range(4):
+        hand = []
+        for face_id in initial_hands[f"s{seat}"]:
+            pool = dealt_by_face.get(face_id, [])
+            if not pool:
+                raise ValueError("fixed initial hands do not match the dealt wall prefix")
+            hand.append(pool.pop())
+        physical_hands[f"s{seat}"] = sorted(hand)
+    if any(dealt_by_face.values()):
+        raise ValueError("fixed initial hands do not consume the dealt wall prefix")
+    players=[PlayerState(seat=s, hand=physical_hands[f"s{s}"], score=config.initial_score, is_dealer=s==dealer) for s in range(4)]
+    dice = DiceResult(d1=1, d2=dealer + 1, total=dealer + 2, dealer_seat=dealer)
+    state=GameState(game_id=game_id, master_seed=0, phase="dealt", num_players=4, dice=dice, dealer_seat=dealer, wall=physical_wall[53:], players=players, turn_index=0, config=config_snapshot(config), current_seat=None, exchange_dir_resolved=None, pending_exchange={}, exchange_log=[])
+    state.validate(); return state
 
 
 def create_dealt_game(

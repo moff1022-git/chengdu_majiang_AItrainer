@@ -20,7 +20,18 @@ STYLE_PRESETS: Mapping[str, Mapping[str, Any]] = {
     "aggressive": {"peng_preference": 0.70, "gang_preference": 0.75, "big_hand_preference": 0.75, "defense_awareness": 0.35, "plan_persistence": 0.45, "thinking_speed": 0.65, "emotional_stability": 0.55, "habit_strength": 0.45, "decision_weights": {"speed": 0.40, "hand_value": 0.35, "defense": 0.10, "flexibility": 0.15}},
 }
 
-PRESET_IDS = tuple(f"{level}_{style}" for level in LEVEL_PRESETS for style in STYLE_PRESETS)
+NONHUMAN_PRESET = {
+    "min_candidates": 14, "max_candidates": 14, "search_depth": 8,
+    "attention_capacity": 64, "satisfaction_threshold": 1.0,
+    "max_error_probability": 0.0, "near_equal_randomness": 0.0,
+    "peng_preference": 0.70, "gang_preference": 0.85,
+    "big_hand_preference": 0.80, "defense_awareness": 0.45,
+    "plan_persistence": 0.05, "thinking_speed": 1.0,
+    "emotional_stability": 1.0, "habit_strength": 0.0,
+    "decision_weights": {"speed": 0.20, "hand_value": 0.45, "defense": 0.25, "flexibility": 0.10},
+}
+
+PRESET_IDS = tuple(f"{level}_{style}" for level in LEVEL_PRESETS for style in STYLE_PRESETS) + ("nonhuman_optimized",)
 
 
 @dataclass(frozen=True, slots=True)
@@ -33,6 +44,8 @@ class PresetDiff:
 def _preset_values(preset_id: str) -> tuple[str, str, Mapping[str, Any], Mapping[str, Any]]:
     if preset_id not in PRESET_IDS:
         raise ValueError(f"unknown personality preset: {preset_id}")
+    if preset_id == "nonhuman_optimized":
+        return "expert", "nonhuman_optimized", NONHUMAN_PRESET, NONHUMAN_PRESET
     level, style = preset_id.split("_", 1)
     return level, style, LEVEL_PRESETS[level], STYLE_PRESETS[style]
 
@@ -45,6 +58,17 @@ def apply_personality_preset(player: Mapping[str, Any], preset_id: str) -> dict[
     gp026 = result["cognitive_parameters"]["GP-026"]
     profile["level"] = level
     profile["style"] = style
+    if preset_id == "nonhuman_optimized":
+        for key in ("peng_preference", "gang_preference", "big_hand_preference", "defense_awareness", "plan_persistence", "thinking_speed"):
+            profile[key] = NONHUMAN_PRESET[key]
+        for key in ("emotional_stability", "habit_strength", "max_error_probability", "near_equal_randomness"):
+            gp025[key] = NONHUMAN_PRESET[key]
+        for key in ("min_candidates", "max_candidates", "search_depth", "attention_capacity", "satisfaction_threshold"):
+            gp026[key] = NONHUMAN_PRESET[key]
+        gp026["decision_weights"] = deepcopy(NONHUMAN_PRESET["decision_weights"])
+        # Keep schema enums valid; the preset identity is carried by preset_id.
+        profile["level"], profile["style"] = "expert", "aggressive"
+        return result
     for key in ("peng_preference", "gang_preference", "big_hand_preference", "defense_awareness", "plan_persistence", "thinking_speed"):
         profile[key] = style_values[key]
     for key in ("emotional_stability", "habit_strength"):

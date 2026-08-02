@@ -5105,10 +5105,10 @@ class TkSeatApp:
                     act = a
                     break
             if act is None and any(a.type == ActionType.DISCARD for a in self.legal):
-                try:
-                    act = Action(ActionType.DISCARD, tiles=(parse_tile(tid_s),))
-                except Exception:
-                    act = None
+                # Never synthesize a discard outside the engine-provided legal
+                # set.  This is especially important while dingque is active:
+                # only tiles of the missing suit may be discarded.
+                act = None
             self._last_tile_click_tid = None
             self._last_tile_click_idx = None
             if act is not None:
@@ -5319,6 +5319,12 @@ class TkSeatApp:
                 elif self.phase == "dingque":
                     self.status_note = "【定缺】点 万 / 筒 / 条"
                 elif self.phase == "discard":
+                    forced = [a for a in self.legal if getattr(a, "type", None).value == "discard"]
+                    forced_ids = {getattr(a.tiles[0], "id", "") for a in forced}
+                    if forced_ids and len(forced_ids) < len({str(x) for x in self.hand_ids}):
+                        self.status_note = "【定缺强制】只能打出定缺花色牌"
+                        self._render_state(force=False)
+                        return
                     n_rec = len(self._recommendations or [])
                     if n_rec and self.recommend_marks_enabled:
                         self.status_note = (
@@ -5331,6 +5337,11 @@ class TkSeatApp:
                     self.status_note = "【响应】碰/杠/胡 或 过"
                 else:
                     self.status_note = f"请操作: {self.phase}"
+                # Optional UI auto-HU: the engine remains authoritative and
+                # only a legal HU action can be submitted.
+                if self.auto_var.get() and any(getattr(a, "type", None).value == "hu" for a in self.legal):
+                    hu_action = next(a for a in self.legal if a.type.value == "hu")
+                    self.root.after(0, lambda a=hu_action: self._submit(a) if self.pending_req is not None else None)
                 try:
                     sys.stderr.write(
                         f"[seat_window] action_request seat={self.seat} "

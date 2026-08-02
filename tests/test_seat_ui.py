@@ -302,3 +302,15 @@ def test_public_view_exposes_dingque_and_status_for_opponents() -> None:
     assert p1["hu_order"] == 1
     # ready game always has dingque
     assert p1["dingque"] in ("wan", "tong", "tiao")
+
+def test_engine_forced_dingque_legal_discards_are_single_suit():
+    from engine.deal import create_dealt_game
+    from engine.config import EngineConfig
+    from engine.legal import legal_discards
+    from engine.tile import Suit
+    state=create_dealt_game("ui-dingque-smoke", config=EngineConfig(num_players=4))
+    state.phase="discard"; state.current_seat=0
+    state.players[0].dingque=Suit.WAN
+    actions=legal_discards(state,0)
+    if any(t.suit == Suit.WAN for t in state.players[0].hand):
+        assert actions and all(a.tiles[0].suit == Suit.WAN for a in actions)

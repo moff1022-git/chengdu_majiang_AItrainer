@@ -108,16 +108,17 @@ class HumanPlayerProxy(BasePlayer):
 
                 legal = legal_actions(state, request.seat)
                 discs = [a for a in legal if a.type == ActionType.DISCARD]
-                # A5: F0011 when env F0011=1 or proxy.use_f0011
-                use_f = getattr(self, "use_f0011", None)
                 snap = analyze_for_seat(
                     state,
                     request.seat,
                     legal_discards=discs,
-                    use_f0011=use_f,
+                    use_f0011=False,
+                    humanlike_preset=getattr(self, "humanlike_preset", None), recommendation_algorithm=getattr(self, "recommendation_algorithm", "rule_ai"),
                 )
                 hints = snap.to_dict(verbose=True)
-                hints["use_f0011"] = bool(getattr(snap, "use_f0011", False))
+                hints["humanlike_preset"] = getattr(self, "humanlike_preset", None)
+                hints["recommendation_algorithm"] = getattr(self, "recommendation_algorithm", "rule_ai")
+                hints["use_f0011"] = False
                 if snap.discard_ranks:
                     best = snap.discard_ranks[0]
                     hints["f0011_best"] = best.tile_id

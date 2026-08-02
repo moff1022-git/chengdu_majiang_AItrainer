@@ -21,7 +21,7 @@ def _raw_player() -> dict:
 
 
 def test_all_twelve_presets_apply_and_detect() -> None:
-    assert len(PRESET_IDS) == 12
+    assert len(PRESET_IDS) == 13
     player = _raw_player()
     for preset_id in PRESET_IDS:
         updated = apply_personality_preset(player, preset_id)

@@ -22,7 +22,7 @@ from engine.blood_battle import (
 )
 from engine.config import EngineConfig
 from engine.crash import AbortGame, CrashConfig, CrashHandler
-from engine.deal import DealRequest, DealTransaction, create_dealt_game
+from engine.deal import DealRequest, DealTransaction, create_dealt_game, create_fixed_dealt_game
 from engine.exchange import pick_same_suit_triple, validate_exchange_tiles
 from engine.legal import action_in_legal, legal_actions
 from engine.opening import begin_opening, submit_dingque, submit_exchange
@@ -34,6 +34,7 @@ from engine.session import GameSession
 from engine.state import GameState
 from engine.tile import Suit, Tile
 from players.base_player import BasePlayer
+from players.human_proxy import HumanPlayerProxy
 from protocols.messages import ActionRequest, Decision
 from protocols.transport import InProcessTransport
 from protocols.view_filter import build_observation
@@ -81,6 +82,7 @@ class PlayerGameRunner:
         starting_scores: dict[int, int] | None = None,
         rng_version: int = 1,
         frozen_config=None,
+        fixed_deal: dict | None = None,
     ) -> None:
         self.players = list(players)
         n = len(self.players)
@@ -90,6 +92,7 @@ class PlayerGameRunner:
         if self.config.num_players != n:
             self.config = replace(self.config, num_players=n)
         self.game_id = game_id
+        self.fixed_deal = fixed_deal
         self.logger = logger
         self.reward_calc = reward_calc or RewardCalculator()
         self.max_steps = max_steps
@@ -165,13 +168,17 @@ class PlayerGameRunner:
             raise PlayError(f"match transaction failed: {match_create.error_code}")
         self.match_controller = match
         self.match_context = match_create.context
-        deal = DealTransaction().execute(DealRequest(
+        if self.fixed_deal:
+            state = create_fixed_dealt_game(effective_gid, wall_order=self.fixed_deal["wall_order"], initial_hands=self.fixed_deal["initial_hands"], dealer=int(self.fixed_deal["dealer"]), config=self.config)
+            deal = type("FixedDeal", (), {"accepted": True, "game_state": state})()
+        else:
+            deal = DealTransaction().execute(DealRequest(
             event_id=f"{gid or 'generated'}:deal", expected_state_version=0,
             game_id=effective_gid,
             num_players=self.config.num_players, initial_score=self.config.initial_score,
             rng_version=self.rng_version, algorithm_version=self.rng_version,
             record_format="legacy-pre-rng-version" if self.rng_version == 1 else "rng-v2-new-record",
-        ), config=self.config)
+            ), config=self.config)
         if not deal.accepted or deal.game_state is None:
             raise PlayError(f"deal transaction failed: {deal.error_code}")
         self.state011_result = deal
@@ -430,7 +437,7 @@ class PlayerGameRunner:
         # deliberately excluded from this full-information compatibility path.
         from players.rule_ai_player import RuleAIPlayer
 
-        if isinstance(player, RuleAIPlayer):
+        if isinstance(player, (RuleAIPlayer, HumanPlayerProxy)):
             setattr(player, "_engine_state", state)
         obs = build_observation(state, seat)
         state_before = state.to_dict()
@@ -485,12 +492,14 @@ class PlayerGameRunner:
             if state.phase == "response":
                 try:
                     from engine.action import Action, ActionType
-                    from engine.blood_battle import force_complete_response
-
-                    pc = dict(state.pending_claims or {})
-                    pc[seat] = Action(ActionType.PASS)
-                    state.pending_claims = pc
-                    force_complete_response(state, self.config)
+                    # The rejected transaction has already restored state. Apply
+                    # the fallback PASS through the same guarded transaction so
+                    # recovery cannot leave a partially mutated response state.
+                    self._state004_apply(
+                        state,
+                        f"recovery-pass-{seat}",
+                        lambda: session.apply(seat, Action(ActionType.PASS)),
+                    )
                 except Exception as e2:
                     print(f"[orchestrator] response recovery failed: {e2}")
                     raise PlayError(str(e)) from e

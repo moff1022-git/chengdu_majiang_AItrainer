@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.3.1 — 2026-08-02
+
+- 修复人类推荐算法设置窗口：`humanlike_v2` 模式显示四座位 13 种人格预设，并支持应用、保存及下局生效。
+- 保持 Humanlike 配置根字段兼容；推荐算法选择独立保存于配置旁车文件，避免破坏严格配置校验。
+- 0.3.1 发布范围明确：包含 0.3.0 之后的引擎、UI、Humanlike v2、人格预设、推荐算法和相关规则修复；不包含牌局生成工具、性能测试工具、其专属测试脚本及生成数据。
+
+## 2026-08-02 — F0038 固定回放缺陷修复
+
+- F0043: 新增人类推荐算法模式设计（Review）；目标是移除 strategy/F0011 入口，改由 humanlike_v2、humanlike_v2.ruleai、humanlike_v2.ruleai_plus 和 13 种人格预设驱动。当前仅更新规格，未修改业务代码。
+- F0043: 需求修正为移除 `HumanPlayerProxy` 内置推荐算法，默认使用 `rule_ai`，由持久化设置值选择算法并在下一次 discard 请求生效；本轮仅更新规格。
+
+- 修复固定牌局错误的四座各 13 张/剩余墙 56 张合同，改为庄家 14、闲家 13、剩余墙 55，并按权威发牌顺序生成。
+- 固定回放将牌面数据稳定映射到唯一物理牌，满足 0–107 `tile_id` 所有权守恒；真实 humanlike_v2 单局回放正常结束且四座均产生决策。
+- 能力测试报告区分尝试/成功/失败，新增 `FAILED`/`PARTIAL` 与失败原因，避免全失败数据被报告为已完成；移除重复校验码。
+- 删除不兼容旧固定数据集 `data/fairness/fairness-20260802-independent-004`（约 67 MB）；未删除其他编号。
+- 清理 `data/fairness` 下此前全部旧编号（independent-001/002/003），并重新生成 `fairness-20260802-random-001` 与 `fairness-20260802-fair-001` 两套完整 10000 局数据。
+- 完成 random/fair 两套新数据集的 50–10000 局公平性复核：全部硬约束和统计状态 PASS；fair 模式座位初始牌总量严格平衡，random 模式差异符合庄家第 14 张的规则预期。
+- 审查发现 fair 模式尚未实现 F0038 约定的窗口配额/候选选择和逐局审计字段；已记录为实现缺口，不能将当前 `fairness-20260802-fair-001` 宣称为完整公平模式证据。
+- 修复 fair 模式：加入 100 局窗口四座 25 局庄家配额校验、候选/选择元数据、seed 坐标、wall SHA-256 和手牌统计；删除旧 fair/random 数据并重建 `fairness-20260802-random-002`、`fairness-20260802-fair-002`。两套数据 50–10000 局公平性复核全部 PASS。
+- F0038 fair-v3: 真正实现每局 16 候选牌墙的确定性花色平衡评分选择，删除 -002 数据并重建 `fairness-20260802-random-003`、`fairness-20260802-fair-003`；全部规模公平性 PASS，fair 模式花色 effect size 显著下降。
+- 按用户要求删除全部旧牌局集并最终重建 `fairness-20260802-random-004`、`fairness-20260802-fair-004`；两套 50–10000 局公平性复核全部 PASS，fair 窗口配额全部通过。
+- 分析 1000 局 fair-004：nonhuman s0 胜率 31.70%、总分 -277，明显低于 novice s1/s3；s0 平均响应 189.9ms，其他座位约 62ms。公平性指标 PASS，问题定位为 nonhuman 策略参数/搜索实现未转化为更高牌局收益，非发牌偏差。
+
+## 2026-08-02 — F0038 生成模式设计（待确认）
+
+- 设计生成器交互式/CLI `fair` 公平模式与 `random` 随机模式；模式、约束版本和候选选择索引纳入 manifest、报告和校验码。
+- 公平模式采用确定性庄家轮换与窗口配额约束，禁止按 AI 结果事后筛选；规格状态调整为 `Review`，尚未修改业务代码。
+- F0038: 实现 `--mode fair|random` 及启动后交互选择；模式、约束版本写入每局记录和 manifest。公平模式固定按局号轮换庄家，随机模式按模式绑定 seed 洗牌；两种模式均完成 10000 局 CLI 验收。
+
 ## 2026-08-01 — MODEL-001 F0035 工程门禁
 
 - 新增独立数据集 validator，覆盖模拟数据准入、feature/label 隔离、分组泄漏检查、正式 provenance 门禁和文件 SHA-256 记录。
@@ -1470,6 +1499,41 @@
 - Task 19 达到 14/14 waves、40/40 batches、96/96 AUDITED。
 - 生成 `releases/v0.3.0/` 完整源代码归档。
 # 2026-08-01
+
+- F0036: 检查 batch 多线程 resume 逻辑，发现乱序完成时按 `len(rows)` 推导 pending 会重复/遗漏局；暂停性能基准，待修复后重测。
+- F0036: 修复 batch 多线程按 game_id/index 的 resume 去重与 checkpoint；新增乱序 pending 回归测试，定向 `15 passed`，20 线程 smoke 验证通过。100 局正式基准因运行时间过长中断，结果可续跑。
+- F0036: 根据实测首批耗时修正 batch ETA 基线：`SECONDS_PER_GAME=30s`；新增估算测试，定向 `16 passed`。
+- F0036: 按修正 ETA 续跑 100 局 batch 至 `42/100` 后中断，保留 checkpoint；观察到 `rule_ai_plus` 长尾 P95 约 6.4 秒，完整基准仍待续跑。
+- F0036: 第二轮续跑将 batch 推进至 `62/100` 后中断，checkpoint 保持可恢复。
+- F0036: 第三轮续跑完成混合 AI batch `100/100`，总耗时约 `203.5s`，校验码 `5075D67FD5635D16`。
+- F0036: batch JSON/Markdown/CSV 报告增加起止时间、总耗时、校验码和 humanlike_v2 座位人格预设字段；定向 `16 passed`。
+- Design: 生成 Humanlike 雷达图参考样本 v1/v2，并将 22 张图片资产复制到 `assets/humanlike_radar_samples/`。
+- Design: 按项目 green/blue UI 色板重生成 v2 双层雷达图；两层 60% 透明，并在每个轴顶点标注参数名和原始值。
+- Design: 修正 v2 标签，改为显示 `normal_balanced` 预设的实际原始参数值；几何归一化仅用于绘图。
+- Design: 将双层雷达填充透明度从 60% 降至 35%，改善重叠区域可读性。
+- F0037: Humanlike 设置窗口实现双层雷达图、顶点点击高亮与人格预设切换动画。
+- F0037: 调整雷达图为 S0–S3 2×2 网格同屏布局并缩小单图尺寸。
+- F0037: 修复多雷达动画回调和透明填充；四座位下拉菜单、应用按钮与对应雷达图同面板显示。
+- F0037: 降低外层/内层 stipple 密度并重绘内层边框，确保下层雷达在重叠区域可见。
+- F0037: 修复设置窗口初始化仅绘制 S0，启动时为四个座位全部生成雷达图。
+- F0037: 修复雷达参考环标量参数导致的 Tkinter `TypeError`。
+- F0037: 新增 `humanlike_v2` 第13预设 `nonhuman_optimized`，主程序/设置窗口/性能测试统一接入，定向 `22 passed`。
+- F0037: 修复 `nonhuman_optimized` 使用非法 style 导致批量全失败；改为合法 aggressive style，单局实战通过，预设测试 `6 passed`。
+- F0038: 新增 Approved 固定测试编号牌局生成器方案，定义完整 10000 局及前缀数据集、可复现/公平性/审计合同和性能测试 test_id 绑定。
+- F0038: 新增固定 test_id 牌局生成器第一版，生成 10000 局及 50/100/500/1000/2000/5000/10000 前缀数据集；smoke 成功。
+- F0038: 增加公平性汇总、生成器回归测试（18 passed）及性能测试 `--test-id/--dataset-games` 参数校验。
+- F0038: 独立生成并验证 `fairness-20260802-independent-001`：10000 局、七个前缀 hash 全匹配、四座硬约束 PASS；固定 deal 注入性能运行仍待完成。
+- F0038: 补齐公平参数基础统计并重新生成 `fairness-20260802-independent-003`；硬约束 PASS、统计 `PASS_WITH_OBSERVATION`，定向 `18 passed`。
+- F0038: 增加公平性 effect size、95% CI 与卡方描述统计；重新生成 `fairness-20260802-independent-004`，1000/10000 局 PASS。
+- F0038: 完成性能测试固定数据集接入：`--test-id/--dataset-games` 读取并校验 deals artifact，使用固定 game_id 运行并写入 config 元数据；定向 `18 passed`。
+- F0038: 增加可选 `--replay-fixed-deal` 完整复现开关；默认保持 game_id 高性能路径，开启后注入固定 deal。
+- F0038: batch 交互模式增加固定测试编号与数据集规模选择菜单，支持从 `data/fairness/*/manifest.json` 选择。
+- F0038: 修复 test_id 菜单触发时机，数据规模改读 manifest，并增加交互式复现方式选择。
+- F0036/F0038: 参数选择 Ctrl-C/EOF 改为无 traceback 退出；报告增加 test_id、dataset hash/规模/路径和复现方式并绑定 verification code。
+- F0037: 新增雷达点位动态说明浮动区，展示参数名称、实际值、范围和说明。
+- F0037: 将点位说明改为选中点位下方的 Canvas 浮动标签，带背景和边界约束。
+
+- F0036: 执行 batch 并发性能基准（100 局、20 线程、四 AI）；因单局耗时较高在 3/100 局中断，保留 checkpoint 与可恢复结果，校验码 `5075D67FD5635D16`。
 
 - F0036: 新增无 UI AI 能力测试 runner，支持固定 game_id、四座 AI、断点续跑和胜负/得分/响应时间报告。
 - F0036: 增加启动前预计耗时确认；取消返回参数选择界面。
