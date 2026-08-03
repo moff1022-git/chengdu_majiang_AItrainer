@@ -6,15 +6,16 @@
 
 ## 本轮完成
 
-- **独立报告**：公开实玩视频 → 分游戏 **C1 画面采集难度**分析  
-  - [`docs/research/c1_video_capture_difficulty/REPORT.md`](../research/c1_video_capture_difficulty/REPORT.md)  
-  - 视频清单：`video_catalog.md`  
-  - 难易标注图：`frames/annot_*.jpg`  
-- 覆盖：欢乐麻将、JJ 麻将、微信川麻血战类、人人等合集、泛川麻噪声集（每类 ≥10 条公开链接/入口）  
-- 局限已写明：环境限制下用结构示意标注 + URL 清单，落地需真机重标定  
+- C1 调研报告补充 **真实视频截图标注**（每类 ≥10 张）：
+  - 腾讯欢乐麻将：14 张
+  - 小书童四川麻将等渠道 App：12 张
+  - 实体川麻实拍：14 张
+  - JJ 标签视频（多为实体）：12 张
+- 路径：`docs/research/c1_video_capture_difficulty/frames/annotated/` + REPORT 附录 A
+- 大体积 `raw_videos/` / `frames/raw/` 已 gitignore
 
 ## 下一步
 
-1. 选定 C1 首发客户端（报告建议：微信川麻血战类或先 C2 合成）  
-2. 真机录 30min + 人工抽帧补全「像素级」标注集  
-3. `确认 F0038 C1` → 实现 M0–M2  
+1. 选定 C1 首发客户端（建议欢乐麻将或渠道川麻 App）
+2. 真机录屏精修 ROI
+3. `实现教练 C1`

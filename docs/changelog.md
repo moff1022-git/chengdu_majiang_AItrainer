@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-03 — C1 真实视频截图标注
+
+- 从公开 YouTube/B 站实玩视频抽帧，每类 ≥10 张并标注手牌/弃牌河/副露难易 ROI。
+- 见 `docs/research/c1_video_capture_difficulty/frames/annotated/` 与 REPORT 附录 A。
+- 原始 mp4 不入库（gitignore）。
+
+
 ## 2026-08-03 — C1 公开视频画面采集难度报告
 
 - 新增独立调研 [`docs/research/c1_video_capture_difficulty/REPORT.md`](research/c1_video_capture_difficulty/REPORT.md)：分游戏检索公开实玩视频、C1 采集难度评分、难易标注图与视频清单。

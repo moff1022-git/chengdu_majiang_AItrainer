@@ -58,3 +58,7 @@ Thumbs.db
 *~
 .idea/
 *.code-workspace
+
+# C1 research video dumps (keep annotated frames only)
+docs/research/c1_video_capture_difficulty/raw_videos/
+docs/research/c1_video_capture_difficulty/frames/raw/
