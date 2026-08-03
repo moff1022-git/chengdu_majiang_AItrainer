@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-03 — F0038 方案 C 观测采集补充
+
+- [`F0038`](features/F0038_online_platform_ai_bridge.md) §4.4 扩充：对手弃牌 / 副露 / 自家手牌的采集通道（C0 手动、C1 视觉可选、C2 本地旁路）、`CoachObservation` 模型、校验规则、架构与 **C-P0–P4 实施步骤**；仍禁止逆向/代打。
+- **无业务代码**。
+
 ## 2026-08-03 — F0038 线上平台 AI 接入方案（Draft）
 
 - 新增 [`docs/features/F0038_online_platform_ai_bridge.md`](features/F0038_online_platform_ai_bridge.md)：主流川麻/血战线上平台调研；方案 A 自建房 / B 官方合作 / C 教练 HUD；禁止逆向与 RPA 挂机；与 `BasePlayer`/Humanlike v2 映射及分阶段路线。
