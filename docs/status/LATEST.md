@@ -6,12 +6,11 @@
 
 ## 本轮完成
 
-- **纠正**：此前「微信小游戏/禅游血战 C1 最简单」在**无真实画面**时下结论，不成立。
-- 已补 **禅游系/血战渠道** 真实标注帧 **23 张**（熊猫竖屏 + 血战麻将横屏）→ `frames/annotated/wechat_zengame_xuezhan/`
-- 报告 §3.x 重估难度；首发建议改为 **C2 合成或真机微信录屏**，勿空口推断。
+- 文档：调研产品在 **macOS 可运行性** → [`docs/research/c1_video_capture_difficulty/MAC_RUNTIME.md`](../research/c1_video_capture_difficulty/MAC_RUNTIME.md)
+- **Mac 上优先可跑**：腾讯欢乐麻将（App Store 原生 Mac）、本项目 GUI；微信小游戏需 Mac 微信实测；JJ/人人多为 M1+ iPad 转 Mac（未验证）。
 
 ## 下一步
 
-1. 用户提供微信内「四川麻将血战到底」真机录屏（最佳）
-2. 或 `C1首发：欢乐麻将` / 熊猫竖屏单独 profile
-3. `实现教练 C1`
+1. 本机实测填 MAC_RUNTIME §3 表格
+2. 选定采集源：`欢乐麻将 Mac` 或 `微信小游戏`
+3. 实现教练 C1
