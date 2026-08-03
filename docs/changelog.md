@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-03 — F0038 线上平台 AI 接入方案（Draft）
+
+- 新增 [`docs/features/F0038_online_platform_ai_bridge.md`](features/F0038_online_platform_ai_bridge.md)：主流川麻/血战线上平台调研；方案 A 自建房 / B 官方合作 / C 教练 HUD；禁止逆向与 RPA 挂机；与 `BasePlayer`/Humanlike v2 映射及分阶段路线。
+- **无业务代码**；待用户确认主路径后再开实现规格。
+
 ## 2026-08-03 — v0.3.1 首页与 macOS 打包修复
 
 - GitHub 首页按 v0.3.1 当前功能整体重写，增加 macOS arm64 PyInstaller/Nuitka 包及 SHA-256 清单的直接下载入口。

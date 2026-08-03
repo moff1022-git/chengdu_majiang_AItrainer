@@ -6,27 +6,22 @@
 
 ## 本轮完成
 
-- GitHub 首页 README 已按 v0.3.1 当前能力整体重写，移除过时的 v0.2.1 下载、玩家列表和命令说明。
-- 首页提供 PyInstaller、Nuitka 两个 macOS arm64 发布包和 SHA-256 清单的直接下载入口。
-- PyInstaller、Nuitka 构建脚本及可选 PyInstaller spec 永久补收 `players/humanlike/parameter_registry_v2.json`。
-- 两个构建脚本增加强制门禁：App Bundle、`assets/`、`configs/`、参数注册表或 CLI 冒烟任一失败即终止构建。
+- **F0038 Draft**：线上成都/四川「血战到底」对战平台调研 + 本项目 AI 接入与自动玩牌可行性方案（仅文档）。
+- 文档：[`docs/features/F0038_online_platform_ai_bridge.md`](../features/F0038_online_platform_ai_bridge.md)
+- 结论摘要：商业平台几乎无公开 Bot API；**推荐自建房（A）/ 商务合作（B）/ 教练 HUD（C）**；**禁止**未授权逆向与模拟点击。
 
 ## 验收锚点
 
-- `tests/test_app_paths.py`：`7 passed`。
-- PyInstaller App：`--version`、`--seat-window --help` 和三类资源检查通过。
-- Nuitka App：`--version`、`--seat-window --help` 和三类资源检查通过。
-- v0.3.1 clean-source 发布基线：`500 passed, 1 skipped, 0 failed`。
-- Release：`https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.1`
+- 方案文档已落盘并索引；无新增业务代码、无平台外挂实现。
 
 ## 状态与风险
 
-- v0.3.1 macOS arm64 双构建已发布；未进行 Apple Developer ID 签名或公证。
-- Nuitka 产物建议从 `/Applications` 等纯英文路径运行。
-- Windows 最新预构建包未纳入本轮发布，README 未宣称存在 v0.3.1 Windows 包。
+- F0038 为调研草案，实现前须用户选定主路径并 `Approved`。
+- 若将 AI 接到未授权商业客户端，存在 ToS/法律风险——仓库明确 Out of Scope。
 
 ## 下一步队列
 
-1. 在目标 arm64 Mac 上分别完成两个 App 的真实 GUI 验收。
-2. 配置 Apple Developer ID 签名、公证和最低 macOS 兼容目标。
-3. 如需 v0.3.1 Windows 包，在 Windows x64 主机分别构建、验证并追加 Release 资产。
+1. 审阅 F0038：选定主路径 A/B/C（建议触发：`确认 F0038` / `主路径自建房`）。
+2. 实现 DecisionService 规格 + 代码（`实现决策服务`）。
+3. 自建好友房 MVP 规格/实现（`开始网络房间`）。
+4. 既有：v0.3.1 macOS App GUI 真机验收；可选 Windows 包与 Apple 签名公证。

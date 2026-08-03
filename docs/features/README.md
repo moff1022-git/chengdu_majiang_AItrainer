@@ -51,8 +51,9 @@
 | **F0028-6** | [F0028_6_training_contract.md](F0028_6_training_contract.md) | 固定动作 codec/mask、Observation v2、奖励分解与训练回归指标 | **Done** |
 | **F0029** | [F0029_humanlike_v2_ui_settings.md](F0029_humanlike_v2_ui_settings.md) | 大厅/主桌/AI 座位 Humanlike v2 开关与全参数设置窗口 | **Done** |
 | **F0030** | [F0030_per_player_cognition_objective.md](F0030_per_player_cognition_objective.md) | GP-024–027 从全局迁移为 S0–S3 独立认知与目标参数 | **Done** |
+| **F0038** | [F0038_online_platform_ai_bridge.md](F0038_online_platform_ai_bridge.md) | **线上血战平台调研 + AI 接入/自动玩牌可行性**（合规 A/B/C；禁逆向） | **Draft** |
 | F0010-规则表 | [F0010_inference_rules_inventory.md](F0010_inference_rules_inventory.md) | 推理规则 ID 清单 + 可行性 | **Review**（文档清单） |
 
-> **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.2.1**
+> **一致性基线**：[`docs/status/DOC_CODE_BASELINE.md`](../status/DOC_CODE_BASELINE.md) · 应用 **v0.3.1**
 
 > **2026-07-11 交叉修订**：F0001 §13、F0002 §10、F0003 §3.3.1、F0004 全文补丁、F0005 §3.2/§10。日终复盘见 [`docs/status/2026-07-11.md`](../status/2026-07-11.md)。

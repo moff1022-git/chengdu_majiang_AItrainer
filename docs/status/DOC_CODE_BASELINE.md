@@ -54,6 +54,7 @@
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0028-4 | **Done** | `players/humanlike/{memory,attention,cognition,policy}.py` + player RP-024–029 / trace v2 |
 | F0028-5 | **Done** | `engine/audit.py`、`players/humanlike/audit_replay.py`、orchestrator Audit v1 接线 |
+| F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
