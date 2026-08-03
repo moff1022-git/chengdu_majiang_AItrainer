@@ -133,6 +133,7 @@ $ENTRY = Join-Path $ROOT "packaging\windows\pyinstaller_entry.py"
   --workpath (Join-Path $ROOT "build\pyinstaller") `
   --add-data "$ROOT\assets;assets" `
   --add-data "$ROOT\configs;configs" `
+  --add-data "$ROOT\players\humanlike\parameter_registry_v2.json;players\humanlike" `
   --hidden-import app_paths `
   --hidden-import version `
   --hidden-import main `
@@ -271,6 +272,7 @@ $ENTRY = Join-Path $ROOT "packaging\windows\pyinstaller_entry.py"
 | W9 | 再来一局 | Hub 复用 / 就绪确认仍可用 |
 | W10 | 2H / 3H | 布局 B/D 可开（F0020） |
 | W11 | 冒烟 CLI | `--version`、`--seat-window --help` |
+| W12 | Humanlike 参数注册表 | onedir 内含 `players/humanlike/parameter_registry_v2.json` |
 
 ---
 

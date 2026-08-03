@@ -49,6 +49,7 @@ Write-Host "==> PyInstaller onedir (windowed) → $OUT"
   --specpath $WORK `
   --add-data "$ROOT\assets;assets" `
   --add-data "$ROOT\configs;configs" `
+  --add-data "$ROOT\players\humanlike\parameter_registry_v2.json;players\humanlike" `
   --hidden-import app_paths `
   --hidden-import version `
   --hidden-import main `

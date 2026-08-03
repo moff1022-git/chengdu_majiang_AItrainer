@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-08-03 — v0.3.1 Windows x64 发布
+
+- 在 Windows 11 x64 完成定向兼容回归 `57 passed`；全仓为
+  `504 passed, 1 failed`，唯一失败是已记录的过期 F0011 合同测试。
+- 修复 PyInstaller/Nuitka 资源清单，补收
+  `players/humanlike/parameter_registry_v2.json`，并新增静态回归测试。
+- 使用 PyInstaller 6.21.0 构建 Windows x64 onedir/ZIP，冻结版
+  `--version`、`--seat-window --help` 与关键资源检查通过。
+- 使用 WiX 3.14.1 生成 per-machine x64 MSI；中文产品名、版本 0.3.1 与语言 2052
+  数据库属性检查通过。
+- Windows ZIP、MSI 与 SHA-256 清单发布到现有 GitHub Release `v0.3.1`。
+
 ## 0.3.1 — 2026-08-02
 
 - 新增 M21 Humanlike 提升计划草案：基于 Task 19 96 单元状态与《成都麻将AI人类化决策规则_v1.md》建立偏差分类、验收门禁和优化任务队列；仅文档变更。

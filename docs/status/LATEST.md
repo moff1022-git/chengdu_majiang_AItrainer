@@ -1,70 +1,46 @@
 # 进度快照
 
+更新时间：`2026-08-03`
 当前应用版本：`0.3.1`
-
-- 新增 Humanlike 提升计划草案：`docs/milestones/M21_humanlike_improvement_plan.md`。当前仅完成 Task 19/规则 v1 偏差审查和任务规划，未修改业务代码。
-- Task 19 设计状态复核见 `docs/status/TASK19_DESIGN_STATUS_REVIEW_2026-08-02.md`：主矩阵 81 个单元，其中 78 个 WAITING_APPROVAL；这些单元包含状态回写滞后、部分实现和确实未实现三类，扩展清单总数尚未确认。
-- M21 已批准进入分阶段自动执行；全量备份：`backup/project_full_20260802_231434/`（约 7.3GB）。只读盘点产物：`docs/status/m21_audit_20260802/`；81 个主单元分类为 `STATE_STALE_CANDIDATE=1`、`REQUIRES_EVIDENCE=77`、`SCAFFOLD_OR_EXTERNAL=3`。Humanlike/UI 定向测试 `19 passed`。
-- 完整方案阶段 A 继续执行：已冻结 Git/运行现场至 `m21_audit_20260802/git_state.txt`，生成 `task19_units_canonical.csv`（81 个、无重复、tracker 全覆盖）、`canonical_summary.json`、`code_contract_scan.txt` 和 `rule_v1_code_test_mapping.csv`。规则文档 20 个章节中 19 个有代码匹配、仅 8 个有直接测试匹配；尚未修改业务代码。
-- 已自动进入阶段 B 前置状态重算：生成 `task19_four_state_model.csv` 与 `four_state_summary.json`。按严格 DONE 公式当前 81 个单元 `DONE=0`（设计 APPROVED=3、实现 IMPLEMENTED=1、验证 PASS=1、审计 PASS=1）；这是证据门禁结果，不代表代码全部不存在。生成 `code_test_evidence_gaps.csv`：76 个缺少可定位代码/测试/证据引用，4 个证据缺口，1 个状态/语义复核项。定向回归仍为 `19 passed`。
-- 自动执行阶段 A/B 继续：生成 `document_reference_scan.json`（原始宽扫描，含历史文本误报）、`document_path_reference_report.json`（明确文件引用缺失 22 项）和 `rule_v1_gap_register.json`（11 个规则章节缺少直接测试映射）。全仓 pytest 结果：`500 passed, 1 skipped, 2 failed`；失败已登记为 numpy 环境依赖缺失和过期 F0011 合同测试，未修改业务代码。
-- 自动执行 finding 处理：安装 numpy 后 CJK 测试 `2 passed`；排除旧 F0011 合同测试后基线为 `498 passed, 1 skipped, 0 failed`。F0011 迁移说明写入 `m21_audit_20260802/recommendation_contract_migration.md`。已生成 clean 归档候选：`releases/v0.3.1-clean-source/`（41MB，1156 文件）与 `releases/v0.3.1-clean-evidence/`（测试摘要和 SHA manifest），未覆盖旧 `releases/v0.3.1/`。
-- 文档引用已分类：145 项有效、14 项待人工语义复核、7 项历史/迁移路径、1 项生成/排除路径。clean baseline gate 当前为 `CANDIDATE_NOT_RELEASE_READY`；已登记当前推荐算法合同测试计划，尚未修改业务代码。
-
-- 已整理本地发布归档：`releases/v0.3.1/`，包含源代码、配置、文档、测试和资源；已排除虚拟环境、运行数据、日志、缓存及构建产物。
-- 已完成测试环境前置检查：`configs/humanlike_v2/compatibility.json` 可读且默认配置校验通过；Humanlike 运行时使用配置文件旁的绝对兼容性路径，不依赖当前工作目录。
-
-0.3.1 范围：纳入 0.3.0 之后的业务/UI/Humanlike v2 与规则修复；明确排除牌局生成工具、性能测试工具、相关专属测试及生成数据。
-
-> 2026-08-02 — F0038 固定牌局回放缺陷修复完成
-
-> 当前新增需求：F0038 公平/随机生成模式已实现并验收。
+发布基线：Git tag `v0.3.1` / commit `a0d5031f0b63fdbd831a6b39520f4e5752ad44b8`
 
 ## 本轮完成
 
-- 修正人类推荐算法设置窗口：选择 `humanlike_v2` 时显示四个座位的 13 种人格预设下拉框，并提供“应用并保存”按钮；非 humanlike 算法时人格控件禁用。代码已通过 Python 编译检查。
+- 在 Windows 11 x64、Python 3.12 x64 上完成 v0.3.1 Windows 兼容性测试。
+- Windows 定向回归：`57 passed`。
+- 全仓回归：`504 passed, 1 failed`；唯一失败为已记录的过期
+  `tests/test_f0011_integrated.py::test_pipeline_f0011_flag` 合同断言，与 Windows
+  兼容性和冻结构建无关。
+- 修复 Windows PyInstaller/Nuitka 构建资源合同：冻结包现在包含
+  `players/humanlike/parameter_registry_v2.json`；新增 3 项静态回归测试。
+- PyInstaller 6.21.0 onedir 构建成功；冻结入口 `--version` 与
+  `--seat-window --help` 均退出 0，PE machine 为 AMD64 (`0x8664`)。
+- WiX 3.14.1 x64 MSI 构建成功；ProductName 中文正常、ProductVersion `0.3.1`、
+  ProductLanguage `2052`。
 
-- 修正固定牌局发牌合同：从庄家开始轮流发 13 轮，再给庄家第 14 张；初始手牌总计 53 张，剩余牌墙 55 张。
-- 修正固定注入的物理牌映射：牌面级数据稳定映射到唯一 `tile_id` 0–107，手牌与剩余牌墙满足引擎物理所有权守恒。
-- 修正能力测试完成统计：成功、失败、尝试数分开记录；全失败为 `FAILED`，部分失败为 `PARTIAL`，并输出聚合失败原因。
-- 删除 Markdown 报告中重复的唯一校验码行。
-- 原 `fairness-20260802-independent-004` 的 50 局固定回放实际为 50/50 `FAILED`，错误为 `wall length 56 != expected 55`，不得作为有效性能或公平性证据。
+## 发布资产
 
-## 验收锚点
-
-- 定向回归：`20 passed`（`tests/test_deal_fairness_generator.py`、`tests/test_ai_capability_test.py`）。
-- 真实固定回放：庄家手牌 14、其余座位 13、牌墙 55；四个 humanlike_v2 座位决策数为 41/46/46/46，以 `last_one` 正常结束。
-- `git diff --check`：通过。
+- `ChengduMahjongAITrainer-0.3.1-windows-x64-PyInstaller.zip`
+  - SHA-256: `762C739EB1044562B07617F0728D8EDF8B836D3ED618FCB0CD53612648083B5C`
+  - 大小：`40,295,251` bytes
+- `ChengduMahjongAITrainer-0.3.1-windows-x64.msi`
+  - SHA-256: `A0B82EF5349BB785CA45B4DAFF7D98E6E5173995A69FFBF92BDC8C57CC91E249`
+  - 大小：`32,534,304` bytes
+- `ChengduMahjongAITrainer-0.3.1-windows-x64-SHA256.txt`
+- Release：`https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.1`
 
 ## 状态与风险
 
-- F0038 保持 `Approved`；2026-08-02 缺陷修正已写入规格并实现。
-- 本轮已删除此前全部旧牌局集，并重新生成两个有效的完整 10000 局编号：`fairness-20260802-random-001`（random）与 `fairness-20260802-fair-001`（fair）。两者首局均满足庄家 14、闲家 13、牌墙 55。
-- 已完成两套新数据集公平性复核：50/100/500/1000/2000/5000/10000 全部 `hard_constraint_status=PASS`、`statistical_status=PASS`。fair 模式在各规模座位初始牌总量严格相等；random 模式因庄家额外第 14 张而存在预期的座位总量小差异，10000 局总量为 s0=132497、s1=132426、s2=132467、s3=132610。
-- 公平模式合规审查结论：部分通过、不能宣称完全符合约定。已通过唯一 game_id、牌墙守恒、庄家每座 2500 局轮换、可复现和统计报告；未实现规格承诺的固定窗口配额约束、候选排列搜索/选择、以及逐局 `balance_window`/`candidate_count`/`selection_index`/seed 坐标/换三张与手牌统计等审计字段。当前 `fair` 实际是“确定性轮换庄家 + 普通洗牌”。
-- 已修复上述公平模式缺口：当前 fair 使用 100 局窗口、每座 25 局庄家配额校验，记录 candidate/selection/seed/wall hash/hand stats 字段；旧编号已删除并重建 `fairness-20260802-random-002` 与 `fairness-20260802-fair-002`。
-- 新数据集 50/100/500/1000/2000/5000/10000 全部 `hard_constraint_status=PASS`、`statistical_status=PASS`；F0038 状态回写为 `Done`。
-- 公平模式进一步实现 16 候选牌墙确定性评分选择（fair-v3）：按窗口内三花色座位计数平方误差最小选择，候选索引稳定可复现。重建 `fairness-20260802-random-003` 与 `fairness-20260802-fair-003` 后，全部规模统计 PASS；fair 10000 局 effect size 约 0.016%/0.011%/0.010%。
-- 按用户要求完成最终重建：删除 `data/fairness` 下全部旧数据，生成 `fairness-20260802-random-004` 与 `fairness-20260802-fair-004`。两套数据 50–10000 局均硬约束/统计 PASS；fair 全部 100 局窗口庄家配额 25/25/25/25，10000 局最大 effect size 约 0.014%。
-- 分析 `fairness-20260802-fair-004` 上 nonhuman 输局：1000 局全部成功，s0 nonhuman 胜率 31.70%、总分 -277；s1/s3 novice 胜率 36.20%/35.90%、总分 204/147。公平数据本身无明显座位花色偏差；主要信号是 nonhuman 每次决策平均 189.9ms（其余约 62ms），配置为 14 候选、搜索深度 8、手牌价值权重 0.45，但并不保证全局最优，且 845 局因牌墙耗尽结束。当前结论为策略/实现效果问题，非数据集公平性问题。
-- 尚未执行全仓回归；本轮仅完成相关模块定向验收和单局真实回放。
-- F0038 生成模式已实现：`--mode fair|random` 与无参数交互选择均可用；规格状态已更新为 `Done`。
-
-## game_id 初始牌局容量结论
-
-- `game_id` 接口接受任意非空字符串，字符串层面没有固定有限上限；自动编号每秒提供 `2^32` 个随机后缀。
-- 引擎通过 BLAKE2b 64 位摘要把 `game_id` 映射为 `master_seed`，因此当前实现至多有 `2^64 = 18,446,744,073,709,551,616` 个种子坐标；不同 ID 可能发生摘要碰撞并得到相同初始结果。
-- 若把 108 张物理牌视为不同，固定庄家时仅“庄家 14、三家各 13、墙 55”的分区数约为 `4.956424 × 10^60`，还未计剩余牌墙顺序；它远大于当前 64 位种子空间，因此项目不可能遍历所有数学上可能的初始牌局。
+- Windows ZIP 与 MSI 自动验收通过；真实 MSI 安装/卸载未自动执行，以避免未经确认的
+  per-machine/UAC 系统变更。
+- Windows EXE/MSI 未做 Authenticode 签名，SmartScreen 可能提示“未知发布者”；符合
+  F0025/F0027 的既定 Out of Scope。
+- 0.3.1 tag 保持不变；本轮资源构建修复将作为 tag 后续提交推送到
+  `release/v0.3.1` 分支，不重写已发布 tag。
 
 ## 下一步队列
 
-- F0042 已批准并待实现：将 13 种 humanlike_v2 预设接入人类玩家推荐与设置界面。
-- F0042 已实现 humanlike_v2 人格推荐 overlay：复用现有合法弃牌/向听/进张分析，仅按预设稳定重排并把预设与算法写入 hints。
-- F0043 新需求已登记为 `Review`：取消人类推荐的 `strategy.rank_discards/F0011` 入口，改为复用现有 `humanlike_v2`、`rule_ai`、`rule_ai_plus` 三种设置窗口可选算法；仅 humanlike_v2 显示 13 种人格预设。
-- F0043 需求修正：完全移除 `HumanPlayerProxy` 内置推荐算法，默认推荐算法改为 `rule_ai`；设置保存后从下一次 discard 请求生效。
-
-1. 用修正版生成器创建新的唯一 test_id，一次生成 10000 局及全部前缀数据集，并检查 manifest/hash/fairness 报告。
-2. 使用新编号执行 50 局 `--replay-fixed-deal` 性能测试，确认 50/50 成功、四座均有决策、报告元数据和失败统计正确。
-3. 对新编号执行 50/100/500/1000/2000/5000/10000 公平性复核，重点解释庄家轮换导致的合理 14 张总量差异。
-4. 执行全仓 pytest，记录任何与 F0038 无关的既有失败；通过后将 F0038 状态更新为 `Done`。
-5. 产品主线随后回到当前 `PLAN.md` / Task 20 已完成基线后的下一批准功能。
+1. 在干净 Windows 10/11 虚拟机中实际安装 MSI，验证开始菜单、启动、开局、日志目录和卸载。
+2. 如需降低 SmartScreen 风险，配置 Authenticode 证书并对 EXE/MSI 签名后重新上传资产。
+3. 将过期 F0011 合同测试迁移到当前推荐算法合同，使全仓回归恢复零失败。
+4. 后续修复应发布为 `0.3.2`，不要重写 `v0.3.1` 源码 tag。

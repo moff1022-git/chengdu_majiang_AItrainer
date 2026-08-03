@@ -51,6 +51,7 @@ $common = @(
     "--include-module=version",
     "--include-data-dir=${ROOT}\assets=assets",
     "--include-data-dir=${ROOT}\configs=configs",
+    "--include-data-file=${ROOT}\players\humanlike\parameter_registry_v2.json=players/humanlike/parameter_registry_v2.json",
     "--output-dir=$OUT",
     "--output-filename=$APP_NAME.exe",
     "--assume-yes-for-downloads",

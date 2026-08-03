@@ -43,6 +43,16 @@
 | O5 | 在 macOS 上 **交叉编译** 出 Windows 二进制（**不支持**；必须在 Windows 上构建） |
 | O6 | 改变引擎规则、座位协议或 UI 布局 |
 
+### 2026-08-03 v0.3.1 发布补充（Approved）
+
+- Windows 冻结包除 `assets/`、`configs/` 外，必须包含
+  `players/humanlike/parameter_registry_v2.json`；该文件是 Humanlike v2
+  参数注册表运行时资源，不得依赖目标机器上的源码树。
+- PyInstaller 与 Nuitka 构建脚本必须采用同一资源合同；MSI 继续完整封装
+  已验收的 PyInstaller onedir。
+- 冻结产物在发布前必须满足：`--version` 退出码 0、
+  `--seat-window --help` 退出码 0、PE machine 为 AMD64 (`0x8664`)。
+
 ---
 
 ## 3. 设计
