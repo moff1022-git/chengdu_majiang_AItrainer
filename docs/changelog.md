@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-03 — 清理本仓 C1 采集数据
+
+- 会话产生的视频/标注图/难度报告已迁至 `chengdumajiang_vision_capturer`，**本仓不再保留**该数据集与 research 目录。
+- 仅保留 F0038 方案文档（无媒体资产）。
+
+
 ## 2026-08-03 — C1 训练：Mac 可运行性检查
 
 - 新增 `docs/research/c1_video_capture_difficulty/MAC_RUNTIME.md`：欢乐麻将/JJ/人人/微信小游戏/禅游渠道在 macOS 的运行路径与 C1 采集建议。

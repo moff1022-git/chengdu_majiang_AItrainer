@@ -4,17 +4,13 @@
 
 当前应用版本：`0.3.1`
 
-## 本轮
+## 状态
 
-- **C1 视觉采集调研资产已迁出**至独立项目  
-  `../chengdumajiang_vision_capturer/`  
-  说明见 [`docs/research/c1_video_capture_difficulty_MOVED.md`](../research/c1_video_capture_difficulty_MOVED.md)
-- F0038 方案文档仍在本仓；报告/视频/标注图在 capturer 仓
+- 本仓为 **成都麻将 AI 训练器**（引擎 / UI / Humanlike / 打包）。
+- 视觉采集（C1 视频/标注/报告）**不在本仓保留**；独立项目：  
+  `../chengdumajiang_vision_capturer/`
+- F0038（线上平台 AI 接入方案）文档仍在 `docs/features/`（方案文，非采集数据集）。
 
-## 后续工作位置
+## 下一步（本仓）
 
-视觉采集程序开发请打开：
-
-`grok build/chengdumajiang_vision_capturer`
-
-本仓继续引擎 / AI / 打包等。
+按产品需要继续引擎/AI/打包等；视觉采集请到 `chengdumajiang_vision_capturer` 会话。

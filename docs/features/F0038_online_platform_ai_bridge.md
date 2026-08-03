@@ -749,7 +749,7 @@ state.rivers[seat] = ordered list[tile_id]   # 已确认
 | 2026-07-26 | Draft | 用户调研需求；初稿曾暂编号冲突，现以 **F0038** 落盘于 v0.3.1 基线 |
 | 2026-08-03 | Draft | 用户指定方案 C 细化：补充对手弃牌 / 副露 / 自家手牌的观测采集可行性与实施步骤（§4.4.1–4.4.10） |
 | 2026-08-03 | Draft | 用户判定 **C0 无实操性**；**初步主路径 C1**；新增 §4.4.11 C1 详细实现路径 |
-| 2026-08-03 | Draft | 公开视频调研报告（已迁至姊妹项目）：[`../../chengdumajiang_vision_capturer/docs/research/c1_video_capture_difficulty/REPORT.md`](../../../chengdumajiang_vision_capturer/docs/research/c1_video_capture_difficulty/REPORT.md) |
+| 2026-08-03 | Draft | 公开视频调研/标注数据集**不在本仓**；见姊妹项目 `chengdumajiang_vision_capturer` |
 
 ---
 
