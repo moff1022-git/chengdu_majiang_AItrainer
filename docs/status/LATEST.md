@@ -4,13 +4,17 @@
 
 当前应用版本：`0.3.1`
 
-## 本轮完成
+## 本轮
 
-- 文档：调研产品在 **macOS 可运行性** → [`docs/research/c1_video_capture_difficulty/MAC_RUNTIME.md`](../research/c1_video_capture_difficulty/MAC_RUNTIME.md)
-- **Mac 上优先可跑**：腾讯欢乐麻将（App Store 原生 Mac）、本项目 GUI；微信小游戏需 Mac 微信实测；JJ/人人多为 M1+ iPad 转 Mac（未验证）。
+- **C1 视觉采集调研资产已迁出**至独立项目  
+  `../chengdumajiang_vision_capturer/`  
+  说明见 [`docs/research/c1_video_capture_difficulty_MOVED.md`](../research/c1_video_capture_difficulty_MOVED.md)
+- F0038 方案文档仍在本仓；报告/视频/标注图在 capturer 仓
 
-## 下一步
+## 后续工作位置
 
-1. 本机实测填 MAC_RUNTIME §3 表格
-2. 选定采集源：`欢乐麻将 Mac` 或 `微信小游戏`
-3. 实现教练 C1
+视觉采集程序开发请打开：
+
+`grok build/chengdumajiang_vision_capturer`
+
+本仓继续引擎 / AI / 打包等。
