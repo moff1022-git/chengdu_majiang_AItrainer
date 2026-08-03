@@ -6,13 +6,15 @@
 
 ## 本轮完成
 
-- **F0038** 修订方案 C：**C1 为采集主路径**（用户认定 C0 整副手录无实操性）。
-- 新增 **§4.4.11 C1 详细实现路径**（Layout Profile、截帧、检测/分类、河差分、副露、置信降级、M0–M6、工作量）。
-- 文档：[`docs/features/F0038_online_platform_ai_bridge.md`](../features/F0038_online_platform_ai_bridge.md)
-- **无业务代码**。
+- **独立报告**：公开实玩视频 → 分游戏 **C1 画面采集难度**分析  
+  - [`docs/research/c1_video_capture_difficulty/REPORT.md`](../research/c1_video_capture_difficulty/REPORT.md)  
+  - 视频清单：`video_catalog.md`  
+  - 难易标注图：`frames/annot_*.jpg`  
+- 覆盖：欢乐麻将、JJ 麻将、微信川麻血战类、人人等合集、泛川麻噪声集（每类 ≥10 条公开链接/入口）  
+- 局限已写明：环境限制下用结构示意标注 + URL 清单，落地需真机重标定  
 
-## 下一步队列
+## 下一步
 
-1. 指定首发目标客户端 + 分辨率 → `确认 F0038 C1` / `目标客户端：…`
-2. Approved 后开实现规格 F0039 + 编码 C1-M0（schema/Policy/HUD）
-3. C1-M1 标定工具 → M2 手牌识别 → M3 河 → M4 副露 → M5 串联
+1. 选定 C1 首发客户端（报告建议：微信川麻血战类或先 C2 合成）  
+2. 真机录 30min + 人工抽帧补全「像素级」标注集  
+3. `确认 F0038 C1` → 实现 M0–M2  

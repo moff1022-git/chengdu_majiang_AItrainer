@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-03 — C1 公开视频画面采集难度报告
+
+- 新增独立调研 [`docs/research/c1_video_capture_difficulty/REPORT.md`](research/c1_video_capture_difficulty/REPORT.md)：分游戏检索公开实玩视频、C1 采集难度评分、难易标注图与视频清单。
+- 结论摘要：微信川麻血战类相对适合作 C1 MVP；欢乐/JJ 3D 更难；客户端不明视频仅作噪声集。
+
 ## 2026-08-03 — F0038 方案 C1 主路径细化
 
 - 用户判定 **C0 整副手录无实操性**；方案 C **初步主路径改为 C1**（区域截图+视觉识别）。
