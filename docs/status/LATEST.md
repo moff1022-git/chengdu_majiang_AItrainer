@@ -22,6 +22,9 @@
 - F0062：固定测试编号、fixed deal、复盘CLI Done。
 - F0063：真实SIGINT、无交互resume、trace完整性门禁和Linux RSS已验收（35,880 KiB）。
 - F0064：盲测、多阵容与向听/进张审计已完成；盲测CI跨0，不晋级参数。
+- F0065已启动主代理监控：新数据集`fairness-20260805-blind-002` 10000局，SHA `5d3dfc305e3df07d2b10b8c04682a4de456203f9d96eac73003c25e31354e50c`；Nonhuman完整trace/Expert长测后台运行，状态见`data/ai_capability/results/f0065_monitor/status.json`。
+- F0065主盲测完成：Nonhuman 956、Expert -51，差值+1007，95% CI `[+0.0561,+0.1448]`；两组10000/10000成功，Nonhuman trace完整。
+- F0065四阵容8组完成：novice +73、normal +126、skilled +123、expert +124；均1000/1000成功；全仓回归`525 passed, 1 skipped`。
 
 ## 状态与风险
 

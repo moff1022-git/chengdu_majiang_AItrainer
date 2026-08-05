@@ -193,6 +193,11 @@ def test_fixed_dataset_loader_accepts_flat_manifest_prefix(tmp_path):
     assert meta["dataset_sha256"] == capability_test.hashlib.sha256(expected).hexdigest()
 
 
+def test_list_test_groups_is_noninteractive(capsys):
+    assert capability_test.main(["--list-test-groups"]) == 0
+    assert "fairness-20260805-blind-001" in capsys.readouterr().out
+
+
 def test_resume_pending_is_based_on_game_id_not_row_count():
     ids = ["g0", "g1", "g2"]
     completed = {"g1"}

@@ -1663,6 +1663,8 @@
 
 - Analysis: 汇总Nonhuman vs Expert完整进展与目标演变；确认旧差距主因是高杠偏好及speed/hand_value权重失衡，正式栈已通过9000局跨数据集门禁，后续目标转为盲测泛化与防回退。
 - F0064: 新盲测Nonhuman 160 vs Expert 131，但配对95% CI `[-0.172,+0.198]`跨0；四阵容8组固定100局成功；完成F0057 shanten/dingque/ukeire只读统计，正式参数不变。
+- F0065: 增加测试组索引CLI、`--yes`无人值守入口和flat manifest兼容；生成10000局新盲测数据并启动主代理监控长测。
+- F0065: 主盲测10000局完成，Nonhuman相对Expert +1007，95% CI `[+0.0561,+0.1448]`；四阵容8组1000局全部成功且方向正向；全仓`525 passed, 1 skipped`。
 - F0063: 实现真实SIGINT安全持久化与退出130，修复process worker中断逃逸和`--resume`错误进入交互的问题。
 - F0063: 报告增加成功局trace完整性统计与门禁，JSON/Markdown统一写入固定数据集及复现元数据。
 - F0063: 固定100局完整复盘100/100成功、100/100 trace完整；全仓`522 passed, 1 skipped`。

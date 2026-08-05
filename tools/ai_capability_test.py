@@ -410,7 +410,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--replay-trace", action="store_true")
     parser.add_argument("--humanlike-preset", choices=PRESET_IDS)
     parser.add_argument("--humanlike-presets", help="batch四座preset，逗号分隔；非humanlike座位可留空")
+    parser.add_argument("--yes", action="store_true", help="跳过启动确认")
+    parser.add_argument("--list-test-groups", action="store_true", help="列出可用固定牌局组")
     args = parser.parse_args(argv)
+    if args.list_test_groups:
+        for test_id in available_test_ids():
+            try:
+                manifest = json.loads((ROOT / "data/fairness" / test_id / "manifest.json").read_text(encoding="utf-8"))
+                counts = manifest.get("supported_counts") or ([manifest.get("games")] if manifest.get("games") else [])
+                print(json.dumps({"test_id": test_id, "mode": manifest.get("mode"), "games": counts, "sha256": manifest.get("sha256"), "seed": manifest.get("seed")}, ensure_ascii=False))
+            except (OSError, json.JSONDecodeError):
+                continue
+        return 0
     resume_config = None
     if args.resume:
         resume_path = Path(args.resume) / "config.json"
@@ -454,7 +465,7 @@ def main(argv: list[str] | None = None) -> int:
             args.executor = "serial" if "humanlike_v2" in selected_specs else "thread"
         if args.threads is None:
             args.threads = 1 if args.executor == "serial" else int(choose_option("workers", [str(x) for x in THREAD_OPTIONS]))
-        if confirm_run(args.games, args.mode, args.target, args.threads, executor=args.executor, memory_budget_mib=args.memory_budget_mib): break
+        if args.yes or confirm_run(args.games, args.mode, args.target, args.threads, executor=args.executor, memory_budget_mib=args.memory_budget_mib): break
         print("已取消，返回参数选择。")
         args.games = None; args.target = None; args.players = None; args.mode = None; args.threads = None; args.executor = None; args.humanlike_preset = None; batch_presets = None
     if args.mode == "capability":
