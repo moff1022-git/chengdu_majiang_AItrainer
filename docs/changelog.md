@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-05 — Humanlike安全集成与F0060设计
+
+- F0040–F0059从断开历史的Humanlike分支安全移植到最新远端main基线；未使用无关历史合并。
+- F0060受控多进程批跑设计Approved，本轮未修改runner。
+- 集成分支全仓`512 passed, 1 skipped`；GitHub分支无Actions运行记录。
+- Humanlike设置备份和推荐算法旁车确认为本地运行状态，加入gitignore并保留。
+
 ## 2026-08-03 — 清理本仓 C1 采集数据
 
 - 会话产生的视频/标注图/难度报告已迁至 `chengdumajiang_vision_capturer`，**本仓不再保留**该数据集与 research 目录。

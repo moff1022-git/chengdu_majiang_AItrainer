@@ -1,8 +1,8 @@
 # 文档 ↔ 程序一致性基线
 
-> **日期**：2026-07-29  
-> **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：F0028-5 Docs-First 规格、实现与验收已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
+> **日期**：2026-08-05  
+> **应用版本**：`0.3.1`（`version.py`）  
+> **Git**：Humanlike F0040–F0059已在最新远端main基线上安全集成；F0060为Approved设计；全仓`512 passed, 1 skipped`
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -12,13 +12,13 @@
 
 | 线 | 权威位置 | 当前值 |
 |----|----------|--------|
-| 应用 SemVer | `version.py` → `APP_VERSION` | **0.2.1** |
+| 应用 SemVer | `version.py` → `APP_VERSION` | **0.3.1** |
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` | F0028-1–6、Human 换三张修复及验收记录已提交 |
-| Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
-| 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
+| Git 集成基线 | `integration/v0.3.1-humanlike` | 基于`origin/main@2198225d`；Humanlike提交已移植并通过全仓回归 |
+| Git 远端 | `origin` | main更新后以推送返回的HEAD为准 |
+| 当前发布记录 | `v0.3.1` | Release与tag已存在；本轮不创建新版本 |
 
 ---
 
@@ -54,6 +54,9 @@
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0028-4 | **Done** | `players/humanlike/{memory,attention,cognition,policy}.py` + player RP-024–029 / trace v2 |
 | F0028-5 | **Done** | `engine/audit.py`、`players/humanlike/audit_replay.py`、orchestrator Audit v1 接线 |
+| F0056 | **Done** | Nonhuman正式验证栈：gang `.50`、权重`.40/.20/.25/.15` |
+| F0057–F0059 | **Done** | 候选审计、人格快照/雷达、人类推荐F0011退役合同 |
+| F0060 | **Approved** | Humanlike受控多进程批跑设计；尚未实现 |
 | F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
