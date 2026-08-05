@@ -6,6 +6,7 @@
 - 恢复`--test-id --dataset-games --replay-fixed-deal --replay-trace`及交互测试编号选择。
 - 双进程固定2局完整trace smoke 2/2成功；全仓分片`518 passed, 1 skipped`。
 - 校准worker内存模型并维持`DEFAULT_WORKER_MIB=96`。
+- F0062 main CI run `30972352679`通过。
 
 ## 2026-08-05 — F0060多进程runner与F0061 CI
 

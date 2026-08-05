@@ -41,3 +41,4 @@
 - resume读取config绑定并按game_id计算pending，不假设连续前缀。
 - process trace smoke 2/2成功，每局生成steps/audit/终局文件。
 - runner定向`22 passed`；全仓分片`518 passed, 1 skipped`。
+- GitHub main run `30972352679`通过。

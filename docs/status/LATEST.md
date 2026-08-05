@@ -11,6 +11,7 @@
 - F0062 Done：恢复测试编号、数据集规模、fixed deal与完整复盘CLI；config/report绑定数据集SHA与复现方式。
 - 最新先前文档提交CI已通过：main run `30967645984`，HEAD `95794f09`。
 - 本轮全仓分片回归：`518 passed, 1 skipped`。
+- F0062远端main CI通过：run `30972352679`，HEAD `5347e282`，作业耗时2分58秒。
 
 ## 当前功能基线
 
