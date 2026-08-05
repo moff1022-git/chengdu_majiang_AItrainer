@@ -67,6 +67,11 @@ def load_fixed_dataset(test_id: str, games: int, *, fairness_root: Path | None =
     if manifest.get("test_id") != test_id:
         raise ValueError("dataset manifest test_id mismatch")
     dataset = (manifest.get("datasets") or {}).get(str(games))
+    flat_games = int(manifest.get("games", -1))
+    flat_prefix = False
+    if not dataset and 0 < games <= flat_games and manifest.get("artifact") and manifest.get("sha256"):
+        dataset = {"artifact": manifest["artifact"], "sha256": manifest["sha256"]}
+        flat_prefix = games < flat_games
     if not dataset:
         raise ValueError(f"dataset {test_id} does not provide {games} games")
     artifact = root / dataset["artifact"]
@@ -75,6 +80,10 @@ def load_fixed_dataset(test_id: str, games: int, *, fairness_root: Path | None =
     if digest != dataset["sha256"]:
         raise ValueError("dataset SHA-256 mismatch")
     deals = [json.loads(line) for line in payload.decode("utf-8").splitlines() if line]
+    if flat_prefix:
+        deals = deals[:games]
+        prefix_payload = "".join(json.dumps(deal, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n" for deal in deals).encode("utf-8")
+        digest = hashlib.sha256(prefix_payload).hexdigest()
     if len(deals) != games or len({deal["game_id"] for deal in deals}) != games:
         raise ValueError("dataset game count or game_id uniqueness mismatch")
     return deals, {"test_id": test_id, "dataset_games": games, "dataset_sha256": digest, "dataset_artifact": str(artifact)}

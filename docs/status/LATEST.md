@@ -12,6 +12,7 @@
 - 报告JSON/Markdown统一绑定测试编号、数据集SHA、fixed_deal、完整复盘和四座人格参数快照。
 - GitHub Actions增加手动Linux RSS smoke，不延长常规push门禁。
 - 本轮定向测试：`25 passed`；全仓回归：`522 passed, 1 skipped`。
+- F0064已完成：全新1000局盲测两组均1000/1000且trace完整；Nonhuman +29但95% CI跨0。四种对手阵容8组固定100局均成功；F0057字段只读统计完成。
 
 ## 当前功能基线
 
@@ -19,7 +20,8 @@
 - F0060：受控多进程、恢复、完整trace隔离Done。
 - F0061：GitHub pytest CI Done。
 - F0062：固定测试编号、fixed deal、复盘CLI Done。
-- F0063：真实SIGINT、无交互resume、trace完整性门禁已实现；Linux RSS CI待本提交推送后验收。
+- F0063：真实SIGINT、无交互resume、trace完整性门禁和Linux RSS已验收（35,880 KiB）。
+- F0064：盲测、多阵容与向听/进张审计已完成；盲测CI跨0，不晋级参数。
 
 ## 状态与风险
 
@@ -29,7 +31,6 @@
 
 ## 下一步完整任务清单
 
-1. 修复F0063 Linux RSS workflow的仓库模块路径，重新触发并记录RSS；当前run `30973389287`因`ModuleNotFoundError: engine`失败。建议触发语：`继续F0063 Linux验收`。
-2. 在全新未参与调参的数据集做正式Nonhuman vs Expert盲测。依赖：F0063闭环。建议触发语：`执行Nonhuman全新盲测`。
-3. 执行novice/normal/skilled/expert混合阵容分层验证。依赖：任务2报告合同。建议触发语：`执行Nonhuman多阵容验证`。
-4. 只读分析F0057新增shanten/ukeire审计字段，定位剩余可泛化差距。依赖：任务2新trace。建议触发语：`分析Nonhuman新审计字段`。
+1. 新盲测数据集扩大配对样本。建议触发语：`扩大Nonhuman盲测`。
+2. 多阵容扩大至每阵容1000局。建议触发语：`扩大多阵容验证`。
+3. 深化候选分差与shanten/ukeire关联审计。建议触发语：`深化F0057审计`。

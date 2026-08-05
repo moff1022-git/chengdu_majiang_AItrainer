@@ -164,6 +164,35 @@ def test_fixed_dataset_loader_verifies_manifest_hash_and_unique_ids(tmp_path):
     assert meta["dataset_sha256"] == digest
 
 
+def test_fixed_dataset_loader_accepts_flat_generator_manifest(tmp_path):
+    root = tmp_path / "flat"; root.mkdir()
+    rows = [{"game_id": "g0"}, {"game_id": "g1"}]
+    payload = "".join(json.dumps(row) + "\n" for row in rows).encode()
+    (root / "deals.jsonl").write_bytes(payload)
+    digest = capability_test.hashlib.sha256(payload).hexdigest()
+    (root / "manifest.json").write_text(json.dumps({
+        "test_id": "flat", "games": 2, "artifact": "deals.jsonl", "sha256": digest,
+    }))
+    deals, meta = load_fixed_dataset("flat", 2, fairness_root=tmp_path)
+    assert [deal["game_id"] for deal in deals] == ["g0", "g1"]
+    assert meta["dataset_sha256"] == digest
+
+
+def test_fixed_dataset_loader_accepts_flat_manifest_prefix(tmp_path):
+    root = tmp_path / "flat"; root.mkdir()
+    rows = [{"game_id": f"g{i}"} for i in range(3)]
+    payload = "".join(json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n" for row in rows).encode()
+    (root / "deals.jsonl").write_bytes(payload)
+    (root / "manifest.json").write_text(json.dumps({
+        "test_id": "flat", "games": 3, "artifact": "deals.jsonl",
+        "sha256": capability_test.hashlib.sha256(payload).hexdigest(),
+    }))
+    deals, meta = load_fixed_dataset("flat", 2, fairness_root=tmp_path)
+    expected = "".join(json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n" for row in rows[:2]).encode()
+    assert [deal["game_id"] for deal in deals] == ["g0", "g1"]
+    assert meta["dataset_sha256"] == capability_test.hashlib.sha256(expected).hexdigest()
+
+
 def test_resume_pending_is_based_on_game_id_not_row_count():
     ids = ["g0", "g1", "g2"]
     completed = {"g1"}
