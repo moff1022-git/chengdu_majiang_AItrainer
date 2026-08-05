@@ -67,6 +67,8 @@
 
 见 `MACOS_BUILD.md` §4。单元：`tests/test_app_paths.py`。
 
+构建脚本必须打包并验证`assets/`、`configs/`和`players/humanlike/parameter_registry_v2.json`；任一资源缺失时构建失败。
+
 ---
 
 ## 5. 状态历史
@@ -74,3 +76,4 @@
 | 日期 | 状态 | 说明 |
 |------|------|------|
 | 2026-07-26 | Done | 用户要求生成 mac 版 PyInstaller + Nuitka 打包与文档 |
+| 2026-08-03 | Done | 补充Humanlike参数注册表资源合同和构建后门禁 |

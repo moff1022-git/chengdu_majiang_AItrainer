@@ -41,6 +41,7 @@ echo "==> PyInstaller (CLI onedir + windowed app) → $OUT"
   --specpath "$WORK" \
   --add-data "${ROOT}/assets:assets" \
   --add-data "${ROOT}/configs:configs" \
+  --add-data "${ROOT}/players/humanlike/parameter_registry_v2.json:players/humanlike" \
   --hidden-import app_paths \
   --hidden-import version \
   --hidden-import main \
@@ -85,6 +86,10 @@ if [[ ! -d "$APP" ]]; then
 fi
 
 if [[ -n "${APP:-}" && -d "$APP" ]]; then
+  RESOURCE_ROOT="$APP/Contents/Resources"
+  test -d "$RESOURCE_ROOT/assets"
+  test -d "$RESOURCE_ROOT/configs"
+  test -f "$RESOURCE_ROOT/players/humanlike/parameter_registry_v2.json"
   # Stamp Info.plist short version from version.py
   PLIST="$APP/Contents/Info.plist"
   if [[ -f "$PLIST" ]]; then
@@ -110,8 +115,9 @@ if [[ -n "${APP:-}" && -d "$APP" ]]; then
     "$BIN" --seat-window --help 2>&1 | head -12 || true
   fi
 else
-  echo "WARN: .app not found; listing $OUT" >&2
+  echo "ERROR: .app not found; listing $OUT" >&2
   find "$OUT" -maxdepth 4 2>/dev/null | head -60
+  exit 1
 fi
 
 # Project-local release copy (alongside Nuitka)

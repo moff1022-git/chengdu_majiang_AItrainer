@@ -47,6 +47,7 @@ set +e
   --include-module=version \
   --include-data-dir="${ROOT}/assets=assets" \
   --include-data-dir="${ROOT}/configs=configs" \
+  --include-data-file="${ROOT}/players/humanlike/parameter_registry_v2.json=players/humanlike/parameter_registry_v2.json" \
   --output-dir="$OUT" \
   --output-filename="${APP_NAME}" \
   --assume-yes-for-downloads \
@@ -70,6 +71,7 @@ if [[ $STATUS -ne 0 ]]; then
     --include-module=version \
     --include-data-dir="${ROOT}/assets=assets" \
     --include-data-dir="${ROOT}/configs=configs" \
+    --include-data-file="${ROOT}/players/humanlike/parameter_registry_v2.json=players/humanlike/parameter_registry_v2.json" \
     --output-dir="$OUT" \
     --output-filename="${APP_NAME}" \
     --assume-yes-for-downloads \
@@ -89,6 +91,10 @@ find "$OUT" -maxdepth 3 \( -name "*.app" -o -name "${APP_NAME}*" \) 2>/dev/null 
 
 APP="$OUT/${APP_NAME}.app"
 if [[ -d "$APP" ]]; then
+  RESOURCE_ROOT="$APP/Contents/MacOS"
+  test -d "$RESOURCE_ROOT/assets"
+  test -d "$RESOURCE_ROOT/configs"
+  test -f "$RESOURCE_ROOT/players/humanlike/parameter_registry_v2.json"
   # Project-local release copy (easier to find than dist/nuitka/)
   REL_DIR="${ROOT}/releases/macos"
   REL_APP="${REL_DIR}/${APP_NAME}-Nuitka.app"
@@ -112,6 +118,9 @@ if [[ -d "$APP" ]]; then
   echo "Recommended run (ASCII path):"
   echo "  cp -R \"$REL_APP\" /Applications/"
   echo "  open /Applications/${APP_NAME}.app"
+else
+  echo "ERROR: Nuitka .app not found under $OUT" >&2
+  exit 1
 fi
 
 echo ""

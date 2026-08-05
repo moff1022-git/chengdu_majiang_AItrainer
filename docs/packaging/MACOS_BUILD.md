@@ -4,7 +4,7 @@
 |------|-----|
 | **平台** | macOS 12+（arm64 / x86_64；本文在 **Apple Silicon arm64** 上验证流程） |
 | **入口** | `main.py`（GUI 默认 `gui`；座位窗 `--seat-window`） |
-| **数据** | `assets/`、`configs/` 打入包；运行时日志写到 `~/Library/Application Support/ChengduMahjongAITrainer/` |
+| **数据** | `assets/`、`configs/`、Humanlike参数注册表打入包；运行时日志写到 `~/Library/Application Support/ChengduMahjongAITrainer/` |
 | **工具** | [PyInstaller](https://pyinstaller.org/) · [Nuitka](https://nuitka.net/) |
 | **脚本** | `tools/packaging/build_pyinstaller_macos.sh` · `tools/packaging/build_nuitka_macos.sh` |
 | **规格** | [`docs/features/F0021_macos_packaging.md`](../features/F0021_macos_packaging.md) |
@@ -22,14 +22,14 @@
 | 主程序 | Pygame 大厅 / 主桌；`SeatUIHub` 广播 |
 | 座位窗 ×4 | Tk `players.seat_window`（play / watch） |
 
-开发态：`python -m players.seat_window ...`  
+开发态：`python -m players.seat_window ...`
 **打包态**：同一可执行文件再拉起自身并带 **`--seat-window`**（见 `app_paths.seat_window_command`）。
 
 因此必须：
 
-1. 把 `assets/`、`configs/` 作为数据文件打进包  
-2. 冻结后能正确解析资源路径（`app_paths.resource_root`）  
-3. 可写目录用 `app_paths.logs_dir()`（勿写进 `.app` 只读区）  
+1. 把`assets/`、`configs/`和`players/humanlike/parameter_registry_v2.json`打进包
+2. 冻结后能正确解析资源路径（`app_paths.resource_root`）
+3. 可写目录用 `app_paths.logs_dir()`（勿写进 `.app` 只读区）
 4. 优先 **onedir / 应用包目录结构**，避免 onefile 解压竞态（多子进程）
 
 ---
@@ -186,18 +186,18 @@ releases/macos/
 
 ### 3.3 注意
 
-- Nuitka 对 pygame 偶发需额外 `--include-module`；脚本里已加常见项。  
-- 若 app 启动失败，先用 **standalone 目录** 在终端运行看 stderr。  
-- 与 PyInstaller 相同：子进程靠 `--seat-window` 再入。  
-- **路径必须是 ASCII（重要）**：Nuitka 运行时解析二进制目录时，若 `.app` 位于含**中文/空格特殊字符**的路径（例如 OneDrive「共享的库」）下，会直接 `abort`（SIGABRT）。  
-  - 构建可在原仓库进行；**运行前请复制到纯英文路径**，例如：  
+- Nuitka 对 pygame 偶发需额外 `--include-module`；脚本里已加常见项。
+- 若 app 启动失败，先用 **standalone 目录** 在终端运行看 stderr。
+- 与 PyInstaller 相同：子进程靠 `--seat-window` 再入。
+- **路径必须是 ASCII（重要）**：Nuitka 运行时解析二进制目录时，若 `.app` 位于含**中文/空格特殊字符**的路径（例如 OneDrive「共享的库」）下，会直接 `abort`（SIGABRT）。
+  - 构建可在原仓库进行；**运行前请复制到纯英文路径**，例如：
     ```bash
     cp -R dist/nuitka/ChengduMahjongAITrainer.app /Applications/
     open /Applications/ChengduMahjongAITrainer.app
     # 或
     cp -R dist/nuitka/ChengduMahjongAITrainer.app /tmp/
     /tmp/ChengduMahjongAITrainer.app/Contents/MacOS/ChengduMahjongAITrainer --seat-window --help
-    ```  
+    ```
   - PyInstaller 产物在中文路径下一般仍可运行；Nuitka 更敏感。
 ---
 
@@ -214,6 +214,7 @@ releases/macos/
 | P7 | 牌面 / 主题 | green/blue 资源正常 |
 | P8 | 日志目录 | Application Support 下有 logs |
 | P9 | 再来一局 | Hub 复用 / 就绪确认仍可用 |
+| P10 | 运行资源门禁 | assets、configs、Humanlike参数注册表均存在；缺失时脚本失败 |
 
 ---
 
@@ -241,10 +242,10 @@ xattr -cr dist/pyinstaller/ChengduMahjongAITrainer.app
 
 ## 7. 与 Windows 的关系
 
-F0005 兼容逻辑仍在代码中；**本文件仅覆盖 macOS 打包命令与产物**。  
+F0005 兼容逻辑仍在代码中；**本文件仅覆盖 macOS 打包命令与产物**。
 Windows 打包规格与手册：
 
-- 规格：[`docs/features/F0025_windows_packaging.md`](../features/F0025_windows_packaging.md)  
-- 手册：[`docs/packaging/WINDOWS_BUILD.md`](WINDOWS_BUILD.md)  
+- 规格：[`docs/features/F0025_windows_packaging.md`](../features/F0025_windows_packaging.md)
+- 手册：[`docs/packaging/WINDOWS_BUILD.md`](WINDOWS_BUILD.md)
 
 须在 **Windows 主机** 构建；模式同为 onedir + `--seat-window` 再入。
