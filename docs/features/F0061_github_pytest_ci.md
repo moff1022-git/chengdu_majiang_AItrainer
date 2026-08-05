@@ -29,3 +29,4 @@
 
 - `.github/workflows/pytest.yml`已实现Python 3.12 pytest门禁、pip缓存、并发取消和20分钟超时。
 - 首次远端运行仅因缺少CJK字体失败；补字体后CJK检测通过并暴露surfarray缺NumPy，补齐两项测试环境依赖后的结果见`LATEST.md`。
+- 最终main run `30967455466`在HEAD `b5a9b354`通过，测试步骤与作业结论均为success。

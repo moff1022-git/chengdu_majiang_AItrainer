@@ -9,6 +9,7 @@
 - 固定100局性能验收：serial 341.241秒，process workers 2为168.367秒，加速2.027x；两组100/100成功、逐局终局100%一致。
 - process估算峰值137.078 MiB，低于1024 MiB预算。
 - F0061 Done：新增GitHub Actions Python 3.12 pytest工作流，覆盖main、integration/**、codex/**和pull request。
+- main远端CI通过：run `30967455466`，HEAD `b5a9b354`，Python 3.12全仓测试步骤成功。
 - 本地全仓分片回归：`513 passed, 1 skipped`。
 - 两个本地配置旁车继续保留并由gitignore排除；未删除用户运行状态。
 
@@ -21,7 +22,7 @@
 
 ## 状态与风险
 
-- macOS沙箱内Python process semaphore查询会被拒绝；正常终端/GitHub runner不受该Codex沙箱限制。
+- macOS Codex沙箱内Python process semaphore查询会被拒绝；授权后的正常终端运行不受此限制。
 - 单进程全仓pytest在当前执行环境可能被外部终止；四片独立进程全部通过。
 - capability和batch统一使用spawn-safe worker；历史`--threads`仍兼容，新接口推荐`--executor/--workers/--memory-budget-mib`。
 

@@ -6,6 +6,7 @@
 - F0061新增GitHub Actions Python 3.12 pytest工作流。
 - CI首次运行仅CJK字体测试失败，补充Ubuntu `fonts-noto-cjk`系统依赖后重跑。
 - 第二次CI的CJK检测通过，随后暴露pygame surfarray缺NumPy；将NumPy加入CI测试依赖。
+- 最终main pytest run `30967455466`通过，F0061远端验收闭环。
 - 全仓分片回归`513 passed, 1 skipped`。
 
 ## 2026-08-05 — Humanlike安全集成与F0060设计
