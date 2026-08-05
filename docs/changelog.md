@@ -4,6 +4,7 @@
 
 - F0060实现受控spawn多进程批跑和内存预算；固定100局process workers 2较serial加速2.027x，逐局结果100%一致。
 - F0061新增GitHub Actions Python 3.12 pytest工作流。
+- CI首次运行仅CJK字体测试失败，补充Ubuntu `fonts-noto-cjk`系统依赖后重跑。
 - 全仓分片回归`513 passed, 1 skipped`。
 
 ## 2026-08-05 — Humanlike安全集成与F0060设计

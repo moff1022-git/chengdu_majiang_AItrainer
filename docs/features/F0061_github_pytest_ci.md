@@ -10,7 +10,7 @@
 ## 方案
 
 - GitHub Actions使用Ubuntu与Python 3.12。
-- 安装`requirements.txt`与pytest，运行`python -m pytest -q`。
+- 安装Ubuntu `fonts-noto-cjk`、`requirements.txt`与pytest，运行`python -m pytest -q`；CJK字体属于UI测试必要环境依赖。
 - 设置`PYTHONPYCACHEPREFIX`到runner临时目录；不上传data、复盘、虚拟环境或构建产物。
 - 触发范围：push到`main`、`integration/**`、`codex/**`及所有pull request。
 - 使用concurrency取消同一ref的过期运行。
@@ -28,4 +28,4 @@
 ## 验收记录
 
 - `.github/workflows/pytest.yml`已实现Python 3.12 pytest门禁、pip缓存、并发取消和20分钟超时。
-- 本地全仓分片回归`513 passed, 1 skipped`；远端run结果见`LATEST.md`。
+- 首次远端运行显示`513 passed, 1 skipped`且仅因Ubuntu缺少CJK字体失败；补充`fonts-noto-cjk`后重跑结果见`LATEST.md`。
