@@ -212,11 +212,29 @@ def summarize(rows: list[dict], specs: list[str], requested: int, interrupted: b
     return {"requested": requested, "completed": len(rows), "interrupted": interrupted, "players": specs, "presets": preset_list, "preset_parameters": snapshots, "seats": seats}
 
 
+def trace_integrity(out: Path, rows: list[dict]) -> dict:
+    successful = [row["game_id"] for row in rows if row.get("status") != "FAILED"]
+    missing = []
+    for game_id in successful:
+        root = out / "traces" / game_id
+        required = (root / f"{game_id}.steps.jsonl", root / f"{game_id}.audit.jsonl", root / f"{game_id}.json")
+        if not all(path.is_file() and path.stat().st_size > 0 for path in required):
+            missing.append(game_id)
+    return {"successful_games": len(successful), "complete_games": len(successful) - len(missing), "missing_games": missing, "complete": not missing}
+
+
 def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int, interrupted: bool, code: str | None = None, presets=None, report_stamp: str | None = None) -> None:
     report_stamp = report_stamp or datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
     summary = summarize(rows, specs, requested, interrupted, presets)
     if code:
         summary["verification_code"] = code
+    config_path = out / "config.json"
+    config = json.loads(config_path.read_text(encoding="utf-8")) if config_path.exists() else {}
+    for key in ("test_id", "dataset_games", "dataset_sha256", "dataset_artifact", "replay_mode", "replay_trace"):
+        if key in config:
+            summary[key] = config[key]
+    if config.get("replay_trace"):
+        summary["trace_integrity"] = trace_integrity(out, rows)
     summary_text = json.dumps(summary, ensure_ascii=False, indent=2)
     (out / f"summary_{report_stamp}.json").write_text(summary_text, encoding="utf-8")
     (out / "summary.json").write_text(summary_text, encoding="utf-8")
@@ -231,11 +249,12 @@ def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int,
     report_csv_latest.write_text(report_csv.read_text(encoding="utf-8"), encoding="utf-8")
     lines = ["# AI 能力测试报告", "", f"- 请求/完成：{requested}/{len(rows)}", f"- 状态：{'已中断（可续跑）' if interrupted else '已完成'}"]
     if code: lines.append(f"- 唯一校验码：`{code}`")
-    config_path = out / "config.json"
-    if config_path.exists():
-        config = json.loads(config_path.read_text(encoding="utf-8"))
+    if config:
         if config.get("test_id"):
             lines.extend((f"- 测试编号：`{config['test_id']}`", f"- 数据集规模：`{config['dataset_games']}`", f"- 数据集 SHA-256：`{config['dataset_sha256']}`", f"- 复现方式：`{config.get('replay_mode', 'game_id')}`", f"- 完整复盘：`{bool(config.get('replay_trace'))}`"))
+    if summary.get("trace_integrity"):
+        ti = summary["trace_integrity"]
+        lines.append(f"- 复盘完整性：`{ti['complete_games']}/{ti['successful_games']}`；门禁：`{'PASS' if ti['complete'] else 'FAIL'}`")
     lines.append(f"- humanlike_v2 人格预设：`{json.dumps(dict(enumerate(summary['presets'])), ensure_ascii=False)}`")
     lines.append(f"- 人格参数快照：`{json.dumps(dict(enumerate(summary['preset_parameters'])), ensure_ascii=False, sort_keys=True)}`")
     lines += ["", "|座位|AI|胜局/胜率|Top1率|总分/均分|平均/P95响应(ms)|", "|---|---|---:|---:|---:|---:|"]
@@ -339,7 +358,6 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
         exp_presets = [preset_id if (target == "humanlike_v2" and seat == experiment["seat"]) else None for seat in range(4)] if preset_id else None
         tasks = [(index, experiment["players"], ids[index], exp_presets, None, None) for index in pending]
         for index, row in execute_tasks(tasks, executor=executor, workers=workers, should_stop=lambda: STOP):
-            if STOP: break
             rows.append(row)
             write_outputs(run_dir, rows, experiment["players"], games, True, presets=exp_presets, report_stamp=run_stamp)
             (run_dir / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -349,6 +367,7 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
             rate = elapsed / completed_total if completed_total else 0.0
             eta = rate * (total - completed_total)
             print(f"\r能力评估 {progress_bar(completed_total, total)} 总局数 {completed_total}/{total} 校验码 {code} 实验 {number}/{len(experiments)} {name} 局 {len(rows)}/{games} 已运行 {elapsed:.1f}s 剩余约 {eta:.1f}s", end="", flush=True)
+            if STOP: break
         write_outputs(run_dir, rows, experiment["players"], games, len(rows) < games, presets=presets, report_stamp=run_stamp)
         target_stat = summarize(rows, experiment["players"], games, len(rows) < games)["seats"][experiment["seat"]]
         aggregate.append({"baseline": experiment["baseline"], "target_seat": f"s{experiment['seat']}", **target_stat})
@@ -381,12 +400,33 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--replay-fixed-deal", action="store_true")
     parser.add_argument("--replay-trace", action="store_true")
     parser.add_argument("--humanlike-preset", choices=PRESET_IDS)
+    parser.add_argument("--humanlike-presets", help="batch四座preset，逗号分隔；非humanlike座位可留空")
     args = parser.parse_args(argv)
+    resume_config = None
+    if args.resume:
+        resume_path = Path(args.resume) / "config.json"
+        if not resume_path.is_file():
+            parser.error(f"--resume 缺少配置文件：{resume_path}")
+        resume_config = json.loads(resume_path.read_text(encoding="utf-8"))
+        args.mode = "batch"
+        args.games = int(resume_config["games"])
+        args.players = ",".join(resume_config["players"])
+        args.executor = resume_config.get("executor", args.executor or "serial")
+        args.threads = int(resume_config.get("workers", resume_config.get("threads", args.threads or 1)))
+        args.test_id = resume_config.get("test_id")
+        args.dataset_games = resume_config.get("dataset_games")
+        batch_presets = resume_config.get("presets")
+    else:
+        batch_presets = None
     if args.workers is not None:
         if args.workers < 1: parser.error("--workers 必须大于0")
         args.threads = args.workers
-    batch_presets = None
-    while True:
+    if args.humanlike_presets is not None:
+        values = [value.strip() or None for value in args.humanlike_presets.split(",")]
+        if len(values) != 4 or any(value is not None and value not in PRESET_IDS for value in values):
+            parser.error("--humanlike-presets 必须是四个合法preset/空值")
+        batch_presets = values
+    while not args.resume:
         if args.mode is None:
             args.mode = choose_option("测试模式", ["batch", "capability"])
         if args.games is None:
@@ -418,7 +458,7 @@ def main(argv: list[str] | None = None) -> int:
     config_path = out / "config.json"
     rows = []
     if args.resume:
-        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config = resume_config or json.loads(config_path.read_text(encoding="utf-8"))
         args.games, specs = int(config["games"]), list(config["players"])
         games_file = out / "games.jsonl"
         if games_file.exists(): rows = [json.loads(line) for line in games_file.read_text(encoding="utf-8").splitlines() if line]
@@ -454,20 +494,28 @@ def main(argv: list[str] | None = None) -> int:
     fixed = config_data.get("replay_mode") == "fixed_deal"
     replay_trace = bool(config_data.get("replay_trace"))
     tasks = [(index, specs, ids[index], batch_presets, deals_by_id.get(ids[index]) if fixed else None, str(out / "traces" / ids[index]) if replay_trace else None) for index in pending]
-    for index, row in execute_tasks(tasks, executor=args.executor, workers=args.threads, should_stop=lambda: STOP):
-        if STOP: break
-        rows.append(row)
-        rows.sort(key=lambda item: ids.index(item.get("game_id", "")))
-        elapsed = time.perf_counter() - wall_start
-        rate = elapsed / max(1, len(rows) - (index - (len(rows) - 1)))
-        eta = rate * (args.games - len(rows))
-        write_outputs(out, rows, specs, args.games, True, code, presets=batch_presets, report_stamp=report_stamp)
-        (out / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
-        score_text = " ".join(f"s{s}:{row.get('scores', {}).get(str(s), 0)}" for s in range(4))
-        print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} executor={args.executor} workers={args.threads} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
+    try:
+        for index, row in execute_tasks(tasks, executor=args.executor, workers=args.threads, should_stop=lambda: STOP):
+            rows.append(row)
+            rows.sort(key=lambda item: ids.index(item.get("game_id", "")))
+            elapsed = time.perf_counter() - wall_start
+            rate = elapsed / max(1, len(rows) - (index - (len(rows) - 1)))
+            eta = rate * (args.games - len(rows))
+            write_outputs(out, rows, specs, args.games, True, code, presets=batch_presets, report_stamp=report_stamp)
+            (out / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
+            score_text = " ".join(f"s{s}:{row.get('scores', {}).get(str(s), 0)}" for s in range(4))
+            print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} executor={args.executor} workers={args.threads} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
+            if STOP: break
+    except KeyboardInterrupt:
+        # SIGINT can also reach a process worker.  Its future then re-raises
+        # KeyboardInterrupt in the parent even though our signal handler has
+        # already requested a graceful stop.  Treat both paths identically so
+        # completed rows are checkpointed and the CLI exits with 130.
+        STOP = True
     print()
     write_outputs(out, rows, specs, args.games, len(rows) < args.games, code, presets=batch_presets, report_stamp=report_stamp)
-    return 130 if STOP else 0
+    integrity = trace_integrity(out, rows) if replay_trace else {"complete": True}
+    return 130 if STOP else (1 if len(rows) == args.games and not integrity["complete"] else 0)
 
 
 if __name__ == "__main__":

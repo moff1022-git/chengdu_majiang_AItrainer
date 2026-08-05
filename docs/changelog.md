@@ -1659,3 +1659,9 @@
 - F0036: 修复 capability 人格预设记录与目标座位注入，避免预设列表嵌套。
 - F0036: 调整 batch 座位配置交互，humanlike_v2 人格预设与对应座位同步选择。
 - F0036: batch 模式接入 ThreadPoolExecutor 并发执行，修复选择 10 线程仍串行的问题。
+# 2026-08-05
+
+- F0063: 实现真实SIGINT安全持久化与退出130，修复process worker中断逃逸和`--resume`错误进入交互的问题。
+- F0063: 报告增加成功局trace完整性统计与门禁，JSON/Markdown统一写入固定数据集及复现元数据。
+- F0063: 固定100局完整复盘100/100成功、100/100 trace完整；全仓`522 passed, 1 skipped`。
+- CI: 增加手动触发Linux RSS smoke job，用于校准worker内存模型。

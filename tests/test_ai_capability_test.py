@@ -1,6 +1,6 @@
 import json
 
-from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, effective_workers, execute_tasks, game_ids, load_fixed_dataset, progress_bar, run_game, summarize, verification_code
+from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, effective_workers, execute_tasks, game_ids, load_fixed_dataset, progress_bar, run_game, summarize, trace_integrity, verification_code
 import tools.ai_capability_test as capability_test
 
 
@@ -185,3 +185,54 @@ def test_serial_executor_stops_before_submitting_more_tasks(monkeypatch):
     rows = list(execute_tasks(tasks, executor="serial", workers=1, should_stop=lambda: len(called) >= 2))
     assert [index for index, _ in rows] == [0, 1]
     assert called == [0, 1]
+
+
+def test_trace_integrity_reports_missing_and_complete_games(tmp_path):
+    rows = [{"game_id": "g0"}, {"game_id": "g1"}]
+    root = tmp_path / "traces" / "g0"; root.mkdir(parents=True)
+    for suffix in ("steps.jsonl", "audit.jsonl", "json"):
+        (root / f"g0.{suffix}").write_text("x")
+    assert trace_integrity(tmp_path, rows) == {"successful_games": 2, "complete_games": 1, "missing_games": ["g1"], "complete": False}
+
+
+def test_main_treats_worker_keyboard_interrupt_as_graceful_sigint(tmp_path, monkeypatch):
+    monkeypatch.setattr(capability_test, "STOP", False)
+    monkeypatch.setattr(capability_test, "confirm_run", lambda *args, **kwargs: True)
+    monkeypatch.setattr(capability_test, "choose_option", lambda *args, **kwargs: "不使用")
+    monkeypatch.setattr(capability_test, "execute_tasks", lambda *args, **kwargs: (_ for _ in ()).throw(KeyboardInterrupt()))
+    monkeypatch.setattr(capability_test.signal, "signal", lambda *args: None)
+    argv = [
+        "ai_capability_test.py", "--mode", "batch", "--games", "100",
+        "--players", "random,random,random,random", "--executor", "serial",
+        "--output", str(tmp_path),
+    ]
+    assert capability_test.main(argv[1:]) == 130
+    out = tmp_path / "100_random_random_random_random"
+    assert (out / "config.json").exists()
+
+
+def test_resume_loads_config_without_interactive_prompts(tmp_path, monkeypatch):
+    out = tmp_path / "run"; out.mkdir()
+    (out / "config.json").write_text(json.dumps({
+        "games": 100, "players": ["random"] * 4, "presets": [None] * 4,
+        "executor": "serial", "workers": 1, "memory_budget_mib": 128,
+        "game_ids": [f"g{i}" for i in range(100)], "replay_mode": "game_id",
+        "replay_trace": False,
+    }))
+    monkeypatch.setattr(capability_test, "choose_option", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("interactive prompt")))
+    monkeypatch.setattr(capability_test, "execute_tasks", lambda *args, **kwargs: (_ for _ in ()).throw(KeyboardInterrupt()))
+    monkeypatch.setattr(capability_test.signal, "signal", lambda *args: None)
+    monkeypatch.setattr(capability_test, "STOP", False)
+    assert capability_test.main(["--resume", str(out)]) == 130
+
+
+def test_json_summary_carries_replay_provenance(tmp_path):
+    (tmp_path / "config.json").write_text(json.dumps({
+        "test_id": "fair-001", "dataset_games": 100, "dataset_sha256": "abc",
+        "replay_mode": "fixed_deal", "replay_trace": True,
+    }))
+    capability_test.write_outputs(tmp_path, [], ["random"] * 4, 100, True, report_stamp="meta")
+    summary = json.loads((tmp_path / "summary_meta.json").read_text())
+    assert summary["test_id"] == "fair-001"
+    assert summary["dataset_sha256"] == "abc"
+    assert summary["replay_mode"] == "fixed_deal" and summary["replay_trace"] is True

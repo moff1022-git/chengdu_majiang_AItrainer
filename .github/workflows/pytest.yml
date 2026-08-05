@@ -1,6 +1,7 @@
 name: pytest
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -33,3 +34,15 @@ jobs:
           PYTHONPYCACHEPREFIX: ${{ runner.temp }}/pycache
           SDL_VIDEODRIVER: dummy
         run: python -m pytest -q
+  linux-rss-smoke:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - name: Sample serial RSS
+        run: /usr/bin/time -v python tools/ai_capability_test.py --mode batch --games 100 --players random,random,random,random --executor serial --workers 1 --output /tmp/rss-smoke <<< y
