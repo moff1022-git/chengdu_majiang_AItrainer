@@ -16,7 +16,9 @@ from types import MethodType
 from engine.config import EngineConfig
 from engine.orchestrator import PlayerGameRunner
 from players.registry import create_players
-from players.humanlike.personality_presets import PRESET_IDS
+from players.humanlike.personality_presets import PRESET_IDS, apply_personality_preset
+from players.humanlike.config import load_config
+from players.humanlike.player import default_humanlike_config_path
 
 ROOT = Path(__file__).resolve().parents[1]
 COUNTS = (100, 200, 500, 1000, 2000, 5000, 10000)
@@ -93,6 +95,15 @@ def _percentile(values: list[float], fraction: float) -> float:
 
 
 def summarize(rows: list[dict], specs: list[str], requested: int, interrupted: bool, presets=None) -> dict:
+    preset_list = list(presets or [None] * len(specs))
+    template = load_config(default_humanlike_config_path()).normalized_dict()["players"][0]
+    snapshots = []
+    for player_type, preset_id in zip(specs, preset_list):
+        if player_type != "humanlike_v2" or not preset_id:
+            snapshots.append(None); continue
+        player = apply_personality_preset(template, preset_id)
+        profile = player["profile"]; gp025 = player["cognitive_parameters"]["GP-025"]; gp026 = player["cognitive_parameters"]["GP-026"]
+        snapshots.append({"preset_id": preset_id, "profile": {k: profile[k] for k in ("peng_preference", "gang_preference", "big_hand_preference", "defense_awareness", "plan_persistence", "thinking_speed")}, "GP-025": {k: gp025[k] for k in ("emotional_stability", "habit_strength", "max_error_probability", "near_equal_randomness")}, "GP-026": {k: gp026[k] for k in ("min_candidates", "max_candidates", "search_depth", "attention_capacity", "satisfaction_threshold") } | {"decision_weights": dict(gp026["decision_weights"])}})
     seats = []
     for seat, player_type in enumerate(specs):
         scores = [int(row.get("scores", {}).get(str(seat), 0)) for row in rows if row.get("status") != "FAILED"]
@@ -110,7 +121,7 @@ def summarize(rows: list[dict], specs: list[str], requested: int, interrupted: b
             "p99_response_ms": _percentile(latencies, .99) * 1000,
             "max_response_ms": max(latencies, default=0.0) * 1000,
         })
-    return {"requested": requested, "completed": len(rows), "interrupted": interrupted, "players": specs, "presets": presets or [None] * len(specs), "seats": seats}
+    return {"requested": requested, "completed": len(rows), "interrupted": interrupted, "players": specs, "presets": preset_list, "preset_parameters": snapshots, "seats": seats}
 
 
 def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int, interrupted: bool, code: str | None = None, presets=None, report_stamp: str | None = None) -> None:
@@ -132,6 +143,8 @@ def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int,
     report_csv_latest.write_text(report_csv.read_text(encoding="utf-8"), encoding="utf-8")
     lines = ["# AI 能力测试报告", "", f"- 请求/完成：{requested}/{len(rows)}", f"- 状态：{'已中断（可续跑）' if interrupted else '已完成'}"]
     if code: lines.append(f"- 唯一校验码：`{code}`")
+    lines.append(f"- humanlike_v2 人格预设：`{json.dumps(dict(enumerate(summary['presets'])), ensure_ascii=False)}`")
+    lines.append(f"- 人格参数快照：`{json.dumps(dict(enumerate(summary['preset_parameters'])), ensure_ascii=False, sort_keys=True)}`")
     lines += ["", "|座位|AI|胜局/胜率|Top1率|总分/均分|平均/P95响应(ms)|", "|---|---|---:|---:|---:|---:|"]
     for s in summary["seats"]:
         lines.append(f"|{s['seat']}|{s['player']}|{s['wins']} / {s['win_rate']:.2%}|{s['top1_rate']:.2%}|{s['total_score']} / {s['average_score']:.2f}|{s['avg_response_ms']:.3f} / {s['p95_response_ms']:.3f}|")
