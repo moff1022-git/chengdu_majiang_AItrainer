@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-05 — F0060恢复/trace与F0062固定数据集CLI
+
+- process执行器改为有界调度，stop后不再提交新任务；resume按game_id去重。
+- 恢复`--test-id --dataset-games --replay-fixed-deal --replay-trace`及交互测试编号选择。
+- 双进程固定2局完整trace smoke 2/2成功；全仓分片`518 passed, 1 skipped`。
+- 校准worker内存模型并维持`DEFAULT_WORKER_MIB=96`。
+
 ## 2026-08-05 — F0060多进程runner与F0061 CI
 
 - F0060实现受控spawn多进程批跑和内存预算；固定100局process workers 2较serial加速2.027x，逐局结果100%一致。

@@ -49,3 +49,5 @@
 - 固定100局：serial `341.241s`，process workers 2 `168.367s`，加速`2.027x`；两组均100/100成功且逐局终局100%一致。
 - process估算总峰值约`137.078 MiB`，低于`1024 MiB`预算。
 - 全仓分片回归`513 passed, 1 skipped`。
+- 有界调度仅保持`workers`个在途任务，stop回调命中后不再提交新任务；resume按game_id去重。
+- process完整trace smoke 2/2成功，每局独立目录均包含steps、audit和终局JSON。

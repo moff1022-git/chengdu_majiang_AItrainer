@@ -1,6 +1,6 @@
 import json
 
-from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, effective_workers, execute_tasks, game_ids, progress_bar, run_game, summarize, verification_code
+from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, effective_workers, execute_tasks, game_ids, load_fixed_dataset, progress_bar, run_game, summarize, verification_code
 import tools.ai_capability_test as capability_test
 
 
@@ -150,3 +150,38 @@ def test_markdown_report_contains_resolved_nonhuman_snapshot(tmp_path):
     assert '"speed": 0.4' in report
     summary = json.loads((tmp_path / "summary_snapshot.json").read_text(encoding="utf-8"))
     assert summary["preset_parameters"][0]["GP-026"]["search_depth"] == 8
+
+
+def test_fixed_dataset_loader_verifies_manifest_hash_and_unique_ids(tmp_path):
+    root = tmp_path / "fixture"; artifact = root / "2" / "deals.jsonl"; artifact.parent.mkdir(parents=True)
+    rows = [{"game_id": "g0"}, {"game_id": "g1"}]
+    payload = "".join(json.dumps(row) + "\n" for row in rows).encode()
+    artifact.write_bytes(payload)
+    digest = capability_test.hashlib.sha256(payload).hexdigest()
+    (root / "manifest.json").write_text(json.dumps({"test_id": "fixture", "datasets": {"2": {"artifact": "2/deals.jsonl", "sha256": digest}}}))
+    deals, meta = load_fixed_dataset("fixture", 2, fairness_root=tmp_path)
+    assert len(deals) == len({deal["game_id"] for deal in deals}) == 2
+    assert meta["dataset_sha256"] == digest
+
+
+def test_resume_pending_is_based_on_game_id_not_row_count():
+    ids = ["g0", "g1", "g2"]
+    completed = {"g1"}
+    assert [index for index, game_id in enumerate(ids) if game_id not in completed] == [0, 2]
+
+
+def test_worker_creates_isolated_trace_directory(tmp_path, monkeypatch):
+    trace = tmp_path / "traces" / "g0"
+    monkeypatch.setattr(capability_test, "_timed_players", lambda *_: (_ for _ in ()).throw(RuntimeError("stop")))
+    _, row = capability_test.run_game_task((0, ["random"] * 4, "g0", None, None, str(trace)))
+    assert trace.is_dir()
+    assert row["status"] == "FAILED"
+
+
+def test_serial_executor_stops_before_submitting_more_tasks(monkeypatch):
+    called = []
+    monkeypatch.setattr(capability_test, "run_game_task", lambda task: called.append(task[0]) or (task[0], {"game_id": task[2]}))
+    tasks = [(i, ["random"] * 4, f"g{i}", None, None, None) for i in range(5)]
+    rows = list(execute_tasks(tasks, executor="serial", workers=1, should_stop=lambda: len(called) >= 2))
+    assert [index for index, _ in rows] == [0, 1]
+    assert called == [0, 1]

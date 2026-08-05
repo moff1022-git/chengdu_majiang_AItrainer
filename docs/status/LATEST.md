@@ -5,29 +5,28 @@
 
 ## 本轮已完成
 
-- F0060 Done：能力测试runner增加`serial/thread/process`执行器、spawn进程worker、workers与内存预算限制；Humanlike默认serial。
-- 固定100局性能验收：serial 341.241秒，process workers 2为168.367秒，加速2.027x；两组100/100成功、逐局终局100%一致。
-- process估算峰值137.078 MiB，低于1024 MiB预算。
-- F0061 Done：新增GitHub Actions Python 3.12 pytest工作流，覆盖main、integration/**、codex/**和pull request。
-- main远端CI通过：run `30967455466`，HEAD `b5a9b354`，Python 3.12全仓测试步骤成功。
-- 本地全仓分片回归：`513 passed, 1 skipped`。
-- 两个本地配置旁车继续保留并由gitignore排除；未删除用户运行状态。
+- F0060恢复/trace增强：process改为有界任务调度，stop后不再提交新任务；resume按game_id去重。
+- process完整trace固定2局smoke：2/2成功，每局独立目录均有steps、audit和终局JSON。
+- 完成worker内存校准：`DEFAULT_WORKER_MIB=96`相对实测51.25 MiB保留1.87倍安全系数，维持不变。
+- F0062 Done：恢复测试编号、数据集规模、fixed deal与完整复盘CLI；config/report绑定数据集SHA与复现方式。
+- 最新先前文档提交CI已通过：main run `30967645984`，HEAD `95794f09`。
+- 本轮全仓分片回归：`518 passed, 1 skipped`。
 
 ## 当前功能基线
 
-- F0040–F0056：Nonhuman联合验证栈Done；正式gang `.50`，权重`.40/.20/.25/.15`。
-- F0057–F0059：候选审计、人格快照/雷达、人类推荐F0011退役合同Done。
-- F0060：受控多进程批跑Done；process为显式可选，Humanlike默认serial。
+- F0040–F0059：Nonhuman验证、候选审计、人格快照及推荐合同Done。
+- F0060：受控多进程、恢复、完整trace隔离Done。
 - F0061：GitHub pytest CI Done。
+- F0062：固定测试编号、fixed deal、复盘CLI Done。
 
 ## 状态与风险
 
-- macOS Codex沙箱内Python process semaphore查询会被拒绝；授权后的正常终端运行不受此限制。
-- 单进程全仓pytest在当前执行环境可能被外部终止；四片独立进程全部通过。
-- capability和batch统一使用spawn-safe worker；历史`--threads`仍兼容，新接口推荐`--executor/--workers/--memory-budget-mib`。
+- macOS Codex沙箱内process semaphore需授权；普通终端不受限制。
+- `DEFAULT_WORKER_MIB=96`已有macOS证据；Linux精确RSS尚未采样，继续采用保守值。
+- data不进Git，固定数据集CLI在无本地manifest时不会显示测试编号选项。
 
 ## 下一步完整任务清单
 
-1. 扩充F0060 Ctrl-C/process恢复和完整trace多进程集成测试。依赖：可控信号测试夹具。建议触发语：`补F0060恢复与trace测试`。
-2. 根据机器内存校准`DEFAULT_WORKER_MIB=96`，形成macOS/CI两套基准。依赖：多进程RSS采样。建议触发语：`校准F0060内存模型`。
-3. 将固定数据集CLI选择能力重新整合进当前runner。依赖：先审计F0038历史实现。建议触发语：`恢复测试编号和固定牌局CLI`。
+1. 为process模式增加真实SIGINT子进程集成测试，而非仅stop回调单元测试。依赖：可控慢worker夹具。建议触发语：`补真实SIGINT集成测试`。
+2. 在Linux runner增加小规模RSS采样，校准CI worker模型。依赖：不延长常规pytest门禁。建议触发语：`增加Linux内存采样任务`。
+3. 为fixed dataset增加报告trace完整性计数和缺失门禁。依赖：F0062现有trace目录合同。建议触发语：`增加trace完整性报告门禁`。

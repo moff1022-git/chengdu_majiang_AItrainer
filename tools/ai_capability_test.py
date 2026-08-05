@@ -56,6 +56,30 @@ def game_ids(count: int) -> list[str]:
     return (found + [gid for gid in generated if gid not in used])[:count]
 
 
+def available_test_ids() -> list[str]:
+    return sorted(path.parent.name for path in (ROOT / "data/fairness").glob("*/manifest.json"))
+
+
+def load_fixed_dataset(test_id: str, games: int, *, fairness_root: Path | None = None) -> tuple[list[dict], dict]:
+    root = (fairness_root or (ROOT / "data/fairness")) / test_id
+    manifest_path = root / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("test_id") != test_id:
+        raise ValueError("dataset manifest test_id mismatch")
+    dataset = (manifest.get("datasets") or {}).get(str(games))
+    if not dataset:
+        raise ValueError(f"dataset {test_id} does not provide {games} games")
+    artifact = root / dataset["artifact"]
+    payload = artifact.read_bytes()
+    digest = hashlib.sha256(payload).hexdigest()
+    if digest != dataset["sha256"]:
+        raise ValueError("dataset SHA-256 mismatch")
+    deals = [json.loads(line) for line in payload.decode("utf-8").splitlines() if line]
+    if len(deals) != games or len({deal["game_id"] for deal in deals}) != games:
+        raise ValueError("dataset game count or game_id uniqueness mismatch")
+    return deals, {"test_id": test_id, "dataset_games": games, "dataset_sha256": digest, "dataset_artifact": str(artifact)}
+
+
 def verification_code(*, games: int, game_id_list: list[str], players: list[str], mode: str, target: str | None = None) -> str:
     payload = {"games": games, "game_ids": game_id_list, "players": players, "mode": mode, "target": target}
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -99,6 +123,8 @@ def run_game_task(task: tuple[int, list[str], str, list[str | None] | None, dict
     """Spawn-safe game worker; it never writes shared reports/checkpoints."""
     index, specs, game_id, presets, fixed_deal, trace_path = task
     try:
+        if trace_path:
+            Path(trace_path).mkdir(parents=True, exist_ok=True)
         players, timing = _timed_players(specs, presets)
         started = time.perf_counter()
         result = PlayerGameRunner(
@@ -122,19 +148,31 @@ def effective_workers(requested: int, pending: int, memory_budget_mib: int, *, w
     return actual, reason
 
 
-def execute_tasks(tasks, *, executor: str, workers: int):
+def execute_tasks(tasks, *, executor: str, workers: int, should_stop=lambda: False):
     """Yield completed `(index, row)` pairs using the selected backend."""
     if executor == "serial" or workers == 1:
-        yield from map(run_game_task, tasks)
+        for task in tasks:
+            if should_stop(): break
+            yield run_game_task(task)
         return
     pool_type = ProcessPoolExecutor if executor == "process" else ThreadPoolExecutor
     kwargs = {"max_workers": workers}
     if executor == "process":
         kwargs["mp_context"] = multiprocessing.get_context("spawn")
     with pool_type(**kwargs) as pool:
-        futures = [pool.submit(run_game_task, task) for task in tasks]
-        for future in as_completed(futures):
+        task_iter = iter(tasks)
+        futures = set()
+        for _ in range(workers):
+            if should_stop(): break
+            try: futures.add(pool.submit(run_game_task, next(task_iter)))
+            except StopIteration: break
+        while futures:
+            future = next(as_completed(futures))
+            futures.remove(future)
             yield future.result()
+            if not should_stop():
+                try: futures.add(pool.submit(run_game_task, next(task_iter)))
+                except StopIteration: pass
 
 
 def _percentile(values: list[float], fraction: float) -> float:
@@ -193,6 +231,11 @@ def write_outputs(out: Path, rows: list[dict], specs: list[str], requested: int,
     report_csv_latest.write_text(report_csv.read_text(encoding="utf-8"), encoding="utf-8")
     lines = ["# AI 能力测试报告", "", f"- 请求/完成：{requested}/{len(rows)}", f"- 状态：{'已中断（可续跑）' if interrupted else '已完成'}"]
     if code: lines.append(f"- 唯一校验码：`{code}`")
+    config_path = out / "config.json"
+    if config_path.exists():
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        if config.get("test_id"):
+            lines.extend((f"- 测试编号：`{config['test_id']}`", f"- 数据集规模：`{config['dataset_games']}`", f"- 数据集 SHA-256：`{config['dataset_sha256']}`", f"- 复现方式：`{config.get('replay_mode', 'game_id')}`", f"- 完整复盘：`{bool(config.get('replay_trace'))}`"))
     lines.append(f"- humanlike_v2 人格预设：`{json.dumps(dict(enumerate(summary['presets'])), ensure_ascii=False)}`")
     lines.append(f"- 人格参数快照：`{json.dumps(dict(enumerate(summary['preset_parameters'])), ensure_ascii=False, sort_keys=True)}`")
     lines += ["", "|座位|AI|胜局/胜率|Top1率|总分/均分|平均/P95响应(ms)|", "|---|---|---:|---:|---:|---:|"]
@@ -295,7 +338,7 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
         pending = list(range(len(rows), games))
         exp_presets = [preset_id if (target == "humanlike_v2" and seat == experiment["seat"]) else None for seat in range(4)] if preset_id else None
         tasks = [(index, experiment["players"], ids[index], exp_presets, None, None) for index in pending]
-        for index, row in execute_tasks(tasks, executor=executor, workers=workers):
+        for index, row in execute_tasks(tasks, executor=executor, workers=workers, should_stop=lambda: STOP):
             if STOP: break
             rows.append(row)
             write_outputs(run_dir, rows, experiment["players"], games, True, presets=exp_presets, report_stamp=run_stamp)
@@ -333,6 +376,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--executor", choices=EXECUTORS)
     parser.add_argument("--workers", type=int)
     parser.add_argument("--memory-budget-mib", type=int, default=1024)
+    parser.add_argument("--test-id")
+    parser.add_argument("--dataset-games", type=int)
+    parser.add_argument("--replay-fixed-deal", action="store_true")
+    parser.add_argument("--replay-trace", action="store_true")
     parser.add_argument("--humanlike-preset", choices=PRESET_IDS)
     args = parser.parse_args(argv)
     if args.workers is not None:
@@ -350,6 +397,9 @@ def main(argv: list[str] | None = None) -> int:
                 args.humanlike_preset = choose_option("humanlike_v2 人格预设", list(PRESET_IDS))
         elif args.players is None:
             args.players, batch_presets = choose_batch_configuration()
+        if args.mode == "batch" and args.test_id is None and available_test_ids():
+            selected = choose_option("固定测试编号", ["不使用"] + available_test_ids())
+            args.test_id = None if selected == "不使用" else selected
         selected_specs = ([args.target] if args.mode == "capability" else ([item.strip() for item in args.players.split(",")] if args.players else []))
         if args.executor is None:
             args.executor = "serial" if "humanlike_v2" in selected_specs else "thread"
@@ -373,15 +423,24 @@ def main(argv: list[str] | None = None) -> int:
         games_file = out / "games.jsonl"
         if games_file.exists(): rows = [json.loads(line) for line in games_file.read_text(encoding="utf-8").splitlines() if line]
     else:
-        ids = game_ids(args.games)
+        if args.dataset_games is not None and args.dataset_games != args.games:
+            parser.error("--dataset-games 必须与 --games 一致")
+        deals, dataset_meta = load_fixed_dataset(args.test_id, args.games) if args.test_id else (None, {})
+        ids = [deal["game_id"] for deal in deals] if deals else game_ids(args.games)
         code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
         actual_workers, worker_reason = effective_workers(args.threads, args.games, args.memory_budget_mib)
         if args.executor == "serial": actual_workers = 1
         args.threads = actual_workers
-        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "executor": args.executor, "workers": actual_workers, "memory_budget_mib": args.memory_budget_mib, "worker_limit_reason": worker_reason, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
+        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "executor": args.executor, "workers": actual_workers, "memory_budget_mib": args.memory_budget_mib, "worker_limit_reason": worker_reason, "game_ids": ids, "verification_code": code, **dataset_meta, "replay_mode": "fixed_deal" if (args.replay_fixed_deal or args.replay_trace) else "game_id", "replay_trace": bool(args.replay_trace)}, ensure_ascii=False, indent=2), encoding="utf-8")
     config_data = json.loads(config_path.read_text(encoding="utf-8"))
     ids = config_data["game_ids"]
     batch_presets = config_data.get("presets", batch_presets or [None] * 4)
+    deals_by_id = {}
+    if config_data.get("test_id"):
+        loaded_deals, checked_meta = load_fixed_dataset(config_data["test_id"], int(config_data["dataset_games"]))
+        if checked_meta["dataset_sha256"] != config_data["dataset_sha256"]:
+            raise ValueError("resume dataset SHA-256 differs from config")
+        deals_by_id = {deal["game_id"]: deal for deal in loaded_deals}
     if args.resume:
         args.executor = config_data.get("executor", args.executor or "serial")
         args.threads = int(config_data.get("workers", config_data.get("threads", args.threads or 1)))
@@ -390,9 +449,12 @@ def main(argv: list[str] | None = None) -> int:
     signal.signal(signal.SIGINT, lambda *_: globals().__setitem__("STOP", True))
     wall_start = time.perf_counter()
     report_stamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
-    pending = list(range(len(rows), args.games))
-    tasks = [(index, specs, ids[index], batch_presets, None, None) for index in pending]
-    for index, row in execute_tasks(tasks, executor=args.executor, workers=args.threads):
+    completed_ids = {row.get("game_id") for row in rows}
+    pending = [index for index, game_id in enumerate(ids) if game_id not in completed_ids]
+    fixed = config_data.get("replay_mode") == "fixed_deal"
+    replay_trace = bool(config_data.get("replay_trace"))
+    tasks = [(index, specs, ids[index], batch_presets, deals_by_id.get(ids[index]) if fixed else None, str(out / "traces" / ids[index]) if replay_trace else None) for index in pending]
+    for index, row in execute_tasks(tasks, executor=args.executor, workers=args.threads, should_stop=lambda: STOP):
         if STOP: break
         rows.append(row)
         rows.sort(key=lambda item: ids.index(item.get("game_id", "")))

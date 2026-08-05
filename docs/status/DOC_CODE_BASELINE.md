@@ -58,6 +58,7 @@
 | F0057–F0059 | **Done** | 候选审计、人格快照/雷达、人类推荐F0011退役合同 |
 | F0060 | **Done** | serial/thread/process、spawn worker与内存预算；固定100局process 2.027x且逐局一致 |
 | F0061 | **Done** | GitHub Python 3.12 pytest Actions门禁 |
+| F0062 | **Done** | 测试编号、fixed deal、完整复盘及resume game_id去重CLI |
 | F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
