@@ -159,6 +159,9 @@ class DecisionAuditWriter:
                 "checked_actions": trace.get("checked_actions"),
                 "stop_reason": trace.get("stop_reason"),
                 "think_time_ms": trace.get("think_time_ms"),
+                "plan_state": trace.get("plan_state"),
+                "hu_rule": trace.get("hu_rule"),
+                "parameter_snapshot": trace.get("parameter_snapshot"),
             }
         row = {
             "audit_format_version": AUDIT_FORMAT_VERSION,

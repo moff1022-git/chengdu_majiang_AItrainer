@@ -84,11 +84,12 @@ def select_cognitively(
     config_seed: int,
     plan_restarted: bool,
     restart_reasons: tuple[str, ...],
+    preset_id: str | None = None,
 ) -> CognitiveDecision:
     rng_before = state.rng_index
     order = _cognitive_order(context, evaluation, state, gp026)
     mandatory = [item for item in order if item.mandatory]
-    threshold = effective_satisfaction_threshold(context.profile.level, context.profile.style, float(gp026["satisfaction_threshold"]))
+    threshold = effective_satisfaction_threshold(context.profile.level, context.profile.style, float(gp026["satisfaction_threshold"]), preset_id=preset_id)
     checked: list[ScoredCandidate] = []
     stop_reason = "best_checked"
     if mandatory:

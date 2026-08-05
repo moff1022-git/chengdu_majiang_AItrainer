@@ -108,6 +108,7 @@ def test_level_and_style_parameters_are_monotonic() -> None:
     expert = effective_satisfaction_threshold("expert", "aggressive", 0.72)
     assert novice < expert
     assert 0.45 <= novice <= expert <= 0.95
+    assert effective_satisfaction_threshold("expert", "aggressive", 1.0, preset_id="nonhuman_optimized") == 1.0
 
 
 def test_mandatory_action_never_consumes_rng() -> None:

@@ -63,3 +63,16 @@ def test_effective_search_depth_uses_level_cap() -> None:
     assert effective_search_depth("normal", 8) == 2
     assert effective_search_depth("skilled", 2) == 2
     assert effective_search_depth("expert", 8) == 4
+    assert effective_search_depth("expert", 8, preset_id="nonhuman_optimized") == 8
+
+
+def test_nonhuman_optimized_uses_promoted_multidataset_stack() -> None:
+    player = apply_personality_preset(_raw_player(), "nonhuman_optimized")
+    assert player["profile"]["gang_preference"] == 0.50
+    assert player["cognitive_parameters"]["GP-026"]["decision_weights"] == {
+        "speed": 0.40,
+        "hand_value": 0.20,
+        "defense": 0.25,
+        "flexibility": 0.15,
+    }
+    assert detect_personality_preset(player) == "nonhuman_optimized"
