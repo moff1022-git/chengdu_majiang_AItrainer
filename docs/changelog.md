@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-05 — F0060受控多进程批跑设计
+
+- 新增Approved设计：Humanlike默认串行，可选spawn多进程；主进程单写checkpoint/报告，worker受CPU、局数和内存预算共同约束。本轮未修改runner。
+
 ## 2026-08-05 — F0059推荐合同与并发审计
 
 - F0059：修正人类推荐F0011退役后的过期测试，遗留`use_f0011=True`不再能重新启用F0011；分片全仓回归`512 passed, 1 skipped`。
