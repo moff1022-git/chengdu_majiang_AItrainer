@@ -1,3 +1,5 @@
+import json
+
 from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, game_ids, progress_bar, run_game, summarize, verification_code
 import tools.ai_capability_test as capability_test
 
@@ -110,3 +112,28 @@ def test_smoke_game_records_scores_and_decision_latency():
     assert set(row["scores"]) == {"0", "1", "2", "3"}
     assert all(seat["decisions"] > 0 for seat in summary["seats"])
     assert all(seat["avg_response_ms"] >= 0 for seat in summary["seats"])
+
+
+def test_summary_snapshots_resolved_nonhuman_parameters_only_for_humanlike_seats():
+    specs = ["humanlike_v2", "random", "rule_ai", "rule_ai_plus"]
+    summary = summarize([], specs, 0, False, ["nonhuman_optimized", None, None, None])
+    snapshot = summary["preset_parameters"][0]
+    assert snapshot["preset_id"] == "nonhuman_optimized"
+    assert snapshot["profile"]["gang_preference"] == 0.50
+    assert snapshot["GP-026"]["decision_weights"] == {
+        "speed": 0.40, "hand_value": 0.20, "defense": 0.25, "flexibility": 0.15,
+    }
+    assert summary["preset_parameters"][1:] == [None, None, None]
+
+
+def test_markdown_report_contains_resolved_nonhuman_snapshot(tmp_path):
+    capability_test.write_outputs(
+        tmp_path, [], ["humanlike_v2", "random", "random", "random"], 0, False,
+        presets=["nonhuman_optimized", None, None, None], report_stamp="snapshot",
+    )
+    report = (tmp_path / "report_snapshot.md").read_text(encoding="utf-8")
+    assert "nonhuman_optimized" in report
+    assert '"gang_preference": 0.5' in report
+    assert '"speed": 0.4' in report
+    summary = json.loads((tmp_path / "summary_snapshot.json").read_text(encoding="utf-8"))
+    assert summary["preset_parameters"][0]["GP-026"]["search_depth"] == 8

@@ -193,7 +193,7 @@ class SettingsWindow:
 
     def _radar_raw_values(self, player, n, idx):
         profile=player["profile"]; gp025=player["cognitive_parameters"]["GP-025"]; gp026=player["cognitive_parameters"]["GP-026"]
-        outer=[profile[k] for k in ("peng_preference","gang_preference","big_hand_preference","defense_awareness","plan_persistence","thinking_speed")] + [gp025[k] for k in ("emotional_stability","habit_strength")] + list(gp026["decision_weights"].values())
+        outer=[profile[k] for k in ("peng_preference","gang_preference","big_hand_preference","defense_awareness","plan_persistence","thinking_speed")] + [gp025[k] for k in ("emotional_stability","habit_strength")] + [gp026["decision_weights"][k] for k in ("speed","hand_value","defense","flexibility")]
         inner=[gp026["min_candidates"],gp026["max_candidates"],gp026["search_depth"],gp026["attention_capacity"],gp026["satisfaction_threshold"],1-gp025["max_error_probability"],1-gp025["near_equal_randomness"]]
         return (outer if n == 12 else inner)[idx]
 
@@ -213,7 +213,7 @@ class SettingsWindow:
 
     def _radar_data(self, player):
         profile = player["profile"]; gp025 = player["cognitive_parameters"]["GP-025"]; gp026 = player["cognitive_parameters"]["GP-026"]
-        outer = [profile[k] for k in ("peng_preference","gang_preference","big_hand_preference","defense_awareness","plan_persistence","thinking_speed")] + [gp025[k] for k in ("emotional_stability","habit_strength")] + list(gp026["decision_weights"].values())
+        outer = [profile[k] for k in ("peng_preference","gang_preference","big_hand_preference","defense_awareness","plan_persistence","thinking_speed")] + [gp025[k] for k in ("emotional_stability","habit_strength")] + [gp026["decision_weights"][k] for k in ("speed","hand_value","defense","flexibility")]
         inner = [gp026["min_candidates"]/14, gp026["max_candidates"]/14, gp026["search_depth"]/8, gp026["attention_capacity"]/64, gp026["satisfaction_threshold"], 1-gp025["max_error_probability"], 1-gp025["near_equal_randomness"]]
         return outer, inner
 

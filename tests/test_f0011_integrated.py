@@ -44,12 +44,12 @@ def test_build_f0010_context_and_rank() -> None:
     assert "s_gong" in det and "s_fang" in det and "s_fei" in det
 
 
-def test_pipeline_f0011_flag() -> None:
+def test_pipeline_legacy_f0011_flag_cannot_reenable_retired_human_recommendation() -> None:
     st = create_dealt_game("f0011-t2", config=EngineConfig(num_players=4))
     snap0 = analyze_for_seat(st, 0, use_f0011=False)
     snap1 = analyze_for_seat(st, 0, use_f0011=True, f0011_top_k=2)
     assert getattr(snap0, "use_f0011", False) is False
-    assert getattr(snap1, "use_f0011", False) is True
+    assert getattr(snap1, "use_f0011", False) is False
     # both may have empty ranks if hand not discard-size; still ok
     assert snap1.generated_ms >= 0
 
