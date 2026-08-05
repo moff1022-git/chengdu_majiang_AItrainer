@@ -29,4 +29,4 @@
 - 新盲测10000局：Nonhuman 956、Expert -51，差值+1007，配对均分+0.1007，95% CI `[+0.0561,+0.1448]`；两组10000/10000成功，Nonhuman trace完整10000/10000。
 - 四阵容各1000局配对：novice +73、normal +126、skilled +123、expert +124；八组均1000/1000成功。
 - F0057主盲测只读聚合：4,182,443候选记录，shanten均值2.0491、dingque_tiles均值0.4547、ukeire_public_count均值0.3696，三个字段覆盖率100%。
-- 本地全仓回归：525 passed、1 skipped；提交`6019f6ac`已推送integration与main；最终CI run `31018099713`。
+- 本地全仓回归：525 passed、1 skipped；最终修复提交`3aacf911`已推送integration与main；远程CI run `31019704124`成功（其前置修复验证见`31019337103`）。
