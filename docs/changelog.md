@@ -1661,6 +1661,8 @@
 - F0036: batch 模式接入 ThreadPoolExecutor 并发执行，修复选择 10 线程仍串行的问题。
 # 2026-08-05
 
+- F0065/CI: 修复 `--list-test-groups` 在不含大数据集工件的干净检出中输出为空的问题，保留规范盲测组索引并通过定向测试。
+
 - Analysis: 汇总Nonhuman vs Expert完整进展与目标演变；确认旧差距主因是高杠偏好及speed/hand_value权重失衡，正式栈已通过9000局跨数据集门禁，后续目标转为盲测泛化与防回退。
 - F0064: 新盲测Nonhuman 160 vs Expert 131，但配对95% CI `[-0.172,+0.198]`跨0；四阵容8组固定100局成功；完成F0057 shanten/dingque/ukeire只读统计，正式参数不变。
 - F0065: 增加测试组索引CLI、`--yes`无人值守入口和flat manifest兼容；生成10000局新盲测数据并启动主代理监控长测。

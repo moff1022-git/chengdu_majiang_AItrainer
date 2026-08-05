@@ -30,7 +30,8 @@
 
 - macOS Codex沙箱内process semaphore需授权；普通终端不受限制。
 - `DEFAULT_WORKER_MIB=96`已有macOS证据；Linux精确RSS workflow已实现，结果待远端手动运行。
-- data不进Git，固定数据集CLI在无本地manifest时不会显示测试编号选项。
+- data不进Git；固定数据集CLI即使在无本地manifest的干净检出中也会显示规范测试组编号（实际运行仍需先提供数据集工件）。
+- CI run `31018377514` 在 `2c54363f` 上发现并修复测试组索引回归；修复提交后的最终CI待完成。
 
 ## 下一步完整任务清单
 

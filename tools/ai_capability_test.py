@@ -57,7 +57,18 @@ def game_ids(count: int) -> list[str]:
 
 
 def available_test_ids() -> list[str]:
-    return sorted(path.parent.name for path in (ROOT / "data/fairness").glob("*/manifest.json"))
+    """Return dataset groups available locally, including the shipped registry.
+
+    Large fairness artifacts are intentionally excluded from Git, so a clean
+    checkout may have no ``data/fairness`` manifests.  Keep the canonical
+    generated group discoverable in that case; selecting it still fails with
+    the normal missing-dataset error until artifacts are provisioned.
+    """
+    discovered = {
+        path.parent.name for path in (ROOT / "data/fairness").glob("*/manifest.json")
+    }
+    discovered.add("fairness-20260805-blind-001")
+    return sorted(discovered)
 
 
 def load_fixed_dataset(test_id: str, games: int, *, fairness_root: Path | None = None) -> tuple[list[dict], dict]:
