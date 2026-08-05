@@ -1,8 +1,8 @@
 # 文档 ↔ 程序一致性基线
 
-> **日期**：2026-07-29  
-> **应用版本**：`0.2.1`（`version.py`）  
-> **Git**：F0028-5 Docs-First 规格、实现与验收已纳入本地 `main` 基线；损坏元数据保留于 `backup/git-metadata-corrupt-2026-07-28/`；远端尚未推送
+> **日期**：2026-08-05
+> **应用版本**：`0.3.1`（`version.py`）
+> **Git**：当前工作分支 `codex/v0.3.1-humanlike-release` 基线 `c2e6d571`；远程 `main` 为 `a0d5031f`。Humanlike 参数实验仍为未提交工作树研究，不属于远程发布基线。
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -12,13 +12,13 @@
 
 | 线 | 权威位置 | 当前值 |
 |----|----------|--------|
-| 应用 SemVer | `version.py` → `APP_VERSION` | **0.2.1** |
+| 应用 SemVer | `version.py` → `APP_VERSION` | **0.3.1** |
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 本地基线 | `main` | F0028-1–6、Human 换三张修复及验收记录已提交 |
-| Git 远端 | `origin` | GitHub 当前返回零 refs 与非法 `refs/heads/.invalid`；未推送、未恢复 tag |
-| 历史发布记录 | `v0.2.1` | changelog 记录 Release 已发布；当前无可验证 Git tag ref |
+| Git 本地基线 | `codex/v0.3.1-humanlike-release` | F0040–F0059、独立公平工具与macOS资源修复已拆分提交；状态提交后以最新HEAD为准 |
+| Git 远端 | `origin/main` | `a0d5031f`，v0.3.1 clean-source 发布基线 |
+| 当前发布记录 | `v0.3.1` | GitHub Release 已发布 PyInstaller/Nuitka macOS arm64 资产 |
 
 ---
 
@@ -54,6 +54,10 @@
 | F0028-3 | **Done** | `players/humanlike/{view,belief,hand_analyzer,plan,candidates,evaluator,player}.py` + registry/preset |
 | F0028-4 | **Done** | `players/humanlike/{memory,attention,cognition,policy}.py` + player RP-024–029 / trace v2 |
 | F0028-5 | **Done** | `engine/audit.py`、`players/humanlike/audit_replay.py`、orchestrator Audit v1 接线 |
+| F0056 | **Done（本地工作树）** | `nonhuman_optimized`: gang `.50`；决策权重 speed/value/defense/flex `.40/.20/.25/.15`；9000局联合门禁通过 |
+| F0057 | **Done（本地工作树）** | 候选trace原始shanten/dingque/ukeire/public count审计字段；Humanlike回归通过 |
+| F0058 | **Done（本地工作树）** | 报告逐座人格快照、雷达显式权重轴；正式preset固定100局s0 `97`分/`34`胡 |
+| F0059 | **Done** | 人类推荐F0011退役合同；分片全仓回归`512 passed, 1 skipped` |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
 ---
@@ -117,6 +121,8 @@
 | 2026-07-29 | F0029 Humanlike v2 UI 开关与全参数设置规格进入 Draft；尚未修改业务代码 |
 | 2026-07-29 | F0029 大厅/主桌/AI 座位开关、全参数窗口与原子保存实现验收通过；状态 Done |
 | 2026-07-29 | F0029 参数窗口按用户反馈移除 JSON 文档模式，完成 156 项中文表单纠偏与复验 |
+| 2026-08-04 | F0056多数据集晋级：主/seed-a/seed-b合并9000局+977，CI下界>0；正式Nonhuman参数栈更新，尚未提交/发布 |
+| 2026-08-05 | F0057/F0058完成：审计字段、报告/雷达快照与正式preset入口100局复核闭环；Humanlike `121 passed` |
 | 2026-07-29 | F0029 表单修复按钮对比度、完整数值/文本规则提示及 34 个枚举下拉框 |
 | 2026-07-29 | F0030 逐玩家 GP-024–027 迁移规格进入 Draft；代码仍为四座共享全局参数 |
 | 2026-07-29 | F0030 PARAMS 1.1 / IMPL 2.1 迁移完成；四座独立认知与目标、旧配置迁移及 GUI 验收通过 |
