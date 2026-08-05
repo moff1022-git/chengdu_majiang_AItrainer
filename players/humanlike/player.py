@@ -165,13 +165,16 @@ class HumanlikeV2Player(BasePlayer):
             config_seed=self.humanlike_config.seed,
             plan_restarted=plan_restarted,
             restart_reasons=restart_reasons,
+            preset_id=self.preset_id,
         )
         trace = dict(decision.trace)
         trace["configured_search_depth"] = int(gp026["search_depth"])
         trace["effective_search_depth"] = effective_search_depth(
             context.profile.level,
             int(gp026["search_depth"]),
+            preset_id=self.preset_id,
         )
+        trace["preset_id"] = self.preset_id
         trace["memory"] = memory_summary.to_dict()
         trace["attention"] = [item.to_dict() for item in attention]
         trace["personality"] = {
@@ -179,6 +182,29 @@ class HumanlikeV2Player(BasePlayer):
             "style": context.profile.style,
             "plan_persistence": context.profile.plan_persistence,
             "emotion": round(self.cognitive_state.emotion, 8),
+        }
+        trace["parameter_snapshot"] = {
+            "preset_id": self.preset_id,
+            "cognitive_7": {k: gp026.get(k) for k in ("min_candidates", "max_candidates", "search_depth", "attention_capacity", "satisfaction_threshold", "research_threshold")},
+            "behavior": {k: gp025.get(k) for k in ("max_error_probability", "near_equal_randomness", "emotional_stability", "habit_strength")},
+            "style_8": {k: getattr(context.profile, k) for k in ("peng_preference", "gang_preference", "big_hand_preference", "defense_awareness", "plan_persistence", "thinking_speed")},
+            "decision_weights": dict(gp026.get("decision_weights", {})),
+            "gp009": dict(self.humanlike_config.global_parameters["GP-009"]),
+            "config_hash": self.player_config_hash,
+        }
+        trace["plan_state"] = {
+            "primary_plan": self.cognitive_state.primary_plan,
+            "inertial_plan": self.cognitive_state.inertial_plan,
+            "plan_age": self.cognitive_state.plan_age,
+            "plan_restarted": plan_restarted,
+        }
+        trace["hu_rule"] = {
+            "pass_hu_mode": self.humanlike_config.global_parameters["GP-009"].get("pass_hu_mode"),
+            "discard_hu_can_pass": self.humanlike_config.global_parameters["GP-009"].get("discard_hu_can_pass"),
+            "self_draw_can_pass": self.humanlike_config.global_parameters["GP-009"].get("self_draw_can_pass"),
+            "forced_hu_wall_threshold": self.humanlike_config.global_parameters["GP-009"].get("forced_hu_wall_threshold"),
+            "hu_candidates": [item.action.to_dict() for item in candidates.candidates if item.action.type.value == "hu"],
+            "mandatory_hu": any(item.action.type.value == "hu" and item.mandatory for item in candidates.candidates),
         }
         trace["cross_round_impressions"] = len(self.cognitive_state.opponent_impressions)
         trace["player_config_hash"] = self.player_config_hash

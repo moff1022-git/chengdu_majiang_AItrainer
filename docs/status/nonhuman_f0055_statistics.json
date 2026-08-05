@@ -1,0 +1,63 @@
+{
+  "main": {
+    "games": 1000,
+    "new_score": 359,
+    "base_score": 282,
+    "delta": 77,
+    "better": 61,
+    "worse": 45,
+    "same": 894,
+    "new_hu": 377,
+    "base_hu": 358,
+    "new_zimo": 132,
+    "base_zimo": 127,
+    "new_huazhu": 40,
+    "base_huazhu": 40,
+    "worst": -15,
+    "negative_p95_magnitude": 10
+  },
+  "seed-a": {
+    "games": 4000,
+    "new_score": 1088,
+    "base_score": 776,
+    "delta": 312,
+    "better": 282,
+    "worse": 186,
+    "same": 3532,
+    "new_hu": 1229,
+    "base_hu": 1176,
+    "new_zimo": 425,
+    "base_zimo": 407,
+    "new_huazhu": 209,
+    "base_huazhu": 215,
+    "worst": -29,
+    "negative_p95_magnitude": 11
+  },
+  "seed-b": {
+    "games": 4000,
+    "new_score": 135,
+    "base_score": -453,
+    "delta": 588,
+    "better": 273,
+    "worse": 205,
+    "same": 3522,
+    "new_hu": 1238,
+    "base_hu": 1155,
+    "new_zimo": 438,
+    "base_zimo": 411,
+    "new_huazhu": 232,
+    "base_huazhu": 244,
+    "worst": -17,
+    "negative_p95_magnitude": 9
+  },
+  "combined": {
+    "games": 9000,
+    "delta": 977,
+    "mean": 0.10855555555555556,
+    "ci95": [
+      0.06544444444444444,
+      0.15233333333333332
+    ],
+    "worst": -29
+  }
+}

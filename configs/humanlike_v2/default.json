@@ -165,13 +165,13 @@
       "profile": {
         "name": "normal_balanced_0",
         "level": "expert",
-        "style": "aggressive",
-        "peng_preference": 0.7,
-        "gang_preference": 0.75,
-        "big_hand_preference": 0.75,
-        "defense_awareness": 0.35,
-        "plan_persistence": 0.45,
-        "thinking_speed": 0.65
+        "style": "balanced",
+        "peng_preference": 0.5,
+        "gang_preference": 0.5,
+        "big_hand_preference": 0.45,
+        "defense_awareness": 0.55,
+        "plan_persistence": 0.55,
+        "thinking_speed": 0.55
       },
       "cognitive_parameters": {
         "GP-024": {
@@ -182,8 +182,8 @@
           "learn_hidden_information": false
         },
         "GP-025": {
-          "emotional_stability": 0.55,
-          "habit_strength": 0.45,
+          "emotional_stability": 0.7,
+          "habit_strength": 0.55,
           "max_error_probability": 0.015,
           "near_equal_randomness": 0.03,
           "random_seed": 0
@@ -196,9 +196,9 @@
           "satisfaction_threshold": 0.82,
           "research_threshold": 0.35,
           "decision_weights": {
-            "speed": 0.4,
-            "hand_value": 0.35,
-            "defense": 0.1,
+            "speed": 0.35,
+            "hand_value": 0.25,
+            "defense": 0.25,
             "flexibility": 0.15
           }
         },

@@ -123,6 +123,8 @@ def effective_candidate_capacity(level: str, minimum: int, maximum: int) -> int:
     return max(minimum, min(maximum, round(maximum * LEVEL_FACTORS[level]["candidate"])))
 
 
-def effective_satisfaction_threshold(level: str, style: str, configured: float) -> float:
+def effective_satisfaction_threshold(level: str, style: str, configured: float, *, preset_id: str | None = None) -> float:
+    if preset_id == "nonhuman_optimized":
+        return max(0.0, min(1.0, float(configured)))
     style_delta = {"conservative": -0.04, "balanced": 0.0, "aggressive": 0.04}[style]
     return max(0.45, min(0.95, configured + LEVEL_FACTORS[level]["threshold"] + style_delta))

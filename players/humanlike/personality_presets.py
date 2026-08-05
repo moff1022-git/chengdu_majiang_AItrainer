@@ -24,11 +24,11 @@ NONHUMAN_PRESET = {
     "min_candidates": 14, "max_candidates": 14, "search_depth": 8,
     "attention_capacity": 64, "satisfaction_threshold": 1.0,
     "max_error_probability": 0.0, "near_equal_randomness": 0.0,
-    "peng_preference": 0.70, "gang_preference": 0.85,
+    "peng_preference": 0.70, "gang_preference": 0.50,
     "big_hand_preference": 0.80, "defense_awareness": 0.45,
     "plan_persistence": 0.05, "thinking_speed": 1.0,
     "emotional_stability": 1.0, "habit_strength": 0.0,
-    "decision_weights": {"speed": 0.20, "hand_value": 0.45, "defense": 0.25, "flexibility": 0.10},
+    "decision_weights": {"speed": 0.40, "hand_value": 0.20, "defense": 0.25, "flexibility": 0.15},
 }
 
 PRESET_IDS = tuple(f"{level}_{style}" for level in LEVEL_PRESETS for style in STYLE_PRESETS) + ("nonhuman_optimized",)
@@ -110,7 +110,9 @@ def _controlled_values(player: Mapping[str, Any]) -> dict[str, Any]:
     return paths
 
 
-def effective_search_depth(level: str, configured: int) -> int:
+def effective_search_depth(level: str, configured: int, *, preset_id: str | None = None) -> int:
     if level not in LEVEL_PRESETS:
         raise ValueError(f"unknown personality level: {level}")
+    if preset_id == "nonhuman_optimized":
+        return min(8, int(configured))
     return min(int(configured), int(LEVEL_PRESETS[level]["search_depth"]))

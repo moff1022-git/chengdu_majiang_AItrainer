@@ -42,11 +42,16 @@ def _mandatory(action: Action, context: DecisionContext) -> bool:
     if action.type != ActionType.HU:
         return False
     gp009 = context.view.payload.get("policy_gp009")
-    # GP is normally supplied by the evaluator/player; absent public metadata is
-    # handled conservatively: discard-phase HU is self-draw and cannot pass.
-    if context.phase == "discard":
+    # A HU may be demoted from mandatory only by the rule's explicit
+    # pass-hu permission for the current response type.  Cognitive
+    # satisfaction/threshold is never consulted here.
+    if not gp009:
         return True
-    return bool(gp009 and not gp009.get("discard_hu_can_pass", True))
+    if context.phase == "response":
+        return not bool(gp009.get("discard_hu_can_pass", False))
+    if context.phase == "discard":
+        return not bool(gp009.get("self_draw_can_pass", False))
+    return True
 
 
 def build_candidates(
@@ -57,7 +62,15 @@ def build_candidates(
 ) -> CandidateSet:
     if max_candidates < 1:
         raise PolicyInputError("max_candidates must be positive")
-    ordered = sorted(context.legal_actions, key=stable_action_key)
+    dingque = (context.view.payload.get("self_player") or {}).get("dingque")
+    hand = (context.view.payload.get("self_player") or {}).get("hand") or []
+    dingque_count = sum(str(tile).startswith(f"{dingque}_") for tile in hand) if dingque else 0
+    filtered = []
+    for action in context.legal_actions:
+        if dingque and dingque_count == 1 and action.type in {ActionType.GANG_AN, ActionType.GANG_JIA, ActionType.GANG_MING} and any(str(tile).startswith(f"{dingque}_") for tile in action.tiles):
+            continue
+        filtered.append(action)
+    ordered = sorted(filtered, key=stable_action_key)
     mandatory = [Candidate(action, True) for action in ordered if _mandatory(action, context)]
     ordinary = [Candidate(action, False) for action in ordered if not _mandatory(action, context)]
     scores = pre_scores or {}
