@@ -66,7 +66,7 @@ F0065 已在一个新盲测数据集上证明 Nonhuman 相对 Expert 的配对�
 - [x] F0057 深化审计输出字段覆盖与分层结果，且不使用隐藏信息。
 - [x] 全仓 pytest 通过：529 passed、1 skipped。
 - [x] source/evidence 候选 manifest 自校验通过，无排除目录泄漏。
-- [ ] `main` 与 `integration/v0.3.1-humanlike` 同步，最终 CI 成功（提交后回填）。
+- [x] `main` 与 `integration/v0.3.1-humanlike` 同步；提交`e9521566`的CI run `31022485737`成功。
 
 ## 验收结果
 
