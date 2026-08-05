@@ -1,6 +1,6 @@
 # F0063复盘完整性、真实中断与Linux RSS
 
-- 状态：Implemented（Linux RSS验收待CI）
+- 状态：Done
 - 日期：2026-08-05
 
 ## 目标
@@ -31,3 +31,4 @@
 - 断点续跑过程中发现并修复worker `KeyboardInterrupt`向父进程逃逸，以及`--resume`错误进入交互选择的问题。
 - JSON与Markdown报告均绑定测试编号、数据集SHA、复现模式、trace开关和四座人格参数快照。
 - 定向测试25 passed；全仓回归522 passed、1 skipped。
+- Linux workflow `30973734923`成功，serial最大RSS `35,880 KiB`，退出状态0。

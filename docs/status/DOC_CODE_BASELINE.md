@@ -59,7 +59,8 @@
 | F0060 | **Done** | serial/thread/process、spawn worker与内存预算；固定100局process 2.027x且逐局一致 |
 | F0061 | **Done** | GitHub Python 3.12 pytest Actions门禁 |
 | F0062 | **Done** | 测试编号、fixed deal、完整复盘及resume game_id去重CLI |
-| F0063 | **Implemented（Linux验收待CI）** | SIGINT退出130、无交互resume、100/100 trace门禁、手动Linux RSS workflow |
+| F0063 | **Done** | SIGINT退出130、无交互resume、100/100 trace门禁、Linux RSS 35,880 KiB |
+| F0065 | **Done（CI run 31018099713待完成）** | 10000局盲测、多阵容8×1000、F0057聚合、无人值守监控 |
 | F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
