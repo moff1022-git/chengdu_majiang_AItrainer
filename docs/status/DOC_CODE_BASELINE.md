@@ -60,7 +60,7 @@
 | F0061 | **Done** | GitHub Python 3.12 pytest Actions门禁 |
 | F0062 | **Done** | 测试编号、fixed deal、完整复盘及resume game_id去重CLI |
 | F0063 | **Done** | SIGINT退出130、无交互resume、100/100 trace门禁、Linux RSS 35,880 KiB |
-| F0065 | **Done（CI run 31018099713待完成）** | 10000局盲测、多阵容8×1000、F0057聚合、无人值守监控 |
+| F0065 | **Done（CI run 31019337103 已通过，28596eaa/ead34381修复后）** | 10000局盲测、多阵容8×1000、F0057聚合、无人值守监控；干净检出测试组索引兼容 |
 | F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
