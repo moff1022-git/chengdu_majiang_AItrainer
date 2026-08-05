@@ -5,9 +5,11 @@ import argparse
 import csv
 import hashlib
 import json
+import multiprocessing
+import os
 import signal
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from statistics import mean, median
@@ -26,6 +28,8 @@ TYPES = ("random", "rule_ai", "rule_ai_plus", "humanlike_v2")
 STOP = False
 SECONDS_PER_GAME = 4.0
 THREAD_OPTIONS = (1, 5, 10, 20, 50, 100)
+EXECUTORS = ("serial", "thread", "process")
+DEFAULT_WORKER_MIB = 96
 
 
 def progress_bar(completed: int, total: int, *, width: int = 28) -> str:
@@ -85,6 +89,52 @@ def run_game(specs: list[str], game_id: str, presets: list[str | None] | None = 
     row["elapsed_seconds"] = time.perf_counter() - started
     row["decision_timing"] = timing
     return row
+
+
+def failed_game(game_id: str, exc: Exception) -> dict:
+    return {"game_id": game_id, "status": "FAILED", "finished_reason": "runner_exception", "error_type": type(exc).__name__, "error": str(exc), "scores": {}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]}
+
+
+def run_game_task(task: tuple[int, list[str], str, list[str | None] | None, dict | None, str | None]) -> tuple[int, dict]:
+    """Spawn-safe game worker; it never writes shared reports/checkpoints."""
+    index, specs, game_id, presets, fixed_deal, trace_path = task
+    try:
+        players, timing = _timed_players(specs, presets)
+        started = time.perf_counter()
+        result = PlayerGameRunner(
+            players, EngineConfig(num_players=4), game_id=game_id,
+            fixed_deal=fixed_deal, save_dir=Path(trace_path) if trace_path else None,
+            save_every_decision=bool(trace_path),
+        ).run()
+        row = result.to_dict()
+        row["elapsed_seconds"] = time.perf_counter() - started
+        row["decision_timing"] = timing
+        return index, row
+    except Exception as exc:
+        return index, failed_game(game_id, exc)
+
+
+def effective_workers(requested: int, pending: int, memory_budget_mib: int, *, worker_mib: int = DEFAULT_WORKER_MIB) -> tuple[int, str | None]:
+    cpu_limit = max(1, os.cpu_count() or 1)
+    memory_limit = max(1, int(memory_budget_mib) // max(1, worker_mib))
+    actual = max(1, min(int(requested), max(1, pending), cpu_limit, memory_limit))
+    reason = None if actual == requested else f"workers由{requested}限制为{actual}（CPU/待运行局数/内存预算）"
+    return actual, reason
+
+
+def execute_tasks(tasks, *, executor: str, workers: int):
+    """Yield completed `(index, row)` pairs using the selected backend."""
+    if executor == "serial" or workers == 1:
+        yield from map(run_game_task, tasks)
+        return
+    pool_type = ProcessPoolExecutor if executor == "process" else ThreadPoolExecutor
+    kwargs = {"max_workers": workers}
+    if executor == "process":
+        kwargs["mp_context"] = multiprocessing.get_context("spawn")
+    with pool_type(**kwargs) as pool:
+        futures = [pool.submit(run_game_task, task) for task in tasks]
+        for future in as_completed(futures):
+            yield future.result()
 
 
 def _percentile(values: list[float], fraction: float) -> float:
@@ -169,11 +219,12 @@ def estimate_seconds(games: int, mode: str = "batch", remaining_experiments: int
     return ((total + workers - 1) // workers) * SECONDS_PER_GAME
 
 
-def confirm_run(games: int, mode: str, target: str | None = None, threads: int = 1, *, input_fn=input) -> bool:
+def confirm_run(games: int, mode: str, target: str | None = None, threads: int = 1, *, executor: str = "thread", memory_budget_mib: int | None = None, input_fn=input) -> bool:
     experiments = 12 if mode == "capability" else 1
     minutes = estimate_seconds(games, mode, threads=threads) / 60
     label = f"目标 {target}，" if target else ""
-    answer = input_fn(f"\n即将开始：{label}{experiments} 个实验，共 {games * experiments} 局；并发线程 {threads}；预计耗时约 {minutes:.1f} 分钟。确认开始？[y/N] ")
+    memory = f"；内存预算 {memory_budget_mib} MiB" if memory_budget_mib is not None else ""
+    answer = input_fn(f"\n即将开始：{label}{experiments} 个实验，共 {games * experiments} 局；执行器 {executor}；workers {threads}{memory}；预计耗时约 {minutes:.1f} 分钟。确认开始？[y/N] ")
     return answer.strip().lower() in {"y", "yes"}
 
 
@@ -215,7 +266,7 @@ def choose_batch_presets(specs: list[str], *, input_fn=input) -> list[str | None
             if player == "humanlike_v2" else None for seat, player in enumerate(specs)]
 
 
-def run_capability_mode(target: str, games: int, output: Path, presets=None, threads: int = 1) -> int:
+def run_capability_mode(target: str, games: int, output: Path, presets=None, threads: int = 1, *, executor: str = "thread", memory_budget_mib: int = 1024) -> int:
     output.mkdir(parents=True, exist_ok=True)
     experiments = capability_experiments(target)
     started_at = datetime.now().astimezone()
@@ -223,7 +274,9 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
     ids_for_code = game_ids(games)
     code = verification_code(games=games, game_id_list=ids_for_code, players=[target] * 4, mode="capability", target=target)
     preset_id = presets[0] if isinstance(presets, (list, tuple)) else presets
-    manifest = {"mode": "capability", "target": target, "humanlike_preset": preset_id, "threads": threads, "games_per_experiment": games,
+    workers, worker_reason = effective_workers(threads, games, memory_budget_mib)
+    if executor == "serial": workers = 1
+    manifest = {"mode": "capability", "target": target, "humanlike_preset": preset_id, "executor": executor, "workers": workers, "memory_budget_mib": memory_budget_mib, "worker_limit_reason": worker_reason, "games_per_experiment": games,
                 "started_at": started_at.isoformat(), "verification_code": code, "report_file": f"capability_report_{run_stamp}.md",
                 "experiments": experiments}
     (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -241,13 +294,8 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
         rows = [json.loads(line) for line in games_file.read_text(encoding="utf-8").splitlines() if line] if games_file.exists() else []
         pending = list(range(len(rows), games))
         exp_presets = [preset_id if (target == "humanlike_v2" and seat == experiment["seat"]) else None for seat in range(4)] if preset_id else None
-        def execute(index):
-            try:
-                return index, run_game(experiment["players"], ids[index], exp_presets)
-            except Exception as exc:
-                return index, {"game_id": ids[index], "status": "FAILED", "finished_reason": "runner_exception", "error_type": type(exc).__name__, "error": str(exc), "scores": {}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]}
-        with ThreadPoolExecutor(max_workers=threads) as pool:
-          for index, row in ((execute(i) for i in pending) if threads == 1 else (f.result() for f in as_completed([pool.submit(execute, i) for i in pending]))):
+        tasks = [(index, experiment["players"], ids[index], exp_presets, None, None) for index in pending]
+        for index, row in execute_tasks(tasks, executor=executor, workers=workers):
             if STOP: break
             rows.append(row)
             write_outputs(run_dir, rows, experiment["players"], games, True, presets=exp_presets, report_stamp=run_stamp)
@@ -263,7 +311,7 @@ def run_capability_mode(target: str, games: int, output: Path, presets=None, thr
         aggregate.append({"baseline": experiment["baseline"], "target_seat": f"s{experiment['seat']}", **target_stat})
         if STOP: break
     (output / "capability_summary.json").write_text(json.dumps({"target": target, "games_per_experiment": games, "verification_code": code, "completed_experiments": len(aggregate), "results": aggregate}, ensure_ascii=False, indent=2), encoding="utf-8")
-    lines = [f"# {target} AI 能力评估", "", f"每个基线每个座位：{games} 局", f"唯一校验码：`{code}`", f"人格预设：`{preset_id or '无'}`", f"并发线程数：`{threads}`", "", "|基线|目标座位|人格预设|胜率|Top1率|平均得分|平均响应(ms)|P95响应(ms)|", "|---|---|---|---:|---:|---:|---:|---:|"]
+    lines = [f"# {target} AI 能力评估", "", f"每个基线每个座位：{games} 局", f"唯一校验码：`{code}`", f"人格预设：`{preset_id or '无'}`", f"执行器/workers：`{executor}/{workers}`", "", "|基线|目标座位|人格预设|胜率|Top1率|平均得分|平均响应(ms)|P95响应(ms)|", "|---|---|---|---:|---:|---:|---:|---:|"]
     lines += [f"|{r['baseline']}|{r['target_seat']}|{preset_id or '无'}|{r['win_rate']:.2%}|{r['top1_rate']:.2%}|{r['average_score']:.2f}|{r['avg_response_ms']:.3f}|{r['p95_response_ms']:.3f}|" for r in aggregate]
     report_name = f"capability_report_{run_stamp}.md"
     report_text = "\n".join(lines) + "\n"
@@ -282,8 +330,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mode", choices=("batch", "capability"), default=None)
     parser.add_argument("--target", choices=TYPES, help="capability 模式中的目标 AI")
     parser.add_argument("--threads", type=int, choices=THREAD_OPTIONS, default=None)
+    parser.add_argument("--executor", choices=EXECUTORS)
+    parser.add_argument("--workers", type=int)
+    parser.add_argument("--memory-budget-mib", type=int, default=1024)
     parser.add_argument("--humanlike-preset", choices=PRESET_IDS)
     args = parser.parse_args(argv)
+    if args.workers is not None:
+        if args.workers < 1: parser.error("--workers 必须大于0")
+        args.threads = args.workers
     batch_presets = None
     while True:
         if args.mode is None:
@@ -296,13 +350,16 @@ def main(argv: list[str] | None = None) -> int:
                 args.humanlike_preset = choose_option("humanlike_v2 人格预设", list(PRESET_IDS))
         elif args.players is None:
             args.players, batch_presets = choose_batch_configuration()
+        selected_specs = ([args.target] if args.mode == "capability" else ([item.strip() for item in args.players.split(",")] if args.players else []))
+        if args.executor is None:
+            args.executor = "serial" if "humanlike_v2" in selected_specs else "thread"
         if args.threads is None:
-            args.threads = int(choose_option("并发线程数", [str(x) for x in THREAD_OPTIONS]))
-        if confirm_run(args.games, args.mode, args.target, args.threads): break
+            args.threads = 1 if args.executor == "serial" else int(choose_option("workers", [str(x) for x in THREAD_OPTIONS]))
+        if confirm_run(args.games, args.mode, args.target, args.threads, executor=args.executor, memory_budget_mib=args.memory_budget_mib): break
         print("已取消，返回参数选择。")
-        args.games = None; args.target = None; args.players = None; args.mode = None; args.threads = None; args.humanlike_preset = None; batch_presets = None
+        args.games = None; args.target = None; args.players = None; args.mode = None; args.threads = None; args.executor = None; args.humanlike_preset = None; batch_presets = None
     if args.mode == "capability":
-        return run_capability_mode(args.target, args.games, Path(args.output) / f"capability_{args.target}_{args.games}", [args.humanlike_preset] * 4 if args.humanlike_preset else None, args.threads)
+        return run_capability_mode(args.target, args.games, Path(args.output) / f"capability_{args.target}_{args.games}", [args.humanlike_preset] * 4 if args.humanlike_preset else None, args.threads, executor=args.executor, memory_budget_mib=args.memory_budget_mib)
     specs = [item.strip() for item in args.players.split(",")]
     if len(specs) != 4 or any(item not in TYPES for item in specs):
         parser.error("--players 必须包含四个合法 AI：" + ",".join(TYPES))
@@ -318,27 +375,24 @@ def main(argv: list[str] | None = None) -> int:
     else:
         ids = game_ids(args.games)
         code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
-        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "threads": args.threads, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
+        actual_workers, worker_reason = effective_workers(args.threads, args.games, args.memory_budget_mib)
+        if args.executor == "serial": actual_workers = 1
+        args.threads = actual_workers
+        config_path.write_text(json.dumps({"games": args.games, "players": specs, "presets": batch_presets, "executor": args.executor, "workers": actual_workers, "memory_budget_mib": args.memory_budget_mib, "worker_limit_reason": worker_reason, "game_ids": ids, "verification_code": code}, ensure_ascii=False, indent=2), encoding="utf-8")
     config_data = json.loads(config_path.read_text(encoding="utf-8"))
     ids = config_data["game_ids"]
     batch_presets = config_data.get("presets", batch_presets or [None] * 4)
     if args.resume:
-        args.threads = int(config_data.get("threads", args.threads or 1))
+        args.executor = config_data.get("executor", args.executor or "serial")
+        args.threads = int(config_data.get("workers", config_data.get("threads", args.threads or 1)))
     code = verification_code(games=args.games, game_id_list=ids, players=specs, mode="batch")
     global STOP
     signal.signal(signal.SIGINT, lambda *_: globals().__setitem__("STOP", True))
     wall_start = time.perf_counter()
     report_stamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
     pending = list(range(len(rows), args.games))
-    def execute_batch(index):
-        try:
-            return index, run_game(specs, ids[index], batch_presets)
-        except Exception as exc:
-            return index, {"game_id": ids[index], "status": "FAILED", "finished_reason": "runner_exception", "error_type": type(exc).__name__, "error": str(exc), "scores": {}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]}
-    with ThreadPoolExecutor(max_workers=args.threads) as pool:
-      futures = [pool.submit(execute_batch, index) for index in pending]
-      iterator = (execute_batch(index) for index in pending) if args.threads == 1 else (future.result() for future in as_completed(futures))
-      for index, row in iterator:
+    tasks = [(index, specs, ids[index], batch_presets, None, None) for index in pending]
+    for index, row in execute_tasks(tasks, executor=args.executor, workers=args.threads):
         if STOP: break
         rows.append(row)
         rows.sort(key=lambda item: ids.index(item.get("game_id", "")))
@@ -348,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
         write_outputs(out, rows, specs, args.games, True, code, presets=batch_presets, report_stamp=report_stamp)
         (out / "checkpoint.json").write_text(json.dumps({"next_index": len(rows), "last_game_id": ids[index]}, ensure_ascii=False, indent=2), encoding="utf-8")
         score_text = " ".join(f"s{s}:{row.get('scores', {}).get(str(s), 0)}" for s in range(4))
-        print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
+        print(f"\r{progress_bar(len(rows), args.games)} 总局数 {len(rows)}/{args.games} 校验码 {code} {score_text} executor={args.executor} workers={args.threads} elapsed={elapsed:.1f}s ETA={eta:.1f}s", end="", flush=True)
     print()
     write_outputs(out, rows, specs, args.games, len(rows) < args.games, code, presets=batch_presets, report_stamp=report_stamp)
     return 130 if STOP else 0

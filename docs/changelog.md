@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-05 — F0060多进程runner与F0061 CI
+
+- F0060实现受控spawn多进程批跑和内存预算；固定100局process workers 2较serial加速2.027x，逐局结果100%一致。
+- F0061新增GitHub Actions Python 3.12 pytest工作流。
+- 全仓分片回归`513 passed, 1 skipped`。
+
 ## 2026-08-05 — Humanlike安全集成与F0060设计
 
 - F0040–F0059从断开历史的Humanlike分支安全移植到最新远端main基线；未使用无关历史合并。

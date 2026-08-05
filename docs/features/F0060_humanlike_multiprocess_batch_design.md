@@ -1,6 +1,6 @@
 # F0060 Humanlike受控多进程批跑设计
 
-- 状态：Approved
+- 状态：Done
 - 日期：2026-08-05
 - 前置：`docs/status/humanlike_concurrency_memory_audit.md`
 
@@ -35,7 +35,6 @@
 
 ## Out of Scope
 
-- 本轮不实现runner代码；
 - 不修改Humanlike策略、参数或评分；
 - 不自动选择超过用户指定值的worker；
 - 不引入外部分布式队列。
@@ -43,3 +42,10 @@
 ## 批准记录
 
 用户执行LATEST任务2，授权形成Humanlike多进程批跑设计；本轮仅规格落盘，据此Approved。
+
+## 验收记录
+
+- runner已实现`serial/thread/process`、spawn worker、CPU/待运行局数/内存预算限制及主进程单写报告/checkpoint。
+- 固定100局：serial `341.241s`，process workers 2 `168.367s`，加速`2.027x`；两组均100/100成功且逐局终局100%一致。
+- process估算总峰值约`137.078 MiB`，低于`1024 MiB`预算。
+- 全仓分片回归`513 passed, 1 skipped`。

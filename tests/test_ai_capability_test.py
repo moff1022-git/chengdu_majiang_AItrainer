@@ -1,14 +1,14 @@
 import json
 
-from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, game_ids, progress_bar, run_game, summarize, verification_code
+from tools.ai_capability_test import capability_experiments, choose_option, choose_batch_configuration, choose_batch_presets, confirm_run, effective_workers, execute_tasks, game_ids, progress_bar, run_game, summarize, verification_code
 import tools.ai_capability_test as capability_test
 
 
 def test_capability_progress_line_contains_total_game_count(monkeypatch, capsys, tmp_path):
-    monkeypatch.setattr(capability_test, "run_game", lambda specs, gid: {
-        "game_id": gid, "scores": {"0": 1, "1": 0, "2": 0, "3": 0},
+    monkeypatch.setattr(capability_test, "run_game_task", lambda task: (task[0], {
+        "game_id": task[2], "scores": {"0": 1, "1": 0, "2": 0, "3": 0},
         "rankings": [0, 1, 2, 3], "hu_sequence": [], "decision_timing": [{"seconds": [0], "phases": {}} for _ in range(4)]
-    })
+    }))
     monkeypatch.setattr(capability_test, "write_outputs", lambda *args, **kwargs: None)
     monkeypatch.setattr(capability_test, "STOP", False)
     capability_test.run_capability_mode("random", 100, tmp_path)
@@ -19,10 +19,10 @@ def test_capability_progress_line_contains_total_game_count(monkeypatch, capsys,
 
 
 def test_capability_report_name_contains_run_timestamp(tmp_path, monkeypatch):
-    monkeypatch.setattr(capability_test, "run_game", lambda specs, gid: {
-        "game_id": gid, "scores": {"0": 1, "1": 0, "2": 0, "3": 0},
+    monkeypatch.setattr(capability_test, "run_game_task", lambda task: (task[0], {
+        "game_id": task[2], "scores": {"0": 1, "1": 0, "2": 0, "3": 0},
         "rankings": [0, 1, 2, 3], "hu_sequence": [], "decision_timing": [{"seconds": [0], "phases": {}} for _ in range(4)]
-    })
+    }))
     monkeypatch.setattr(capability_test, "write_outputs", lambda *args, **kwargs: None)
     monkeypatch.setattr(capability_test, "STOP", False)
     capability_test.run_capability_mode("random", 100, tmp_path)
@@ -65,7 +65,20 @@ def test_estimate_seconds_accounts_for_threads():
     assert estimate_seconds(100, "capability", threads=5) < estimate_seconds(100, "capability", threads=1)
     prompts = []
     confirm_run(100, "batch", threads=10, input_fn=lambda prompt: prompts.append(prompt) or "n")
-    assert "并发线程 10" in prompts[0]
+    assert "workers 10" in prompts[0]
+
+
+def test_effective_workers_respects_memory_cpu_and_pending(monkeypatch):
+    monkeypatch.setattr(capability_test.os, "cpu_count", lambda: 8)
+    assert effective_workers(10, 100, 250, worker_mib=100) == (2, "workers由10限制为2（CPU/待运行局数/内存预算）")
+    assert effective_workers(2, 1, 1000, worker_mib=100)[0] == 1
+
+
+def test_serial_task_executor_preserves_index_and_failure_shape():
+    tasks = [(0, ["invalid"] * 4, "bad-game", None, None, None)]
+    [(index, row)] = list(execute_tasks(tasks, executor="serial", workers=1))
+    assert index == 0
+    assert row["status"] == "FAILED" and row["game_id"] == "bad-game"
 
 
 def test_capability_mode_rotates_target_across_all_seats():
@@ -91,7 +104,7 @@ def test_batch_configuration_selects_preset_immediately_after_each_seat():
     assert presets[2] == list(capability_test.PRESET_IDS)[1]
 
 def test_capability_manifest_records_scalar_preset(tmp_path, monkeypatch):
-    monkeypatch.setattr(capability_test, "run_game", lambda specs, gid, presets=None: {"game_id": gid, "scores": {"0": 0, "1": 0, "2": 0, "3": 0}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]})
+    monkeypatch.setattr(capability_test, "run_game_task", lambda task: (task[0], {"game_id": task[2], "scores": {"0": 0, "1": 0, "2": 0, "3": 0}, "rankings": [], "hu_sequence": [], "decision_timing": [{"seconds": [], "phases": {}} for _ in range(4)]}))
     monkeypatch.setattr(capability_test, "write_outputs", lambda *args, **kwargs: None)
     monkeypatch.setattr(capability_test, "STOP", False)
     capability_test.run_capability_mode("humanlike_v2", 100, tmp_path, ["low_aggressive"] * 4, 1)
