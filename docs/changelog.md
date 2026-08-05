@@ -1661,6 +1661,7 @@
 - F0036: batch 模式接入 ThreadPoolExecutor 并发执行，修复选择 10 线程仍串行的问题。
 # 2026-08-05
 
+- Analysis: 汇总Nonhuman vs Expert完整进展与目标演变；确认旧差距主因是高杠偏好及speed/hand_value权重失衡，正式栈已通过9000局跨数据集门禁，后续目标转为盲测泛化与防回退。
 - F0063: 实现真实SIGINT安全持久化与退出130，修复process worker中断逃逸和`--resume`错误进入交互的问题。
 - F0063: 报告增加成功局trace完整性统计与门禁，JSON/Markdown统一写入固定数据集及复现元数据。
 - F0063: 固定100局完整复盘100/100成功、100/100 trace完整；全仓`522 passed, 1 skipped`。

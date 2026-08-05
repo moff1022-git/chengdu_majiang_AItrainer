@@ -5,6 +5,8 @@
 
 ## 本轮已完成
 
+- 完成Nonhuman相较Expert差距定位全链路复盘报告：区分旧基线`-559`、规则排障、被否决方向、Expert上限恢复及9000局跨数据集超越证据。
+- 当前目标口径更新：正式Nonhuman已通过项目内Expert跨数据集晋级门禁；下一阶段转为全新盲测、多阵容泛化和持续防回退，不宣称理论全局最优。
 - F0063实现真实SIGINT安全恢复：worker中断不再打印traceback，CLI返回130并保留已完成结果；`--resume`无交互恢复原配置。
 - 固定100局process完整复盘验收：100/100成功、100个唯一game_id、100/100 trace三件套、完整性门禁PASS。
 - 报告JSON/Markdown统一绑定测试编号、数据集SHA、fixed_deal、完整复盘和四座人格参数快照。
@@ -27,6 +29,7 @@
 
 ## 下一步完整任务清单
 
-1. 推送F0063实现并手动运行Linux RSS workflow，记录RSS和CI run。依赖：远端Actions。建议触发语：`完成F0063 Linux验收`。
-2. 根据Linux RSS结果复核`DEFAULT_WORKER_MIB=96`安全系数；仅在证据要求时调整。依赖：任务1。
-3. 将F0063状态置Done并同步DOC_CODE_BASELINE/changelog。依赖：任务1–2。
+1. 修复F0063 Linux RSS workflow的仓库模块路径，重新触发并记录RSS；当前run `30973389287`因`ModuleNotFoundError: engine`失败。建议触发语：`继续F0063 Linux验收`。
+2. 在全新未参与调参的数据集做正式Nonhuman vs Expert盲测。依赖：F0063闭环。建议触发语：`执行Nonhuman全新盲测`。
+3. 执行novice/normal/skilled/expert混合阵容分层验证。依赖：任务2报告合同。建议触发语：`执行Nonhuman多阵容验证`。
+4. 只读分析F0057新增shanten/ukeire审计字段，定位剩余可泛化差距。依赖：任务2新trace。建议触发语：`分析Nonhuman新审计字段`。
