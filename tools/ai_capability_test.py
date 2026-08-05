@@ -431,7 +431,9 @@ def main(argv: list[str] | None = None) -> int:
                 counts = manifest.get("supported_counts") or ([manifest.get("games")] if manifest.get("games") else [])
                 print(json.dumps({"test_id": test_id, "mode": manifest.get("mode"), "games": counts, "sha256": manifest.get("sha256"), "seed": manifest.get("seed")}, ensure_ascii=False))
             except (OSError, json.JSONDecodeError):
-                continue
+                # Keep the registry visible even when large data artifacts are
+                # intentionally omitted from a clean source checkout.
+                print(json.dumps({"test_id": test_id, "mode": "unprovisioned", "games": [], "sha256": None, "seed": None}, ensure_ascii=False))
         return 0
     resume_config = None
     if args.resume:
