@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from copy import deepcopy
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -65,6 +66,27 @@ def test_mandatory_hu_survives_candidate_cap() -> None:
     assert len(candidates.candidates) == 2
 
 
+def test_hu_is_not_threshold_delayed_when_pass_not_allowed() -> None:
+    actions = [Action(ActionType.DISCARD, (parse_tile("wan_1"),)), Action(ActionType.HU)]
+    context, cfg = _context(actions=actions)
+    payload = dict(context.view.payload)
+    payload["policy_gp009"] = {"discard_hu_can_pass": False, "self_draw_can_pass": False}
+    context = replace(context, view=replace(context.view, payload=payload))
+    candidates = build_candidates(context, max_candidates=1)
+    assert candidates.candidates[0].action.type is ActionType.HU
+    assert candidates.candidates[0].mandatory is True
+
+
+def test_hu_can_be_passed_only_when_rule_allows_it() -> None:
+    actions = [Action(ActionType.DISCARD, (parse_tile("wan_1"),)), Action(ActionType.HU)]
+    context, _ = _context(phase="response", actions=actions)
+    payload = dict(context.view.payload)
+    payload["policy_gp009"] = {"discard_hu_can_pass": True, "self_draw_can_pass": False}
+    context = replace(context, view=replace(context.view, payload=payload))
+    candidates = build_candidates(context, max_candidates=1)
+    assert all(item.mandatory is False for item in candidates.candidates)
+
+
 def test_stable_action_key_is_explicit() -> None:
     actions = [Action(ActionType.PASS), Action(ActionType.DISCARD, (parse_tile("tong_2"),)), Action(ActionType.HU)]
     assert [action.type for action in sorted(actions, key=stable_action_key)] == [ActionType.HU, ActionType.DISCARD, ActionType.PASS]
@@ -80,6 +102,12 @@ def test_evaluation_is_repeatable_and_rng_free() -> None:
     assert first.trace == second.trace
     assert first.trace["rng_used"] is False
     assert all(round(item.score, 8) == item.score for item in first.scored)
+    for candidate in first.trace["candidates"]:
+        features = candidate["features"]
+        assert isinstance(features["shanten"], int)
+        assert isinstance(features["dingque_tiles"], int)
+        assert features["ukeire_faces"] == sorted(features["ukeire_faces"])
+        assert features["ukeire_public_count"] >= 0
 
 
 def test_player_dingque_and_trace_are_deterministic() -> None:

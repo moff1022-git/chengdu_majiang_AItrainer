@@ -21,9 +21,13 @@ class HandFeatures:
     defense: float
     flexibility: float
     dingque_tiles: int
+    ukeire_faces: tuple[str, ...]
+    ukeire_public_count: int
 
-    def to_dict(self) -> dict[str, float | int]:
-        return {name: getattr(self, name) for name in self.__dataclass_fields__}
+    def to_dict(self) -> dict[str, object]:
+        out = {name: getattr(self, name) for name in self.__dataclass_fields__}
+        out["ukeire_faces"] = list(self.ukeire_faces)
+        return out
 
 
 def visible_hand(context: DecisionContext) -> tuple[list[Tile], list, Suit | None]:
@@ -55,9 +59,8 @@ def analyze_action(context: DecisionContext, action: Action, belief: PublicBelie
     counts = Counter(tile.id for tile in trial)
     dq_n = sum(1 for tile in trial if dingque is not None and tile.suit == dingque)
 
-    useful = 0
-    if result.ukeire:
-        useful = sum(belief.unseen_counts[tile_index(tile)] for tile in result.ukeire)
+    ukeire_faces = tuple(sorted(tile.id for tile in (result.ukeire or ())))
+    useful = sum(belief.unseen_counts[tile_index(parse_tile(face))] for face in ukeire_faces)
     speed = max(0.0, min(1.0, (8 - max(-1, result.shanten)) / 9.0 + min(useful, 16) / 64.0))
     if action.type == ActionType.DISCARD and action.tiles and dingque is not None:
         if action.tiles[0].suit == dingque:
@@ -77,4 +80,4 @@ def analyze_action(context: DecisionContext, action: Action, belief: PublicBelie
     distinct = len(counts)
     neighbor_links = sum(1 for tile in set(trial) if any(other.suit == tile.suit and abs(other.rank - tile.rank) in (1, 2) for other in set(trial)))
     flexibility = min(1.0, 0.6 * distinct / 14.0 + 0.4 * neighbor_links / 14.0)
-    return HandFeatures(result.shanten, round(speed, 8), round(hand_value, 8), round(defense, 8), round(flexibility, 8), dq_n)
+    return HandFeatures(result.shanten, round(speed, 8), round(hand_value, 8), round(defense, 8), round(flexibility, 8), dq_n, ukeire_faces, useful)

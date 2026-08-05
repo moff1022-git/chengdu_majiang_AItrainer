@@ -99,7 +99,7 @@ def evaluate_candidates(
         "plan": plan.to_dict(),
         "belief_summary": belief.summary(),
         "candidates": [
-            {"action": item.action.to_dict(), "mandatory": item.mandatory, "features": {key: getattr(item.features, key) for key in ("speed", "hand_value", "defense", "flexibility")}, "score": item.score}
+            {"action": item.action.to_dict(), "mandatory": item.mandatory, "features": item.features.to_dict(), "score": item.score}
             for item in all_ranked
         ],
         "selected_action": selected.to_dict(),
@@ -107,4 +107,3 @@ def evaluate_candidates(
         "rng_used": False,
     }
     return EvaluationResult(selected, plan, tuple(all_ranked), trace)
-
