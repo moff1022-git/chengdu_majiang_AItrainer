@@ -46,7 +46,7 @@ backup/
 configs/humanlike_v2/*.json.bak
 configs/humanlike_v2/*.json.recommendation.json
 data/
-.worktrees/
+worktrees/
 releases/
 !docs/releases/
 !docs/releases/*.md
