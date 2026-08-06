@@ -7,6 +7,10 @@
 
 > 当前为F0069独立产品线快照；不用于续跑F0070，不合并回`main`。
 
+- F0069-A0主代理全自动编排契约已Approved：后续由主代理总控，自动派生有界子代理、独立Review/Audit并幂等续跑。
+- 用户的自动授权覆盖Approved规格内低风险动作，不覆盖平台提权、远端发布、破坏性操作、新语义或跨线修改。
+- 本轮仅审计现有Task 19 runtime/monitor并落盘流程规格；没有修改业务代码、工具或启动实验。
+
 - F0067已Done：v0.3.2完成回归、双编译器构建、clean source/evidence归档、双分支同步、CI、tag和GitHub Release。
 - 发布tag/Release指向`a4f2f5b1`；CI run `31063883299`成功；全仓`530 passed, 1 skipped`。
 - Release包含PyInstaller、Nuitka、source、evidence和`SHA256SUMS.json`：`https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.2`。
@@ -37,7 +41,7 @@
 ## 下一步完整任务清单
 
 1. **立即下一步**：完成两个永久独立分支/worktree初始化与首次CI。产出：0.3.3/0.4.0独立HEAD、stream LATEST和CI证据。依赖：ADR-0002。建议触发语：自动执行中。
-2. **F0069-A1**：编制实施预注册，冻结精确参数邻域、候选上限、数据集分区、多重比较和资源预算。产出：F0069实施附录/manifest规格。依赖：F0069 Approved。建议触发语：`开始F0069-A1`。
+2. **F0069-A1**：主代理按A0契约自动派生Spec Agent与独立Reviewer，冻结精确参数邻域、候选上限、数据集分区、多重比较和资源预算。产出：F0069实施附录/manifest规格。依赖：F0069与A0 Approved。建议触发语：`按F0069全自动执行`。
 3. **F0069-A2–A6**：基线冻结 → 单参数粗筛 → 有限交互 → 多阵容护栏 → 10000–50000局盲测 → 晋级/回滚。产出：manifest、配对数据、门禁JSON、研究报告。依赖：前一阶段门禁PASS。建议触发语：`按F0069自动执行`。
 4. **F0070-B6/B1**：先批准统一trace子规格，再实现计划生命周期子规格。产出：一次性trace契约、计划状态机和专项门禁。依赖：F0070 Approved。建议触发语：`开始F0070-B6和B1规格`。
 5. **F0070-B3/B2/B4/B5**：公开进张与F0068 → 多步弃牌 → 对手风险 → 碰杠后搜索；每个WP独立A/B和盲测。产出：各WP子规格、代码、测试和决定记录。依赖：前置WP晋级。建议触发语：`按F0070分包执行`。
