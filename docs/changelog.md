@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-06 — v0.3.2 Windows 首页下载入口
+
+- GitHub 首页增加 Windows x64 EXE应用ZIP与MSI安装程序直链、SHA-256和SmartScreen/UAC说明。
+
 ## 2026-08-06 — 独立工作区Finder可见
 
 - F0069/F0070工作区从隐藏的`.worktrees/`迁移到项目根下可见的`worktrees/`，Git分支、HEAD和本地运行数据保持不变。

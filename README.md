@@ -6,15 +6,19 @@
 
 ## 下载 v0.3.2
 
-当前提供 Apple Silicon（arm64）macOS 应用。两个版本功能相同，优先使用 PyInstaller 版；均为未签名构建。
+当前提供 Windows x64 与 Apple Silicon（arm64）macOS 应用。Windows 可选免安装 ZIP 或 MSI 安装程序；所有构建均未签名。
 
 | 构建 | 下载 | SHA-256 |
 |---|---|---|
+| Windows x64 PyInstaller | [下载 EXE 应用 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64-PyInstaller.zip) | `4010ad74968c98a4cf2f3edba67218083519e94e3a3cd448d5a18d3dc2416097` |
+| Windows x64 MSI | [下载 MSI 安装程序](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64.msi) | `a6ca147899595de8e3e99e12e245f1319649abf82e72f6be62d1e42ca2201c80` |
 | PyInstaller | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-PyInstaller.zip) | `768bc96a7cfb9fc03d81687629cb50d7d64ceb92ef40f3ec9928905d5ff6f6b8` |
 | Nuitka | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-Nuitka.zip) | `c1626970f64373372588af8265c0a68224592549b2582de6038de81be484f6cc` |
 | 源码归档 | [v0.3.2-source.zip](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/v0.3.2-source.zip) | `9bfff482057a64a162abf861b24534db2b0a992bfa161a6415955485417d3c0d` |
 | 证据归档 | [v0.3.2-evidence.zip](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/v0.3.2-evidence.zip) | `2d1ee3ae11fa57a5909f161044b536fcfb64e6e24cb93ba14d1446eee984a24d` |
 | 校验文件 | [SHA256SUMS.json](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/SHA256SUMS.json) | — |
+
+Windows：ZIP 解压后运行 `ChengduMahjongAITrainer.exe`；MSI 双击安装并按提示确认 UAC。未签名程序可能触发 SmartScreen，请确认下载来源后选择继续运行。
 
 解压后打开 `ChengduMahjongAITrainer.app`。若 macOS Gatekeeper 阻止未签名应用，可在确认下载来源后执行：
 
