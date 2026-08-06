@@ -1,9 +1,11 @@
 # 进度快照
 
 更新时间：`2026-08-06`
-当前应用版本：`0.3.2`
+当前应用版本：`0.3.3`
 
 ## 本轮已完成
+
+> 当前为F0069独立产品线快照；不用于续跑F0070，不合并回`main`。
 
 - F0067已Done：v0.3.2完成回归、双编译器构建、clean source/evidence归档、双分支同步、CI、tag和GitHub Release。
 - 发布tag/Release指向`a4f2f5b1`；CI run `31063883299`成功；全仓`530 passed, 1 skipped`。

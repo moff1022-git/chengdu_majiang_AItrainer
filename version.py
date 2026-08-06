@@ -8,8 +8,8 @@ Do not hardcode version strings elsewhere; import from here.
 from __future__ import annotations
 
 # SemVer: MAJOR.MINOR.PATCH[-prerelease]
-APP_VERSION = "0.3.2"
-APP_VERSION_INFO = (0, 3, 2)
+APP_VERSION = "0.3.3"
+APP_VERSION_INFO = (0, 3, 3)
 
 APP_NAME = "ChengduMahjongAITrainer"
 APP_NAME_ZH = "成都麻将AI训练器"
