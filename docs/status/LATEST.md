@@ -5,6 +5,8 @@
 
 ## 本轮已完成
 
+- F0069/F0070的独立worktree已迁移到Finder默认可见的`worktrees/f0069-v0.3.3/`和`worktrees/f0070-v0.4.0/`；分支、HEAD、版本与数据均保持隔离。
+
 - F0067已Done：v0.3.2完成回归、双编译器构建、clean source/evidence归档、双分支同步、CI、tag和GitHub Release。
 - 发布tag/Release指向`a4f2f5b1`；CI run `31063883299`成功；全仓`530 passed, 1 skipped`。
 - Release包含PyInstaller、Nuitka、source、evidence和`SHA256SUMS.json`：`https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.2`。

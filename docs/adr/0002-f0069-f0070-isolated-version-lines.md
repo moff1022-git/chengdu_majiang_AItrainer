@@ -26,9 +26,9 @@ v0.3.2发布后存在两条目标、风险和SemVer语义完全不同的研发�
 ### 2. 工作区与代码隔离
 
 - 两分支使用独立Git worktree，不在根工作区来回checkout。
-- A线工作区：`.worktrees/f0069-v0.3.3/`。
-- B线工作区：`.worktrees/f0070-v0.4.0/`。
-- `.worktrees/`不进入Git、clean source或打包资产。
+- A线工作区：`worktrees/f0069-v0.3.3/`。
+- B线工作区：`worktrees/f0070-v0.4.0/`。
+- `worktrees/`为Finder默认可见的项目内目录，但不进入Git、clean source或打包资产。
 - 每个工作区有独立代码HEAD、`version.py`、测试结果和状态文档。
 
 ### 3. 文档隔离

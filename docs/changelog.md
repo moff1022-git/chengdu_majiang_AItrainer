@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-06 — 独立工作区Finder可见
+
+- F0069/F0070工作区从隐藏的`.worktrees/`迁移到项目根下可见的`worktrees/`，Git分支、HEAD和本地运行数据保持不变。
+
 ## 2026-08-06 — v0.3.2 首页对比证据补充
 
 - README的0.3.2更新说明增加`nonhuman_optimized` vs `expert_balanced`对比条件、9000局晋级验证、11000局独立盲测、95% CI及胡/自摸/花猪/点炮护栏表。
