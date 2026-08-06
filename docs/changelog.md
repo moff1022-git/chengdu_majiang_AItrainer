@@ -1677,6 +1677,7 @@
 
 ### 内部
 
+- Windows x64 PyInstaller onedir ZIP与WiX MSI已追加至GitHub v0.3.2 Release；远端SHA-256与本地构建产物一致。
 - 全仓回归、Linux RSS校准、四阵容8×1000及10000局主盲测证据均已固化。
 - 应用版本由0.3.1升至0.3.2；存档schema、文件格式和座位协议均不变。
 - 发布修复提交`1033f9f3`已同步双分支，最终CI run `31063215072`成功。
