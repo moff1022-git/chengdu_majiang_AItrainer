@@ -1,0 +1,22 @@
+name: independent-line-guard
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  reject-independent-product-lines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject F0069/F0070 merge into main
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          case "$HEAD_REF" in
+            feature/f0069-v0.3.3|feature/f0070-v0.4.0)
+              echo "::error::$HEAD_REF is a permanent independent product line and must not merge into main."
+              exit 1
+              ;;
+          esac
+          echo "Head branch is not an isolated product line."

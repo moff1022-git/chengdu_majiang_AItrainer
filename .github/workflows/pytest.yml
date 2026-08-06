@@ -7,6 +7,8 @@ on:
       - main
       - "integration/**"
       - "codex/**"
+      - "feature/f0069-v0.3.3"
+      - "feature/f0070-v0.4.0"
   pull_request:
 
 concurrency:
