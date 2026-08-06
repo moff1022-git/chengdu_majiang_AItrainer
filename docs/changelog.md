@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 — 2026-08-06
+
+- README 增加 Windows ZIP/MSI 与 macOS v0.3.2 下载入口及 Windows 安装说明。
+
 ## 2026-08-05 — F0060恢复/trace与F0062固定数据集CLI
 
 - process执行器改为有界调度，stop后不再提交新任务；resume按game_id去重。

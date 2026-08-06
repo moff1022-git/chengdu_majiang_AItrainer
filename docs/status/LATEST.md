@@ -5,6 +5,7 @@
 
 ## 本轮已完成
 
+- README 已补充 v0.3.2 Windows x64 ZIP/MSI 下载入口、安装说明与校验值。
 - v0.3.2 Windows x64 PyInstaller ZIP与WiX MSI已构建并上传；EXE版本冒烟通过，远端SHA-256与本地一致。
 - F0067已Done：v0.3.2完成回归、双编译器构建、clean source/evidence归档、双分支同步、CI、tag和GitHub Release。
 - 发布tag/Release指向`a4f2f5b1`；CI run `31063883299`成功；全仓`530 passed, 1 skipped`。

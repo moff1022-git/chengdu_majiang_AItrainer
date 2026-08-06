@@ -2,17 +2,21 @@
 
 成都麻将（四川血战到底）规则引擎、可视化对局程序与 AI 训练/评估框架。
 
-当前版本：**v0.3.1** · [查看 Release](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.1) · [版本变更](docs/changelog.md)
+当前版本：**v0.3.2** · [查看 Release](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.2) · [版本变更](docs/changelog.md)
 
-## 下载 v0.3.1
+## 下载 v0.3.2
 
-当前提供 Apple Silicon（arm64）macOS 应用。两个版本功能相同，优先使用 PyInstaller 版；均为未签名构建。
+Windows x64 和 Apple Silicon（arm64）macOS 均提供预构建包。Windows 优先使用 PyInstaller ZIP；MSI 适合需要开始菜单和卸载入口的安装。所有包均为未签名构建。
 
 | 构建 | 下载 | SHA-256 |
 |---|---|---|
-| PyInstaller | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.1/ChengduMahjongAITrainer-0.3.1-macOS-arm64-PyInstaller.zip) | `7af0e83f5a744197a5716f6d6411ff29454c744a51d303013f1b9b451a770b83` |
-| Nuitka | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.1/ChengduMahjongAITrainer-0.3.1-macOS-arm64-Nuitka.zip) | `28169e2b11bae19656a6a77b9e3b8a9ddf1645bc965b8f907efba35d171384b5` |
-| 校验文件 | [SHA-256 清单](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.1/ChengduMahjongAITrainer-0.3.1-macOS-arm64-SHA256.txt) | — |
+| Windows x64 PyInstaller | [ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64-PyInstaller.zip) | `4010ad74968c98a4cf2f3edba67218083519e94e3a3cd448d5a18d3dc2416097` |
+| Windows x64 MSI | [安装程序](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64.msi) | `a6ca147899595de8e3e99e12e245f1319649abf82e72f6be62d1e42ca2201c80` |
+| macOS arm64 PyInstaller | [ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-PyInstaller.zip) | — |
+| macOS arm64 Nuitka | [ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-Nuitka.zip) | — |
+| 校验文件 | [SHA-256 清单](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/SHA256SUMS.json) | — |
+
+Windows ZIP 解压后运行 `ChengduMahjongAITrainer.exe`；MSI 双击安装（可能需要 UAC 管理员确认）。未签名程序可能触发 SmartScreen，请确认来源后选择继续运行。
 
 解压后打开 `ChengduMahjongAITrainer.app`。若 macOS Gatekeeper 阻止未签名应用，可在确认下载来源后执行：
 
