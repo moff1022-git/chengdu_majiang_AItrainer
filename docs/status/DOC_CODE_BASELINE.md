@@ -62,7 +62,7 @@
 | F0063 | **Done** | SIGINT退出130、无交互resume、100/100 trace门禁、Linux RSS 35,880 KiB |
 | F0065 | **Done（CI run 31019337103 已通过，28596eaa/ead34381修复后）** | 10000局盲测、多阵容8×1000、F0057聚合、无人值守监控；干净检出测试组索引兼容 |
 | F0066 | **Done（本地529 passed、1 skipped；CI 31022485737成功）** | 跨种子11000局防回退门禁、F0057深化只读审计、0.3.1发布候选归档 |
-| F0067 | **In Progress** | v0.3.2版本、受控artifact防回退workflow、双编译器构建与GitHub Release |
+| F0067 | **In Progress（530 passed/1 skipped；CI 31062994354成功）** | v0.3.2版本、受控artifact防回退workflow、双编译器构建完成；待tag/Release |
 | F0068 | **Approved/实验未启动** | F0057公开进张单参数随机因果A/B预注册；依赖独立倍率实现规格 |
 | F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |

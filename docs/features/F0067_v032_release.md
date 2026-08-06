@@ -36,12 +36,12 @@
 
 ## 验收
 
-- [ ] `main.py --version`输出0.3.2，版本测试通过。
-- [ ] 手动workflow具备输入校验、SHA校验、门禁退出码传播和结果artifact。
-- [ ] 全仓pytest通过。
+- [x] `main.py --version`输出0.3.2，版本测试通过。
+- [x] 手动workflow具备输入校验、SHA校验、门禁退出码传播和结果artifact。
+- [x] 全仓pytest通过：530 passed、1 skipped。
 - [x] PyInstaller与Nuitka产物均构建成功并有SHA-256。
-- [ ] clean source/evidence归档自校验通过。
-- [ ] 双分支同步，最终CI成功。
+- [x] clean source/evidence归档自校验通过。
+- [ ] 双分支同步，最终CI成功（最终修复提交后回填）。
 - [ ] tag `v0.3.2`与Release指向同一提交，Release资产完整。
 
 ## 回滚
@@ -52,6 +52,9 @@
 
 - PyInstaller macOS arm64：冻结程序与seat-window smoke通过，ZIP SHA-256 `768bc96a7cfb9fc03d81687629cb50d7d64ceb92ef40f3ec9928905d5ff6f6b8`。
 - Nuitka macOS arm64：完整C编译、资源检查及ASCII路径smoke通过，ZIP SHA-256 `c1626970f64373372588af8265c0a68224592549b2582de6038de81be484f6cc`。
+- Clean source ZIP：SHA-256 `9bfff482057a64a162abf861b24534db2b0a992bfa161a6415955485417d3c0d`。
+- Evidence ZIP：SHA-256 `2d1ee3ae11fa57a5909f161044b536fcfb64e6e24cb93ba14d1446eee984a24d`。
+- 版本主提交`4d131d46`的CI run `31062994354`成功。
 
 ## 批准记录
 

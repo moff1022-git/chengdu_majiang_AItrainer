@@ -1673,6 +1673,7 @@
 - 固定测试组在不含大数据工件的干净检出中仍可列出并明确标记`unprovisioned`。
 - 真实SIGINT、无交互resume及成功局trace完整性门禁闭环。
 - macOS PyInstaller/Nuitka构建脚本在`.venv`不可执行时自动使用恢复后的`.venv-macos`环境。
+- clean release candidate工具支持显式版本标签，避免0.3.2归档沿用旧F0066候选名称。
 
 ### 内部
 

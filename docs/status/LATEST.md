@@ -21,7 +21,7 @@
 ## 当前状态
 
 - F0060–F0066：Done。
-- F0067：In Progress，待全仓回归、双编译器构建、双分支CI、tag和GitHub Release。
+- F0067：In Progress；530/1回归、双编译器构建、clean归档及主提交CI `31062994354`已完成，待最终修复CI、tag和GitHub Release。
 - F0068：Approved，预注册完成；实验启动依赖独立公开进张倍率的实现规格。
 
 ## 风险与限制

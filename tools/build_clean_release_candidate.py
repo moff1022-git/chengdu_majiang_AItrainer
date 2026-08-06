@@ -56,7 +56,8 @@ def build(output: Path, evidence: list[Path], version: str = "0.3.1-f0066-rc") -
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(); p.add_argument("--output", type=Path, default=ROOT / "releases"); p.add_argument("--evidence", type=Path, action="append", required=True)
-    args = p.parse_args(argv); print(json.dumps(build(args.output, args.evidence), indent=2)); return 0
+    p.add_argument("--version", default="0.3.1-f0066-rc", help="archive version label")
+    args = p.parse_args(argv); print(json.dumps(build(args.output, args.evidence, version=args.version), indent=2)); return 0
 
 
 if __name__ == "__main__": raise SystemExit(main())
