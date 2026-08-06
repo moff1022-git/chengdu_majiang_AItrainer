@@ -2,17 +2,19 @@
 
 成都麻将（四川血战到底）规则引擎、可视化对局程序与 AI 训练/评估框架。
 
-当前版本：**v0.3.1** · [查看 Release](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.1) · [版本变更](docs/changelog.md)
+当前稳定版本：**v0.3.2** · [查看 Release](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.2) · [版本变更](docs/changelog.md)
 
-## 下载 v0.3.1
+## 下载 v0.3.2
 
 当前提供 Apple Silicon（arm64）macOS 应用。两个版本功能相同，优先使用 PyInstaller 版；均为未签名构建。
 
 | 构建 | 下载 | SHA-256 |
 |---|---|---|
-| PyInstaller | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.1/ChengduMahjongAITrainer-0.3.1-macOS-arm64-PyInstaller.zip) | `7af0e83f5a744197a5716f6d6411ff29454c744a51d303013f1b9b451a770b83` |
-| Nuitka | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.1/ChengduMahjongAITrainer-0.3.1-macOS-arm64-Nuitka.zip) | `28169e2b11bae19656a6a77b9e3b8a9ddf1645bc965b8f907efba35d171384b5` |
-| 校验文件 | [SHA-256 清单](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.1/ChengduMahjongAITrainer-0.3.1-macOS-arm64-SHA256.txt) | — |
+| PyInstaller | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-PyInstaller.zip) | `768bc96a7cfb9fc03d81687629cb50d7d64ceb92ef40f3ec9928905d5ff6f6b8` |
+| Nuitka | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-Nuitka.zip) | `c1626970f64373372588af8265c0a68224592549b2582de6038de81be484f6cc` |
+| 源码归档 | [v0.3.2-source.zip](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/v0.3.2-source.zip) | `9bfff482057a64a162abf861b24534db2b0a992bfa161a6415955485417d3c0d` |
+| 证据归档 | [v0.3.2-evidence.zip](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/v0.3.2-evidence.zip) | `2d1ee3ae11fa57a5909f161044b536fcfb64e6e24cb93ba14d1446eee984a24d` |
+| 校验文件 | [SHA256SUMS.json](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/SHA256SUMS.json) | — |
 
 解压后打开 `ChengduMahjongAITrainer.app`。若 macOS Gatekeeper 阻止未签名应用，可在确认下载来源后执行：
 
@@ -23,7 +25,16 @@ open ChengduMahjongAITrainer.app
 
 Nuitka 版建议放在 `/Applications` 等纯英文路径运行。当前包未进行 Apple Developer ID 签名或公证。
 
-## v0.3.1 主要能力
+## v0.3.2 主要更新
+
+- Nonhuman参数栈完成跨数据集优化：两个独立盲测SHA合11000局，相对Expert总分`+1036`、配对均分`+0.09418`，95% CI `[+0.04991,+0.13755]`。
+- 行为护栏同步改善：胡牌`+154`、自摸`+74`、花猪`-16`、点炮`-28`。
+- 新增手动Nonhuman防回退workflow，支持受控artifact和SHA-256校验。
+- 完善固定牌局、安全中断/续跑、完整trace和报告一致性门禁。
+- macOS PyInstaller/Nuitka双构建均通过冻结程序和资源冒烟测试。
+- 详细资料：[Nonhuman优化历程](docs/releases/V0.3.2_NONHUMAN_OPTIMIZATION.md) · [13种人格及旧Nonhuman 7+12参数矩阵](docs/releases/V0.3.2_PERSONALITY_PARAMETER_MATRIX.md)
+
+## 主要能力
 
 - 完整成都麻将规则：108 张牌、换三张、定缺、血战到底、一炮多响、碰杠胡与成都番型计分。
 - 四座独立界面：支持人类玩家、AI 玩家和观战窗口，同屏展示牌桌、手牌、弃牌与事件日志。
@@ -106,7 +117,7 @@ bash tools/packaging/build_nuitka_macos.sh
 .venv/bin/python -m pytest -q
 ```
 
-v0.3.1 clean-source 发布基线：**500 passed, 1 skipped, 0 failed**。
+v0.3.2 发布基线：**530 passed, 1 skipped, 0 failed**；GitHub Actions run `31063883299` 成功。
 
 ## 项目结构
 
