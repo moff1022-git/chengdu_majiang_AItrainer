@@ -6,6 +6,7 @@
 ## 本轮已完成
 
 - GitHub 默认分支 `main` 的 README 已补充 v0.3.2 Windows EXE ZIP与MSI直链、SHA-256和安装说明。
+- Windows 包已从含人格雷达图的 `origin/main` 重建并覆盖 Release 附件；新 SHA 已同步 README。
 - F0069/F0070的独立worktree已迁移到Finder默认可见的`worktrees/f0069-v0.3.3/`和`worktrees/f0070-v0.4.0/`；分支、HEAD、版本与数据均保持隔离。
 
 - F0067已Done：v0.3.2完成回归、双编译器构建、clean source/evidence归档、双分支同步、CI、tag和GitHub Release。

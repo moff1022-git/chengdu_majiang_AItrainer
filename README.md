@@ -10,8 +10,8 @@
 
 | 构建 | 下载 | SHA-256 |
 |---|---|---|
-| Windows x64 PyInstaller | [下载 EXE 应用 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64-PyInstaller.zip) | `4010ad74968c98a4cf2f3edba67218083519e94e3a3cd448d5a18d3dc2416097` |
-| Windows x64 MSI | [下载 MSI 安装程序](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64.msi) | `a6ca147899595de8e3e99e12e245f1319649abf82e72f6be62d1e42ca2201c80` |
+| Windows x64 PyInstaller | [下载 EXE 应用 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64-PyInstaller.zip) | `35d004d6f953430708d58cb236f6c58832472f23a56ff19273e3feb58bdfde69` |
+| Windows x64 MSI | [下载 MSI 安装程序](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-windows-x64.msi) | `43c1a63b28034c0f814385478e8e84d26b778c879ac54ccad02047555070a857` |
 | PyInstaller | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-PyInstaller.zip) | `768bc96a7cfb9fc03d81687629cb50d7d64ceb92ef40f3ec9928905d5ff6f6b8` |
 | Nuitka | [macOS arm64 ZIP](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/ChengduMahjongAITrainer-0.3.2-macOS-arm64-Nuitka.zip) | `c1626970f64373372588af8265c0a68224592549b2582de6038de81be484f6cc` |
 | 源码归档 | [v0.3.2-source.zip](https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/download/v0.3.2/v0.3.2-source.zip) | `9bfff482057a64a162abf861b24534db2b0a992bfa161a6415955485417d3c0d` |
