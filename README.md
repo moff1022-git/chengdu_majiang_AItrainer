@@ -74,6 +74,12 @@ Nuitka 版建议放在 `/Applications` 等纯英文路径运行。当前包未�
 
 ![结算窗口](docs/media/readme/05_result.png)
 
+### Humanlike v2 人格雷达图
+
+设置界面的“人格预设”页展示四个座位的双层人格雷达图。
+
+![Humanlike v2 人格雷达图](docs/media/readme/06_humanlike_settings.png)
+
 ## 从源码运行
 
 要求 Python 3.11+；推荐 Python 3.12。macOS 的 Tk 座位窗口需要 `python-tk@3.12`。

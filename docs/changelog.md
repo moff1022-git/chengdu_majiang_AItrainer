@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-06 — v0.3.2 人格雷达图首页截图
+
+- 首页新增真实 Windows 设置窗口的 Humanlike v2 双层人格雷达图截图。
+
 ## 2026-08-06 — v0.3.2 Windows 首页下载入口
 
 - GitHub 首页增加 Windows x64 EXE应用ZIP与MSI安装程序直链、SHA-256和SmartScreen/UAC说明。
