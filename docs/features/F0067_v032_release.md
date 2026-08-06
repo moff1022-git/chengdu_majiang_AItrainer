@@ -1,6 +1,6 @@
 # F0067 v0.3.2 发布
 
-- 状态：Approved
+- 状态：In Progress（发布资产已就绪）
 - 日期：2026-08-06
 - 依赖：F0066
 
@@ -41,7 +41,7 @@
 - [x] 全仓pytest通过：530 passed、1 skipped。
 - [x] PyInstaller与Nuitka产物均构建成功并有SHA-256。
 - [x] clean source/evidence归档自校验通过。
-- [ ] 双分支同步，最终CI成功（最终修复提交后回填）。
+- [x] 双分支同步，最终修复提交CI成功。
 - [ ] tag `v0.3.2`与Release指向同一提交，Release资产完整。
 
 ## 回滚
@@ -54,7 +54,7 @@
 - Nuitka macOS arm64：完整C编译、资源检查及ASCII路径smoke通过，ZIP SHA-256 `c1626970f64373372588af8265c0a68224592549b2582de6038de81be484f6cc`。
 - Clean source ZIP：SHA-256 `9bfff482057a64a162abf861b24534db2b0a992bfa161a6415955485417d3c0d`。
 - Evidence ZIP：SHA-256 `2d1ee3ae11fa57a5909f161044b536fcfb64e6e24cb93ba14d1446eee984a24d`。
-- 版本主提交`4d131d46`的CI run `31062994354`成功。
+- 版本主提交`4d131d46`的CI run `31062994354`成功；归档修复提交`1033f9f3`的最终CI run `31063215072`成功。
 
 ## 批准记录
 
