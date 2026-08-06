@@ -1,39 +1,38 @@
 # 进度快照
 
-更新时间：`2026-08-05`
-当前应用版本：`0.3.1`
+更新时间：`2026-08-06`
+当前应用版本：`0.3.2`
 
-## 本轮已完成
+## 本轮目标与进度
 
-- F0066跨种子验证：复用两个预注册独立盲测SHA，共11000局固定牌局配对；Nonhuman相对Expert总分`+1036`、均分`+0.09418`、bootstrap 95% CI `[+0.04991,+0.13755]`。
-- 两个数据集均为正向；合并胡牌`+154`、自摸`+74`、花猪`-16`、点炮`-28`，零容差方向护栏全部通过。
-- 新增`tools/nonhuman_regression_gate.py`：数据结构错误/门槛失败/通过分别退出2/1/0；CI小样本不依赖本地大数据。
-- F0057深化只读审计：完整扫描F0065 Nonhuman trace中571,186次s0决策、1,151,998个候选；shanten、dingque_tiles、ukeire_public_count覆盖率100%，不作因果声称。
-- 生成`0.3.1-f0066-rc` clean source/evidence候选、manifest和SHA-256；不修改版本、不覆盖正式tag/Release。
-- 本地全仓回归：`529 passed, 1 skipped`。
+- 用户已确定0.3.2版本，F0067发布规格和F0068 F0057因果A/B预注册规格均为Approved。
+- 已完成Nonhuman优化过程复核：确认正式能力提升来自HumanlikeV2Player参数栈中的杠偏好与speed/hand_value权重迁移；Engine保持规则权威，相关Engine改动属于合法性、胡牌/血战/定缺与复盘一致性修复，不作为调参收益来源。
+- 0.3.2内容介绍已增加`docs/releases/V0.3.2_NONHUMAN_OPTIMIZATION.md`和`V0.3.2_PERSONALITY_PARAMETER_MATRIX.md`。
+- `version.py`已升至0.3.2；存档schema 5、存档格式1、座位协议1均不改变。
+- 新增手动Nonhuman防回退workflow：必须提供受控GitHub artifact run/name/SHA，校验后才运行门禁并上传诊断。
+- F0068冻结单参数实验：只改变公开进张贡献倍率1.00→0.00；因当前是否存在独立倍率仍需代码核查，本轮不擅改评分公式、不启动伪A/B。
 
-## 当前功能基线
+## 发布依据
 
-- F0040–F0059：Nonhuman参数验证、候选审计、人格快照和推荐合同Done。
-- F0060–F0063：多进程、CI、固定数据集复盘、SIGINT/trace/RSS门禁Done。
-- F0064–F0065：新盲测、四阵容8×1000、主盲测10000局和无人值守闭环Done。
-- F0066：跨种子防回退、F0057深化审计和发布候选Done；提交`e9521566`已同步双分支，CI run `31022485737`成功。
+- F0066两个独立盲测SHA共11000局：Nonhuman−Expert `+1036`，均分`+0.09418`，95% CI `[+0.04991,+0.13755]`。
+- 胡牌`+154`、自摸`+74`、花猪`-16`、点炮`-28`，防回退门禁PASS。
+- F0057公开trace审计：571,186次s0决策、1,151,998候选，三字段覆盖率100%。
 
-## 关键证据
+## 当前状态
 
-- 结果报告：`docs/status/f0066_cross_seed_and_f0057_result.md`。
-- 本地证据：`data/ai_capability/results/f0066_monitor/`（不进Git）。
-- source ZIP：`1a99783b1fcdcb3ee8acdaedcc3b910db5d4d8f24543cae087ba3eecc795dfb8`。
-- evidence ZIP：`41fd63e1a6c1fce278fb678544312f0b668d1aa17bf0c6066f40d3f8cbc848a3`。
+- F0060–F0066：Done。
+- F0067：In Progress，待全仓回归、双编译器构建、双分支CI、tag和GitHub Release。
+- F0068：Approved，预注册完成；实验启动依赖独立公开进张倍率的实现规格。
 
 ## 风险与限制
 
-- 现有审计为观察关联，不能证明单字段对得分的因果影响。
-- `data/`和`releases/`按策略不进Git；跨机需单独传输固定数据及候选归档。
-- 发布候选仍使用应用版本0.3.1，仅为F0066验证快照；正式升版需另立发版规格。
+- 发布构建依赖本机`.venv`；OneDrive非ASCII路径可能影响Nuitka，脚本已有ASCII路径smoke策略。
+- 防回退workflow默认不在push触发，避免CI下载大数据；必须由受控artifact手动触发。
+- 因果A/B尚未执行，不能把F0066观察关联表述为因果。
 
 ## 下一步完整任务清单
 
-1. 若要正式发布候选，确定新SemVer并按`docs/VERSIONING.md`建立发版规格。建议触发语：`制定下一版本发布方案`。
-2. 若要研究因果影响，预注册单参数随机A/B并生成独立固定数据集。建议触发语：`设计F0057因果A/B`。
-3. 将防回退门禁接入手动GitHub Actions，并由受控证据artifact驱动。建议触发语：`设计远程Nonhuman防回退workflow`。
+1. 完成定向和全仓回归。建议触发语：自动执行中。
+2. 使用PyInstaller和Nuitka构建0.3.2，并生成clean source/evidence与SHA。建议触发语：自动执行中。
+3. 提交推送双分支、等待CI、创建v0.3.2 tag和GitHub Release。建议触发语：自动执行中。
+4. 后续另立公开进张倍率实现规格并执行F0068预注册10000局A/B。建议触发语：`实现并执行F0068`。

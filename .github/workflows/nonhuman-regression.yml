@@ -1,0 +1,68 @@
+name: Nonhuman regression gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_run_id:
+        description: "GitHub Actions run ID containing the controlled evidence artifact"
+        required: true
+        type: string
+      artifact_name:
+        description: "Artifact name; archive must contain regression_spec.json and referenced games files"
+        required: true
+        type: string
+      artifact_sha256:
+        description: "SHA-256 of the downloaded artifact ZIP"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download controlled evidence artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: evidence
+      - name: Verify evidence archive digest
+        env:
+          EXPECTED_SHA256: ${{ inputs.artifact_sha256 }}
+        run: |
+          python - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          archives = sorted(Path("evidence").glob("*.zip"))
+          if len(archives) != 1:
+              raise SystemExit(f"expected exactly one evidence ZIP, found {len(archives)}")
+          actual = hashlib.sha256(archives[0].read_bytes()).hexdigest()
+          expected = os.environ["EXPECTED_SHA256"].strip().lower()
+          if actual != expected:
+              raise SystemExit(f"artifact SHA mismatch: {actual} != {expected}")
+          print(actual)
+          PY
+      - name: Extract and run regression gate
+        run: |
+          python -m zipfile -e evidence/*.zip evidence/unpacked
+          spec="$(find evidence/unpacked -name regression_spec.json -type f -print -quit)"
+          test -n "$spec"
+          python tools/nonhuman_regression_gate.py "$spec" --output regression_result.json
+      - name: Upload gate diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nonhuman-regression-result-${{ github.run_id }}
+          path: regression_result.json
+          if-no-files-found: warn
+          retention-days: 30

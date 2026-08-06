@@ -1659,6 +1659,26 @@
 - F0036: 修复 capability 人格预设记录与目标座位注入，避免预设列表嵌套。
 - F0036: 调整 batch 座位配置交互，humanlike_v2 人格预设与对应座位同步选择。
 - F0036: batch 模式接入 ThreadPoolExecutor 并发执行，修复选择 10 线程仍串行的问题。
+# 0.3.2 — 2026-08-06
+
+### 新增
+
+- Nonhuman跨种子防回退门禁：两个独立盲测SHA合并11000局，支持PASS/FAIL/ERROR机器判定。
+- F0057候选向听、定缺、公开进张分层审计，以及单参数因果A/B预注册方案。
+- 手动GitHub Actions防回退workflow：受控artifact下载、SHA-256校验、门禁结果归档。
+- 新增Nonhuman优化历程、Task 19/AI Player/Engine边界说明，以及13种人格与旧Nonhuman的7+12参数对照。
+
+### 修复
+
+- 固定测试组在不含大数据工件的干净检出中仍可列出并明确标记`unprovisioned`。
+- 真实SIGINT、无交互resume及成功局trace完整性门禁闭环。
+- macOS PyInstaller/Nuitka构建脚本在`.venv`不可执行时自动使用恢复后的`.venv-macos`环境。
+
+### 内部
+
+- 全仓回归、Linux RSS校准、四阵容8×1000及10000局主盲测证据均已固化。
+- 应用版本由0.3.1升至0.3.2；存档schema、文件格式和座位协议均不变。
+
 # 2026-08-05
 
 - F0066: 合并两个独立盲测SHA共11000局，Nonhuman相对Expert `+1036`、95% CI `[+0.04991,+0.13755]`；新增可机器判定的离线防回退门禁。

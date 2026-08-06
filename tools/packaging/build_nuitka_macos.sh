@@ -6,8 +6,9 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 
 PY="${ROOT}/.venv/bin/python"
+[[ -x "$PY" ]] || PY="${ROOT}/.venv-macos/bin/python"
 if [[ ! -x "$PY" ]]; then
-  echo "ERROR: missing $PY — run: bash tools/setup_venv.sh" >&2
+  echo "ERROR: missing ${ROOT}/.venv/bin/python and ${ROOT}/.venv-macos/bin/python — run: bash tools/setup_venv.sh" >&2
   exit 1
 fi
 

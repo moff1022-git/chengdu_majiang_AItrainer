@@ -47,6 +47,8 @@ configs/humanlike_v2/*.json.bak
 configs/humanlike_v2/*.json.recommendation.json
 data/
 releases/
+!docs/releases/
+!docs/releases/*.md
 assets/tiles/_sample_mapped.png
 assets/tiles/_tiles_regen_preview_*.png
 assets/tiles/tile_clean_preview.png
