@@ -43,7 +43,7 @@ v0.3.2证明现有Task 19框架下的Nonhuman参数可稳定超过Expert，但�
 
 ### 路线隔离契约
 
-- 唯一工作区：`.worktrees/f0070-v0.4.0/`。
+- 唯一工作区：`worktrees/f0070-v0.4.0/`（Finder默认可见）。
 - 唯一数据根：`data/experiments/f0070_v040/`。
 - `test_id`和artifact名必须以`f0070-v040-`开头。
 - 独立进度源：`docs/status/streams/F0070_V040_LATEST.md`。

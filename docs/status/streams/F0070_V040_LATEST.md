@@ -21,3 +21,4 @@
 - Task 19业务代码：仍为v0.3.2基线，本初始化未改框架
 - 数据：未生成；本线后续只写`data/experiments/f0070_v040/`
 - 本地目录已创建：`manifests/runs/reports/traces/artifacts/tmp`；`STREAM_ROOT.md`声明本线命名和禁止交叉写入。
+- 工作区已迁移至Finder可见路径：`worktrees/f0070-v0.4.0/`；Git HEAD和本地数据不变。

@@ -34,7 +34,7 @@ v0.3.2的`nonhuman_optimized`已在两个独立盲测SHA、合11000局中相对`
 
 ### 路线隔离契约
 
-- 唯一工作区：`.worktrees/f0069-v0.3.3/`。
+- 唯一工作区：`worktrees/f0069-v0.3.3/`（Finder默认可见）。
 - 唯一数据根：`data/experiments/f0069_v033/`。
 - `test_id`和artifact名必须以`f0069-v033-`开头。
 - 独立进度源：`docs/status/streams/F0069_V033_LATEST.md`。
