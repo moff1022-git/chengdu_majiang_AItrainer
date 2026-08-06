@@ -1,6 +1,6 @@
 # F0067 v0.3.2 发布
 
-- 状态：In Progress（发布资产已就绪）
+- 状态：Done
 - 日期：2026-08-06
 - 依赖：F0066
 
@@ -42,7 +42,7 @@
 - [x] PyInstaller与Nuitka产物均构建成功并有SHA-256。
 - [x] clean source/evidence归档自校验通过。
 - [x] 双分支同步，最终修复提交CI成功。
-- [ ] tag `v0.3.2`与Release指向同一提交，Release资产完整。
+- [x] tag `v0.3.2`与Release指向同一提交，Release资产完整。
 
 ## 回滚
 
@@ -55,6 +55,8 @@
 - Clean source ZIP：SHA-256 `9bfff482057a64a162abf861b24534db2b0a992bfa161a6415955485417d3c0d`。
 - Evidence ZIP：SHA-256 `2d1ee3ae11fa57a5909f161044b536fcfb64e6e24cb93ba14d1446eee984a24d`。
 - 版本主提交`4d131d46`的CI run `31062994354`成功；归档修复提交`1033f9f3`的最终CI run `31063215072`成功。
+- 发布提交`a4f2f5b1`的CI run `31063883299`成功；注野tag `v0.3.2`与GitHub Release均指向该提交。
+- GitHub Release：`https://github.com/moff1022-git/chengdu_majiang_AItrainer/releases/tag/v0.3.2`，包含PyInstaller、Nuitka、source、evidence及`SHA256SUMS.json`。
 
 ## 批准记录
 

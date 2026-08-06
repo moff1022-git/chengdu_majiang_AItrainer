@@ -2,7 +2,7 @@
 
 > **日期**：2026-08-06
 > **应用版本**：`0.3.2`（`version.py`）
-> **Git**：`main`与`integration/v0.3.1-humanlike`已同步至`1033f9f3`；全仓`530 passed, 1 skipped`；最终CI run `31063215072`成功
+> **Git**：0.3.2 tag基线`a4f2f5b1`；全仓`530 passed, 1 skipped`；发布CI run `31063883299`成功
 
 本文件是 **权威对照表**：文档状态须与下表一致。换机 / 新 session 除读 `LATEST.md` 外，冲突时以 **代码 + 本表** 为准。
 
@@ -16,9 +16,9 @@
 | 存档 GameState schema | `engine/state.py` → `SCHEMA_VERSION` | **5**（reader 1–5） |
 | 存档外壳 format | `engine/persistence.py` → `FORMAT_VERSION` | **1** |
 | 座位 NDJSON 协议 | `protocols/wire.py` → `PROTOCOL_VERSION` | **1** |
-| Git 集成基线 | `integration/v0.3.1-humanlike` | 与`origin/main@1033f9f3`一致 |
-| Git 远端 | `origin` | `main`与集成分支均为`1033f9f3` |
-| 当前发布记录 | `v0.3.2` | 构建与归档资产已就绪；待tag/Release |
+| Git 集成基线 | `integration/v0.3.1-humanlike` | 0.3.2发布时与`origin/main@a4f2f5b1`一致 |
+| Git 远端 | `origin` | `v0.3.2`已发布；后续规划在tag之后提交 |
+| 当前发布记录 | `v0.3.2` | tag/Release指向`a4f2f5b1`；五份资产完整 |
 
 ---
 
@@ -62,8 +62,10 @@
 | F0063 | **Done** | SIGINT退出130、无交互resume、100/100 trace门禁、Linux RSS 35,880 KiB |
 | F0065 | **Done（CI run 31019337103 已通过，28596eaa/ead34381修复后）** | 10000局盲测、多阵容8×1000、F0057聚合、无人值守监控；干净检出测试组索引兼容 |
 | F0066 | **Done（本地529 passed、1 skipped；CI 31022485737成功）** | 跨种子11000局防回退门禁、F0057深化只读审计、0.3.1发布候选归档 |
-| F0067 | **In Progress（530 passed/1 skipped；CI 31063215072成功）** | v0.3.2版本、受控artifact防回退workflow、双编译器构建与clean归档完成；待tag/Release |
+| F0067 | **Done（530 passed/1 skipped；CI 31063883299成功）** | v0.3.2 tag/Release、受控artifact防回退workflow、双编译器构建与clean归档完成 |
 | F0068 | **Approved/实验未启动** | F0057公开进张单参数随机因果A/B预注册；依赖独立倍率实现规格 |
+| F0069 | **Review** | Nonhuman现有7+12参数空间分层局部优化计划；未修改业务代码 |
+| F0070 | **Review** | Task 19决策框架能力升级计划；六个隔离工作包，未修改业务代码 |
 | F0038 | **Draft** | 线上血战平台 AI 接入可行性（仅文档；禁未授权外挂） |
 | F0010-规则表 | Review | 清单文档，非阻塞实现 |
 
