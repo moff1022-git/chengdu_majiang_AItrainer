@@ -20,3 +20,4 @@
 - `version.py`：`0.3.3`
 - 业务参数：仍为v0.3.2基线，本初始化未调参
 - 数据：未生成；本线后续只写`data/experiments/f0069_v033/`
+- 本地目录已创建：`manifests/runs/reports/traces/artifacts/tmp`；`STREAM_ROOT.md`声明本线命名和禁止交叉写入。
